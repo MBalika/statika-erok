@@ -1,0 +1,191 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+
+/* ============================================================
+   STATIKA – Erők és erőrendszerek
+   Színvilág: petrol / tealkék alap + narancs kiemelés
+   ============================================================ */
+
+@theme {
+  /* Petrol / teal skála – az oldal alapszíne */
+  --color-petrol-50: #f1f8f9;
+  --color-petrol-100: #dcedf0;
+  --color-petrol-200: #bcdce2;
+  --color-petrol-300: #8ec3cd;
+  --color-petrol-400: #59a3b2;
+  --color-petrol-500: #3a8798;
+  --color-petrol-600: #2e6c7f;
+  --color-petrol-700: #275767;
+  --color-petrol-800: #234957;
+  --color-petrol-900: #1d3c48;
+  --color-petrol-950: #0f2630;
+
+  /* Narancs skála – erők, eredők, kiemelések */
+  --color-naracs-50: #fff7ed;
+  --color-naracs-100: #ffedd5;
+  --color-naracs-200: #fed7aa;
+  --color-naracs-300: #fdba74;
+  --color-naracs-400: #fb923c;
+  --color-naracs-500: #f97316;
+  --color-naracs-600: #e2590a;
+  --color-naracs-700: #bc4508;
+  --color-naracs-800: #97370e;
+  --color-naracs-900: #7c2f0f;
+
+  /* Ábrák jelölőszínei – következetesen az egész oldalon */
+  --color-jel-ero: #e2590a; /* erővektor */
+  --color-jel-komp: #0f766e; /* komponens */
+  --color-jel-eredo: #7c3aed; /* eredő */
+  --color-jel-tengely: #64748b; /* tengely, segédvonal */
+  --color-jel-meret: #475569; /* méretvonal */
+  --color-jel-ok: #15803d; /* helyes */
+  --color-jel-hiba: #be123c; /* hibás */
+
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "Menlo", "Consolas", monospace;
+}
+
+:root {
+  --hatter: #f6fafb;
+  --papir: #ffffff;
+  --szoveg: #1d3c48;
+  --halvany: #5b7684;
+  --keret: #dce9ed;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* fejléc (56 px) + szakaszsáv (52 px) + kis levegő */
+  scroll-padding-top: 7rem;
+}
+
+@media (min-width: 768px) {
+  html {
+    /* asztali nézetben a fejléc két sávból áll (97 px) */
+    scroll-padding-top: 10rem;
+  }
+}
+
+body {
+  background-color: var(--hatter);
+  color: var(--szoveg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Finom rácsminta – álelemként, hogy ne írja felül a háttér-gradienst */
+.racs-hatter {
+  position: relative;
+  isolation: isolate;
+}
+.racs-hatter::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.racs-vilagos {
+  position: relative;
+  isolation: isolate;
+}
+.racs-vilagos::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(
+      to right,
+      rgba(35, 73, 87, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(35, 73, 87, 0.05) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* --- Tipográfia a tartalmi blokkokban --- */
+.proza p {
+  margin-bottom: 0.85rem;
+  line-height: 1.75;
+}
+.proza p:last-child {
+  margin-bottom: 0;
+}
+.proza strong {
+  font-weight: 650;
+  color: var(--color-petrol-900);
+}
+.proza em {
+  font-style: italic;
+}
+
+/* --- KaTeX igazítások --- */
+.katex {
+  font-size: 1.04em;
+}
+.katex-display {
+  margin: 0.9rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.15rem 0;
+}
+
+/* Számok táblázatban mindig egyforma szélesek legyenek */
+.szamok {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- SVG ábrák közös stílusa --- */
+.abra text {
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+.abra .cimke-kicsi {
+  font-size: 11px;
+  fill: var(--color-jel-meret);
+}
+.abra .tengely {
+  stroke: var(--color-jel-tengely);
+  stroke-width: 1.25;
+}
+.abra .segedvonal {
+  stroke: var(--color-jel-tengely);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+  opacity: 0.75;
+}
+
+/* Fogópont húzható ábrákon */
+.fogopont {
+  cursor: grab;
+  transition: r 0.12s ease;
+}
+.fogopont:active {
+  cursor: grabbing;
+}
+
+/* Görgetősáv finomítás */
+.finom-gorgeto::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+.finom-gorgeto::-webkit-scrollbar-thumb {
+  background: var(--color-petrol-200);
+  border-radius: 99px;
+}
+
+@media print {
+  .nyomtatasban-rejtve {
+    display: none !important;
+  }
+}
