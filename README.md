@@ -63,6 +63,10 @@ src/
     ModulKeret.js          modulfejléc és ragadós szakasznavigáció
     KidolgozottFeladat.js  lépésenként feltárható mintapélda
     GyakorloDoboz.js       általános gyakorlófeladat-motor
+    anim/
+      Idovonal.js          idővonal-hook (lejátszás, ugrás, sebesség) és simító függvények
+      FeladatFilm.js       a „film” keret: rajz + fejezetek + vezérlők
+      FilmElemek.js        animálható SVG-elemek (kihúzódó nyíl, ív, felirat, pont)
     Hamarosan.js           „hamarosan” oldal (jelenleg nem használt, új modulhoz jól jön)
     ui/
       Elemek.js            szakasz, kártya, kiemelő doboz, ábrakeret
@@ -90,12 +94,16 @@ src/
       SulypontKalk.js      kalkulátor: összetett síkidom súlypontja, kivont részekkel
     vektorok/
       GyakorloSzekcio.js   az 1. modul feladatgenerátorai
+      FilmGyf2.js          film: négy erő eredője lépésről lépésre
     nyomatek/
       GyakorloSzekcio.js   a 2. modul feladatgenerátorai
+      FilmGyf3.js          film: redukálás az origóra, az eredő hatásvonala
     megoszlo/
       GyakorloSzekcio.js   a 3. modul feladatgenerátorai
+      FilmGyf1.js          film: a trapéz teher eredője
     sulypont/
       GyakorloSzekcio.js   a 4. modul feladatgenerátorai
+      FilmGyf4.js          film: a T-szelvény súlypontja mérleggel
   lib/
     oldalterkep.js         a modulok listája – innen épül a navigáció
     szamok.js              magyar számformázás, szögek, vektorműveletek
@@ -134,6 +142,12 @@ function ujFeladat() {
 
 A `mezok` elemeinél a `tures` mezővel állítható az elfogadott eltérés
 (alapértelmezés: a helyes érték 1,5 %-a, de legalább 0,01).
+
+**Új film (animált megoldás):** a `FeladatFilm` komponensnek egy `rajz(t)`
+függvényt adsz (a teljes SVG a t másodperchez), és a fejezetek listáját
+(`{ t0, cim, szoveg, kepletek }`). Az `anim/Idovonal.js` `arany(t, t0, t1)`
+függvénye 0→1 arányt ad a két időpont között, ebből számolható minden
+nyílhossz, eltolás és opacitás. Minta: `src/components/megoszlo/FilmGyf1.js`.
 
 **Képletek:** a `M` komponens soron belüli, a `MB` önálló sorban álló KaTeX
 képletet renderel. A magyar tizedesvesszőt automatikusan kezeli, elég

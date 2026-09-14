@@ -7,6 +7,7 @@ import SulypontKalk from "@/components/abrak/SulypontKalk";
 import { AbraSulypontFogalom, AbraAlapidomok, AbraFelbontasT, AbraKivonas } from "@/components/abrak/SulypontAbrak";
 import { AbraTSzelveny, AbraLyukasIdom, AbraNegyedkorIdom } from "@/components/abrak/SulypontFeladatAbrak";
 import GyakorloSzekcio from "@/components/sulypont/GyakorloSzekcio";
+import FilmGyf4 from "@/components/sulypont/FilmGyf4";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -234,6 +235,11 @@ export default function SulypontOldal() {
             <p>A súlypont a fejlemez alatt 41 mm-rel, a gerincben van — az idom felső, „nehezebb” részéhez közel, ahogy várható.</p>
           </Lepes>
         </KidolgozottFeladat>
+
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a súlypont mint mérleg</p>
+          <FilmGyf4 />
+        </div>
 
         <KidolgozottFeladat
           jel="GYF‑5"

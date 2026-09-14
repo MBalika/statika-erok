@@ -24,6 +24,7 @@ import {
   AbraTerbeliErorendszer,
 } from "@/components/abrak/NyomatekFeladatAbrak";
 import GyakorloSzekcio from "@/components/nyomatek/GyakorloSzekcio";
+import FilmGyf3 from "@/components/nyomatek/FilmGyf3";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -473,6 +474,11 @@ export default function NyomatekOldal() {
             <MB>{"x_0 = \\frac{M^{(O)}}{R_y} = \\frac{-210}{10} = -21\\ \\text{m}"}</MB>
           </Lepes>
         </KidolgozottFeladat>
+
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a redukálás lépésről lépésre</p>
+          <FilmGyf3 />
+        </div>
 
         {/* ---- GYF-4 ---- */}
         <KidolgozottFeladat

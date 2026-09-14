@@ -24,6 +24,7 @@ import {
 } from "@/components/abrak/StatikusAbrak";
 import { AbraGyf2, AbraGyf3 } from "@/components/abrak/FeladatAbrak";
 import GyakorloSzekcio from "@/components/vektorok/GyakorloSzekcio";
+import FilmGyf2 from "@/components/vektorok/FilmGyf2";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -472,6 +473,11 @@ export default function VektorokOldal() {
         </KidolgozottFeladat>
 
         {/* ---- GYF-3 ---- */}
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – nézd végig, hogyan áll össze az eredő</p>
+          <FilmGyf2 />
+        </div>
+
         <KidolgozottFeladat
           jel="GYF‑3"
           ido="5 perc"

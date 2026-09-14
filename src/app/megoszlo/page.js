@@ -7,6 +7,7 @@ import SzakaszosTeherKalk from "@/components/abrak/SzakaszosTeherKalk";
 import { AbraMegoszloFogalom, AbraAlapesetek, AbraFelbontas, AbraFerdeVetulet } from "@/components/abrak/MegoszloAbrak";
 import { AbraTrapezTeher, AbraValtakozoTeher, AbraFureszfogTeher } from "@/components/abrak/MegoszloFeladatAbrak";
 import GyakorloSzekcio from "@/components/megoszlo/GyakorloSzekcio";
+import FilmGyf1 from "@/components/megoszlo/FilmGyf1";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -217,6 +218,11 @@ export default function MegoszloOldal() {
             </p>
           </Lepes>
         </KidolgozottFeladat>
+
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a teher egyetlen erővé húzódik össze</p>
+          <FilmGyf1 />
+        </div>
 
         <KidolgozottFeladat
           jel="GYF‑2"
