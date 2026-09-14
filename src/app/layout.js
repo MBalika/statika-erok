@@ -17,7 +17,15 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="hu" className="h-full">
+    <html lang="hu" className="h-full" suppressHydrationWarning>
+      <head>
+        {/* a mentett téma a festés előtt, hogy ne villanjon */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("statika-tema")==="sotet"){document.documentElement.classList.add("dark")}}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="flex min-h-full flex-col">
         <SiteHeader />
         <main className="flex-1">{children}</main>

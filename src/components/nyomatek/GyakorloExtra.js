@@ -160,6 +160,13 @@ function eroEsParFeladat() {
   };
 }
 
+export const EXTRA_GENERATOROK = [
+  { cim: "Ferde erő nyomatéka és az erőkar", fn: ferdeFeladat },
+  { cim: "Nyomaték átszámítása másik pontra", fn: atszamitasFeladat },
+  { cim: "A hatásvonal tengelymetszetei", fn: metszetFeladat },
+  { cim: "Erő és erőpár együtt", fn: eroEsParFeladat },
+];
+
 export default function GyakorloExtra() {
   return (
     <>

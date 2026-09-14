@@ -279,6 +279,14 @@ function korivesFeladat() {
 
 /* ---------- a szekció ---------- */
 
+export const GENERATOROK = [
+  { cim: "T-szelvény", fn: tSzelvenyFeladat },
+  { cim: "L-szelvény: mindkét koordináta", fn: lSzelvenyFeladat },
+  { cim: "Kivonásos módszer", fn: kivonasosFeladat },
+  { cim: "Téglalap és háromszög", fn: trapezFeladat },
+  { cim: "Köríves idomok", fn: korivesFeladat },
+];
+
 export default function GyakorloSzekcio() {
   return (
     <>

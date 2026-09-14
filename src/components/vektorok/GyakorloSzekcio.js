@@ -296,6 +296,14 @@ function terbeliFeladat() {
 
 /* ---------- a szekció ---------- */
 
+export const GENERATOROK = [
+  { cim: "Komponensekre bontás", fn: komponensFeladat },
+  { cim: "Síkbeli erőrendszer eredője", fn: eredoFeladat },
+  { cim: "Vetület ferde tengelyre", fn: vetuletFeladat },
+  { cim: "Egyensúly: a hiányzó erő", fn: egyensulyFeladat },
+  { cim: "Térbeli vektorok összege", fn: terbeliFeladat },
+];
+
 export default function GyakorloSzekcio() {
   return (
     <>

@@ -161,6 +161,13 @@ function haromszogFeladat() {
   };
 }
 
+export const EXTRA_GENERATOROK = [
+  { cim: "Aszimmetrikus I-szelvény", fn: iSzelvenyFeladat },
+  { cim: "U-szelvény", fn: uSzelvenyFeladat },
+  { cim: "Kör alakú lyuk", fn: korLyukFeladat },
+  { cim: "Háromszög három csúccsal", fn: haromszogFeladat },
+];
+
 export default function GyakorloExtra() {
   return (
     <>

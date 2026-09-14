@@ -189,3 +189,207 @@ body {
     display: none !important;
   }
 }
+
+/* ============================================================
+   SÖTÉT MÓD
+   A <html class="dark"> alatt a lapfelületek sötétek, a szövegek világosak;
+   az ábrák és az interaktív rajzpanelek (racs-vilagos) világos „papírlapok”
+   maradnak, hogy a színes jelölések változatlanul olvashatók legyenek.
+   Az itt (réteg nélkül) megadott szabályok felülírják a Tailwind-utilityket.
+   ============================================================ */
+.dark {
+  --hatter: #0e1c22;
+  --papir: #142830;
+  --szoveg: #e4eef1;
+  --halvany: #9db4bd;
+  --keret: #27434d;
+  color-scheme: dark;
+}
+.dark body {
+  background-color: var(--hatter);
+  color: var(--szoveg);
+}
+.dark .bg-white,
+.dark [class~="bg-white/95"] {
+  background-color: #142830;
+}
+.dark [class~="bg-white/40"],
+.dark [class~="bg-white/55"] {
+  background-color: rgba(20, 40, 48, 0.55);
+}
+.dark .bg-petrol-50,
+.dark [class~="bg-petrol-50/60"],
+.dark [class~="bg-petrol-50/70"],
+.dark [class~="bg-petrol-50/40"],
+.dark .bg-petrol-100,
+.dark [class~="hover:bg-petrol-50"]:hover,
+.dark [class~="hover:bg-petrol-100"]:hover,
+.dark [class~="hover:bg-white"]:hover {
+  background-color: #1b323b;
+}
+.dark .bg-petrol-200 {
+  background-color: #2b4a55;
+}
+.dark .bg-naracs-50,
+.dark [class~="bg-naracs-50/40"] {
+  background-color: #33210f;
+}
+.dark .bg-naracs-100 {
+  background-color: #4a2d12;
+}
+.dark .bg-emerald-50,
+.dark [class~="bg-emerald-50/40"] {
+  background-color: #0f2b1f;
+}
+.dark .bg-emerald-100 {
+  background-color: #13402c;
+}
+.dark .bg-rose-50,
+.dark [class~="bg-rose-50/70"],
+.dark [class~="bg-rose-50/40"] {
+  background-color: #361420;
+}
+.dark .bg-rose-100 {
+  background-color: #4a1a2a;
+}
+.dark .bg-violet-100 {
+  background-color: #2d1f4a;
+}
+.dark .text-petrol-900,
+.dark .text-petrol-800,
+.dark .text-petrol-950 {
+  color: #e4eef1;
+}
+.dark .text-petrol-700,
+.dark .text-petrol-600 {
+  color: #b7cbd2;
+}
+.dark .text-petrol-500,
+.dark .text-petrol-400 {
+  color: #8ea7b0;
+}
+.dark .text-naracs-800,
+.dark .text-naracs-700 {
+  color: #fdba74;
+}
+.dark .text-emerald-800,
+.dark .text-emerald-700,
+.dark .text-emerald-900 {
+  color: #6ee7b7;
+}
+.dark .text-rose-800,
+.dark .text-rose-700,
+.dark .text-rose-900 {
+  color: #fda4af;
+}
+.dark .text-violet-800 {
+  color: #c4b5fd;
+}
+.dark .border-petrol-100,
+.dark .border-petrol-200,
+.dark .border-petrol-300,
+.dark [class~="border-petrol-200/70"],
+.dark .border-petrol-50 {
+  border-color: #2c4852;
+}
+.dark .border-naracs-200,
+.dark .border-naracs-300 {
+  border-color: #7c3f14;
+}
+.dark .border-emerald-200,
+.dark .border-emerald-300,
+.dark .border-emerald-400 {
+  border-color: #1f6b4a;
+}
+.dark .border-rose-200,
+.dark .border-rose-300,
+.dark .border-rose-400 {
+  border-color: #8a2a44;
+}
+.dark .ring-petrol-200 {
+  --tw-ring-color: #2c4852;
+}
+.dark .shadow-sm,
+.dark .shadow-xl,
+.dark .shadow-lg,
+.dark .shadow-md {
+  --tw-shadow-color: rgba(0, 0, 0, 0.5);
+}
+.dark input,
+.dark select {
+  background-color: #0e1c22;
+  color: #e4eef1;
+  border-color: #2c4852;
+}
+.dark .katex {
+  color: inherit;
+}
+/* az ábrák és rajzpanelek világos lapok maradnak */
+.dark .racs-vilagos,
+.dark figure.overflow-hidden > .racs-vilagos {
+  background-color: #f6fafb;
+  color: #1d3c48;
+}
+.dark .racs-vilagos .text-petrol-400,
+.dark .racs-vilagos .text-petrol-500 {
+  color: #5b7684;
+}
+.dark .racs-vilagos .bg-white {
+  background-color: #ffffff;
+}
+
+/* ============================================================
+   NYOMTATÁS – a puska oldal
+   ============================================================ */
+@media print {
+  header,
+  footer,
+  .nyomtatasban-rejtve {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .puska-lap {
+    break-after: page;
+    page-break-after: always;
+  }
+  .puska-lap:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+  a[href]::after {
+    content: "";
+  }
+}
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+/* sötét mód – kiegészítések */
+.dark [class~="bg-white/90"] {
+  background-color: rgba(20, 40, 48, 0.92);
+}
+.dark .proza strong {
+  color: #ffffff;
+}
+.dark .bg-petrol-700,
+.dark .bg-petrol-800 {
+  background-color: #2e6c7f;
+}
+.dark [class~="hover:bg-petrol-800"]:hover {
+  background-color: #3a8798;
+}
+.dark .text-white {
+  color: #ffffff;
+}
+@media print {
+  .puska-lap .katex {
+    font-size: 0.92em;
+  }
+  .puska-lap .katex-display {
+    overflow: visible;
+  }
+}

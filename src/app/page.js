@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Szakasz, Kartya, Kiemelo, AbraKeret, Cimke } from "@/components/ui/Elemek";
 import { M, MB } from "@/components/ui/Keplet";
-import { modulok, kurzus } from "@/lib/oldalterkep";
+import { modulok, kurzus, extraOldalak } from "@/lib/oldalterkep";
 
 export const metadata = {
   title: "Erők és erőrendszerek – interaktív tananyag",
@@ -325,6 +325,24 @@ export default function Kezdolap() {
                 </span>
               </Link>
             ))}
+        </div>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {extraOldalak.map((o) => (
+            <Link
+              key={o.slug}
+              href={o.slug}
+              className="group flex items-center gap-4 rounded-2xl border border-naracs-200 bg-naracs-50 p-5 transition hover:border-naracs-400 hover:shadow-lg hover:shadow-naracs-500/10"
+            >
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-naracs-500 text-[16px] font-bold text-white">
+                {o.slug === "/zh" ? "zh" : "✎"}
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-[16px] font-semibold text-petrol-900">{o.rovid}</h3>
+                <p className="mt-1 text-[13.5px] leading-relaxed text-petrol-600">{o.leiras}</p>
+              </div>
+              <span className="ml-auto text-[13px] font-semibold text-naracs-600 opacity-0 transition group-hover:opacity-100">→</span>
+            </Link>
+          ))}
         </div>
       </Szakasz>
     </>

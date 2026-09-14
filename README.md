@@ -13,6 +13,8 @@ véletlenszerűen generált gyakorlófeladatok.
 | 1. Vektorok, erők megadása | komponensek, összeadás, vetítés, egyensúly, térbeli vektorok | kész |
 | 2. Nyomaték, eredő, redukálás | forgatónyomaték, erőpár, redukálás, az eredő három esete | kész |
 | 3. Megoszló erők | eredő nagysága és helye, felbontási technikák, szakaszos teher | kész |
+| Zh-szimulátor (/zh) | 4 véletlen feladat órával, pontozás, mentett előzmények | kész |
+| Puska (/puska) | nyomtatható egyoldalas összefoglaló modulonként | kész |
 | 4. Súlypont | statikai nyomaték, alapidomok, részekre bontás, kivonásos módszer, köríves idomok | kész |
 
 ## Futtatás helyben
@@ -56,13 +58,22 @@ src/
     nyomatek/page.js       2. modul – teljes tartalom
     megoszlo/page.js       3. modul – teljes tartalom
     sulypont/page.js       4. modul – teljes tartalom
-    globals.css            színrendszer és közös stílusok
+    zh/page.js             zh-szimulátor
+    puska/page.js          nyomtatható puska (print-CSS a globals.css-ben)
+    globals.css            színrendszer, sötét mód felülírások, nyomtatási stílus
   components/
     SiteHeader.js          felső navigáció, mobil menü
     SiteFooter.js          lábléc
     ModulKeret.js          modulfejléc és ragadós szakasznavigáció
     KidolgozottFeladat.js  lépésenként feltárható mintapélda
-    GyakorloDoboz.js       általános gyakorlófeladat-motor
+    GyakorloDoboz.js       általános gyakorlófeladat-motor (+ konfetti 5 egymás utáni jó megoldás után)
+    Kviz.js                fogalmi kvíz (feleletválasztós, magyarázattal)
+    Hibakereso.js          hibás megoldásban a hibás lépés megjelölése
+    SotetKapcsolo.js       sötét mód kapcsoló (localStorage: statika-tema)
+    NyomtatasGomb.js       window.print() gomb a puska oldalon
+    ui/Konfetti.js         canvas-konfetti
+    zh/ZhSzimulator.js     a zh-szimulátor (a modulok GENERATOROK / EXTRA_GENERATOROK exportjait használja)
+    <modul>/KvizAdatok.js  a modul kvízkérdései (KVIZ) és hibakereső feladatai (HIBAK)
     anim/
       Idovonal.js          idővonal-hook (lejátszás, ugrás, sebesség) és simító függvények
       FeladatFilm.js       a „film” keret: rajz + fejezetek + vezérlők
@@ -161,6 +172,17 @@ function ujFeladat() {
 
 A `mezok` elemeinél a `tures` mezővel állítható az elfogadott eltérés
 (alapértelmezés: a helyes érték 1,5 %-a, de legalább 0,01).
+
+**Új kvízkérdés / hibakereső:** a modul `KvizAdatok.js` fájljában a `KVIZ`
+(`{ k, v: [4 válasz], helyes: index, magyarazat }`) és a `HIBAK`
+(`{ cim, feladat, lepesek: [{ szoveg, hibas?, javitas? }], tanulsag }`) tömbbe
+kell felvenni egy elemet. A zh-szimulátor automatikusan látja az új
+gyakorlófeladat-generátorokat, ha a modul `GENERATOROK` / `EXTRA_GENERATOROK`
+tömbjébe is bekerülnek.
+
+**Sötét mód:** a `globals.css` végén réteg nélküli `.dark …` felülírások vannak
+a leggyakoribb utility-osztályokra; az ábrapanelek (`racs-vilagos`) világosak
+maradnak. Új színosztály használatakor érdemes ott is felvenni.
 
 **Új film (animált megoldás):** a `FeladatFilm` komponensnek egy `rajz(t)`
 függvényt adsz (a teljes SVG a t másodperchez), és a fejezetek listáját

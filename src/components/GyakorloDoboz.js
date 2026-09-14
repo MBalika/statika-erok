@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Konfetti from "@/components/ui/Konfetti";
 
 /**
  * Általános gyakorlófeladat-motor.
@@ -26,6 +27,9 @@ export default function GyakorloDoboz({
   const [megoldasLathato, setMegoldasLathato] = useState(false);
   const [sugoLathato, setSugoLathato] = useState(false);
   const [statisztika, setStatisztika] = useState({ jo: 0, osszes: 0 });
+  const [sorozat, setSorozat] = useState(0); // egymás utáni hibátlan megoldások
+  const [konfetti, setKonfetti] = useState(false);
+  const konfettiVege = useCallback(() => setKonfetti(false), []);
 
   const ujFeladat = useCallback(() => {
     setFeladat(generator());
@@ -52,10 +56,16 @@ export default function GyakorloDoboz({
     setEllenorizve(true);
     const mind = feladat.mezok.every((m) => jo(m, valaszok[m.id]));
     setStatisztika((s) => ({ jo: s.jo + (mind ? 1 : 0), osszes: s.osszes + 1 }));
+    setSorozat((n) => {
+      const uj = mind ? n + 1 : 0;
+      if (uj > 0 && uj % 5 === 0) setKonfetti(true);
+      return uj;
+    });
   };
 
   return (
     <div className="my-6 overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white shadow-sm shadow-petrol-900/[0.03]">
+      <Konfetti aktiv={konfetti} onVege={konfettiVege} />
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 border-b border-[color:var(--keret)] bg-linear-to-r from-petrol-800 to-petrol-700 px-5 py-3.5">
         <span className="text-[10.5px] font-bold tracking-[0.16em] text-naracs-300 uppercase">
           Gyakorlás
@@ -64,6 +74,7 @@ export default function GyakorloDoboz({
         {statisztika.osszes > 0 && (
           <span className="szamok ml-auto rounded-full bg-white/10 px-2.5 py-1 text-[12px] font-medium text-white">
             {statisztika.jo} / {statisztika.osszes} hibátlan
+            {sorozat >= 2 ? ` · ${sorozat} egymás után 🔥` : ""}
           </span>
         )}
       </div>

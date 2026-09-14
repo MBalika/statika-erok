@@ -7,6 +7,9 @@ import SulypontKalk from "@/components/abrak/SulypontKalk";
 import { AbraSulypontFogalom, AbraAlapidomok, AbraFelbontasT, AbraKivonas } from "@/components/abrak/SulypontAbrak";
 import { AbraTSzelveny, AbraLyukasIdom, AbraNegyedkorIdom } from "@/components/abrak/SulypontFeladatAbrak";
 import GyakorloSzekcio from "@/components/sulypont/GyakorloSzekcio";
+import Kviz from "@/components/Kviz";
+import Hibakereso from "@/components/Hibakereso";
+import { KVIZ, HIBAK } from "@/components/sulypont/KvizAdatok";
 import FilmGyf4 from "@/components/sulypont/FilmGyf4";
 import FilmGyf5 from "@/components/sulypont/FilmGyf5";
 import FilmGyf6 from "@/components/sulypont/FilmGyf6";
@@ -379,6 +382,11 @@ export default function SulypontOldal() {
         bevezeto="Öt feladattípus a szimmetrikus szelvénytől a köríves idomokig. Papíron, táblázatban dolgozz, és csak az eredményt írd be."
         className="bg-white"
       >
+        <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Előbb az ötlet – fogalmi kvíz</p>
+        <Kviz cim="Érted, vagy csak számolod?" leiras="Nyolc kérdés a modul tipikus félreértéseiről. Minden válasz után rövid magyarázat." kerdesek={KVIZ} />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Hibakereső – találd meg a hibát</p>
+        <Hibakereso feladatok={HIBAK} />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Számolós gyakorlás</p>
         <GyakorloSzekcio />
         <Kiemelo tipus="kulcs" cim="Ezzel a négy modul végére értél">
           <p>

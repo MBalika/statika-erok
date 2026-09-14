@@ -160,6 +160,13 @@ function forditottFeladat() {
   };
 }
 
+export const EXTRA_GENERATOROK = [
+  { cim: "Víznyomás gátfalon", fn: viznyomasFeladat },
+  { cim: "Ferde rúd terhe", fn: ferdeRudFeladat },
+  { cim: "Trapéz teher és koncentrált erő", fn: trapezPluszFeladat },
+  { cim: "Fordított feladat: adott az eredő", fn: forditottFeladat },
+];
+
 export default function GyakorloExtra() {
   return (
     <>

@@ -24,6 +24,9 @@ import {
 } from "@/components/abrak/StatikusAbrak";
 import { AbraGyf2, AbraGyf3 } from "@/components/abrak/FeladatAbrak";
 import GyakorloSzekcio from "@/components/vektorok/GyakorloSzekcio";
+import Kviz from "@/components/Kviz";
+import Hibakereso from "@/components/Hibakereso";
+import { KVIZ, HIBAK } from "@/components/vektorok/KvizAdatok";
 import FilmGyf2 from "@/components/vektorok/FilmGyf2";
 import FilmGyf3 from "@/components/vektorok/FilmGyf3";
 import { Film3DTerbeliOsszeg } from "@/components/harom/Film3D";
@@ -642,6 +645,11 @@ export default function VektorokOldal() {
         bevezeto="Minden feladat új számokkal generálódik, az „új feladat” gombbal pedig végtelen sokat kaphatsz. A megoldást csak akkor nézd meg, ha már próbálkoztál."
         className="bg-white"
       >
+        <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Előbb az ötlet – fogalmi kvíz</p>
+        <Kviz cim="Érted, vagy csak számolod?" leiras="Nyolc kérdés a modul tipikus félreértéseiről. Minden válasz után rövid magyarázat." kerdesek={KVIZ} />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Hibakereső – találd meg a hibát</p>
+        <Hibakereso feladatok={HIBAK} />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Számolós gyakorlás</p>
         <GyakorloSzekcio />
 
         <Kiemelo tipus="kulcs" cim="Mikor mehetsz tovább">

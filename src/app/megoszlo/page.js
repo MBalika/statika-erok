@@ -7,6 +7,9 @@ import SzakaszosTeherKalk from "@/components/abrak/SzakaszosTeherKalk";
 import { AbraMegoszloFogalom, AbraAlapesetek, AbraFelbontas, AbraFerdeVetulet } from "@/components/abrak/MegoszloAbrak";
 import { AbraTrapezTeher, AbraValtakozoTeher, AbraFureszfogTeher } from "@/components/abrak/MegoszloFeladatAbrak";
 import GyakorloSzekcio from "@/components/megoszlo/GyakorloSzekcio";
+import Kviz from "@/components/Kviz";
+import Hibakereso from "@/components/Hibakereso";
+import { KVIZ, HIBAK } from "@/components/megoszlo/KvizAdatok";
 import FilmGyf1 from "@/components/megoszlo/FilmGyf1";
 import FilmGyf2 from "@/components/megoszlo/FilmGyf2";
 import FilmGyf3 from "@/components/megoszlo/FilmGyf3";
@@ -339,6 +342,11 @@ export default function MegoszloOldal() {
         bevezeto="Az alapesetektől az összetett terhekig. Az ötödik típus már átvezet a tartók reakcióinak számításához."
         className="bg-white"
       >
+        <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Előbb az ötlet – fogalmi kvíz</p>
+        <Kviz cim="Érted, vagy csak számolod?" leiras="Nyolc kérdés a modul tipikus félreértéseiről. Minden válasz után rövid magyarázat." kerdesek={KVIZ} />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Hibakereső – találd meg a hibát</p>
+        <Hibakereso feladatok={HIBAK} />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Számolós gyakorlás</p>
         <GyakorloSzekcio />
         <Kiemelo tipus="kulcs" cim="Mikor mehetsz tovább">
           <p>

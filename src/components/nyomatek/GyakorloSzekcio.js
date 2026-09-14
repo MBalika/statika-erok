@@ -320,6 +320,14 @@ function terbeliFeladat() {
 
 /* ---------- a szekció ---------- */
 
+export const GENERATOROK = [
+  { cim: "Nyomaték egy pontra", fn: nyomatekFeladat },
+  { cim: "Erőpár nyomatéka", fn: eroparFeladat },
+  { cim: "Párhuzamos erőrendszer eredője és helye", fn: parhuzamosFeladat },
+  { cim: "Redukálás az origóra", fn: redukalasFeladat },
+  { cim: "Térbeli nyomaték (r × F)", fn: terbeliFeladat },
+];
+
 export default function GyakorloSzekcio() {
   return (
     <>

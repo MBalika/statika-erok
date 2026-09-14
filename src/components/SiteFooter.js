@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { kurzus, modulok } from "@/lib/oldalterkep";
+import { kurzus, modulok, extraOldalak } from "@/lib/oldalterkep";
 
 export default function SiteFooter() {
   return (
@@ -30,6 +30,13 @@ export default function SiteFooter() {
                 >
                   {m.szam !== null ? `${m.szam}. ` : ""}
                   {m.rovid}
+                </Link>
+              </li>
+            ))}
+            {extraOldalak.map((o) => (
+              <li key={o.slug}>
+                <Link href={o.slug} className="text-[13px] text-naracs-300 transition hover:text-naracs-200">
+                  {o.rovid}
                 </Link>
               </li>
             ))}

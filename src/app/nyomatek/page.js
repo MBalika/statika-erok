@@ -24,6 +24,9 @@ import {
   AbraTerbeliErorendszer,
 } from "@/components/abrak/NyomatekFeladatAbrak";
 import GyakorloSzekcio from "@/components/nyomatek/GyakorloSzekcio";
+import Kviz from "@/components/Kviz";
+import Hibakereso from "@/components/Hibakereso";
+import { KVIZ, HIBAK } from "@/components/nyomatek/KvizAdatok";
 import FilmGyf3 from "@/components/nyomatek/FilmGyf3";
 import FilmGyf2 from "@/components/nyomatek/FilmGyf2";
 import FilmGyf4 from "@/components/nyomatek/FilmGyf4";
@@ -738,6 +741,11 @@ export default function NyomatekOldal() {
         bevezeto="Öt feladattípus, mindegyik új számokkal minden indításkor. Az első kettő rövid, a harmadik és a negyedik már zárthelyi-méretű."
         className="bg-white"
       >
+        <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Előbb az ötlet – fogalmi kvíz</p>
+        <Kviz cim="Érted, vagy csak számolod?" leiras="Nyolc kérdés a modul tipikus félreértéseiről. Minden válasz után rövid magyarázat." kerdesek={KVIZ} />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Hibakereső – találd meg a hibát</p>
+        <Hibakereso feladatok={HIBAK} />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Számolós gyakorlás</p>
         <GyakorloSzekcio />
 
         <Kiemelo tipus="kulcs" cim="Mikor mehetsz tovább">

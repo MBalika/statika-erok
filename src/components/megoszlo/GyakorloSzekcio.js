@@ -237,6 +237,14 @@ function vegyesFeladat() {
 
 /* ---------- a szekció ---------- */
 
+export const GENERATOROK = [
+  { cim: "Egyenletes teher eredője", fn: egyenletesFeladat },
+  { cim: "Háromszög alakú teher", fn: haromszogFeladat },
+  { cim: "Trapéz alakú teher", fn: trapezFeladat },
+  { cim: "Szakaszos, előjeles teher", fn: szakaszosFeladat },
+  { cim: "Megoszló teher és koncentrált erő együtt", fn: vegyesFeladat },
+];
+
 export default function GyakorloSzekcio() {
   return (
     <>

@@ -184,6 +184,13 @@ function kotelFeladat() {
   };
 }
 
+export const EXTRA_GENERATOROK = [
+  { cim: "Erő két ponton átmenő hatásvonallal", fn: hatasvonalFeladat },
+  { cim: "Két erő közti szög", fn: szogFeladat },
+  { cim: "Eredő poláris alakban", fn: polarisFeladat },
+  { cim: "Kötélerők egyensúlya", fn: kotelFeladat },
+];
+
 export default function GyakorloExtra() {
   return (
     <>

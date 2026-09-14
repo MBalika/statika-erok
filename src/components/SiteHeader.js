@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { kurzus, modulok } from "@/lib/oldalterkep";
+import { kurzus, modulok, extraOldalak } from "@/lib/oldalterkep";
+import SotetKapcsolo from "@/components/SotetKapcsolo";
 
 function Logo({ className = "" }) {
   // Erőháromszög: két komponens és az eredőjük – az egész anyag alapgondolata
@@ -176,6 +177,24 @@ export default function SiteHeader() {
               </div>
             );
           })}
+          <div className="ml-auto flex items-center gap-1">
+            {extraOldalak.map((o) => {
+              const aktiv = utvonal.startsWith(o.slug);
+              return (
+                <Link
+                  key={o.slug}
+                  href={o.slug}
+                  title={o.leiras}
+                  className={`my-2 rounded-lg px-3 py-1.5 text-[12.5px] font-semibold transition ${
+                    aktiv ? "bg-naracs-500 text-white" : "bg-petrol-50 text-petrol-700 ring-1 ring-petrol-200 hover:bg-petrol-100"
+                  }`}
+                >
+                  {o.rovid}
+                </Link>
+              );
+            })}
+            <SotetKapcsolo />
+          </div>
         </div>
       </nav>
 
@@ -217,6 +236,19 @@ export default function SiteHeader() {
                 </div>
               );
             })}
+            <div className="flex flex-wrap items-center gap-2 pt-3">
+              {extraOldalak.map((o) => (
+                <Link
+                  key={o.slug}
+                  href={o.slug}
+                  onClick={() => setMobilNyitva(false)}
+                  className="rounded-lg bg-petrol-50 px-3 py-1.5 text-[13px] font-semibold text-petrol-700 ring-1 ring-petrol-200"
+                >
+                  {o.rovid}
+                </Link>
+              ))}
+              <SotetKapcsolo />
+            </div>
           </div>
         </nav>
       )}
