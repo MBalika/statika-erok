@@ -68,7 +68,7 @@ export const modulok = [
     leiras:
       "Vonal mentén megoszló teher eredőjének nagysága és helye, felbontási technikák.",
     ikon: "megoszlo",
-    kesz: false,
+    kesz: true,
     szakaszok: [
       { id: "elmelet", cim: "Elmélet" },
       { id: "peldak", cim: "Kidolgozott feladatok" },

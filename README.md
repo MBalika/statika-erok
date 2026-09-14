@@ -12,7 +12,7 @@ véletlenszerűen generált gyakorlófeladatok.
 | Bevezetés | útmutató, jelölések, koordináta-rendszerek, mértékegységek | kész |
 | 1. Vektorok, erők megadása | komponensek, összeadás, vetítés, egyensúly, térbeli vektorok | kész |
 | 2. Nyomaték, eredő, redukálás | forgatónyomaték, erőpár, redukálás, az eredő három esete | kész |
-| 3. Megoszló erők | eredő nagysága és helye, felbontási technikák | váz |
+| 3. Megoszló erők | eredő nagysága és helye, felbontási technikák, szakaszos teher | kész |
 | 4. Súlypont | statikai nyomaték, összetett idomok, kivonásos módszer | váz |
 
 ## Futtatás helyben
@@ -54,7 +54,8 @@ src/
     page.js                Bevezetés (kezdőlap)
     vektorok/page.js       1. modul – teljes tartalom
     nyomatek/page.js       2. modul – teljes tartalom
-    megoszlo|sulypont/page.js   3–4. modul (egyelőre váz)
+    megoszlo/page.js       3. modul – teljes tartalom
+    sulypont/page.js       4. modul (egyelőre váz)
     globals.css            színrendszer és közös stílusok
   components/
     SiteHeader.js          felső navigáció, mobil menü
@@ -79,10 +80,16 @@ src/
       NyomatekFelfedezo.js interaktív: nyomaték, erőkar, forgásirány
       ErorendszerRedukalo.js interaktív: redukálás, három nézet
       TerbeliNyomatekKalk.js kalkulátor: r × F
+      MegoszloAbrak.js     a 3. modul elméleti ábrái
+      MegoszloFeladatAbrak.js  a 3. modul feladatábrái
+      TrapezTeherFelfedezo.js interaktív: trapézteher eredője, felbontások
+      SzakaszosTeherKalk.js kalkulátor: szakaszos megoszló teher eredője
     vektorok/
       GyakorloSzekcio.js   az 1. modul feladatgenerátorai
     nyomatek/
       GyakorloSzekcio.js   a 2. modul feladatgenerátorai
+    megoszlo/
+      GyakorloSzekcio.js   a 3. modul feladatgenerátorai
   lib/
     oldalterkep.js         a modulok listája – innen épül a navigáció
     szamok.js              magyar számformázás, szögek, vektorműveletek
