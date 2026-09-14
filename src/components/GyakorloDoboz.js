@@ -217,8 +217,10 @@ function jo(mezo, valasz) {
 }
 
 function kerekit(szam, tizedes) {
+  // csak a tizedesjegyek végéről vágjuk le a nullákat (10340 maradjon 10340)
   return szam
     .toFixed(tizedes)
-    .replace(/\.?0+$/, "")
+    .replace(/(\.\d*?)0+$/, "$1")
+    .replace(/\.$/, "")
     .replace(".", ",");
 }

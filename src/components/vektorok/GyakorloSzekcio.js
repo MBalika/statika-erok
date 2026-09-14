@@ -1,6 +1,7 @@
 "use client";
 
 import GyakorloDoboz from "@/components/GyakorloDoboz";
+import GyakorloExtra from "./GyakorloExtra";
 import { M, MB } from "@/components/ui/Keplet";
 import {
   derekszogu,
@@ -324,6 +325,12 @@ export default function GyakorloSzekcio() {
         leiras="Ugyanaz a gondolat három komponenssel."
         generator={terbeliFeladat}
       />
+      <div className="mt-10 mb-4 flex items-center gap-3">
+        <span className="h-px flex-1 bg-petrol-200" />
+        <span className="text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">További feladattípusok</span>
+        <span className="h-px flex-1 bg-petrol-200" />
+      </div>
+      <GyakorloExtra />
     </>
   );
 }

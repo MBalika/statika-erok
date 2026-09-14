@@ -25,6 +25,9 @@ import {
 } from "@/components/abrak/NyomatekFeladatAbrak";
 import GyakorloSzekcio from "@/components/nyomatek/GyakorloSzekcio";
 import FilmGyf3 from "@/components/nyomatek/FilmGyf3";
+import FilmGyf2 from "@/components/nyomatek/FilmGyf2";
+import FilmGyf4 from "@/components/nyomatek/FilmGyf4";
+import { Film3DVektorSzorzat, Film3DHasab } from "@/components/harom/Film3D";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -358,6 +361,11 @@ export default function NyomatekOldal() {
           </Lepes>
         </KidolgozottFeladat>
 
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez 3D-ben – r × F forgatható jelenetben</p>
+          <Film3DVektorSzorzat />
+        </div>
+
         {/* ---- GYF-2 ---- */}
         <KidolgozottFeladat
           jel="GYF‑2"
@@ -414,6 +422,11 @@ export default function NyomatekOldal() {
             <MB>{"x_R R_y = M^{(O)} \\quad\\Rightarrow\\quad x_R = \\frac{-154}{-44} = 3{,}5\\ \\text{m}"}</MB>
           </Lepes>
         </KidolgozottFeladat>
+
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – párhuzamos erők eredője</p>
+          <FilmGyf2 />
+        </div>
 
         {/* ---- GYF-3 ---- */}
         <KidolgozottFeladat
@@ -597,6 +610,11 @@ export default function NyomatekOldal() {
           </Lepes>
         </KidolgozottFeladat>
 
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a három eset egymás után</p>
+          <FilmGyf4 />
+        </div>
+
         <Kiemelo tipus="tipp" cim="Mi kellene ahhoz, hogy tényleg zérusrendszer legyen?">
           <p>
             A b) esetben az erők kioltják egymást, de a nyomaték megmarad. Ha az{" "}
@@ -670,6 +688,11 @@ export default function NyomatekOldal() {
             <MB>{"|\\underline{M}| = \\sqrt{(-48)^2 + (-56)^2 + (-42)^2} = 84{,}88\\ \\text{Nm}"}</MB>
           </Lepes>
         </KidolgozottFeladat>
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez 3D-ben – a hasáb és a hat erő</p>
+          <Film3DHasab />
+        </div>
+
       </Szakasz>
 
       {/* ==================== KALKULÁTOROK ==================== */}

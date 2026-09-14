@@ -8,6 +8,9 @@ import { AbraSulypontFogalom, AbraAlapidomok, AbraFelbontasT, AbraKivonas } from
 import { AbraTSzelveny, AbraLyukasIdom, AbraNegyedkorIdom } from "@/components/abrak/SulypontFeladatAbrak";
 import GyakorloSzekcio from "@/components/sulypont/GyakorloSzekcio";
 import FilmGyf4 from "@/components/sulypont/FilmGyf4";
+import FilmGyf5 from "@/components/sulypont/FilmGyf5";
+import FilmGyf6 from "@/components/sulypont/FilmGyf6";
+import { Film3DKeresztmetszet } from "@/components/harom/Film3D";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -184,6 +187,10 @@ export default function SulypontOldal() {
             fogod.
           </p>
         </div>
+        <div className="mt-6">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">3D-ben – a keresztmetszet és a súlyponti tengely</p>
+          <Film3DKeresztmetszet />
+        </div>
       </Szakasz>
 
       {/* ==================== KIDOLGOZOTT FELADATOK ==================== */}
@@ -287,6 +294,11 @@ export default function SulypontOldal() {
           </Lepes>
         </KidolgozottFeladat>
 
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a súlypont elvándorol a lyuktól</p>
+          <FilmGyf5 />
+        </div>
+
         <KidolgozottFeladat
           jel="GYF‑6"
           ido="6 perc"
@@ -334,6 +346,11 @@ export default function SulypontOldal() {
             <MB>{"y_S = \\frac{-35\\,674{,}8}{2\\,500} = -14{,}27\\ \\text{cm}"}</MB>
           </Lepes>
         </KidolgozottFeladat>
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – negyedkör ki, negyedkör be</p>
+          <FilmGyf6 />
+        </div>
+
       </Szakasz>
 
       {/* ==================== KALKULÁTOR ==================== */}

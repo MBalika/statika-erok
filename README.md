@@ -95,15 +95,34 @@ src/
     vektorok/
       GyakorloSzekcio.js   az 1. modul feladatgenerátorai
       FilmGyf2.js          film: négy erő eredője lépésről lépésre
+      FilmGyf3.js          film: a hiányzó erő, a vektorsokszög bezárul
+      GyakorloExtra.js     további 4 feladattípus (hatásvonal, szög, poláris eredő, kötélerők)
     nyomatek/
       GyakorloSzekcio.js   a 2. modul feladatgenerátorai
+      FilmGyf2.js          film: négy párhuzamos erő
       FilmGyf3.js          film: redukálás az origóra, az eredő hatásvonala
+      FilmGyf4.js          film: a három eset (erőpár, erőpár, egyetlen erő)
+      GyakorloExtra.js     további 4 feladattípus (ferde erő, átszámítás, tengelymetszet, erő+erőpár)
     megoszlo/
       GyakorloSzekcio.js   a 3. modul feladatgenerátorai
       FilmGyf1.js          film: a trapéz teher eredője
+      FilmGyf2.js          film: váltakozó irányú szakaszok
+      FilmGyf3.js          film: a fűrészfog eredője
+      GyakorloExtra.js     további 4 feladattípus (víznyomás, ferde rúd, trapéz+erő, fordított)
     sulypont/
       GyakorloSzekcio.js   a 4. modul feladatgenerátorai
       FilmGyf4.js          film: a T-szelvény súlypontja mérleggel
+      FilmGyf5.js          film: kivonás – S elvándorol a lyuktól
+      FilmGyf6.js          film: negyedkör ki, negyedkör be
+      GyakorloExtra.js     további 4 feladattípus (aszimm. I, U, kör-lyuk, háromszög csúcsokkal)
+    harom/
+      Jelenet3D.js         Three.js (react-three-fiber) építőelemek: Nyil3D, Vonal3D, Cimke3D, tengelyek, rács
+      Film3D.js            a 3D filmek böngészőoldali (ssr: false) betöltője
+      FilmTerbeliOsszeg.js 3D film: három térbeli vektor összege
+      FilmVektorSzorzat.js 3D film: r × F, a sík és a merőleges nyomatékvektor
+      FilmHasab.js         3D film: hat erő a hasáb élein
+      FilmTeherLepel.js    3D film: a trapéz teher lepele egy erővé húzódik össze
+      FilmKeresztmetszet.js 3D film: a T-szelvény kihúzva gerendává, súlyponti tengely
   lib/
     oldalterkep.js         a modulok listája – innen épül a navigáció
     szamok.js              magyar számformázás, szögek, vektorműveletek
@@ -172,6 +191,11 @@ levezetés szerepel, és a feladat tanulsága éppen erre a különbségre épü
 
 ## Technikai háttér
 
-Next.js (App Router) · React · Tailwind CSS · KaTeX. Nincs adatbázis és nincs
-szerveroldali logika: az egész oldal statikusan előrenderelhető, a
-gyakorlófeladatok a böngészőben generálódnak.
+Next.js (App Router) · React · Tailwind CSS · KaTeX · Three.js
+(react-three-fiber + drei, csak a 3D jeleneteknél, böngészőoldalon betöltve).
+Nincs adatbázis és nincs szerveroldali logika: az egész oldal statikusan
+előrenderelhető, a gyakorlófeladatok a böngészőben generálódnak.
+
+A filmek (2D és 3D) ugyanazt a `FeladatFilm` keretet használják: a `rajz(t)`
+függvény a t másodperchez tartozó képet adja vissza — SVG-t vagy Three.js
+jelenetet.

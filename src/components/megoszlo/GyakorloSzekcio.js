@@ -1,6 +1,7 @@
 "use client";
 
 import GyakorloDoboz from "@/components/GyakorloDoboz";
+import GyakorloExtra from "./GyakorloExtra";
 import { M, MB } from "@/components/ui/Keplet";
 import { sz, zarojel } from "@/lib/szamok";
 
@@ -244,6 +245,12 @@ export default function GyakorloSzekcio() {
       <GyakorloDoboz cim="Trapéz alakú teher" leiras="Felbontás és nyomatéki egyenlet — a GYF‑1 mintájára." generator={trapezFeladat} />
       <GyakorloDoboz cim="Szakaszos, előjeles teher" leiras="Több szakasz, néha felfelé ható is — a GYF‑2 mintájára." generator={szakaszosFeladat} />
       <GyakorloDoboz cim="Megoszló teher és koncentrált erő együtt" leiras="Átvezetés a tartók reakcióihoz: minden teher egyetlen eredőbe." generator={vegyesFeladat} />
+      <div className="mt-10 mb-4 flex items-center gap-3">
+        <span className="h-px flex-1 bg-petrol-200" />
+        <span className="text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">További feladattípusok</span>
+        <span className="h-px flex-1 bg-petrol-200" />
+      </div>
+      <GyakorloExtra />
     </>
   );
 }

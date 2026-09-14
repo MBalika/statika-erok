@@ -8,6 +8,9 @@ import { AbraMegoszloFogalom, AbraAlapesetek, AbraFelbontas, AbraFerdeVetulet } 
 import { AbraTrapezTeher, AbraValtakozoTeher, AbraFureszfogTeher } from "@/components/abrak/MegoszloFeladatAbrak";
 import GyakorloSzekcio from "@/components/megoszlo/GyakorloSzekcio";
 import FilmGyf1 from "@/components/megoszlo/FilmGyf1";
+import FilmGyf2 from "@/components/megoszlo/FilmGyf2";
+import FilmGyf3 from "@/components/megoszlo/FilmGyf3";
+import { Film3DTeherLepel } from "@/components/harom/Film3D";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -224,6 +227,11 @@ export default function MegoszloOldal() {
           <FilmGyf1 />
         </div>
 
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">És 3D-ben – a teherlepel a gerendán</p>
+          <Film3DTeherLepel />
+        </div>
+
         <KidolgozottFeladat
           jel="GYF‑2"
           ido="1 perc"
@@ -260,6 +268,11 @@ export default function MegoszloOldal() {
           </Lepes>
         </KidolgozottFeladat>
 
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – előjeles szakaszok</p>
+          <FilmGyf2 />
+        </div>
+
         <KidolgozottFeladat
           jel="GYF‑3"
           ido="1 perc"
@@ -293,6 +306,11 @@ export default function MegoszloOldal() {
             <MB>{"k = \\frac{120}{24} = 5\\ \\text{m}"}</MB>
           </Lepes>
         </KidolgozottFeladat>
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a fűrészfog eredője</p>
+          <FilmGyf3 />
+        </div>
+
       </Szakasz>
 
       {/* ==================== KALKULÁTOR ==================== */}

@@ -25,6 +25,8 @@ import {
 import { AbraGyf2, AbraGyf3 } from "@/components/abrak/FeladatAbrak";
 import GyakorloSzekcio from "@/components/vektorok/GyakorloSzekcio";
 import FilmGyf2 from "@/components/vektorok/FilmGyf2";
+import FilmGyf3 from "@/components/vektorok/FilmGyf3";
+import { Film3DTerbeliOsszeg } from "@/components/harom/Film3D";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -356,6 +358,11 @@ export default function VektorokOldal() {
         </KidolgozottFeladat>
 
         {/* ---- GYF-2 ---- */}
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez 3D-ben – forgatható jelenet</p>
+          <Film3DTerbeliOsszeg />
+        </div>
+
         <KidolgozottFeladat
           jel="GYF‑2"
           ido="8 perc"
@@ -578,6 +585,11 @@ export default function VektorokOldal() {
             </MB>
           </Lepes>
         </KidolgozottFeladat>
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a vektorsokszög bezárul</p>
+          <FilmGyf3 />
+        </div>
+
       </Szakasz>
 
       {/* ==================== KALKULÁTOROK ==================== */}

@@ -1,6 +1,7 @@
 "use client";
 
 import GyakorloDoboz from "@/components/GyakorloDoboz";
+import GyakorloExtra from "./GyakorloExtra";
 import { M, MB } from "@/components/ui/Keplet";
 import { sz } from "@/lib/szamok";
 
@@ -286,6 +287,12 @@ export default function GyakorloSzekcio() {
       <GyakorloDoboz cim="Kivonásos módszer" leiras="Téglalap lyukkal — a GYF‑5 mintájára, negatív előjelű résszel." generator={kivonasosFeladat} />
       <GyakorloDoboz cim="Téglalap és háromszög" leiras="Derékszögű trapéz: itt dől el, hogy a háromszög súlypontját jó helyről méred-e." generator={trapezFeladat} />
       <GyakorloDoboz cim="Köríves idomok" leiras="Félkör hozzáadva vagy negyedkör kivágva — a 4r/3π használata, a GYF‑6 mintájára." generator={korivesFeladat} />
+      <div className="mt-10 mb-4 flex items-center gap-3">
+        <span className="h-px flex-1 bg-petrol-200" />
+        <span className="text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">További feladattípusok</span>
+        <span className="h-px flex-1 bg-petrol-200" />
+      </div>
+      <GyakorloExtra />
     </>
   );
 }
