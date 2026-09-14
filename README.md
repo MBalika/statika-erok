@@ -13,7 +13,7 @@ véletlenszerűen generált gyakorlófeladatok.
 | 1. Vektorok, erők megadása | komponensek, összeadás, vetítés, egyensúly, térbeli vektorok | kész |
 | 2. Nyomaték, eredő, redukálás | forgatónyomaték, erőpár, redukálás, az eredő három esete | kész |
 | 3. Megoszló erők | eredő nagysága és helye, felbontási technikák, szakaszos teher | kész |
-| 4. Súlypont | statikai nyomaték, összetett idomok, kivonásos módszer | váz |
+| 4. Súlypont | statikai nyomaték, alapidomok, részekre bontás, kivonásos módszer, köríves idomok | kész |
 
 ## Futtatás helyben
 
@@ -55,7 +55,7 @@ src/
     vektorok/page.js       1. modul – teljes tartalom
     nyomatek/page.js       2. modul – teljes tartalom
     megoszlo/page.js       3. modul – teljes tartalom
-    sulypont/page.js       4. modul (egyelőre váz)
+    sulypont/page.js       4. modul – teljes tartalom
     globals.css            színrendszer és közös stílusok
   components/
     SiteHeader.js          felső navigáció, mobil menü
@@ -63,7 +63,7 @@ src/
     ModulKeret.js          modulfejléc és ragadós szakasznavigáció
     KidolgozottFeladat.js  lépésenként feltárható mintapélda
     GyakorloDoboz.js       általános gyakorlófeladat-motor
-    Hamarosan.js           a még el nem készült modulok oldala
+    Hamarosan.js           „hamarosan” oldal (jelenleg nem használt, új modulhoz jól jön)
     ui/
       Elemek.js            szakasz, kártya, kiemelő doboz, ábrakeret
       Keplet.js            KaTeX képletek (M, MB, KepletDoboz)
@@ -84,12 +84,18 @@ src/
       MegoszloFeladatAbrak.js  a 3. modul feladatábrái
       TrapezTeherFelfedezo.js interaktív: trapézteher eredője, felbontások
       SzakaszosTeherKalk.js kalkulátor: szakaszos megoszló teher eredője
+      SulypontAbrak.js     a 4. modul elméleti ábrái (+ TengelyekYZ, SJel közös elemek)
+      SulypontFeladatAbrak.js  a 4. modul feladatábrái
+      SzelvenyFelfedezo.js interaktív: T/L/U/I szelvény súlypontja csúszkákkal
+      SulypontKalk.js      kalkulátor: összetett síkidom súlypontja, kivont részekkel
     vektorok/
       GyakorloSzekcio.js   az 1. modul feladatgenerátorai
     nyomatek/
       GyakorloSzekcio.js   a 2. modul feladatgenerátorai
     megoszlo/
       GyakorloSzekcio.js   a 3. modul feladatgenerátorai
+    sulypont/
+      GyakorloSzekcio.js   a 4. modul feladatgenerátorai
   lib/
     oldalterkep.js         a modulok listája – innen épül a navigáció
     szamok.js              magyar számformázás, szögek, vektorműveletek
@@ -141,7 +147,8 @@ oldalhoz elég ezeket átírni.
 
 Hincz Krisztián – Németh Róbert K.: *Statika* (BME Tartószerkezetek Mechanikája
 Tanszék, 2025), 2–3. fejezet. A kidolgozott feladatok az A1. gyakorlat
-feladatsorát követik.
+feladatsorát követik. Keresztmetszeteknél a gyakorlat jelölését használjuk:
+y balra, z lefelé, S_y = ∫z dA, S_z = ∫y dA.
 
 Egy eltérés: a GYF‑4 feladatban a három erő hatásvonala a rajz szerint egy
 háromszög három oldala, nem egy közös ponton átmenő sugársor. Emiatt az a) és a

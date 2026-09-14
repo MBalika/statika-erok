@@ -299,10 +299,10 @@ export default function MegoszloOldal() {
         <SzakaszosTeherKalk />
         <Kiemelo tipus="tipp" cim="Trapéz szakasz a kalkulátorban">
           <p>
-            Trapéz alakú szakaszt úgy tudsz megadni, hogy egy egyenletes és egy háromszög alakú
-            szakaszt teszel <em>ugyanarra a helyre</em> — ehhez add hozzá kétszer ugyanazt a hosszt, és
-            az egyiket állítsd háromszögre. Vagy használd a fenti trapéz-felfedezőt, az közvetlenül
-            kezeli.
+            A kalkulátor szakaszai egymás után következnek, ezért egy trapéz alakú szakaszt nem tud
+            közvetlenül kezelni. Ilyenkor bontsd fel fejben egy egyenletes és egy háromszög alakú részre
+            (ugyanazon a hosszon), és számold a két rész eredőjét külön — vagy használd a fenti
+            trapéz-felfedezőt, az közvetlenül adja az eredőt és a helyét.
           </p>
         </Kiemelo>
       </Szakasz>

@@ -84,7 +84,7 @@ export const modulok = [
     leiras:
       "Statikai nyomaték, összetett síkidomok súlypontja, kivonásos módszer, köríves alakzatok.",
     ikon: "sulypont",
-    kesz: false,
+    kesz: true,
     szakaszok: [
       { id: "elmelet", cim: "Elmélet" },
       { id: "peldak", cim: "Kidolgozott feladatok" },
