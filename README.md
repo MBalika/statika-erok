@@ -11,7 +11,7 @@ véletlenszerűen generált gyakorlófeladatok.
 | --- | --- | --- |
 | Bevezetés | útmutató, jelölések, koordináta-rendszerek, mértékegységek | kész |
 | 1. Vektorok, erők megadása | komponensek, összeadás, vetítés, egyensúly, térbeli vektorok | kész |
-| 2. Nyomaték, eredő, redukálás | forgatónyomaték, erőpár, redukálás, az eredő három esete | váz |
+| 2. Nyomaték, eredő, redukálás | forgatónyomaték, erőpár, redukálás, az eredő három esete | kész |
 | 3. Megoszló erők | eredő nagysága és helye, felbontási technikák | váz |
 | 4. Súlypont | statikai nyomaték, összetett idomok, kivonásos módszer | váz |
 
@@ -34,7 +34,7 @@ Node 20 vagy újabb szükséges.
    ```bash
    git init
    git add .
-   git commit -m "Statika – Erők és erőrendszerek, 1. modul"
+   git commit -m "Statika – Erők és erőrendszerek"
    git branch -M main
    git remote add origin https://github.com/<felhasznalonev>/statika-erok.git
    git push -u origin main
@@ -53,7 +53,8 @@ src/
     layout.js              közös fejléc, lábléc, metaadatok
     page.js                Bevezetés (kezdőlap)
     vektorok/page.js       1. modul – teljes tartalom
-    nyomatek|megoszlo|sulypont/page.js   2–4. modul (egyelőre váz)
+    nyomatek/page.js       2. modul – teljes tartalom
+    megoszlo|sulypont/page.js   3–4. modul (egyelőre váz)
     globals.css            színrendszer és közös stílusok
   components/
     SiteHeader.js          felső navigáció, mobil menü
@@ -69,12 +70,19 @@ src/
       SvgElemek.js         közös SVG építőelemek (nyíl, tengely, szögív)
       StatikusAbrak.js     elméleti magyarázó ábrák
       FeladatAbrak.js      a kidolgozott feladatok ábrái
+      NyomatekAbrak.js     a 2. modul elméleti ábrái
+      NyomatekFeladatAbrak.js  a 2. modul feladatábrái
       ErovektorBonto.js    interaktív: erő komponensekre bontása
       VektorOsszegzo.js    interaktív: síkbeli eredő, láncszabály
       VetuletFelfedezo.js  interaktív: vetítés forgatható tengelyre
       TerbeliVektorKalk.js kalkulátor: térbeli vektorok összege
+      NyomatekFelfedezo.js interaktív: nyomaték, erőkar, forgásirány
+      ErorendszerRedukalo.js interaktív: redukálás, három nézet
+      TerbeliNyomatekKalk.js kalkulátor: r × F
     vektorok/
       GyakorloSzekcio.js   az 1. modul feladatgenerátorai
+    nyomatek/
+      GyakorloSzekcio.js   a 2. modul feladatgenerátorai
   lib/
     oldalterkep.js         a modulok listája – innen épül a navigáció
     szamok.js              magyar számformázás, szögek, vektorműveletek
@@ -125,8 +133,14 @@ oldalhoz elég ezeket átírni.
 ## Háttéranyag
 
 Hincz Krisztián – Németh Róbert K.: *Statika* (BME Tartószerkezetek Mechanikája
-Tanszék, 2025), 2–3. fejezet. A kidolgozott feladatok az A1. gyakorlat hivatalos
-megoldássorát követik.
+Tanszék, 2025), 2–3. fejezet. A kidolgozott feladatok az A1. gyakorlat
+feladatsorát követik.
+
+Egy eltérés: a GYF‑4 feladatban a három erő hatásvonala a rajz szerint egy
+háromszög három oldala, nem egy közös ponton átmenő sugársor. Emiatt az a) és a
+b) adatsornál az erők ugyan kiegyenlítik egymást, de a nyomatékuk nem tűnik el,
+így az eredő mindkét esetben erőpár (−103, illetve −60 kNm). Az oldalon ez a
+levezetés szerepel, és a feladat tanulsága éppen erre a különbségre épül.
 
 ## Technikai háttér
 

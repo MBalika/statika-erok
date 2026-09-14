@@ -117,7 +117,7 @@ export function AbraKeret({ szam, cim, children, jobbSav }) {
 export function KetOszlop({ children, forditott = false }) {
   return (
     <div
-      className={`grid items-start gap-6 lg:grid-cols-2 ${
+      className={`grid items-start gap-6 lg:grid-cols-2 [&>*]:min-w-0 ${
         forditott ? "lg:[&>*:first-child]:order-2" : ""
       }`}
     >

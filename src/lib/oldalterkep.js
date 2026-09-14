@@ -52,7 +52,7 @@ export const modulok = [
     leiras:
       "Forgatónyomaték, erőpár, erőrendszer redukálása egy pontra, az eredő három esete.",
     ikon: "nyomatek",
-    kesz: false,
+    kesz: true,
     szakaszok: [
       { id: "elmelet", cim: "Elmélet" },
       { id: "peldak", cim: "Kidolgozott feladatok" },
