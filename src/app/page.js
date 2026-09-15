@@ -18,10 +18,7 @@ export default function Kezdolap() {
       <div className="racs-hatter relative overflow-hidden bg-linear-to-br from-petrol-950 via-petrol-800 to-petrol-600">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.15fr_1fr]">
           <div>
-            <p className="text-[11.5px] font-semibold tracking-[0.2em] text-naracs-300 uppercase">
-              {kurzus.targy}
-            </p>
-            <h1 className="mt-3 text-4xl leading-[1.1] font-bold tracking-tight text-white sm:text-5xl">
+            <h1 className="text-4xl leading-[1.1] font-bold tracking-tight text-white sm:text-5xl">
               Erők és erőrendszerek
             </h1>
             <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-petrol-100">

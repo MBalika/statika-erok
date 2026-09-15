@@ -9,7 +9,6 @@ export default function SiteFooter() {
           <p className="text-[15px] font-semibold tracking-[0.14em] text-white uppercase">
             {kurzus.cim}
           </p>
-          <p className="mt-1 text-[13px] text-petrol-300">{kurzus.alcim}</p>
           <p className="mt-4 max-w-sm text-[12.5px] leading-relaxed text-petrol-300/80">
             Interaktív tananyag a statika első heteihez. A kidolgozott feladatok
             a gyakorlat hivatalos megoldássorát követik, a gyakorlófeladatok
@@ -49,9 +48,6 @@ export default function SiteFooter() {
           </p>
           <p className="mt-3 text-[13px] leading-relaxed text-petrol-300">
             {kurzus.tankonyv}
-          </p>
-          <p className="mt-3 text-[12px] leading-relaxed text-petrol-400">
-            {kurzus.tanszek}
           </p>
         </div>
       </div>
