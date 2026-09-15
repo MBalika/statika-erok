@@ -261,7 +261,7 @@ export default function SulypontKalk() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-[1.1fr_1fr]">
+      <div className="grid lg:grid-cols-[1.1fr_1fr] [&>*]:min-w-0">
         <div className="racs-vilagos flex flex-col justify-center border-b border-[color:var(--keret)] p-3 lg:border-r lg:border-b-0">
           <svg viewBox={`0 0 ${SZ} ${MA}`} className="abra w-full select-none">
             <defs>

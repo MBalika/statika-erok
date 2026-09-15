@@ -105,7 +105,7 @@ export default function VektorOsszegzo() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-[1.3fr_1fr]">
+      <div className="grid lg:grid-cols-[1.3fr_1fr] [&>*]:min-w-0">
         {/* Ábra */}
         <div className="racs-vilagos border-b border-[color:var(--keret)] p-3 lg:border-r lg:border-b-0">
           <svg

@@ -93,7 +93,7 @@ export default function TeherLepelFelfedezo() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
-      <div className="grid lg:grid-cols-[1.35fr_1fr]">
+      <div className="grid lg:grid-cols-[1.35fr_1fr] [&>*]:min-w-0">
         <div className="border-b border-[color:var(--keret)] p-2 lg:border-r lg:border-b-0">
           <Jelenet3D kamera={[5.8, -5.6, 3.4]} cel={[L / 2, b / 2 - 0.4, 0.5]} magassag={420} tavolsagMin={2} tavolsagMax={30}>
             <Racs3D meret={14} osztas={14} />

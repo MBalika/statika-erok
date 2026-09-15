@@ -156,7 +156,7 @@ export default function JobbkezFelfedezo() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
-      <div className="grid lg:grid-cols-[1.35fr_1fr]">
+      <div className="grid lg:grid-cols-[1.35fr_1fr] [&>*]:min-w-0">
         <div className="border-b border-[color:var(--keret)] p-2 lg:border-r lg:border-b-0">
           <Jelenet3D kamera={NEZET_ALTALANOS} cel={CEL} magassag={400} tavolsagMin={5} tavolsagMax={40}>
             <KameraVezerlo nezet={nezet} />

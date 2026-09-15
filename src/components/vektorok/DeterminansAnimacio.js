@@ -105,7 +105,7 @@ export default function DeterminansAnimacio() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
-      <div className="grid lg:grid-cols-[1fr_1.1fr]">
+      <div className="grid lg:grid-cols-[1fr_1.1fr] [&>*]:min-w-0">
         {/* ---- bal: a determináns ---- */}
         <div className="racs-vilagos border-b border-[color:var(--keret)] p-3 lg:border-r lg:border-b-0">
           <svg viewBox={`0 0 ${SZ} 215`} className="abra mx-auto w-full max-w-[360px] select-none">

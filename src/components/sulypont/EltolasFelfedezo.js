@@ -164,7 +164,7 @@ export default function EltolasFelfedezo() {
         </button>
       </div>
 
-      <div className="grid lg:grid-cols-[1.2fr_1fr]">
+      <div className="grid lg:grid-cols-[1.2fr_1fr] [&>*]:min-w-0">
         <div className="racs-vilagos border-b border-[color:var(--keret)] p-3 lg:border-r lg:border-b-0">
           <svg ref={svgRef} viewBox={`0 0 ${SZ} ${MA}`} className="abra w-full touch-none select-none" style={{ cursor: huzasban ? "grabbing" : "default" }}>
             <defs>

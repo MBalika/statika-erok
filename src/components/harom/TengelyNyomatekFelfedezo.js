@@ -71,7 +71,7 @@ export default function TengelyNyomatekFelfedezo() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
-      <div className="grid lg:grid-cols-[1.35fr_1fr]">
+      <div className="grid lg:grid-cols-[1.35fr_1fr] [&>*]:min-w-0">
         <div className="border-b border-[color:var(--keret)] p-2 lg:border-r lg:border-b-0">
           <Jelenet3D kamera={[13, -15, 10]} cel={[1, 1, 1.5]} magassag={400}>
             <Racs3D meret={20} osztas={10} />

@@ -70,7 +70,7 @@ export default function ErroparAlakito() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
-      <div className="grid lg:grid-cols-[1.3fr_1fr]">
+      <div className="grid lg:grid-cols-[1.3fr_1fr] [&>*]:min-w-0">
         <div className="racs-vilagos border-b border-[color:var(--keret)] p-3 lg:border-r lg:border-b-0">
           <svg viewBox={`0 0 ${SZ} ${MA}`} className="abra w-full select-none">
             <defs>

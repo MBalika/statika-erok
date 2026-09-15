@@ -60,7 +60,7 @@ export default function FeladatFilm({ cim, hossz, fejezetek, rajz, megjegyzes })
         </span>
       </div>
 
-      <div className="grid lg:grid-cols-[1.25fr_1fr]">
+      <div className="grid lg:grid-cols-[1.25fr_1fr] [&>*]:min-w-0">
         {/* rajz */}
         <div className="racs-vilagos relative flex flex-col justify-center border-b border-[color:var(--keret)] p-3 lg:border-r lg:border-b-0">
           {rajz(t)}
