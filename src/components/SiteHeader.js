@@ -122,7 +122,7 @@ export default function SiteHeader() {
               >
                 <Link
                   href={m.slug}
-                  className={`flex h-12 items-center gap-1.5 border-b-2 px-2.5 text-[13.5px] font-medium whitespace-nowrap transition xl:px-3 ${
+                  className={`flex h-12 items-center gap-1.5 border-b-2 px-2 text-[13.5px] font-medium whitespace-nowrap transition 2xl:px-3 ${
                     aktiv
                       ? "border-naracs-500 text-petrol-900"
                       : "border-transparent text-petrol-600 hover:border-petrol-200 hover:text-petrol-900"
@@ -139,8 +139,8 @@ export default function SiteHeader() {
                       {m.szam}
                     </span>
                   )}
-                  <span className="hidden xl:inline">{m.rovid}</span>
-                  <span className="xl:hidden">{m.menu ?? m.rovid}</span>
+                  <span className="hidden 2xl:inline">{m.rovid}</span>
+                  <span className="2xl:hidden">{m.menu ?? m.rovid}</span>
                   {!m.kesz && (
                     <span className="rounded bg-petrol-100 px-1.5 py-0.5 text-[9.5px] font-semibold tracking-wide text-petrol-500 uppercase">
                       hamarosan
@@ -176,12 +176,12 @@ export default function SiteHeader() {
                   key={o.slug}
                   href={o.slug}
                   title={o.leiras}
-                  className={`my-2 rounded-lg px-2.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition xl:px-3 ${
+                  className={`my-2 rounded-lg px-2.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition 2xl:px-3 ${
                     aktiv ? "bg-naracs-500 text-white" : "bg-petrol-50 text-petrol-700 ring-1 ring-petrol-200 hover:bg-petrol-100"
                   }`}
                 >
-                  <span className="hidden xl:inline">{o.rovid}</span>
-                  <span className="xl:hidden">{o.menu ?? o.rovid}</span>
+                  <span className="hidden 2xl:inline">{o.rovid}</span>
+                  <span className="2xl:hidden">{o.menu ?? o.rovid}</span>
                 </Link>
               );
             })}

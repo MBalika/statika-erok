@@ -236,6 +236,55 @@ oldalhoz elég ezeket átírni.
 - `/utvonal`: `lib/utvonal.js` (HETEK, VIZSGA_TIPUSOK), `components/Utvonal.js` (hét-választó, idővonal, haladás).
 - A zh-szimulátor öt feladatot ad (a tartók modulból is), és kirajzolja a feladat ábráját.
 
+## 7–8. kör: igénybevétel-számító motor és levezetés
+
+- 7. kör: `src/lib/tarto/` (lásd lent), `/tartokalkulator` oldal a paraméteres sablonokkal, metszet-csúszkával.
+- 8. kör: `levezetes.js` + `TartoLevezetes.js` — a kalkulátor lépésről lépésre le is vezeti a reakciókat
+  a tankönyv nyelvén (a gyakorlaton elvárt formában), és kiírja a szakaszonkénti igénybevételi függvényeket.
+
+## Igénybevétel-számító motor (`src/lib/tarto/`)
+
+Önálló, a webhely komponenseitől független számítómag — ha később külön alkalmazás lesz belőle,
+lényegében másolás. Síkbeli rúdszerkezetek megoldása elmozdulásmódszerrel (merevségi mátrix),
+a kényszerek Lagrange-multiplikátorral, így a ferde görgő és a támasztórúd is egzakt.
+Statikailag határozott szerkezetnél az eredmény nem függ az EI/EA értékétől; határozatlanra
+ugyanez a kód működik.
+
+| Fájl | Mit csinál |
+| --- | --- |
+| `matrix.js` | lineáris megoldó sorskálázott főelem-kiválasztással, inverz, rang |
+| `polinom.js` | szakaszonkénti polinomok: érték, derivált, gyökök, szélsőértékek |
+| `modell.js` | modell normalizálása, terhek lokálissá alakítása, fokszám-mérleg |
+| `megold.js` | merevségi mátrix, konzisztens tehervektor, csuklós végek kondenzálása, megoldás |
+| `igenybevetel.js` | N, V, M szakaszonként **egzakt** polinomként (nem mintavételezés) |
+| `sablonok.js` | paraméteres szerkezet-sablonok a kalkulátorhoz |
+| `levezetes.js` | **levezetés-réteg**: a tankönyv receptje szerinti, emberi nyelvű levezetés (elkülönítés → egyensúlyi kijelentés → egyismeretlenes egyenletek főpontokkal, több merev testnél az egész szerkezetre és testenként → ellenőrző egyenlet → eredményvázlat), valamint szakaszonként az N(x), V(x), M(x) függvények KaTeX-ben |
+| `index.js` | `elemez(modell)` — reakciók, igénybevételek, egyensúly-ellenőrzés |
+
+Előjelek a tankönyv 8.1.2.2. pontja szerint: N pozitív, ha húz; a pozitív V a pozitív N irányának
+óramutató szerinti 90°-os elforgatása; a nyomatéki ábra a **húzott oldalra** kerül.
+
+**Tesztek** (zárt képlettel ismert eredmények + az 5. modul kidolgozott feladatai):
+
+```bash
+cd src/lib/tarto && node teszt-alap.mjs && node teszt-szerkezetek.mjs && node teszt-levezetes.mjs
+```
+
+84 ellenőrzés: kéttámaszú/konzol/konzolos tartó, háromszög- és trapézteher, koncentrált nyomaték,
+Gerber-tartó, háromcsuklós tartó, keret, ferde rúd, vetületre megadott teher, támasztórúd,
+kétoldalt befogott és bebetonozott-görgős tartó (statikailag határozatlan: qL²/12, qL²/24,
+3qL/8, 9qL²/128), a `dM/dx = V` összefüggés, valamint a hibás szerkezetek felismerése
+(három párhuzamos görgő, egy ponton átmenő hatásvonalú három rúd).
+
+A levezetés-réteg a reakciókat **az egyensúlyi egyenletekből** számolja, a motor pedig a merevségi
+módszerrel — két független út, amelynek egyeznie kell. `teszt-levezetes.mjs` ezt ellenőrzi minden
+sablonra (alapértékek + véletlen paraméterek), a modul‑5 feladataira, és minden kiírt képletet
+lefordít KaTeX-szel (~1200 ellenőrzés). Statikailag határozatlan szerkezetnél a levezetés
+kimondja, hogy az egyensúlyi egyenletek elfogytak, és a hiányzó értékeket a motortól veszi át.
+
+A felület: `/tartokalkulator` (`src/components/tarto/TartoKalkulator.js`, a levezetés-panel
+`TartoLevezetes.js`: lépésenként felfedhető, az aktuális lépés főpontját a rajzon is kiemeli).
+
 ## Háttéranyag
 
 Hincz Krisztián – Németh Róbert K.: *Statika* (BME Tartószerkezetek Mechanikája

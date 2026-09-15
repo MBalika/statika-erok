@@ -125,6 +125,12 @@ export const extraOldalak = [
     leiras: "Hetekre bontott tanulási útvonal: mit olvass, mit nézz meg, mit gyakorolj.",
   },
   {
+    slug: "/tartokalkulator",
+    rovid: "Ábrakalkulátor",
+    menu: "Ábrák",
+    leiras: "Igénybevételi ábrák tetszőleges tartóra: N, V, M, reakciók, metszetértékek.",
+  },
+  {
     slug: "/zh",
     rovid: "Zh-szimulátor",
     menu: "Zh",
