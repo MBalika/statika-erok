@@ -33,5 +33,5 @@ a felhasználó leírja a lépéseket.
 - Nincs beállítva lint vagy teszt szkript; a `npm run build` az egyetlen
   automatikus ellenőrzés.
 - A `node_modules/` és a `.next/` a `.gitignore`-ban van.
-- Az oldal teljesen statikusan generálódik (11 útvonal), a build végén
-  ennek hibátlanul le kell futnia.
+- Az oldal teljesen statikusan generálódik (az útvonalak száma a modulok
+  bővülésével változik), a build végén ennek hibátlanul le kell futnia.
