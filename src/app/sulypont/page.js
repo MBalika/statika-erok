@@ -538,12 +538,13 @@ export default function SulypontOldal() {
         <Hibakereso feladatok={HIBAK} />
         <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Számolós gyakorlás</p>
         <GyakorloSzekcio />
-        <Kiemelo tipus="kulcs" cim="Ezzel a négy modul végére értél">
+        <Kiemelo tipus="kulcs" cim="Ezzel az erőrendszerek négy moduljának végére értél">
           <p>
             Vektorok, nyomaték, megoszló erők, súlypont — ez az a négy eszköz, amivel a félév további
-            része dolgozik: tartók reakciói, igénybevételi ábrák, majd keresztmetszeti jellemzők. Ha a
-            gyakorló feladatokat folyamatosan jól oldod meg, a zárthelyi számolós része nem érhet
-            meglepetéssel.
+            része dolgozik: tartók reakciói, igénybevételi ábrák, majd keresztmetszeti jellemzők. A
+            következő lépés az 5. modul, az egyszerű tartók reakciói — ott ez a négy eszköz egyszerre
+            kerül elő. Ha a gyakorló feladatokat folyamatosan jól oldod meg, a zárthelyi számolós része
+            nem érhet meglepetéssel.
           </p>
         </Kiemelo>
       </Szakasz>

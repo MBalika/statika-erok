@@ -10,9 +10,10 @@ export default function SiteFooter() {
             {kurzus.cim}
           </p>
           <p className="mt-4 max-w-sm text-[12.5px] leading-relaxed text-petrol-300/80">
-            Interaktív tananyag a statika első heteihez. A kidolgozott feladatok
-            a gyakorlat hivatalos megoldássorát követik, a gyakorlófeladatok
-            minden indításkor új számokkal generálódnak.
+            Interaktív tananyag a Statika tárgy egész félévéhez, a tankönyv
+            fejezeteinek sorrendjében. A kidolgozott feladatok a gyakorlat, a
+            szintemelő feladatsorok és a tankönyv példáit követik, a
+            gyakorlófeladatok minden indításkor új számokkal generálódnak.
           </p>
         </div>
 

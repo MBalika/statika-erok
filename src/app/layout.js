@@ -4,11 +4,11 @@ import SiteFooter from "@/components/SiteFooter";
 
 export const metadata = {
   title: {
-    default: "Statika – Erők és erőrendszerek",
+    default: "Statika – lépésről lépésre",
     template: "%s · Statika",
   },
   description:
-    "Interaktív tananyag a BME Építőmérnöki Kar Statika tárgyának első heteihez: vektorok, nyomaték és eredő, megoszló erők, súlypont. Elmélet, kidolgozott feladatok, kalkulátorok és gyakorlás.",
+    "Interaktív tananyag a BME Építőmérnöki Kar Statika tárgyának teljes félévéhez: erőrendszerek, nyomaték, megoszló erők, súlypont, tartók reakciói, rácsos tartók, igénybevételi ábrák, térbeli szerkezetek. Elmélet, kidolgozott feladatok filmmel, kalkulátorok, játékok és gyakorlás.",
 };
 
 export const viewport = {

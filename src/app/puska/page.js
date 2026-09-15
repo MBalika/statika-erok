@@ -3,7 +3,7 @@ import NyomtatasGomb from "@/components/NyomtatasGomb";
 
 export const metadata = {
   title: "Puska",
-  description: "Nyomtatható egyoldalas összefoglaló mind a négy modulhoz és a tankönyv nyelvéhez: képletek, szabályok, tipikus hibák.",
+  description: "Nyomtatható egyoldalas összefoglaló minden modulhoz és a tankönyv nyelvéhez: képletek, szabályok, tipikus hibák.",
 };
 
 function Lap({ szam, cim, gyerekek }) {
@@ -37,10 +37,9 @@ export default function PuskaOldal() {
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-naracs-500 text-[15px] font-bold text-white">✎</span>
             <span className="text-[11px] font-semibold tracking-[0.2em] text-petrol-300 uppercase">Összefoglaló</span>
           </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Puska — négy modul, öt oldal</h1>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Puska — hat lap</h1>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-petrol-200">
-            A legfontosabb képletek, szabályok és a tipikus hibák, modulonként egy oldalon, plusz egy lap a tankönyv
-            nyelvéről (kijelentések, egyenletek írásmódja, szótár). Nyomtasd ki, vagy mentsd PDF-be — de előbb próbáld
+            A legfontosabb képletek, szabályok és a tipikus hibák, modulonként egy oldalon, plusz egy lap a tankönyv nyelvéről (kijelentések, egyenletek írásmódja, szótár). Nyomtasd ki, vagy mentsd PDF-be — de előbb próbáld
             meg fejből leírni, aztán hasonlítsd össze.
           </p>
           <div className="mt-5">
@@ -234,6 +233,46 @@ export default function PuskaOldal() {
               </Doboz>
               <Doboz cim="Tipikus hibák" szeles>
                 <p>Kijelentés nélkül nekiállni az egyenleteknek (mit mivel helyettesítesz?) · a nyomatéki egyenletbe erőt, a vetületibe nyomatékot írni · az előjel-nyíl (→ ↑ ↶) hiánya a sor elejéről, majd elrontott előjel · „≐” helyett „=” — az erőrendszer nem szám · kevesebb vagy több egyenlet, mint amennyit a rendszer fajtája megenged.</p>
+              </Doboz>
+            </>
+          }
+        />
+
+        <Lap
+          szam={6}
+          cim="Egyszerű tartók reakciói"
+          gyerekek={
+            <>
+              <Doboz cim="Kényszerek és fokszámuk">
+                <p>Görgő: 1 (a gördülési síkra merőleges erő). Rúd, kötél: 1 (rúdirányú, <strong>húzottnak</strong> felvéve). Csukló: 2 (A_x, A_y). Befogás: 3 (A_x, A_y, M_A).</p>
+                <p>Síkban 3 független egyenlet → a fokszámok összege legalább 3 (de ez nem elég: három közös metszéspontú hatásvonal nem tartó).</p>
+              </Doboz>
+              <Doboz cim="A recept">
+                <p>1. elkülönítés (támaszok helyett reakciók) · 2. egyensúlyi kijelentés <M>{"(\\underline F, \\underline p, \\underline A, \\underline B) \\ekv \\underline O"}</M> · 3. egyismeretlenes egyenletek · 4. ellenőrző egyenlet ≈ 0 · 5. eredményvázlat (tényleges irány, pozitív nagyság).</p>
+              </Doboz>
+              <Doboz cim="Egyismeretlenes egyenlet — mit zár ki?">
+                <p>Egy erő nem szerepel a rá merőleges vetületi egyenletben és a hatásvonalára írt nyomatéki egyenletben; egy nyomaték nem szerepel a vetületi egyenletekben.</p>
+                <p>Két nem párhuzamos ismeretlen → nyomatéki egyenlet a metszéspontjukra (<strong>főpont</strong>); két párhuzamos → rájuk merőleges vetületi egyenlet.</p>
+              </Doboz>
+              <Doboz cim="Kéttámaszú tartó">
+                <MB>{"\\Mp{A}\\ \\ldots = 0 \\ \\Rightarrow\\ B"}</MB>
+                <MB>{"\\Mp{B}\\ \\ldots = 0 \\ \\Rightarrow\\ A_y,\\qquad \\Fx \\Rightarrow A_x"}</MB>
+                <p>Ellenőrzés: <M>{"\\Fy"}</M>. Ferde görgőnél B a síkra merőleges: a függőlegessel a sík hajlásszögét zárja be.</p>
+              </Doboz>
+              <Doboz cim="Befogott konzol">
+                <MB>{"\\Fx \\Rightarrow A_x,\\qquad \\Fy \\Rightarrow A_y"}</MB>
+                <MB>{"\\Mp{A} \\Rightarrow M_A"}</MB>
+                <p>Ellenőrzés: nyomatéki egyenlet egy másik pontra (pl. a szabad végre).</p>
+              </Doboz>
+              <Doboz cim="Rúddal megtámasztott tartó">
+                <p>Ugyanaz, mint a görgő: ismert hatásvonal, ismeretlen nagyság. Pozitív S = húzott, negatív S = nyomott rúd. Kötélnél S &lt; 0 nem lehet.</p>
+                <p>Három rúd: főpontok O₁, O₂, O₃; két párhuzamos rúdnál a rájuk merőleges vetületi egyenlet.</p>
+              </Doboz>
+              <Doboz cim="Megoszló teher a tartón">
+                <p>Az eredővel számolunk: nagysága a teherábra területe, helye a súlypont (téglalap: L/2, háromszög: L/3 a magas oldaltól) — <strong>csak a reakciókhoz</strong>, a belső erőkhöz nem.</p>
+              </Doboz>
+              <Doboz cim="Tipikus hibák" szeles>
+                <p>A nyomatéki egyenletbe elfelejtett koncentrált nyomaték · a megoszló eredő rossz helyen · a ferde görgő reakciója „függőleges” · a rúderő nyomottnak felvéve és rosszul olvasva · előjelhiba, amit az ellenőrző egyenlet mutatna, de „úgyis kijött” · negatív B-t nem észrevenni: a görgő nem tud húzni, a tartó felbillen.</p>
               </Doboz>
             </>
           }

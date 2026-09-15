@@ -82,7 +82,7 @@ export default function SiteHeader() {
           <button
             type="button"
             onClick={() => setMobilNyitva((v) => !v)}
-            className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/20 text-white transition hover:bg-white/10 md:hidden"
+            className="ml-auto inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/20 text-white transition hover:bg-white/10 lg:hidden"
             aria-label="Menü"
             aria-expanded={mobilNyitva}
           >
@@ -108,7 +108,7 @@ export default function SiteHeader() {
       </div>
 
       {/* Alsó, világos navigációs sáv – asztali nézet */}
-      <nav className="hidden border-b border-[color:var(--keret)] bg-white/95 backdrop-blur md:block">
+      <nav className="hidden border-b border-[color:var(--keret)] bg-white/95 backdrop-blur lg:block">
         <div className="mx-auto flex max-w-7xl items-stretch gap-1 px-4 sm:px-6">
           {modulok.map((m) => {
             const aktiv =
@@ -122,7 +122,7 @@ export default function SiteHeader() {
               >
                 <Link
                   href={m.slug}
-                  className={`flex h-12 items-center gap-1.5 border-b-2 px-3 text-[13.5px] font-medium transition ${
+                  className={`flex h-12 items-center gap-1.5 border-b-2 px-2.5 text-[13.5px] font-medium whitespace-nowrap transition xl:px-3 ${
                     aktiv
                       ? "border-naracs-500 text-petrol-900"
                       : "border-transparent text-petrol-600 hover:border-petrol-200 hover:text-petrol-900"
@@ -139,7 +139,8 @@ export default function SiteHeader() {
                       {m.szam}
                     </span>
                   )}
-                  {m.rovid}
+                  <span className="hidden xl:inline">{m.rovid}</span>
+                  <span className="xl:hidden">{m.menu ?? m.rovid}</span>
                   {!m.kesz && (
                     <span className="rounded bg-petrol-100 px-1.5 py-0.5 text-[9.5px] font-semibold tracking-wide text-petrol-500 uppercase">
                       hamarosan
@@ -175,11 +176,12 @@ export default function SiteHeader() {
                   key={o.slug}
                   href={o.slug}
                   title={o.leiras}
-                  className={`my-2 rounded-lg px-3 py-1.5 text-[12.5px] font-semibold transition ${
+                  className={`my-2 rounded-lg px-2.5 py-1.5 text-[12.5px] font-semibold whitespace-nowrap transition xl:px-3 ${
                     aktiv ? "bg-naracs-500 text-white" : "bg-petrol-50 text-petrol-700 ring-1 ring-petrol-200 hover:bg-petrol-100"
                   }`}
                 >
-                  {o.rovid}
+                  <span className="hidden xl:inline">{o.rovid}</span>
+                  <span className="xl:hidden">{o.menu ?? o.rovid}</span>
                 </Link>
               );
             })}
@@ -190,7 +192,7 @@ export default function SiteHeader() {
 
       {/* Mobil menü */}
       {mobilNyitva && (
-        <nav className="border-b border-[color:var(--keret)] bg-white shadow-lg md:hidden">
+        <nav className="border-b border-[color:var(--keret)] bg-white shadow-lg lg:hidden">
           <div className="max-h-[70vh] overflow-y-auto px-4 py-3">
             {modulok.map((m) => {
               const aktiv =

@@ -7,7 +7,7 @@ import { modulok } from "@/lib/oldalterkep";
 /*
  * Haladás-kijelzés a kezdőlap modulkártyáihoz (localStorage-ból, csak a böngészőben).
  *   <HaladasJelzo slug="/vektorok" />  – körgyűrű + jelvények + rövid szöveg egy kártyában
- *   <HaladasOsszesito />               – a négy modul együtt, egy sorban
+ *   <HaladasOsszesito />               – a modulok együtt, egy sorban
  *   <HaladasTorlesGomb />              – kétlépcsős törlés („Biztos?”)
  */
 
@@ -87,7 +87,7 @@ export function HaladasJelzo({ slug }) {
   );
 }
 
-/** Összesítő sor: a négy modul készültsége egymás mellett + átlag. */
+/** Összesítő sor: a modulok készültsége egymás mellett + átlag. */
 export function HaladasOsszesito() {
   const adat = useHaladas();
   const ertekek = MODUL_LISTA.map((m) => modulSzazalek(adat[m.slug]));

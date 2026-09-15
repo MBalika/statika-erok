@@ -9,12 +9,15 @@ import { GENERATOROK as M1 } from "@/components/megoszlo/GyakorloSzekcio";
 import { EXTRA_GENERATOROK as M2 } from "@/components/megoszlo/GyakorloExtra";
 import { GENERATOROK as S1 } from "@/components/sulypont/GyakorloSzekcio";
 import { EXTRA_GENERATOROK as S2 } from "@/components/sulypont/GyakorloExtra";
+import { GENERATOROK as T1 } from "@/components/tartok/GyakorloSzekcio";
+import { EXTRA_GENERATOROK as T2 } from "@/components/tartok/GyakorloExtra";
 
 const MODULOK = [
   { nev: "Vektorok", szin: "bg-petrol-600", gen: [...V1, ...V2] },
   { nev: "Nyomaték, eredő", szin: "bg-violet-600", gen: [...N1, ...N2] },
   { nev: "Megoszló erők", szin: "bg-naracs-500", gen: [...M1, ...M2] },
   { nev: "Súlypont", szin: "bg-emerald-600", gen: [...S1, ...S2] },
+  { nev: "Tartók reakciói", szin: "bg-rose-600", gen: [...T1, ...T2] },
 ];
 const KULCS = "statika-zh-elozmenyek";
 const valaszt = (t) => t[Math.floor(Math.random() * t.length)];
@@ -54,7 +57,7 @@ function ujFeladatsor() {
 
 export default function ZhSzimulator() {
   const [fazis, setFazis] = useState("kezdo");
-  const [perc, setPerc] = useState(20);
+  const [perc, setPerc] = useState(30);
   const [feladatok, setFeladatok] = useState(null);
   const [valaszok, setValaszok] = useState({});
   const [hatra, setHatra] = useState(0);
@@ -149,7 +152,7 @@ export default function ZhSzimulator() {
         <div className="rounded-2xl border border-[color:var(--keret)] bg-white p-5 sm:p-6">
           <p className="text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Hogyan működik</p>
           <ul className="mt-3 space-y-2 text-[14.5px] leading-relaxed text-petrol-700">
-            <li>Négy véletlen feladat, modulonként egy — ugyanazokból a típusokból, mint a gyakorló dobozok, de <strong>segítség és ellenőrzés nélkül</strong>.</li>
+            <li>Öt véletlen feladat, modulonként egy — ugyanazokból a típusokból, mint a gyakorló dobozok, de <strong>segítség és ellenőrzés nélkül</strong>.</li>
             <li>Az óra indul, és a beadásig (vagy az idő lejártáig) nincs visszajelzés. Papírral, számológéppel dolgozz, ahogy a zh-n.</li>
             <li>A végén mezőnként látod, mi volt jó, mi nem, és minden feladathoz megnyithatod a teljes levezetést.</li>
             <li>Az eredményeid ebben a böngészőben elmentődnek, hogy lásd a fejlődést.</li>
@@ -157,7 +160,7 @@ export default function ZhSzimulator() {
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <span className="text-[13px] font-medium text-petrol-600">Időkeret:</span>
             <div className="flex gap-1 rounded-lg bg-petrol-50 p-0.5 ring-1 ring-petrol-200">
-              {[15, 20, 30].map((p) => (
+              {[20, 30, 45].map((p) => (
                 <button
                   key={p}
                   type="button"
@@ -230,6 +233,7 @@ export default function ZhSzimulator() {
                 <span className="text-[12px] text-petrol-400">· {f.cim}</span>
               </div>
               <div className="proza mt-3 text-[14.5px] leading-relaxed text-petrol-800">{f.adat.szoveg}</div>
+              {f.adat.abra && <div className="mt-3">{f.adat.abra}</div>}
               <div className={`mt-3 grid gap-3 ${f.adat.mezok.length > 1 ? "sm:grid-cols-2" : ""} ${f.adat.mezok.length > 2 ? "lg:grid-cols-3" : ""}`}>
                 {f.adat.mezok.map((m) => (
                   <label key={m.id} className="block">
@@ -289,6 +293,7 @@ export default function ZhSzimulator() {
                 <span className="ml-auto szamok text-[13px] font-bold text-petrol-800">{f.joDb} / {f.mez.length}</span>
               </div>
               <div className="proza mt-2 text-[13.5px] text-petrol-700">{f.adat.szoveg}</div>
+              {f.adat.abra && <div className="mt-2">{f.adat.abra}</div>}
               <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
                 {f.mez.map((m) => (
                   <li key={m.id} className={`szamok rounded-lg px-3 py-1.5 text-[13px] ${m.ok ? "bg-emerald-100 text-emerald-900" : "bg-rose-100 text-rose-900"}`}>

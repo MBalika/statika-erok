@@ -19,13 +19,16 @@ export default function Kezdolap() {
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.15fr_1fr]">
           <div>
             <h1 className="text-4xl leading-[1.1] font-bold tracking-tight text-white sm:text-5xl">
-              Erők és erőrendszerek
+              Statika, lépésről lépésre
             </h1>
             <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-petrol-100">
-              A statika első heteinek anyaga egy helyen: mozgatható ábrákkal
-              magyarázott elmélet, a gyakorlat feladatai lépésről lépésre
-              kidolgozva, kalkulátorok a számoláshoz és végtelen sok
-              gyakorlófeladat, minden indításkor új számokkal.
+              Az egész félév egy helyen: az erőktől és erőrendszerektől a
+              tartók reakcióin, a rácsos tartókon és az igénybevételi ábrákon
+              át a térbeli szerkezetekig. Mozgatható ábrákkal magyarázott
+              elmélet, a gyakorlat és a tankönyv feladatai lépésenként
+              kidolgozva és filmen, kalkulátorok a számoláshoz, játékok a
+              szemnek és végtelen sok gyakorlófeladat, minden indításkor új
+              számokkal.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -34,9 +37,15 @@ export default function Kezdolap() {
               >
                 Kezdés az 1. modullal →
               </Link>
+              <Link
+                href="/utvonal"
+                className="rounded-xl border border-white/25 px-5 py-3 text-[14px] font-semibold text-white transition hover:bg-white/10"
+              >
+                Heti útvonal
+              </Link>
               <a
                 href="#utmutato"
-                className="rounded-xl border border-white/25 px-5 py-3 text-[14px] font-semibold text-white transition hover:bg-white/10"
+                className="rounded-xl px-5 py-3 text-[14px] font-semibold text-petrol-100 transition hover:bg-white/10"
               >
                 Hogyan használd?
               </a>
@@ -54,7 +63,7 @@ export default function Kezdolap() {
         id="utmutato"
         cimke="Bevezetés"
         cim="Útmutató ehhez az anyaghoz"
-        bevezeto="Minden modul ugyanazt a négy lépést járja végig, és mindegyikhez tartozik egy játék meg egy fogalmi kvíz is. A sorrend nem véletlen: a megértés az ábráknál kezdődik, és csak a gyakorlásnál rögzül."
+        bevezeto="Az oldal a Statika tárgy teljes félévét kíséri végig, a tankönyv (Hincz–Németh: Statika) fejezeteinek sorrendjében, modulokra bontva. Minden modul ugyanazt a négy lépést járja végig, és mindegyikhez tartozik egy játék meg egy fogalmi kvíz is. A sorrend nem véletlen: a megértés az ábráknál kezdődik, és csak a gyakorlásnál rögzül. Ha nem tudod, hol tarts, az Útvonal oldal hetekre bontva megmondja, mit olvass, mit nézz meg és mit gyakorolj."
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -68,7 +77,7 @@ export default function Kezdolap() {
               szam: "2",
               cim: "Kidolgozott feladatok",
               szoveg:
-                "A gyakorlat hivatalos feladatai, lépésenként feltárható megoldással. Először próbáld meg magad, és csak utána nyisd ki a lépéseket.",
+                "A gyakorlat, a szintemelő feladatsorok és a tankönyv feladatai lépésenként feltárható megoldással és animált filmmel. Először próbáld meg magad, és csak utána nyisd ki a lépéseket.",
             },
             {
               szam: "3",
@@ -113,7 +122,14 @@ export default function Kezdolap() {
             eltér a könyvétől, lila „A tankönyvben így” doboz mutatja a
             párját. Minden modul végén <strong>játék</strong> és{" "}
             <strong>kvíz</strong> vár — az eredményeidet a kezdőlap
-            modulkártyái mutatják.
+            modulkártyái és az Útvonal oldal mutatják.
+          </p>
+          <p>
+            A félév végére mind az öt vizsgafeladat-típust gyakorolhatod itt:
+            erőrendszer eredője, egyszerű tartó igénybevételi ábrái, rácsos
+            tartó rúderői, összetett tartó reakciói és ábrái, térbeli feladat.
+            A még hiányzó modulok „hamarosan” jelzéssel szerepelnek, és a
+            tankönyv megfelelő fejezetére mutatnak.
           </p>
         </Kiemelo>
       </Szakasz>
@@ -516,8 +532,8 @@ export default function Kezdolap() {
       <Szakasz
         id="modulok"
         cimke="Tartalom"
-        cim="A négy modul"
-        bevezeto="Az anyag a gyakorlat felépítését követi. Érdemes sorban haladni, mert minden modul az előzőre épít."
+        cim="A modulok"
+        bevezeto="Az anyag a gyakorlat és a tankönyv felépítését követi. Érdemes sorban haladni, mert minden modul az előzőre épít — a heti bontást az Útvonal oldal mutatja."
       >
         <div className="grid gap-4 sm:grid-cols-2">
           {modulok

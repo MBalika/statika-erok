@@ -64,7 +64,7 @@ export function SzakaszSav({ szakaszok }) {
   }, [szakaszok]);
 
   return (
-    <div className="nyomtatasban-rejtve sticky top-14 z-30 border-b border-[color:var(--keret)] bg-white/90 backdrop-blur md:top-[97px]">
+    <div className="nyomtatasban-rejtve sticky top-14 z-30 border-b border-[color:var(--keret)] bg-white/90 backdrop-blur lg:top-[97px]">
       <div className="finom-gorgeto mx-auto flex max-w-5xl gap-1.5 overflow-x-auto px-4 py-2.5 sm:px-6">
         {szakaszok.map((sz) => (
           <a

@@ -14,8 +14,10 @@ véletlenszerűen generált gyakorlófeladatok.
 | 2. Nyomaték, eredő, redukálás | forgatónyomaték pontra és tengelyre, erőpár és erőpárrá alakítás, dinámrendszer redukálása, az eredő esetei síkban és térben (erőcsavar) | kész |
 | 3. Megoszló erők | megoszló erők fajtái, vonal- és felületmenti teher, terhelési test, felbontás, ferde és ívmenti teher, víznyomás | kész |
 | 4. Súlypont | statikai nyomaték és eltolása, alapidomok, részekre bontás, kivonásos módszer, köríves idomok | kész |
+| 5. Egyszerű tartók reakciói | kényszerek és fokszámuk, elkülönítés, egyensúlyi kijelentés, egyismeretlenes egyenletek (főpont), kéttámaszú tartó, konzol, rúddal / három rúddal megtámasztott tartó, grafikus megoldás | kész |
+| Útvonal (/utvonal) | 13 hétre bontott tanulási útvonal: tankönyv-fejezet, modul, H-feladatsor, haladás; a vizsgaminta öt típusa | kész |
 | Zh-szimulátor (/zh) | 4 véletlen feladat órával, pontozás, mentett előzmények | kész |
-| Puska (/puska) | nyomtatható összefoglaló modulonként + „a tankönyv nyelve” lap | kész |
+| Puska (/puska) | nyomtatható összefoglaló modulonként (6 lap) + „a tankönyv nyelve” | kész |
 
 Minden modulban: elmélet interaktív felfedezőkkel, kidolgozott feladatok filmmel (2D/3D), kalkulátorok,
 **játék**, fogalmi kvíz, hibakereső és 12–14 gyakorló feladattípus. A haladás (feladatok, kvíz, játék)
@@ -221,6 +223,18 @@ oldalhoz elég ezeket átírni.
 - **Új kidolgozott feladatok a tankönyv példáiból**: GYF‑A/B a 2. modulban (3.7. ábra: M = −24 kNm
   négyféleképpen; 3.10. ábra: dinámrendszer négy esete) és a 3. modulban (3.22: félkörív; 3.23: ferde
   gát), mindegyik filmmel.
+
+## 6. kör: 5. modul és az útvonal
+
+- `src/components/tartok/TartoElemek.js` – közös SVG rajzelemek a tartókhoz (támaszjelek a tankönyv szerint, terhek,
+  reakciók, méretvonalak); `TartoRajz` (`tartok/GyakorloExtra.js`) méterben megadott geometriából rajzol.
+- Felfedezők: `KenyszerSzotar` (told el / forgasd: szabad vagy gátolt), `SzabadtestEpito` (támaszok leemelése,
+  reakciónyilak felrakása), `EgyenletValaszto` (pontra kattintva hány ismeretlen marad; főpontok), `ReakcioFelfedezo`,
+  `ReakcioKalk` (általános 3×3 megoldó, tankönyvi kiírással).
+- GYF‑1…6 a H03/H04 szintemelő feladatokból számokkal (`tartok/Gyf.js`), mindegyik filmmel (`FilmGyf1…6`).
+- Játék: `JatekReakcio` (tippeld meg a reakciókat, a tartó billen/süllyed). 9 generátor, 12 kvíz, 5 hibakereső.
+- `/utvonal`: `lib/utvonal.js` (HETEK, VIZSGA_TIPUSOK), `components/Utvonal.js` (hét-választó, idővonal, haladás).
+- A zh-szimulátor öt feladatot ad (a tartók modulból is), és kirajzolja a feladat ábráját.
 
 ## Háttéranyag
 
