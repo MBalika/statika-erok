@@ -5,23 +5,34 @@ import {
   Kiemelo,
   AbraKeret,
   KetOszlop,
+  TankonyvJel,
+  Szotar,
 } from "@/components/ui/Elemek";
 import { M, MB, KepletDoboz } from "@/components/ui/Keplet";
 import { KidolgozottFeladat, Lepes } from "@/components/KidolgozottFeladat";
 import NyomatekFelfedezo from "@/components/abrak/NyomatekFelfedezo";
 import ErorendszerRedukalo from "@/components/abrak/ErorendszerRedukalo";
 import TerbeliNyomatekKalk from "@/components/abrak/TerbeliNyomatekKalk";
+import TerbeliEredoOsztalyozo from "@/components/abrak/TerbeliEredoOsztalyozo";
+import ErroparAlakito from "@/components/nyomatek/ErroparAlakito";
+import JatekMerleg from "@/components/nyomatek/JatekMerleg";
 import {
   AbraErokar,
   AbraEropar,
   AbraHaromEset,
   AbraTerbeliNyomatekElv,
+  AbraTengelyre,
+  AbraEroparValtozatok,
+  AbraEltolasSzabaly,
+  AbraNegyEsetTer,
 } from "@/components/abrak/NyomatekAbrak";
 import {
   AbraParhuzamos,
   AbraSzetszort,
   AbraHaromszog,
   AbraTerbeliErorendszer,
+  AbraNegyfele,
+  AbraDinam,
 } from "@/components/abrak/NyomatekFeladatAbrak";
 import GyakorloSzekcio from "@/components/nyomatek/GyakorloSzekcio";
 import Kviz from "@/components/Kviz";
@@ -30,7 +41,9 @@ import { KVIZ, HIBAK } from "@/components/nyomatek/KvizAdatok";
 import FilmGyf3 from "@/components/nyomatek/FilmGyf3";
 import FilmGyf2 from "@/components/nyomatek/FilmGyf2";
 import FilmGyf4 from "@/components/nyomatek/FilmGyf4";
-import { Film3DVektorSzorzat, Film3DHasab } from "@/components/harom/Film3D";
+import FilmNegyfele from "@/components/nyomatek/FilmNegyfele";
+import FilmDinam from "@/components/nyomatek/FilmDinam";
+import { Film3DVektorSzorzat, Film3DHasab, TengelyNyomatekFelfedezo3D } from "@/components/harom/Film3D";
 import { modulSlugAlapjan } from "@/lib/oldalterkep";
 
 export const metadata = {
@@ -49,11 +62,12 @@ export default function NyomatekOldal() {
         cim="Nyomaték, eredő, redukálás"
         leiras="Az erő nemcsak tolni akarja a testet, hanem forgatni is. Ebben a modulban megtanulod, hogyan mérjük ezt a forgatóhatást, és hogyan lehet egy egész erőrendszert egyetlen erővel vagy egyetlen nyomatékkal helyettesíteni."
         tartalom={[
-          "Forgatónyomaték és erőkar",
-          "Erőpár",
-          "Redukálás egy pontra",
+          "Forgatónyomaték és az erő karja",
+          "Erőpár, nyomaték erőpárrá alakítása",
+          "Redukálás, dinámrendszer",
           "Az eredő három esete",
-          "Térbeli nyomaték",
+          "Nyomaték tengelyre",
+          "Térben négy eset: erőcsavar",
         ]}
       />
       <SzakaszSav szakaszok={modul.szakaszok} />
@@ -87,9 +101,20 @@ export default function NyomatekOldal() {
         </div>
 
         <KepletDoboz
-          cimke="Nyomaték egy pontra, síkban"
+          cimke="Nyomaték egy pontra, síkban (tankönyv 3.43)"
           keplet={"M^{(O)} = \\pm F\\,k"}
         />
+
+        <TankonyvJel fejezet="3.3.2">
+          <p>
+            A könyv a pontot alsó indexbe írja: <M>{"\\underline{M}_P = \\underline{r}\\times\\underline{F}"}</M>, síkban{" "}
+            <M>{"M_P = \\pm|\\underline{F}|\\,k"}</M>. Itt a gyakorlat jelölését használjuk, a pont felső indexben:{" "}
+            <M>{"M^{(O)}"}</M> — ugyanazt jelenti. Az erő karja mindkét helyen <M>{"k"}</M>, a hatásvonal és a pont
+            távolsága. A vektoriális szorzatból a nagyság:{" "}
+            <M>{"|M_P| = |\\underline{F}|\\,|\\underline{r}|\\sin\\varphi"}</M>, ahol{" "}
+            <M>{"k = |\\underline{r}|\\sin\\varphi"}</M> az <M>{"\\underline{r}"}</M> vektornak az erőre merőleges vetülete.
+          </p>
+        </TankonyvJel>
 
         <AbraKeret
           szam={1}
@@ -98,18 +123,50 @@ export default function NyomatekOldal() {
           <AbraErokar />
         </AbraKeret>
 
-        <div className="proza text-[15px] leading-relaxed text-petrol-700">
-          <p>
-            Az erőkar leolvasása rajzról körülményes, ezért a gyakorlatban szinte
-            mindig komponensekkel számolunk. Ha az erő támadáspontja{" "}
-            <M>{"P(x;\\,y)"}</M>, akkor az origóra vett nyomaték a két komponens
-            nyomatékának összege — ez a Varignon-tétel:
-          </p>
+        <div className="mt-5 grid gap-4 lg:grid-cols-2">
+          <Kartya cimke="1. út" cim="Erő × kar, előjel szemléletből">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              A tankönyv gyakorlati módszere: az origóba tűt szúrva eldöntjük, merre
+              forgatná az erő a papírt (↶ pozitív, ↷ negatív), a nagyságot pedig
+              az erő és a karja <em>abszolút értékének</em> szorzataként írjuk fel:{" "}
+              <M>{"M_P = \\pm|\\underline{F}|\\,k"}</M>. Az előjel a rajzról, a szám a
+              képletből.
+            </p>
+          </Kartya>
+          <Kartya cimke="2. út" cim="Komponensekkel, előjel a képletből">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              Ha az erő támadáspontja <M>{"P(x;\\,y)"}</M>, a nyomaték a két
+              komponens nyomatékának összege: a függőleges komponens karja{" "}
+              <M>{"x"}</M>, a vízszintesé <M>{"y"}</M>. Az előjelet itt a képlet
+              hozza magával — a könyv ezt nem nevezi néven, mi Varignon-tételként
+              hivatkozunk rá.
+            </p>
+          </Kartya>
         </div>
 
         <KepletDoboz
-          cimke="Nyomaték komponensekkel"
+          cimke="Nyomaték komponensekkel (a könyv 3.41 z-komponense)"
           keplet={"M^{(O)} = x\\,F_y - y\\,F_x"}
+        />
+
+        <Kiemelo tipus="tipp" cim="Terület-trükk a karhoz (tankönyv 3.46)">
+          <p>
+            Ha a hatásvonal a két tengelyt <M>{"a"}</M> és <M>{"b"}</M> távolságban
+            metszi, az origó, a két metszéspont derékszögű háromszöget alkot. A
+            területét kétféleképpen felírva a kar kiesik:{" "}
+            <M>{"\\dfrac{a\\,b}{2} = \\dfrac{\\sqrt{a^2+b^2}\\,k}{2}\\ \\Rightarrow\\ k = \\dfrac{a\\,b}{\\sqrt{a^2+b^2}}"}</M>.
+            Nem kell szög, nem kell szinusz. A GYF‑A ezt mutatja meg számokkal.
+          </p>
+        </Kiemelo>
+
+        <Szotar
+          sorok={[
+            { itt: <>zérusrendszer</>, konyv: <>egyensúlyi erőrendszer, az eredője zéruserő <M>{"\\underline{O}"}</M></>, megjegyzes: "Ugyanaz: R = 0 és M = 0." },
+            { itt: <>redukált erő és nyomaték, <M>{"(\\underline{R},\\ M^{(O)})"}</M></>, konyv: <>társerő és társnyomaték, <M>{"(\\underline{F}_A,\\ \\underline{M}_A)"}</M></>, megjegyzes: "A társnyomaték az A ponton átmenő társerőhöz tartozik." },
+            { itt: <>Varignon-tétel</>, konyv: <>nem nevezi néven: a nyomaték a komponensek nyomatékainak összege</>, megjegyzes: "A 3.7. ábra harmadik módszere." },
+            { itt: <>erőkar</>, konyv: <>az erő karja, <M>{"k"}</M></>, megjegyzes: "A hatásvonal és a pont távolsága." },
+            { itt: <>erőpár nyomatéka</>, konyv: <><M>{"\\underline{M}_P = \\underline{r}_{BA}\\times\\underline{F}_A"}</M>, szabad vektor</>, megjegyzes: "Síkban ↶ / ↷ félköríves nyíllal." },
+          ]}
         />
 
         <Kiemelo tipus="kulcs" cim="Miért nem kell tudni, hol pontosan támad az erő">
@@ -155,6 +212,77 @@ export default function NyomatekOldal() {
           <AbraEropar />
         </AbraKeret>
 
+        <div className="proza text-[15px] leading-relaxed text-petrol-700">
+          <p>
+            Hogy miért nem függ a nyomaték a ponttól, két sorban látszik. Az{" "}
+            <M>{"A"}</M> és <M>{"B"}</M> pontban ható <M>{"\\underline{F}_A"}</M>,{" "}
+            <M>{"\\underline{F}_B = -\\underline{F}_A"}</M> erők nyomatéka egy tetszőleges{" "}
+            <M>{"P"}</M> pontra:
+          </p>
+        </div>
+        <MB>{"\\underline{M}_P = \\underline{r}_{PA}\\times\\underline{F}_A + \\underline{r}_{PB}\\times(-\\underline{F}_A) = (\\underline{r}_{PA} - \\underline{r}_{PB})\\times\\underline{F}_A = \\underline{r}_{BA}\\times\\underline{F}_A"}</MB>
+        <div className="proza text-[15px] leading-relaxed text-petrol-700">
+          <p>
+            A <M>{"P"}</M> pont kiesett: csak a <M>{"B"}</M>-ből <M>{"A"}</M>-ba mutató
+            vektor és az erő maradt. Az egyenértékűségi kijelentés tehát{" "}
+            <M>{"(\\underline{F}_A, \\underline{F}_B) \\ekv M"}</M>, és a nagyság{" "}
+            <M>{"|M| = F\\,d"}</M>.
+          </p>
+        </div>
+
+        <h4 className="mt-8 text-[16px] font-semibold text-petrol-900">
+          Nyomaték erőpárrá alakítása
+        </h4>
+        <div className="proza mt-2 text-[15px] leading-relaxed text-petrol-700">
+          <p>
+            Visszafelé is megy: egy adott <M>{"M"}</M> nyomatékot bármikor
+            helyettesíthetünk egy erőpárral. A tankönyv 3.9. ábrája három
+            változatot mutat, attól függően, mi adott.
+          </p>
+        </div>
+        <AbraKeret szam={3} cim="Nyomaték erőpárrá alakítása a tankönyv 3.9. ábrája szerint: (a) adott hatásvonalak, (b) adott erő, (c) szabadon választott irány.">
+          <AbraEroparValtozatok />
+        </AbraKeret>
+        <div className="mt-2 grid gap-4 lg:grid-cols-3">
+          <Kartya cimke="a)" cim="Adott a két hatásvonal">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              A kar <M>{"d"}</M> ismert, az erők nagysága <M>{"F = |M|/d"}</M>. Az
+              irányukat úgy választjuk, hogy az erőpár <M>{"M"}</M>-mel azonos
+              értelemben forgasson.
+            </p>
+          </Kartya>
+          <Kartya cimke="b)" cim="Adott az egyik erő">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              A másik erő az ellentettje; a helyét a kar adja:{" "}
+              <M>{"d = |M|/|F_1|"}</M>. Ha rossz oldalra tesszük, az erőpár a
+              kívánttal ellentétesen forgat — a rajz elárulja.
+            </p>
+          </Kartya>
+          <Kartya cimke="c)" cim="Az irány szabadon választható">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              Csak az erő nagysága adott: az irányt tetszőlegesen vehetjük fel. A
+              kar nem függ tőle, mindig <M>{"|M|/F"}</M> — csak a hatásvonalak
+              fordulnak el vele együtt.
+            </p>
+          </Kartya>
+        </div>
+
+        <div className="mt-6">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">
+            Próbáld ki – nyomatékból erőpár
+          </p>
+          <ErroparAlakito />
+        </div>
+
+        <Kiemelo tipus="kulcs" cim="Több nyomaték eredője">
+          <p>
+            Ha az erőrendszert csak nyomatékok alkotják, azok szabad vektorként egy
+            közös pontba tolhatók, és komponensenként összeadódnak, mint a közös
+            metszéspontú erők: <M>{"(M_1, M_2, M_3) \\ekv M"}</M>,{" "}
+            <M>{"\\sum M_{ix} = M_x"}</M> stb. Síkban ez egyetlen előjeles összeg.
+          </p>
+        </Kiemelo>
+
         {/* --- 2.3 --- */}
         <h3 className="mt-10 text-xl font-semibold text-petrol-900">
           2.3 Redukálás egy pontra
@@ -170,11 +298,27 @@ export default function NyomatekOldal() {
         </div>
 
         <KepletDoboz
-          cimke="Az erőrendszer redukálása az O pontba"
+          cimke="Az erőrendszer redukálása az O pontba (társerő és társnyomaték)"
           keplet={
-            "R_x = \\sum F_{ix},\\qquad R_y = \\sum F_{iy},\\qquad M^{(O)} = \\sum \\left( x_i F_{iy} - y_i F_{ix} \\right)"
+            "(\\underline{F}_1,\\dots,\\underline{F}_n, M_1,\\dots,M_m) \\ekv (\\underline{R},\\ M^{(O)})"
+          }
+          behelyettesitve={
+            "\\Fx \\sum F_{ix} = R_x,\\qquad \\Fy \\sum F_{iy} = R_y,\\qquad \\Mp{O} \\sum \\left( x_i F_{iy} - y_i F_{ix} \\right) + \\sum M_j = M^{(O)}"
           }
         />
+
+        <TankonyvJel fejezet="3.3.3–3.3.4" cim="Dinámrendszer: erők és nyomatékok együtt">
+          <p>
+            Az erőket és a nyomatékokat együtt a könyv <strong>dinámoknak</strong>{" "}
+            nevezi, a nyomatékot is tartalmazó erőrendszert{" "}
+            <strong>dinámrendszernek</strong>. A koncentrált <M>{"M_j"}</M>{" "}
+            nyomatékok <em>csak</em> a nyomatéki egyenletbe kerülnek be (erőpárrá
+            alakítva a vetületi egyenletben kiejtenék egymást), ott viszont
+            előjelesen, karral szorzás nélkül. A síkbeli párhuzamos erőrendszerbe
+            a nyomatékokat is beleértjük — a GYF‑B a tankönyv 3.10. ábráját
+            számolja végig négyféle részhalmazzal.
+          </p>
+        </TankonyvJel>
 
         <Kiemelo tipus="tipp" cim="Melyik pontot válasszuk?">
           <p>
@@ -197,7 +341,7 @@ export default function NyomatekOldal() {
           </p>
         </div>
 
-        <AbraKeret szam={3} cim="Minden síkbeli erőrendszer e három eset valamelyikébe esik.">
+        <AbraKeret szam={4} cim="Minden síkbeli erőrendszer e három eset valamelyikébe esik.">
           <AbraHaromEset />
         </AbraKeret>
 
@@ -258,6 +402,39 @@ export default function NyomatekOldal() {
           }
         />
 
+        <Kiemelo tipus="tipp" cim="Melyik oldalra tolódik az erő? (tankönyv 3.11. ábra)">
+          <p>
+            Erő + nyomaték eredője ugyanakkora erő, <M>{"d = M/F"}</M>-fel eltolva.
+            Az oldalt a tankönyv félköríves-nyíl szabálya adja: az erő
+            vektorának <em>kezdőpontjából hátrafelé</em> (az erővel ellentétes
+            irányba) indítunk egy félköríves nyilat, amely <M>{"M"}</M>-mel azonos
+            irányba forgat — amelyik oldalra a nyíl vége kerül, ott van az eredő.
+            A bizonyítás: <M>{"M"}</M>-et erőpárrá alakítjuk úgy, hogy az egyik
+            erő <M>{"\\underline{F}_1 = -\\underline{F}"}</M> legyen; ez <M>{"\\underline{F}"}</M>-fel
+            zéruserőt ad, és marad a pár másik tagja: <M>{"\\underline{F}_2 \\ekv \\underline{R}"}</M>.
+          </p>
+        </Kiemelo>
+        <AbraKeret szam={5} cim="Egyetlen erő és nyomaték eredője: (a) a félköríves nyíl kijelöli az oldalt; (b) ugyanez erőpárrá alakítással bizonyítva.">
+          <AbraEltolasSzabaly />
+        </AbraKeret>
+
+        <div className="mt-2 grid gap-4 lg:grid-cols-2">
+          <Kartya cimke="Kvalitatív szabály 1" cim="Azonos irányú párhuzamos erők">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              Az eredő a két hatásvonal <strong>között</strong> van, a nagyobb
+              erőhöz közelebb; egyenlő erőknél középen. (A GYF‑2 négy egyenlő
+              erőjének eredője ezért a számtani középen áll.)
+            </p>
+          </Kartya>
+          <Kartya cimke="Kvalitatív szabály 2" cim="Ellentétes irányú párhuzamos erők">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              Az eredő a két hatásvonalon <strong>kívül</strong> esik, a nagyobb
+              erő oldalán. Ha a két erő egyenlő nagyságú, nincs eredő erő — az
+              erőpár.
+            </p>
+          </Kartya>
+        </div>
+
         <div className="mt-6">
           <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">
             Próbáld ki – kapcsolgasd a három nézetet
@@ -292,10 +469,113 @@ export default function NyomatekOldal() {
               {"M_x = y F_z - z F_y,\\quad M_y = z F_x - x F_z,\\quad M_z = x F_y - y F_x"}
             </MB>
           </div>
-          <AbraKeret szam={4} cim="A nyomatékvektor merőleges az r és az F síkjára.">
+          <AbraKeret szam={6} cim="A nyomatékvektor merőleges az r és az F síkjára.">
             <AbraTerbeliNyomatekElv />
           </AbraKeret>
         </KetOszlop>
+
+        {/* --- 2.7 --- */}
+        <h3 className="mt-10 text-xl font-semibold text-petrol-900">
+          2.7 Nyomaték tengelyre
+        </h3>
+        <div className="proza mt-3 text-[15px] leading-relaxed text-petrol-700">
+          <p>
+            A három komponens a három koordinátatengelyre vett nyomaték volt. De
+            tengely bármilyen irányú lehet. Egy <M>{"t"}</M> tengelyre vett
+            nyomatékot úgy kapunk, hogy a tengely egy tetszőleges{" "}
+            <M>{"Q"}</M> pontjára kiszámoljuk a nyomatékvektort, majd azt a tengely
+            irányába eső <M>{"\\underline{e}_t"}</M> egységvektorra vetítjük:
+          </p>
+        </div>
+        <KepletDoboz
+          cimke="Nyomaték tengelyre (tankönyv 3.42)"
+          keplet={"M_t = \\underline{M}_Q\\cdot\\underline{e}_t = M_{Qx}e_{tx} + M_{Qy}e_{ty} + M_{Qz}e_{tz}"}
+        />
+        <div className="proza text-[15px] leading-relaxed text-petrol-700">
+          <p>
+            A <M>{"Q"}</M> pont helye a tengelyen mindegy: ha a tengely mentén
+            odébb visszük, <M>{"\\underline{M}_Q"}</M> csak egy tengelyre merőleges
+            vektorral változik, aminek a vetülete nulla. Az előjel: a tengely
+            pozitív vége felől nézve az óramutatóval ellentétes forgatás a
+            pozitív. Két megállapítás következik, amelyeket a tankönyv külön
+            kiemel:
+          </p>
+        </div>
+        <AbraKeret szam={7} cim="Egy erő csak a hozzá képest kitérő tengely körül forgat.">
+          <AbraTengelyre />
+        </AbraKeret>
+        <Kiemelo tipus="kulcs" cim="Mikor nem forgat egy erő egy tengely körül?">
+          <ul className="list-disc space-y-1 pl-5">
+            <li>Ha a hatásvonala <strong>metszi</strong> a tengelyt (a karja nulla).</li>
+            <li>Ha <strong>párhuzamos</strong> vele (a tengely irányában tol, nem forgat).</li>
+          </ul>
+          <p className="mt-2">
+            Következmény: egy erő csakis a hozzá képest <strong>kitérő</strong>{" "}
+            helyzetű tengelyek körül forgat. Ezért hiányzott a GYF‑1-ben minden
+            komponensképletből az adott tengellyel párhuzamos erőkomponens.
+          </p>
+        </Kiemelo>
+        <div className="mt-6">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">
+            Próbáld ki 3D-ben – erő, tengely, vetület
+          </p>
+          <TengelyNyomatekFelfedezo3D />
+        </div>
+
+        {/* --- 2.8 --- */}
+        <h3 className="mt-10 text-xl font-semibold text-petrol-900">
+          2.8 Térben négy eset: az erőcsavar
+        </h3>
+        <div className="proza mt-3 text-[15px] leading-relaxed text-petrol-700">
+          <p>
+            Térben a redukálás ugyanúgy megy, csak a társerő és a társnyomaték is
+            háromkomponensű: három vetületi és három, az{" "}
+            <M>{"A"}</M> ponton átmenő tengelyekre felírt nyomatéki egyenlet. A
+            döntés viszont már nem három-, hanem négyesélyes, és a negyedik
+            esetnek síkban nincs párja.
+          </p>
+        </div>
+        <AbraKeret szam={8} cim="A térbeli eredő négy esete a társerő és a társnyomaték skaláris szorzata alapján.">
+          <AbraNegyEsetTer />
+        </AbraKeret>
+        <div className="mt-2 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Kartya cimke="1. eset" cim="Egyensúly">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              <M>{"\\underline{F}_A = 0"}</M> és <M>{"\\underline{M}_A = 0"}</M>. Bármely
+              más pontra ugyanez.
+            </p>
+          </Kartya>
+          <Kartya cimke="2. eset" cim="Nyomaték">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              <M>{"\\underline{F}_A = 0"}</M>, <M>{"\\underline{M}_A \\neq 0"}</M>: az
+              eredő a nyomatékvektor, pontfüggetlen. Ez a GYF‑5.
+            </p>
+          </Kartya>
+          <Kartya cimke="3. eset" cim="Erő">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              <M>{"\\underline{F}_A \\neq 0"}</M> és{" "}
+              <M>{"\\underline{F}_A\\cdot\\underline{M}_A = 0"}</M>: a nyomaték merőleges az
+              erőre (vagy nulla), az erő eltolásával eltüntethető — mint síkban.
+            </p>
+          </Kartya>
+          <Kartya cimke="4. eset" cim="Erőcsavar">
+            <p className="text-[13.5px] leading-relaxed text-petrol-600">
+              <M>{"\\underline{F}_A\\cdot\\underline{M}_A \\neq 0"}</M>: a nyomaték erőre
+              merőleges részét eltolással elnyeljük, de marad egy, az erővel{" "}
+              <em>párhuzamos</em> tengely körül forgató nyomaték. Erő + vele
+              párhuzamos nyomaték: mint a facsavar behajtása.
+            </p>
+          </Kartya>
+        </div>
+        <Kiemelo tipus="kulcs" cim="A skaláris szorzat nem függ a ponttól">
+          <p>
+            Más pontra redukálva a társnyomatékhoz az <M>{"\\underline{F}_A"}</M>-ra
+            merőleges vektor adódik hozzá, aminek <M>{"\\underline{F}_A"}</M>-val vett
+            skaláris szorzata nulla — ezért <M>{"\\underline{F}_A\\cdot\\underline{M}_A"}</M>{" "}
+            értéke minden pontra ugyanaz, és a döntés egyértelmű. A Kalkulátorok
+            részben egy osztályozó eszköz számolja ezt bármilyen adatra.
+          </p>
+        </Kiemelo>
       </Szakasz>
 
       {/* ==================== KIDOLGOZOTT FELADATOK ==================== */}
@@ -303,9 +583,82 @@ export default function NyomatekOldal() {
         id="peldak"
         cimke="2. rész"
         cim="Kidolgozott feladatok"
-        bevezeto="A gyakorlat öt feladata. A negyedik különösen fontos: ugyanazt az ábrát számolja végig háromféle adattal, és ezzel mind a három esetet megmutatja."
+        bevezeto="A gyakorlat öt feladata, kiegészítve a tankönyv két példájával (GYF‑A és GYF‑B). Minden megoldás az egyenértékűségi kijelentéssel kezdődik. A GYF‑4 különösen fontos: ugyanazt az ábrát számolja végig háromféle adattal, és ezzel mind a három esetet megmutatja."
         className="bg-white"
       >
+        {/* ---- GYF-A ---- */}
+        <KidolgozottFeladat
+          jel="GYF‑A"
+          ido="5 perc"
+          forras="Tankönyv 3.7. ábra"
+          cim="M = −24 kNm négyféleképpen"
+          feladat={
+            <p>
+              Az <M>{"\\underline{r} = (2;\\ 3)\\ \\text{m}"}</M> támadáspontú{" "}
+              <M>{"\\underline{F} = (6;\\ -3)\\ \\text{kN}"}</M> erő nyomatékát az origóra
+              négy különböző módon számítsd ki, és győződj meg róla, hogy mind
+              ugyanazt adja!
+            </p>
+          }
+          abra={
+            <AbraKeret cim="A tankönyv 3.7. ábrája: az erő karja d, a hatásvonal tengelymetszetei 8 m és 4 m.">
+              <AbraNegyfele />
+            </AbraKeret>
+          }
+          tanulsag={
+            <p>
+              Négy út, egy eredmény. Kézi számolásnál a leggyorsabb a{" "}
+              <strong>tengelymetszetbe tolás</strong>: ott az egyik komponens
+              karja nulla, a másiké leolvasható. A képlet a legbiztosabb (az
+              előjelet is hozza), az erő×kar módszer pedig akkor jó, ha a kar a
+              rajzról adódik — a terület-trükkel ez is gyors.
+            </p>
+          }
+        >
+          <Lepes cim="Mit keresünk">
+            <p>
+              Egyetlen erő nyomatéka egy pontra: <M>{"M_O"}</M>. A forgatási
+              értelmet előre eldönthetjük: az origóba tűt szúrva az erő az
+              óramutató járásával egyezően forgatná a papírt, tehát negatív
+              számot várunk.
+            </p>
+          </Lepes>
+          <Lepes cim="(i) Képlettel">
+            <MB>{"M_O = x F_y - y F_x = 2\\cdot(-3) - 3\\cdot 6 = -6 - 18 = -24\\ \\text{kNm}"}</MB>
+          </Lepes>
+          <Lepes cim="(ii) Erő szorozva a karjával — a terület-trükk">
+            <p>
+              Az erő nagysága <M>{"F = \\sqrt{6^2 + (-3)^2} = 6,708\\ \\text{kN}"}</M>. A
+              hatásvonal az x tengelyt 8 m-nél, az y tengelyt 4 m-nél metszi
+              (ellenőrzés: <M>{"y - 3 = -\\tfrac{1}{2}(x - 2)"}</M>). A nagy derékszögű
+              háromszög területét kétféleképpen felírva:
+            </p>
+            <MB>{"\\frac{8\\cdot 4}{2} = \\frac{\\sqrt{8^2 + 4^2}\\cdot d}{2}\\ \\Rightarrow\\ d = \\frac{32}{8,944} = 3,578\\ \\text{m}"}</MB>
+            <MB>{"M_O = -6,708\\cdot 3,578 = -24,00\\ \\text{kNm}"}</MB>
+          </Lepes>
+          <Lepes cim="(iii) Komponensek a támadáspontban">
+            <p>
+              A vízszintes 6 kN karja a függőleges távolság (3 m), a függőleges 3
+              kN karja a vízszintes távolság (2 m). Mindkettő az óramutató
+              irányába forgat — az előjel szemléletből, a képletbe abszolút értékek:
+            </p>
+            <MB>{"M_O = -6\\cdot 3 - 3\\cdot 2 = -24\\ \\text{kNm}"}</MB>
+          </Lepes>
+          <Lepes cim="(iv) Komponensek a hatásvonal tengelymetszetében">
+            <p>
+              Az erő a hatásvonala mentén eltolható. Az x tengelyen (8; 0)-ban a
+              vízszintes komponens karja nulla; az y tengelyen (0; 4)-ben a
+              függőlegesé:
+            </p>
+            <MB>{"M_O = 0 - 3\\cdot 8 = -24\\ \\text{kNm},\\qquad M_O = -6\\cdot 4 + 0 = -24\\ \\text{kNm}"}</MB>
+          </Lepes>
+        </KidolgozottFeladat>
+
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a négy módszer egymás után</p>
+          <FilmNegyfele />
+        </div>
+
         {/* ---- GYF-1 ---- */}
         <KidolgozottFeladat
           jel="GYF‑1"
@@ -335,6 +688,14 @@ export default function NyomatekOldal() {
             </p>
           }
         >
+          <Lepes cim="Kijelentés: egyetlen erő nyomatéka az origóra">
+            <p>
+              Egy erő nyomatéka egy pontra a helyvektor és az erő vektoriális
+              szorzata; a három komponens a három tengelyre vett nyomaték:
+            </p>
+            <MB>{"\\underline{M}_O = \\underline{r}\\times\\underline{F},\\qquad M_x = \\underline{M}_O\\cdot\\underline{i},\\ M_y = \\underline{M}_O\\cdot\\underline{j},\\ M_z = \\underline{M}_O\\cdot\\underline{k}"}</MB>
+          </Lepes>
+
           <Lepes cim="Nyomaték az x tengelyre">
             <p>
               Az <M>{"x"}</M> tengely körüli forgatásban csak az{" "}
@@ -402,33 +763,134 @@ export default function NyomatekOldal() {
               ezután két egyenletet írunk fel rá: egyet az erőre, egyet a
               nyomatékra.
             </p>
-            <MB>{"(\\underline{F}_1,\\ \\underline{F}_2,\\ \\underline{F}_3,\\ \\underline{F}_4) \\doteq \\underline{R}"}</MB>
+            <MB>{"(\\underline{F}_1,\\ \\underline{F}_2,\\ \\underline{F}_3,\\ \\underline{F}_4) \\ekv \\underline{R}"}</MB>
           </Lepes>
 
-          <Lepes cim="Az eredő nagysága">
+          <Lepes cim="Vetületi egyenlet: az eredő nagysága">
             <p>
               Mind a négy erő lefelé mutat, tehát mind negatív{" "}
               <M>{"y"}</M> irányú:
             </p>
-            <MB>{"R_y = -4\\cdot 11 = -44\\ \\text{kN}\\quad(\\downarrow)"}</MB>
+            <MB>{"\\Fy -11 - 11 - 11 - 11 = R_y \\;\\Rightarrow\\; R_y = -44\\ \\text{kN}\\quad(\\downarrow)"}</MB>
           </Lepes>
 
-          <Lepes cim="Nyomaték az origóra">
-            <MB>{"M^{(O)} = \\sum x_i F_{iy} = (2 + 3 + 4 + 5)\\cdot(-11) = -154\\ \\text{kNm}"}</MB>
+          <Lepes cim="Nyomatéki egyenlet az origóra">
+            <p>
+              Bal oldalon az erőrendszer nyomatéka, jobb oldalon az{" "}
+              <M>{"x_R"}</M> helyen működő eredőé:
+            </p>
+            <MB>{"\\Mp{O} 2\\cdot(-11) + 3\\cdot(-11) + 4\\cdot(-11) + 5\\cdot(-11) = x_R\\cdot(-44)"}</MB>
           </Lepes>
 
           <Lepes cim="Az eredő helye">
-            <p>
-              Az eredőnek ugyanezt a nyomatékot kell adnia az origóra, ha a{" "}
-              <M>{"x_R"}</M> helyen működik:
-            </p>
-            <MB>{"x_R R_y = M^{(O)} \\quad\\Rightarrow\\quad x_R = \\frac{-154}{-44} = 3{,}5\\ \\text{m}"}</MB>
+            <MB>{"-154 = -44\\,x_R \\quad\\Rightarrow\\quad x_R = \\frac{-154}{-44} = 3,5\\ \\text{m}"}</MB>
           </Lepes>
         </KidolgozottFeladat>
 
         <div className="my-8">
           <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – párhuzamos erők eredője</p>
           <FilmGyf2 />
+        </div>
+
+        {/* ---- GYF-B ---- */}
+        <KidolgozottFeladat
+          jel="GYF‑B"
+          ido="8 perc"
+          forras="Tankönyv 3.10. ábra"
+          cim="Dinámrendszer: négy részhalmaz, négyféle eredő"
+          feladat={
+            <p>
+              Az <M>{"A"}</M>, <M>{"B"}</M>, <M>{"C"}</M> pontok egy vízszintes
+              egyenesen vannak, <M>{"AB = 3\\ \\text{m}"}</M>, <M>{"BC = 5\\ \\text{m}"}</M>.
+              Az ábra dinámjaiból képzett négy erőrendszer eredőjét keressük:{" "}
+              <strong>a)</strong> <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M_1, M_2)"}</M>,{" "}
+              <strong>b)</strong> <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3)"}</M>,{" "}
+              <strong>c)</strong> <M>{"(\\underline{F}_1, \\underline{F}_3, M_2)"}</M>,{" "}
+              <strong>d)</strong> <M>{"(\\underline{F}_2, M_1)"}</M>.
+            </p>
+          }
+          abra={
+            <AbraKeret cim="A tankönyv 3.10. ábrája: F₁ = 2 kN ↓ A-ban, F₂ = 5 kN ↑ B-ben, F₃ = 3 kN ↓ C-ben; M₁ = 3 kNm ↷, M₂ = 12 kNm ↶.">
+              <AbraDinam />
+            </AbraKeret>
+          }
+          tanulsag={
+            <p>
+              Mindig ugyanaz a menet: <em>előbb a típus</em> a vetületi
+              egyenletből (a nyomatékok ebbe nem kerülnek bele!), <em>aztán</em> a
+              nyomatéki egyenlet — ha az eredő erő, abból a helye, ha nem, abból a
+              nyomaték nagysága. A c) és d) eredője ugyanazon a hatásvonalon áll,
+              ellentétesen: a két részrendszer együtt az a) eset, egyensúly.
+            </p>
+          }
+        >
+          <Lepes cim="a) Kijelentés és vetületi egyenlet">
+            <p>
+              Még nem tudjuk, mi lesz az eredő, ezért a könyv{" "}
+              <M>{"\\mathcal{D}"}</M>-vel jelöli. A nyomatékok a vetületi
+              egyenletben nem szerepelnek:
+            </p>
+            <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M_1, M_2) \\ekv \\mathcal{D}"}</MB>
+            <MB>{"\\Fy -2 + 5 - 3 = 0\\ \\text{kN}"}</MB>
+            <p>Az eredő tehát nem lehet erő — csak nyomaték vagy egyensúly.</p>
+          </Lepes>
+          <Lepes cim="a) Nyomatéki egyenlet az A pontra">
+            <p>
+              Az <M>{"A"}</M> az <M>{"F_1"}</M> hatásvonalán van, ezért annak karja
+              nulla. <M>{"M_1"}</M> az óramutató irányába forgat (−3),{" "}
+              <M>{"M_2"}</M> ellentétesen (+12):
+            </p>
+            <MB>{"\\Mp{A} 0 + 5\\cdot 3 - 3\\cdot 8 - 3 + 12 = 0\\ \\text{kNm}"}</MB>
+            <p>
+              Ez is nulla: az erőrendszer <strong>egyensúlyi</strong>,{" "}
+              <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M_1, M_2) \\ekv \\underline{O}"}</M>.
+            </p>
+          </Lepes>
+          <Lepes cim="b) Csak a három erő">
+            <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv \\mathcal{D},\\qquad \\Fy -2 + 5 - 3 = 0"}</MB>
+            <p>
+              Nem erő. A nyomatéki egyenletet a <M>{"B"}</M> pontra írjuk (ott{" "}
+              <M>{"F_2"}</M> karja nulla); <M>{"F_1"}</M> 3 m-rel balra lefelé mutat,
+              az óramutatóval ellentétesen forgat:
+            </p>
+            <MB>{"\\Mp{B} 2\\cdot 3 + 0 - 3\\cdot 5 = -9\\ \\text{kNm}\\ (\\curvearrowright)"}</MB>
+            <p>
+              Az eredő az <M>{"M_B = -9\\ \\text{kNm}"}</M> nyomaték:{" "}
+              <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv M_B"}</M>.
+            </p>
+          </Lepes>
+          <Lepes cim="c) Két erő és egy nyomaték">
+            <MB>{"(\\underline{F}_1, \\underline{F}_3, M_2) \\ekv \\mathcal{D},\\qquad \\Fy -2 - 3 = -5\\ \\text{kN}\\ (\\downarrow)"}</MB>
+            <p>
+              Az eredő egy 5 kN-os, lefelé mutató erő:{" "}
+              <M>{"(\\underline{F}_1, \\underline{F}_3, M_2) \\ekv \\underline{R}"}</M>. A
+              helyét a <M>{"C"}</M> pontra írt nyomatéki egyenletből kapjuk; jelölje{" "}
+              <M>{"x_R"}</M> az eredő helyét C-hez képest (jobbra pozitív):
+            </p>
+            <MB>{"\\Mp{C} 2\\cdot 8 + 0 + 12 = -5\\cdot x_R \\quad\\Rightarrow\\quad x_R = \\frac{28}{-5} = -5,6\\ \\text{m}"}</MB>
+            <p>
+              A negatív előjel: az eredő a <M>{"C"}</M>-től <strong>balra</strong>{" "}
+              5,6 m-re van, vagyis a <M>{"B"}</M>-től 0,6 m-rel balra.
+            </p>
+          </Lepes>
+          <Lepes cim="d) Egy erő és egy nyomaték">
+            <MB>{"(\\underline{F}_2, M_1) \\ekv \\mathcal{D},\\qquad \\Fy +5 = +5\\ \\text{kN}\\ (\\uparrow)"}</MB>
+            <p>
+              Az eredő egy felfelé mutató 5 kN. A <M>{"B"}</M>-re írt nyomatéki
+              egyenletben <M>{"F_2"}</M> karja nulla:
+            </p>
+            <MB>{"\\Mp{B} 0 - 3 = 5\\cdot x_R \\quad\\Rightarrow\\quad x_R = -0,6\\ \\text{m}"}</MB>
+            <p>
+              Ugyanott, mint a c) eredője — nem véletlen: a két részrendszer
+              együtt az a) eset, amely egyensúlyi, tehát a részeredőik is
+              egyensúlyban vannak.
+            </p>
+          </Lepes>
+        </KidolgozottFeladat>
+
+        <div className="my-8">
+          <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a négy részhalmaz</p>
+          <FilmDinam />
         </div>
 
         {/* ---- GYF-3 ---- */}
@@ -458,13 +920,21 @@ export default function NyomatekOldal() {
             </p>
           }
         >
-          <Lepes cim="Az eredő komponensei">
+          <Lepes cim="Egyenértékűségi kijelentés">
+            <p>
+              A négy erőt az origóba redukáljuk: társerő és társnyomaték. A
+              típust csak a végén döntjük el.
+            </p>
+            <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, \\underline{F}_4) \\ekv (\\underline{R},\\ M^{(O)})"}</MB>
+          </Lepes>
+
+          <Lepes cim="Vetületi egyenletek: az eredő komponensei">
             <p>
               Csak a vízszintes erők adnak <M>{"R_x"}</M>-et, és csak a
               függőlegesek <M>{"R_y"}</M>-t:
             </p>
-            <MB>{"R_x = 23 + 20 = 43\\ \\text{kN}\\quad(\\rightarrow)"}</MB>
-            <MB>{"R_y = -9 + 19 = 10\\ \\text{kN}\\quad(\\uparrow)"}</MB>
+            <MB>{"\\Fx 23 + 0 + 20 + 0 = R_x \\;\\Rightarrow\\; R_x = 43\\ \\text{kN}\\quad(\\rightarrow)"}</MB>
+            <MB>{"\\Fy 0 - 9 + 0 + 19 = R_y \\;\\Rightarrow\\; R_y = 10\\ \\text{kN}\\quad(\\uparrow)"}</MB>
           </Lepes>
 
           <Lepes cim="Az eredő nagysága és iránya">
@@ -472,12 +942,12 @@ export default function NyomatekOldal() {
             <MB>{"\\alpha_R = \\operatorname{arctg}\\frac{10}{43} = 13{,}09^\\circ"}</MB>
           </Lepes>
 
-          <Lepes cim="Nyomaték az origóra">
+          <Lepes cim="Nyomatéki egyenlet az origóra">
             <p>
               A vízszintes erő nyomatéka <M>{"-y F_x"}</M>, a függőlegesé{" "}
               <M>{"x F_y"}</M>. Menjünk végig sorban a négy erőn:
             </p>
-            <MB>{"M^{(O)} = -7\\cdot 23 + 8\\cdot(-9) - (-4)\\cdot 20 + (-3)\\cdot 19"}</MB>
+            <MB>{"\\Mp{O} -7\\cdot 23 + 8\\cdot(-9) - (-4)\\cdot 20 + (-3)\\cdot 19 = M^{(O)}"}</MB>
             <MB>{"M^{(O)} = -161 - 72 + 80 - 57 = -210\\ \\text{kNm}"}</MB>
           </Lepes>
 
@@ -487,7 +957,7 @@ export default function NyomatekOldal() {
               hatásvonala ott metszi az <M>{"x"}</M> tengelyt, ahol ugyanazt a
               nyomatékot adja:
             </p>
-            <MB>{"x_0 = \\frac{M^{(O)}}{R_y} = \\frac{-210}{10} = -21\\ \\text{m}"}</MB>
+            <MB>{"\\Mp{O} -210 = x_0 R_y = x_0\\cdot 10 \\quad\\Rightarrow\\quad x_0 = -21\\ \\text{m}"}</MB>
           </Lepes>
         </KidolgozottFeladat>
 
@@ -495,6 +965,12 @@ export default function NyomatekOldal() {
           <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Ugyanez filmen – a redukálás lépésről lépésre</p>
           <FilmGyf3 />
         </div>
+
+        <KepletDoboz
+          cimke="Ferde erő komponensei a hatásvonal egy szakaszának vetületeiből (tankönyv 9.1)"
+          keplet={"F_x = \\pm F\\,\\frac{l_x}{l},\\qquad F_y = \\pm F\\,\\frac{l_y}{l},\\qquad l = \\sqrt{l_x^2 + l_y^2}"}
+          behelyettesitve={"\\text{GYF-4:}\\quad F_{1x} = -F_1\\frac{5}{\\sqrt{41}},\\quad F_{1y} = -F_1\\frac{4}{\\sqrt{41}}\\qquad\\text{(az előjelek szemléletből)}"}
+        />
 
         {/* ---- GYF-4 ---- */}
         <KidolgozottFeladat
@@ -542,6 +1018,14 @@ export default function NyomatekOldal() {
             </p>
           }
         >
+          <Lepes cim="Egyenértékűségi kijelentés">
+            <p>
+              Három erő és egy nyomaték (dinámrendszer) redukálva az origóra;
+              a típust a végén döntjük el:
+            </p>
+            <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv (\\underline{R},\\ M^{(O)})"}</MB>
+          </Lepes>
+
           <Lepes cim="A geometria: a hatásvonalak">
             <p>
               A három hatásvonal a <M>{"(-3;\\,8)"}</M>, <M>{"(2;\\,0)"}</M> és{" "}
@@ -560,10 +1044,10 @@ export default function NyomatekOldal() {
             <MB>{"F_{1x} = -F_1\\frac{5}{\\sqrt{41}} = -10{,}00,\\qquad F_{1y} = -F_1\\frac{4}{\\sqrt{41}} = -8{,}00\\ \\text{kN}"}</MB>
             <MB>{"F_{2x} = F_2\\frac{5}{\\sqrt{89}} = 10{,}00,\\qquad F_{2y} = -F_2\\frac{8}{\\sqrt{89}} = -16{,}00\\ \\text{kN}"}</MB>
             <MB>{"F_{3x} = 0,\\qquad F_{3y} = 24{,}00\\ \\text{kN}"}</MB>
+            <MB>{"\\Fx -10 + 10 + 0 = R_x = 0,\\qquad \\Fy -8 - 16 + 24 = R_y = 0"}</MB>
             <p>
-              Az összegük mindkét irányban zérus:{" "}
-              <M>{"R_x = 0"}</M>, <M>{"R_y = 0"}</M>. Eddig minden úgy fest,
-              mintha egyensúly volna.
+              Az összegük mindkét irányban zérus. Eddig minden úgy fest, mintha
+              egyensúly volna.
             </p>
           </Lepes>
 
@@ -574,11 +1058,13 @@ export default function NyomatekOldal() {
               <M>{"2 F_{iy}"}</M>. Az <M>{"F_3"}</M> függőleges, az{" "}
               <M>{"x = -3"}</M> egyenesen:
             </p>
-            <MB>{"M^{(O)} = 2\\cdot(-8{,}00) + 2\\cdot(-16{,}00) + (-3)\\cdot 24{,}00 + 17"}</MB>
+            <MB>{"\\Mp{O} 2\\cdot(-8{,}00) + 2\\cdot(-16{,}00) + (-3)\\cdot 24{,}00 + 17 = M^{(O)}"}</MB>
             <MB>{"M^{(O)} = -16 - 32 - 72 + 17 = -103\\ \\text{kNm}"}</MB>
             <p>
-              Az eredő tehát <strong>forgatónyomaték</strong>: erő nincs, de a
-              rendszer −103 kNm-mel forgat, és ez minden pontra ugyanennyi.
+              Az eredő tehát <strong>forgatónyomaték</strong>,{" "}
+              <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv M^{(O)}"}</M>: erő
+              nincs, de a rendszer −103 kNm-mel forgat, és ez minden pontra
+              ugyanennyi.
             </p>
           </Lepes>
 
@@ -588,7 +1074,8 @@ export default function NyomatekOldal() {
               hosszával egyeznek meg, így az összegük megint zérus:
             </p>
             <MB>{"F_{1} = (-5;\\,-4),\\quad F_{2} = (5;\\,-8),\\quad F_{3} = (0;\\,12)\\ \\text{kN}"}</MB>
-            <MB>{"M^{(O)} = 2\\cdot(-4) + 2\\cdot(-8) + (-3)\\cdot 12 + 0 = -60\\ \\text{kNm}"}</MB>
+            <MB>{"\\Fx -5 + 5 + 0 = 0,\\qquad \\Fy -4 - 8 + 12 = 0"}</MB>
+            <MB>{"\\Mp{O} 2\\cdot(-4) + 2\\cdot(-8) + (-3)\\cdot 12 + 0 = -60\\ \\text{kNm}"}</MB>
             <p>
               Az eredő itt is erőpár. Hiába zárul be a három erő vektorháromszöge,
               a hatásvonalaik nem egy ponton mennek át, ezért a forgatóhatás
@@ -598,13 +1085,13 @@ export default function NyomatekOldal() {
 
           <Lepes cim="c) Most már marad erő is">
             <MB>{"F_{1} = (-3{,}436;\\,-2{,}749),\\quad F_{2} = (3{,}498;\\,-5{,}597),\\quad F_{3} = (0;\\,10{,}1)\\ \\text{kN}"}</MB>
-            <MB>{"R_x = 0{,}062\\ \\text{kN},\\qquad R_y = 1{,}754\\ \\text{kN}"}</MB>
-            <MB>{"M^{(O)} = 2\\cdot(-2{,}749) + 2\\cdot(-5{,}597) + (-3)\\cdot 10{,}1 + 14 = -32{,}99\\ \\text{kNm}"}</MB>
+            <MB>{"\\Fx -3,436 + 3,498 + 0 = R_x = 0,062\\ \\text{kN},\\qquad \\Fy -2,749 - 5,597 + 10,1 = R_y = 1,754\\ \\text{kN}"}</MB>
+            <MB>{"\\Mp{O} 2\\cdot(-2{,}749) + 2\\cdot(-5{,}597) + (-3)\\cdot 10{,}1 + 14 = M^{(O)} = -32{,}99\\ \\text{kNm}"}</MB>
           </Lepes>
 
           <Lepes cim="c) Az eredő és a hatásvonala">
             <MB>{"R = \\sqrt{0{,}062^2 + 1{,}754^2} = 1{,}755\\ \\text{kN},\\qquad \\alpha_R = 87{,}98^\\circ"}</MB>
-            <MB>{"x_0 = \\frac{M^{(O)}}{R_y} = \\frac{-32{,}99}{1{,}754} = -18{,}80\\ \\text{m}"}</MB>
+            <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv \\underline{R},\\qquad \\Mp{O} -32,99 = x_0\\cdot 1,754 \\;\\Rightarrow\\; x_0 = -18,80\\ \\text{m}"}</MB>
             <p>
               Az eredő tehát egyetlen, majdnem függőleges erő, amelynek
               hatásvonala az origótól 18,8 méterrel balra metszi az{" "}
@@ -656,16 +1143,25 @@ export default function NyomatekOldal() {
             </p>
           }
         >
-          <Lepes cim="Az erők összege">
+          <Lepes cim="Egyenértékűségi kijelentés">
+            <p>
+              A hat erőt az origóra redukáljuk: társerő és társnyomaték, mindkettő
+              háromkomponensű vektor.
+            </p>
+            <MB>{"(\\underline{F}_1,\\dots,\\underline{F}_6) \\ekv (\\underline{R},\\ \\underline{M}_O)"}</MB>
+          </Lepes>
+
+          <Lepes cim="Vetületi egyenletek: az erők összege">
             <p>
               Az erők párba állnak: mindegyik irányban van egy oda- és egy
               visszamutató, azonos nagyságú erő.
             </p>
-            <MB>{"\\sum F_{ix} = F_1 - F_4 = 7 - 7 = 0\\ \\text{N}"}</MB>
-            <MB>{"\\sum F_{iy} = -F_2 + F_5 = -6 + 6 = 0\\ \\text{N}"}</MB>
-            <MB>{"\\sum F_{iz} = F_3 - F_6 = 8 - 8 = 0\\ \\text{N}"}</MB>
+            <MB>{"\\Fx F_1 - F_4 = 7 - 7 = 0\\ \\text{N}"}</MB>
+            <MB>{"\\Fy -F_2 + F_5 = -6 + 6 = 0\\ \\text{N}"}</MB>
+            <MB>{"\\Fz F_3 - F_6 = 8 - 8 = 0\\ \\text{N}"}</MB>
             <p>
-              Az eredő erő tehát <M>{"\\underline{R} = 0"}</M>.
+              Az eredő erő tehát <M>{"\\underline{R} = 0"}</M>: az eredő nyomaték
+              vagy egyensúly.
             </p>
           </Lepes>
 
@@ -688,7 +1184,12 @@ export default function NyomatekOldal() {
               Az eredő tiszta forgatónyomaték, amelyet a három komponense
               egyértelműen meghatároz:
             </p>
-            <MB>{"|\\underline{M}| = \\sqrt{(-48)^2 + (-56)^2 + (-42)^2} = 84{,}88\\ \\text{Nm}"}</MB>
+            <MB>{"(\\underline{F}_1,\\dots,\\underline{F}_6) \\ekv \\underline{M}_O,\\qquad |\\underline{M}| = \\sqrt{(-48)^2 + (-56)^2 + (-42)^2} = 84{,}88\\ \\text{Nm}"}</MB>
+            <p>
+              A négy térbeli eset közül ez a 2.: <M>{"\\underline{R} = 0"}</M>,{" "}
+              <M>{"\\underline{M} \\neq 0"}</M>. A Kalkulátorok részben az
+              osztályozóba betöltve ugyanezt kapod.
+            </p>
           </Lepes>
         </KidolgozottFeladat>
         <div className="my-8">
@@ -703,7 +1204,7 @@ export default function NyomatekOldal() {
         id="kalkulator"
         cimke="3. rész"
         cim="Kalkulátorok"
-        bevezeto="Két eszköz: az egyikkel tetszőleges síkbeli erőrendszert tudsz redukálni, a másikkal térbeli nyomatékot számolni."
+        bevezeto="Három eszköz: síkbeli erőrendszer redukálása, térbeli nyomaték számítása, és a térbeli eredő osztályozása — erő, nyomaték vagy erőcsavar."
       >
         <div className="space-y-8">
           <div>
@@ -730,6 +1231,19 @@ export default function NyomatekOldal() {
             </p>
             <TerbeliNyomatekKalk />
           </div>
+
+          <div>
+            <h3 className="mb-2 text-[16px] font-semibold text-petrol-900">
+              Térbeli eredő osztályozása
+            </h3>
+            <p className="mb-3 text-[14px] text-petrol-600">
+              Írd be a pontra redukált társerő és társnyomaték komponenseit: a
+              program kiszámolja az <M>{"\\underline{R}\\cdot\\underline{M}"}</M>{" "}
+              szorzatot, és besorolja az eredőt a négy eset egyikébe. A GYF‑5
+              adatai egy gombbal betölthetők.
+            </p>
+            <TerbeliEredoOsztalyozo />
+          </div>
         </div>
       </Szakasz>
 
@@ -738,11 +1252,13 @@ export default function NyomatekOldal() {
         id="gyakorlas"
         cimke="4. rész"
         cim="Gyakorlás"
-        bevezeto="Öt feladattípus, mindegyik új számokkal minden indításkor. Az első kettő rövid, a harmadik és a negyedik már zárthelyi-méretű."
+        bevezeto="Előbb egy játék a szemnek, aztán kvíz, hibakereső és tizenkét feladattípus — mindegyik új számokkal minden indításkor."
         className="bg-white"
       >
-        <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Előbb az ötlet – fogalmi kvíz</p>
-        <Kviz cim="Érted, vagy csak számolod?" leiras="Nyolc kérdés a modul tipikus félreértéseiről. Minden válasz után rövid magyarázat." kerdesek={KVIZ} />
+        <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Előbb játssz – hova tedd az erőt?</p>
+        <JatekMerleg />
+        <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Az ötlet – fogalmi kvíz</p>
+        <Kviz cim="Érted, vagy csak számolod?" leiras="Tizenkét kérdés a modul tipikus félreértéseiről. Minden válasz után rövid magyarázat." kerdesek={KVIZ} />
         <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Hibakereső – találd meg a hibát</p>
         <Hibakereso feladatok={HIBAK} />
         <p className="mt-8 mb-2 text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Számolós gyakorlás</p>

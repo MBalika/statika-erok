@@ -17,3 +17,8 @@ export const Film3DVektorSzorzat = dynamic(() => import("./FilmVektorSzorzat"), 
 export const Film3DHasab = dynamic(() => import("./FilmHasab"), { ssr: false, loading: Betoltes });
 export const Film3DTeherLepel = dynamic(() => import("./FilmTeherLepel"), { ssr: false, loading: Betoltes });
 export const Film3DKeresztmetszet = dynamic(() => import("./FilmKeresztmetszet"), { ssr: false, loading: Betoltes });
+
+/* Interaktív 3D felfedezők (csúszkás), szintén csak a böngészőben. */
+export const TengelyNyomatekFelfedezo3D = dynamic(() => import("./TengelyNyomatekFelfedezo"), { ssr: false, loading: Betoltes });
+export const TeherLepelFelfedezo3D = dynamic(() => import("./TeherLepelFelfedezo"), { ssr: false, loading: Betoltes });
+export const JobbkezFelfedezo3D = dynamic(() => import("./JobbkezFelfedezo"), { ssr: false, loading: Betoltes });

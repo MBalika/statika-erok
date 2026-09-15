@@ -29,8 +29,8 @@ const FEJEZETEK = [
   {
     t0: 0,
     cim: "A négy erő",
-    szoveg: "Mind a négy erő az origóból indul. Két erő tengelyirányú, kettő ferde — csak a ferdéket kell felbontani.",
-    kepletek: ["F_1 = 5\\ \\text{N},\\ F_2 = 6\\ \\text{N},\\ F_3 = 8\\ \\text{N},\\ F_4 = 4\\ \\text{N}"],
+    szoveg: "Mind a négy erő az origóból indul; az eredőt keressük, ezért az első sor az egyenértékűségi kijelentés. Két erő tengelyirányú, kettő ferde — csak a ferdéket kell felbontani.",
+    kepletek: ["(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, \\underline{F}_4) \\ekv \\underline{R}", "F_1 = 5\\ \\text{N},\\ F_2 = 6\\ \\text{N},\\ F_3 = 8\\ \\text{N},\\ F_4 = 4\\ \\text{N}"],
   },
   {
     t0: 4.6,
@@ -47,14 +47,14 @@ const FEJEZETEK = [
   {
     t0: 9.8,
     cim: "Az x komponensek összege",
-    szoveg: "A vízszintes darabok egymás után fűzve adják Rx-et. A tengelyirányú F₂ egyben egy komponens.",
-    kepletek: ["R_x = 3{,}830 + 6 + 3{,}381 + 0 = 13{,}211\\ \\text{N}"],
+    szoveg: "A vízszintes vetületi egyenlet: a kijelentés bal oldalának erői sorban, jobbra az eredő komponense. A tengelyirányú F₂ egyben egy komponens.",
+    kepletek: ["\\Fx 3{,}830 + 6 + 3{,}381 + 0 = R_x \\;\\Rightarrow\\; R_x = 13{,}211\\ \\text{N}"],
   },
   {
     t0: 12.8,
     cim: "Az y komponensek összege",
     szoveg: "A függőleges darabok: egy felfelé, kettő lefelé. Az összeg negatív — az eredő lefelé is mutat.",
-    kepletek: ["R_y = 3{,}214 + 0 - 7{,}250 - 4 = -8{,}036\\ \\text{N}"],
+    kepletek: ["\\Fy 3{,}214 + 0 - 7{,}250 - 4 = R_y \\;\\Rightarrow\\; R_y = -8{,}036\\ \\text{N}"],
   },
   {
     t0: 15.8,

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+import { kvizEredmeny } from "@/lib/haladas";
 
 /**
  * Fogalmi kvíz: feleletválasztós kérdések azonnali magyarázattal.
@@ -41,6 +43,7 @@ export default function Kviz({ cim = "Fogalmi kvíz", leiras, kerdesek, db }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const utvonal = usePathname();
   const aktualis = sor ? sor[i] : null;
   const betuk = ["A", "B", "C", "D"];
 
@@ -50,7 +53,10 @@ export default function Kviz({ cim = "Fogalmi kvíz", leiras, kerdesek, db }) {
     if (k === aktualis.helyes) setPont((p) => p + 1);
   };
   const tovabb = () => {
-    if (i + 1 >= sor.length) setKesz(true);
+    if (i + 1 >= sor.length) {
+      setKesz(true);
+      kvizEredmeny(utvonal, pont, sor.length);
+    }
     else {
       setI(i + 1);
       setValasz(null);

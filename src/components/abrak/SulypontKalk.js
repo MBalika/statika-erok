@@ -191,6 +191,7 @@ function Mezo({ cimke, ertek, onChange, szeles = "w-16" }) {
 export default function SulypontKalk() {
   const [egyseg, setEgyseg] = useState("mm");
   const [reszek, setReszek] = useState(ELORE.gyf5.reszek);
+  const [eltol, setEltol] = useState({ nyitva: false, y0: "0", z0: "0" });
 
   const adatok = reszek.map((r) => ({ ...reszAdat(r), elojel: r.elojel }));
   const A = adatok.reduce((s, a) => s + a.elojel * a.A, 0);
@@ -200,6 +201,18 @@ export default function SulypontKalk() {
   const ys = van ? Sz / A : 0;
   const zs = van ? Sy / A : 0;
 
+  // origó eltolása: O″ helye az O′ rendszerben (y0; z0) → S_y″ = S_y′ − z0·A, S_z″ = S_z′ − y0·A
+  const y0e = Number(eltol.y0) || 0;
+  const z0e = Number(eltol.z0) || 0;
+  const eltolva = eltol.nyitva && (y0e !== 0 || z0e !== 0);
+  const Sy2 = Sy - z0e * A;
+  const Sz2 = Sz - y0e * A;
+  // „nulla”, ha a súlypont az O″-től 0,005 egységen belül van (a kerekített koordináták miatt)
+  const nullaY = Math.abs(Sy2) < 0.0051 * Math.abs(A);
+  const nullaZ = Math.abs(Sz2) < 0.0051 * Math.abs(A);
+  const kerek = (v) => Math.round(v * 100) / 100;
+  const tagK = (v) => `${v < 0 ? "+" : "-"} ${szK(Math.abs(v), Number.isInteger(v) ? 0 : 2)}`;
+
   // befoglaló doboz (az origót is beleértve)
   let yMin = 0, yMax = 0, zMin = 0, zMax = 0;
   adatok.forEach((a) => {
@@ -208,6 +221,12 @@ export default function SulypontKalk() {
     zMin = Math.min(zMin, a.doboz[2]);
     zMax = Math.max(zMax, a.doboz[3]);
   });
+  if (eltolva) {
+    yMin = Math.min(yMin, y0e);
+    yMax = Math.max(yMax, y0e);
+    zMin = Math.min(zMin, z0e);
+    zMax = Math.max(zMax, z0e);
+  }
   const szel = Math.max(yMax - yMin, 1);
   const mag = Math.max(zMax - zMin, 1);
   const m = Math.min(330 / szel, 290 / mag);
@@ -249,6 +268,9 @@ export default function SulypontKalk() {
               <marker id="hegy-sk-t" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
                 <path d="M 0 1 L 9 5 L 0 9 z" fill="#475569" />
               </marker>
+              <marker id="hegy-sk-l" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#7c3aed" />
+              </marker>
               <pattern id="sk-vonalka" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
                 <line x1="0" y1="0" x2="0" y2="6" stroke="#be123c" strokeWidth="1" opacity="0.5" />
               </pattern>
@@ -279,8 +301,27 @@ export default function SulypontKalk() {
               ) : null,
             )}
 
-            <TengelyekYZ x={ox} y={oy} hossz={Math.max(50, yMax * m + 30)} zHossz={Math.max(50, zMax * m + 30)} id="hegy-sk-t" />
-            <circle cx={ox} cy={oy} r="2.2" fill="#475569" />
+            <g opacity={eltolva ? 0.5 : 1}>
+              <TengelyekYZ x={ox} y={oy} hossz={Math.max(50, yMax * m + 30)} zHossz={Math.max(50, zMax * m + 30)} id="hegy-sk-t" />
+              <circle cx={ox} cy={oy} r="2.2" fill="#475569" />
+              {eltolva && (
+                <text x={ox + 6} y={oy - 6} fontSize="11" fontWeight="600" style={{ fill: "#475569" }}>O′</text>
+              )}
+            </g>
+
+            {/* az eltolt O″ rendszer */}
+            {eltolva && (
+              <g>
+                <line x1={X(y0e)} y1={Y(z0e)} x2={X(y0e) - 80} y2={Y(z0e)} stroke="#7c3aed" strokeWidth="1.6" markerEnd="url(#hegy-sk-l)" />
+                <line x1={X(y0e)} y1={Y(z0e)} x2={X(y0e)} y2={Y(z0e) + 80} stroke="#7c3aed" strokeWidth="1.6" markerEnd="url(#hegy-sk-l)" />
+                <text x={X(y0e) - 86} y={Y(z0e) + 4} textAnchor="end" fontSize="11.5" fontStyle="italic" fontWeight="600" style={{ fill: "#7c3aed", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>y″</text>
+                <text x={X(y0e) + 5} y={Y(z0e) + 90} fontSize="11.5" fontStyle="italic" fontWeight="600" style={{ fill: "#7c3aed", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>z″</text>
+                <circle cx={X(y0e)} cy={Y(z0e)} r="4.5" fill="white" stroke="#7c3aed" strokeWidth="2" />
+                <text x={X(y0e) + 8} y={Y(z0e) + 19} fontSize="11" fontWeight="650" style={{ fill: "#7c3aed", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                  O″ ({sz(y0e, Number.isInteger(y0e) ? 0 : 2)}; {sz(z0e, Number.isInteger(z0e) ? 0 : 2)})
+                </text>
+              </g>
+            )}
 
             {van && (
               <>
@@ -292,6 +333,7 @@ export default function SulypontKalk() {
           </svg>
           <p className="mt-1 text-center text-[11.5px] text-petrol-400">
             y balra, z lefelé. A kivont (−) részek vonalkázva. Az egység csak a feliratokat érinti.
+            {eltolva ? " A lila O″ az eltolt rendszer — a súlypont ugyanott van." : ""}
           </p>
         </div>
 
@@ -436,6 +478,52 @@ export default function SulypontKalk() {
               </div>
             ) : (
               <p className="mt-1 text-[13px] text-petrol-700">Az összterület nulla — így nincs súlypont. Ellenőrizd az előjeleket.</p>
+            )}
+          </div>
+
+          {/* origó eltolása – a 4.3 eltolási szabálya */}
+          <div className={`mt-3 rounded-xl border px-4 py-3 ${eltolva ? "border-violet-200 bg-violet-50" : "border-petrol-100 bg-petrol-50/60"}`}>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className={`text-[10.5px] font-bold tracking-[0.16em] uppercase ${eltolva ? "text-violet-800" : "text-petrol-500"}`}>Origó eltolása</p>
+              <button
+                type="button"
+                onClick={() => setEltol((e) => ({ ...e, nyitva: !e.nyitva }))}
+                className="ml-auto rounded-md bg-white px-2 py-0.5 text-[11.5px] font-medium text-petrol-600 ring-1 ring-petrol-200 transition hover:bg-petrol-50"
+              >
+                {eltol.nyitva ? "elrejt" : "megnyit"}
+              </button>
+            </div>
+            {eltol.nyitva && (
+              <>
+                <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                  <Mezo cimke="y₀ =" ertek={eltol.y0} onChange={(v) => setEltol((e) => ({ ...e, y0: v }))} />
+                  <Mezo cimke="z₀ =" ertek={eltol.z0} onChange={(v) => setEltol((e) => ({ ...e, z0: v }))} />
+                  <button
+                    type="button"
+                    disabled={!van}
+                    onClick={() => setEltol((e) => ({ ...e, y0: String(kerek(ys)), z0: String(kerek(zs)) }))}
+                    className="rounded-md bg-naracs-500 px-2.5 py-1 text-[11.5px] font-semibold text-white transition hover:bg-naracs-600 disabled:opacity-40"
+                  >
+                    a súlypontba
+                  </button>
+                  <button type="button" onClick={() => setEltol((e) => ({ ...e, y0: "0", z0: "0" }))} className="rounded-md bg-white px-2.5 py-1 text-[11.5px] font-medium text-petrol-600 ring-1 ring-petrol-200 transition hover:bg-petrol-50">
+                    vissza
+                  </button>
+                  <span className="w-full text-[11px] text-petrol-400">(y₀, z₀): az új O″ origó helye a mostani rendszerben — a részek adatait nem kell átírni</span>
+                </div>
+                {van && (
+                  <div className="szamok mt-2 space-y-1 text-[13px] text-petrol-900">
+                    <div><M>{`S_{y''} = S_{y'} - z_0 A = ${szK(Sy, 0)} ${tagK(z0e)}\\cdot ${szK(A, 1)} = ${nullaY ? "0" : szK(Sy2, 0)}\\ \\text{${e3}}`}</M></div>
+                    <div><M>{`S_{z''} = S_{z'} - y_0 A = ${szK(Sz, 0)} ${tagK(y0e)}\\cdot ${szK(A, 1)} = ${nullaZ ? "0" : szK(Sz2, 0)}\\ \\text{${e3}}`}</M></div>
+                    <div><M>{`z_S'' = z_S' - z_0 = ${szK(zs - z0e, 2)},\\quad y_S'' = y_S' - y_0 = ${szK(ys - y0e, 2)}\\ \\text{${egyseg}}`}</M></div>
+                    <p className="mt-1 text-[12px] text-petrol-600">
+                      {nullaY && nullaZ
+                        ? "Az origó a súlypontban: mindkét statikai nyomaték nulla — ez a súlyponti koordináta-rendszer."
+                        : "A statikai nyomaték az eltolás × terület szorzatával változik; a súlypont a rajzon nem mozdul, csak a koordinátái mások."}
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

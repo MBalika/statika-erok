@@ -49,6 +49,30 @@ export const KVIZ = [
     helyes: 0,
     magyarazat: <>A súlyponti tengelyre <M>{"S = 0"}</M>; hajlításnál a keresztmetszet e körül „forog”, ez a semleges tengely. A másodrendű nyomatékot is a súlyponti tengelyekre számoljuk.</>,
   },
+  {
+    k: <>Mi a súlypont definíciója a tankönyv szerint?</>,
+    v: [<>Az a pont, amelyen átmenő tengelyekre a síkidom statikai nyomatéka nulla.</>, <>Az a pont, ahol a terület a legnagyobb.</>, <>A befoglaló téglalap középpontja.</>, <>Az a pont, ahol a statikai nyomaték a legnagyobb.</>],
+    helyes: 0,
+    magyarazat: <>Tankönyv 9.14: <M>{"0 = S_{y'} - z_S' A"}</M>, innen <M>{"z_S' = S_{y'}/A"}</M>. A súlyponti tengelyre <M>{"S = 0"}</M> — ez nem következmény, hanem maga a definíció; a „súlyozott átlag” képlet ebből jön.</>,
+  },
+  {
+    k: <>Az origót eltoljuk <M>{"z_0"}</M>-lal lefelé. Mi történik az <M>{"S_y"}</M> statikai nyomatékkal és a súlyponttal?</>,
+    v: [<><M>{"S_y"}</M> az eltolás × terület szorzatával változik (<M>{"S_{y''} = S_{y'} - z_0 A"}</M>), a súlypont helye nem változik.</>, <>Sem <M>{"S_y"}</M>, sem a súlypont nem változik.</>, <><M>{"S_y"}</M> nem változik, a súlypont eltolódik.</>, <><M>{"S_y"}</M> a <M>{"z_0"}</M>-lal szorzódik.</>],
+    helyes: 0,
+    magyarazat: <>Tankönyv 9.12: <M>{"S_{y''} = \\int (z' - z_0)\\,dA = S_{y'} - z_0 A"}</M>. A statikai nyomaték lineárisan változik az eltolással, a súlypont geometriai pont — csak a koordinátái mások: <M>{"z_S'' = z_S' - z_0"}</M>.</>,
+  },
+  {
+    k: <>A tankönyv az <M>{"x'y'"}</M>-síkban dolgozik: <M>{"S_{x'} = \\int y'\\,dA"}</M>. Az oldalon <M>{"S_y = \\int z\\,dA"}</M>. Mi a közös szabály?</>,
+    v: [<>Az index a tengely, a távolság a másik koordináta — mindkét jelölésben ugyanaz.</>, <>A tankönyvben fordított a szabály.</>, <>A tankönyvi képlet csak vízszintes tengelyre érvényes.</>, <>Nincs kapcsolat, más mennyiségről van szó.</>],
+    helyes: 0,
+    magyarazat: <>A könyv 9.9–9.10: az <M>{"x'"}</M> tengelyre az <M>{"y'"}</M>, az <M>{"y'"}</M> tengelyre az <M>{"x'"}</M> koordinátával. Itt a keresztmetszet síkja az y–z, ezért az y tengelyre a z koordináta: <M>{"S_y = \\sum A_i z_i"}</M>. A vessző a könyvben a külső (tetszőleges) tengelyeket jelöli, a vesszőtlen xy a súlyponti rendszer.</>,
+  },
+  {
+    k: <>Egy kör átmérője <M>{"D = 40"}</M> mm. Mekkora a területe?</>,
+    v: [<><M>{"D^2\\pi/4 = 1\\,257\\ \\text{mm}^2"}</M></>, <><M>{"D^2\\pi = 5\\,027\\ \\text{mm}^2"}</M></>, <><M>{"D\\pi = 125{,}7\\ \\text{mm}^2"}</M></>, <><M>{"D^2\\pi/2 = 2\\,513\\ \\text{mm}^2"}</M></>],
+    helyes: 0,
+    magyarazat: <><M>{"A = R^2\\pi = (D/2)^2\\pi = D^2\\pi/4"}</M> — 20²π = 1 256,6 mm². Aki D-t sugárnak nézi, négyszeres területet kap. Ugyanígy félkörnél <M>{"D^2\\pi/8"}</M>, negyedkörnél <M>{"D^2\\pi/16"}</M> (tankönyv 9.4. ábra).</>,
+  },
 ];
 
 export const HIBAK = [
@@ -82,5 +106,25 @@ export const HIBAK = [
       { szoveg: <><M>{"y_S = \\frac{1\\,600\\cdot 20 + 314{,}2\\cdot 8{,}49}{1\\,285{,}8} = 26{,}96\\ \\text{mm}"}</M></>, hibas: true, javitas: <>A kivont rész statikai nyomatéka is negatív: <M>{"y_S = \\frac{1\\,600\\cdot 20 - 314{,}2\\cdot 8{,}49}{1\\,285{,}8} = 22{,}81"}</M> mm. A területnél már levontuk — a nyomatéknál is le kell. (Józan ész: a sarok hiányzik az origónál, a súlypont onnan <em>elfelé</em>, balra tolódik: 20-nál nagyobb, de 27 túl sok.)</> },
     ],
     tanulsag: <>Az előjel a területnél és a statikai nyomatéknál <em>ugyanaz</em>. Ha a területet kivontad, a nyomatékot is vond ki.</>,
+  },
+  {
+    cim: "D vagy R? — az átmérőt sugárnak nézték",
+    feladat: <>Egy 120×60 mm-es téglalap alsó éléhez egy D = 120 mm átmérőjű félkör illeszkedik (domború oldalával lefelé). Milyen mélyen van a súlypont a felső éltől?</>,
+    lepesek: [
+      { szoveg: <><M>{"A_1 = 120\\cdot 60 = 7\\,200\\ \\text{mm}^2,\\quad z_1 = 30\\ \\text{mm}"}</M></> },
+      { szoveg: <><M>{"A_2 = \\frac{120^2\\pi}{2} = 22\\,619\\ \\text{mm}^2,\\quad z_2 = 60 + \\frac{4\\cdot 120}{3\\pi} = 110{,}9\\ \\text{mm}"}</M></>, hibas: true, javitas: <>A 120 az <em>átmérő</em>, a sugár R = 60 mm. Helyesen <M>{"A_2 = \\frac{60^2\\pi}{2} = \\frac{D^2\\pi}{8} = 5\\,654{,}9"}</M> mm² (a hibás érték ennek a négyszerese), és <M>{"z_2 = 60 + \\frac{4\\cdot 60}{3\\pi} = 60 + 25{,}46 = 85{,}46"}</M> mm. Ezzel <M>{"A = 12\\,854{,}9"}</M>, <M>{"S_y = 7\\,200\\cdot 30 + 5\\,654{,}9\\cdot 85{,}46 \\approx 699\\,300"}</M>, <M>{"z_S = 54{,}4"}</M> mm. (A hibás adatokkal 91,4 mm jönne ki — a félkör közepénél is mélyebben, ami már szemre gyanús.)</> },
+      { szoveg: <><M>{"z_S = \\frac{A_1 z_1 + A_2 z_2}{A_1 + A_2}"}</M></> },
+    ],
+    tanulsag: <>A feladat gyakran <em>átmérőt</em> ad (tankönyv 9.4. ábra: <M>{"D^2\\pi/4"}</M>, <M>{"D^2\\pi/8"}</M>, <M>{"D^2\\pi/16"}</M>). Írd fel először R = D/2-t, és csak utána a képleteket — a 4R/3π-ben is a sugár szerepel.</>,
+  },
+  {
+    cim: "Eltolt origó — az előjel",
+    feladat: <>Egy L-idom álló szára 20×120 mm, fekvő szára 100×20 mm (az álló szár jobb felső sarka az O′ origó, y balra, z lefelé). Az O′ rendszerben <M>{"S_{y'} = 364\\,000"}</M> mm³. Mekkora <M>{"S_{y''}"}</M>, ha az origót 50 mm-rel <strong>lejjebb</strong> toljuk (O″: <M>{"y_0 = 0,\\ z_0 = 50"}</M> mm)?</>,
+    lepesek: [
+      { szoveg: <><M>{"A = 20\\cdot 120 + 100\\cdot 20 = 4\\,400\\ \\text{mm}^2,\\qquad z_S' = \\frac{S_{y'}}{A} = \\frac{364\\,000}{4\\,400} = 82{,}73\\ \\text{mm}"}</M></> },
+      { szoveg: <><M>{"S_{y''} = S_{y'} + z_0 A = 364\\,000 + 50\\cdot 4\\,400 = 584\\,000\\ \\text{mm}^3"}</M></>, hibas: true, javitas: <>Az eltolást <em>le kell vonni</em> (tankönyv 9.12): az új koordináta <M>{"z'' = z' - z_0"}</M>, ezért <M>{"S_{y''} = S_{y'} - z_0 A = 364\\,000 - 50\\cdot 4\\,400 = 144\\,000"}</M> mm³. Ellenőrzés a súlyponttal: az O″ rendszerben <M>{"z_S'' = 82{,}73 - 50 = 32{,}73"}</M> mm, és <M>{"32{,}73\\cdot 4\\,400 = 144\\,000"}</M> — stimmel. A hibás előjellel a súlypont a súlypontba tolt tengelyre sem adna nullát: <M>{"364\\,000 + 82{,}73\\cdot 4\\,400 = 728\\,000 \\ne 0"}</M>.</> },
+      { szoveg: <><M>{"z_S'' = \\frac{S_{y''}}{A} = \\frac{584\\,000}{4\\,400} = 132{,}73\\ \\text{mm}"}</M></> },
+    ],
+    tanulsag: <>Józan ész: ha az origót <em>lefelé</em> toljuk, a súlypont z koordinátája <em>kisebb</em> lesz, nem nagyobb — 132,7 mm helyett 32,7 mm. A végső próba mindig ugyanaz: a súlyponton átmenő tengelyre <M>{"S = 0"}</M> kell, hogy legyen; ha nem az, az előjelet rontottad el.</>,
   },
 ];

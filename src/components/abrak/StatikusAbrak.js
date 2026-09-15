@@ -405,3 +405,97 @@ export function AbraTerbeliVektor() {
     </svg>
   );
 }
+
+/* ---------------- Erőrendszerek fajtái (2×2 rács) ---------------- */
+
+export function AbraErorendszerFajtai() {
+  // Négy kis rajz ugyanarra a lemezre: a hatásvonalak elhelyezkedése különbözik.
+  const NAR = "#e2590a";
+  const TEAL = "#0f766e";
+  const KEK = "#2563eb";
+  const cellak = [
+    { cim: "Közös hatásvonalú", x: 0, y: 0 },
+    { cim: "Közös metszéspontú", x: 280, y: 0 },
+    { cim: "Párhuzamos", x: 0, y: 200 },
+    { cim: "Általános helyzetű (szétszórt)", x: 280, y: 200 },
+  ];
+  const Lemez = ({ x, y }) => (
+    <rect x={x + 40} y={y + 60} width="200" height="100" rx="6" fill="#e8f1f3" stroke="#bcdce2" strokeWidth="1.2" />
+  );
+  const Ero = ({ x1, y1, x2, y2, szin, hegy, nev, dx = 0, dy = -6 }) => (
+    <g>
+      <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={szin} strokeWidth="2.8" strokeLinecap="round" markerEnd={`url(#${hegy})`} />
+      <text x={x2 + dx} y={y2 + dy} fontSize="11.5" fontWeight="650" fill={szin} textAnchor="middle">
+        {nev}
+      </text>
+    </g>
+  );
+  const Hv = ({ x1, y1, x2, y2 }) => <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="#94a3b8" strokeWidth="0.9" strokeDasharray="4 3" />;
+
+  return (
+    <svg viewBox="0 0 560 400" className="abra w-full">
+      <defs>
+        <Hegy id="ef-1" szin={NAR} />
+        <Hegy id="ef-2" szin={TEAL} />
+        <Hegy id="ef-3" szin={KEK} />
+      </defs>
+      {cellak.map((c) => (
+        <g key={c.cim}>
+          <text x={c.x + 40} y={c.y + 30} fontSize="12.5" fontWeight="700" fill="#275767">
+            {c.cim}
+          </text>
+          <Lemez x={c.x} y={c.y} />
+        </g>
+      ))}
+
+      {/* 1. közös hatásvonalú: minden erő ugyanazon az egyenesen */}
+      <Hv x1={20} y1={125} x2={270} y2={95} />
+      <Ero x1={60} y1={120} x2={120} y2={113} szin={NAR} hegy="ef-1" nev="F₁" dy={-8} />
+      <Ero x1={140} y1={111} x2={190} y2={105} szin={TEAL} hegy="ef-2" nev="F₂" dy={-8} />
+      <Ero x1={255} y1={97} x2={215} y2={102} szin={KEK} hegy="ef-3" nev="F₃" dx={-4} dy={18} />
+
+      {/* 2. közös metszéspontú: a hatásvonalak egy pontban metszik egymást */}
+      {(() => {
+        const M = { x: 420, y: 110 };
+        const irany = [
+          [-1, -0.45],
+          [0.9, -0.7],
+          [0.3, 1],
+        ];
+        const szinek = [NAR, TEAL, KEK];
+        return (
+          <g>
+            {irany.map(([dx, dy], i) => {
+              const h = Math.hypot(dx, dy);
+              const ex = dx / h;
+              const ey = dy / h;
+              return (
+                <g key={i}>
+                  <Hv x1={M.x - ex * 90} y1={M.y - ey * 90} x2={M.x + ex * 90} y2={M.y + ey * 90} />
+                  <Ero x1={M.x + ex * 20} y1={M.y + ey * 20} x2={M.x + ex * 70} y2={M.y + ey * 70} szin={szinek[i]} hegy={`ef-${i + 1}`} nev={`F${"₁₂₃"[i]}`} dx={ex * 14} dy={ey * 14 + 4} />
+                </g>
+              );
+            })}
+            <circle cx={M.x} cy={M.y} r="3.5" fill="#1d3c48" />
+          </g>
+        );
+      })()}
+
+      {/* 3. párhuzamos */}
+      <Hv x1={90} y1={245} x2={90} y2={380} />
+      <Hv x1={150} y1={245} x2={150} y2={380} />
+      <Hv x1={215} y1={245} x2={215} y2={380} />
+      <Ero x1={90} y1={250} x2={90} y2={300} szin={NAR} hegy="ef-1" nev="F₁" dx={12} dy={4} />
+      <Ero x1={150} y1={250} x2={150} y2={310} szin={TEAL} hegy="ef-2" nev="F₂" dx={12} dy={4} />
+      <Ero x1={215} y1={375} x2={215} y2={330} szin={KEK} hegy="ef-3" nev="F₃" dx={12} dy={4} />
+
+      {/* 4. általános helyzetű: se nem metsződnek egy pontban, se nem párhuzamosak */}
+      <Hv x1={300} y1={330} x2={420} y2={240} />
+      <Hv x1={395} y1={250} x2={470} y2={380} />
+      <Hv x1={330} y1={360} x2={540} y2={340} />
+      <Ero x1={330} y1={307} x2={385} y2={266} szin={NAR} hegy="ef-1" nev="F₁" dx={10} dy={-4} />
+      <Ero x1={404} y1={265.6} x2={430} y2={310.7} szin={TEAL} hegy="ef-2" nev="F₂" dx={14} dy={4} />
+      <Ero x1={345} y1={358.6} x2={405} y2={352.9} szin={KEK} hegy="ef-3" nev="F₃" dx={-6} dy={18} />
+    </svg>
+  );
+}

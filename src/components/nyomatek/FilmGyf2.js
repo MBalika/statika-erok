@@ -21,25 +21,25 @@ const FEJEZETEK = [
     t0: 0,
     cim: "Négy egyforma, párhuzamos erő",
     szoveg: "Mind a négy 11 kN, mind lefelé mutat, 2, 3, 4 és 5 m-nél. Párhuzamos erőknél az eredő nagysága egyszerű összeg, a helye a nyomatéki egyenletből jön.",
-    kepletek: ["(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, \\underline{F}_4) \\doteq \\underline{R}"],
+    kepletek: ["(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, \\underline{F}_4) \\ekv \\underline{R}"],
   },
   {
     t0: 3.4,
     cim: "Az eredő nagysága",
     szoveg: "A négy erőt egymás után fűzve egyetlen, négyszer akkora erő lesz — mind negatív y irányú.",
-    kepletek: ["R_y = -4\\cdot 11 = -44\\ \\text{kN}\\quad(\\downarrow)"],
+    kepletek: ["\\Fy -11 - 11 - 11 - 11 = R_y \\;\\Rightarrow\\; R_y = -44\\ \\text{kN}\\quad(\\downarrow)"],
   },
   {
     t0: 6.6,
     cim: "Nyomaték az origóra",
     szoveg: "Lefelé mutató erő az origótól jobbra az óramutató irányába forgat: minden tag negatív. Minél távolabb az erő, annál nagyobb a nyomatéka.",
-    kepletek: ["M^{(O)} = 2\\cdot(-11) + 3\\cdot(-11) + 4\\cdot(-11) + 5\\cdot(-11) = -154\\ \\text{kNm}"],
+    kepletek: ["\\Mp{O} 2\\cdot(-11) + 3\\cdot(-11) + 4\\cdot(-11) + 5\\cdot(-11) = M^{(O)} = -154\\ \\text{kNm}"],
   },
   {
     t0: 11,
     cim: "Az eredő helye",
     szoveg: "Az eredőnek ugyanezt a nyomatékot kell adnia. Az origóból indulva addig toljuk, amíg x·(−44) = −154 lesz — a négy erő „közepén” áll meg, a 2 és az 5 felezőjénél.",
-    kepletek: ["x_R = \\frac{M^{(O)}}{R_y} = \\frac{-154}{-44} = 3{,}5\\ \\text{m}"],
+    kepletek: ["\\Mp{O} -154 = x_R\\cdot(-44) \\;\\Rightarrow\\; x_R = 3,5\\ \\text{m}"],
   },
 ];
 

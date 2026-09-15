@@ -40,31 +40,31 @@ const FEJEZETEK = [
     t0: 0,
     cim: "A geometria: három hatásvonal, egy háromszög",
     szoveg: "A három erő hatásvonala a (−3; 8), (2; 0), (−3; −4) csúcsú háromszög három oldala; ehhez jön egy M forgatónyomaték. Ugyanezt az ábrát háromféle adattal nézzük meg.",
-    kepletek: ["\\text{a)}\\ F_1 = 12{,}81,\\ F_2 = 18{,}87,\\ F_3 = 24\\ \\text{kN},\\ M = 17\\ \\text{kNm}"],
+    kepletek: ["(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv \\mathcal{D}", "\\text{a)}\\ F_1 = 12,81,\\ F_2 = 18,87,\\ F_3 = 24\\ \\text{kN},\\ M = 17\\ \\text{kNm}"],
   },
   {
     t0: 4,
     cim: "a) Az erők összege nulla",
     szoveg: "Ha a három erőt egymás után fűzzük, a lánc bezárul: ΣFx = 0, ΣFy = 0. Ez egyensúlynak látszik — de még nem az.",
-    kepletek: ["\\underline{F}_1 = (-10;-8),\\ \\underline{F}_2 = (10;-16),\\ \\underline{F}_3 = (0;24)\\ \\Rightarrow\\ \\underline{R} = \\underline{0}"],
+    kepletek: ["\\Fx -10 + 10 + 0 = R_x = 0,\\qquad \\Fy -8 - 16 + 24 = R_y = 0"],
   },
   {
     t0: 8,
     cim: "a) …de a nyomaték nem: erőpár",
     szoveg: "F₁ és F₂ hatásvonala a (2; 0) ponton megy át, F₃-é az x = −3 egyenesen. A nyomatékok nem ejtik ki egymást — az eredő tiszta forgatónyomaték, minden pontra ugyanannyi.",
-    kepletek: ["M^{(O)} = 2\\cdot(-8) + 2\\cdot(-16) + (-3)\\cdot 24 + 17 = -103\\ \\text{kNm}"],
+    kepletek: ["\\Mp{O} 2\\cdot(-8) + 2\\cdot(-16) + (-3)\\cdot 24 + 17 = -103\\ \\text{kNm}", "(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv M^{(O)}"],
   },
   {
     t0: 12,
     cim: "b) Fele erők, M = 0 — megint erőpár",
     szoveg: "Az erők most pontosan az oldalvektorok: az összegük megint nulla. A nyomaték kisebb, de nem nulla — mert a hatásvonalak nem egy ponton mennek át.",
-    kepletek: ["M^{(O)} = 2\\cdot(-4) + 2\\cdot(-8) + (-3)\\cdot 12 = -60\\ \\text{kNm}"],
+    kepletek: ["\\Mp{O} 2\\cdot(-4) + 2\\cdot(-8) + (-3)\\cdot 12 = -60\\ \\text{kNm}"],
   },
   {
     t0: 15.5,
     cim: "c) Itt már marad erő: egyetlen erő az eredő",
     szoveg: "A lánc nem zárul be: a hézag maga az eredő, egy majdnem függőleges 1,755 kN. A nyomaték −32,99 kNm, ezért az eredő hatásvonala az origótól balra, 18,8 m-re metszi az x tengelyt.",
-    kepletek: ["R = 1{,}755\\ \\text{kN},\\quad M^{(O)} = -32{,}99\\ \\text{kNm},\\quad x_0 = \\frac{-32{,}99}{1{,}754} = -18{,}80\\ \\text{m}"],
+    kepletek: ["\\Fx 0,062,\\quad \\Fy 1,754\\ \\text{kN};\\quad \\Mp{O} -32,99\\ \\text{kNm}", "(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv \\underline{R},\\quad -32,99 = x_0\\cdot 1,754 \\;\\Rightarrow\\; x_0 = -18,80\\ \\text{m}"],
   },
 ];
 

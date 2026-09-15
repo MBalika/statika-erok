@@ -34,7 +34,7 @@ export const modulok = [
     cim: "Vektorok, erők megadása",
     rovid: "Vektorok",
     leiras:
-      "Erő megadása komponensekkel, vektorok összeadása, vetítés ferde tengelyre, egyensúly.",
+      "Erő megadása komponensekkel, vektorműveletek, egyenértékűségi kijelentés, skaláris és vektoriális szorzat, egyensúly.",
     ikon: "vektor",
     kesz: true,
     szakaszok: [
@@ -50,7 +50,7 @@ export const modulok = [
     cim: "Nyomaték, eredő, redukálás",
     rovid: "Nyomaték és eredő",
     leiras:
-      "Forgatónyomaték, erőpár, erőrendszer redukálása egy pontra, az eredő három esete.",
+      "Forgatónyomaték pontra és tengelyre, erőpár, dinámrendszer redukálása, az eredő esetei síkban és térben.",
     ikon: "nyomatek",
     kesz: true,
     szakaszok: [
@@ -66,7 +66,7 @@ export const modulok = [
     cim: "Megoszló erők",
     rovid: "Megoszló erők",
     leiras:
-      "Vonal mentén megoszló teher eredőjének nagysága és helye, felbontási technikák.",
+      "Vonal, felület és térfogat mentén megoszló erők eredője, felbontás, ferde és ívmenti teher, víznyomás.",
     ikon: "megoszlo",
     kesz: true,
     szakaszok: [
@@ -82,7 +82,7 @@ export const modulok = [
     cim: "Súlypont",
     rovid: "Súlypont",
     leiras:
-      "Statikai nyomaték, összetett síkidomok súlypontja, kivonásos módszer, köríves alakzatok.",
+      "Statikai nyomaték és eltolása, összetett síkidomok súlypontja, kivonásos módszer, köríves alakzatok.",
     ikon: "sulypont",
     kesz: true,
     szakaszok: [
@@ -104,7 +104,7 @@ export const extraOldalak = [
   {
     slug: "/puska",
     rovid: "Puska",
-    leiras: "Nyomtatható egyoldalas összefoglaló modulonként.",
+    leiras: "Nyomtatható összefoglaló modulonként, plusz a tankönyv nyelve.",
   },
 ];
 

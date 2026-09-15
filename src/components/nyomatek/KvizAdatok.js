@@ -29,7 +29,7 @@ export const KVIZ = [
     k: <>Melyik előjelszabály helyes a síkbeli nyomatékra egy ponton átmenő F = (Fx; Fy) erőnél, amely az (x; y) pontban támad?</>,
     v: [<><M>{"M = x F_y - y F_x"}</M></>, <><M>{"M = x F_x + y F_y"}</M></>, <><M>{"M = y F_x - x F_y"}</M></>, <><M>{"M = x F_x - y F_y"}</M></>],
     helyes: 0,
-    magyarazat: <>Ez a Varignon-tétel komponensekkel: a függőleges komponens karja x, a vízszintesé y, és a vízszintes tag negatív előjellel jön (pozitív Fx pozitív y-nál az óramutató irányába forgat). A második képlet a skaláris szorzat — az nem nyomaték.</>,
+    magyarazat: <>A nyomaték a komponensek nyomatékainak összege (ezt hívják Varignon-tételnek, a tankönyv nem nevezi néven): a függőleges komponens karja x, a vízszintesé y, és a vízszintes tag negatív előjellel jön (pozitív Fx pozitív y-nál az óramutató irányába forgat). A második képlet a skaláris szorzat — az nem nyomaték.</>,
   },
   {
     k: <>Egy erőrendszer eredője egyetlen erő, <M>{"R_y = 10\\ \\text{kN}"}</M>, az origóra vett nyomaték <M>{"M^{(O)} = -210\\ \\text{kNm}"}</M>. Hol metszi a hatásvonal az x tengelyt?</>,
@@ -48,6 +48,30 @@ export const KVIZ = [
     v: [<>Megadja a nyomatékvektor irányát: r-től F felé forgatva a hüvelykujj mutatja M-et.</>, <>Megadja a nyomaték nagyságát.</>, <>Eldönti, hogy az erő pozitív vagy negatív.</>, <>Csak síkbeli feladatoknál használjuk.</>],
     helyes: 0,
     magyarazat: <>A vektoriális szorzat iránya merőleges r és F síkjára, és a jobbkéz-szabály mondja meg, a két lehetséges merőleges közül melyik. A nagyságot <M>{"|r||F|\\sin\\varphi"}</M> adja.</>,
+  },
+  {
+    k: <>Térbeli erőrendszert redukáltunk egy pontra: a társerő <M>{"\\underline{R}_A \\neq 0"}</M>, és <M>{"\\underline{R}_A\\cdot\\underline{M}_A \\neq 0"}</M>. Mi az eredő?</>,
+    v: [<>Erőcsavar: egy erő és egy vele párhuzamos tengely körül forgató nyomaték.</>, <>Egyetlen erő, mert R ≠ 0.</>, <>Tiszta nyomaték.</>, <>Egyensúly, ha a szorzat pozitív.</>],
+    helyes: 0,
+    magyarazat: <>Ha a társnyomatéknak van az erővel párhuzamos vetülete (a skaláris szorzat nem nulla), azt a részt nem lehet az erő eltolásával „elnyeletni” — megmarad az erő tengelye körüli forgatás. Ez az erőcsavar, mint a facsavar behajtásakor. Egyetlen erő csak akkor az eredő, ha <M>{"\\underline{R}\\cdot\\underline{M} = 0"}</M>.</>,
+  },
+  {
+    k: <>Két párhuzamos, <em>ellentétes</em> irányú, különböző nagyságú erő eredője hol van?</>,
+    v: [<>A két hatásvonalon kívül, a nagyobb erő oldalán.</>, <>A két hatásvonal között, a nagyobbhoz közelebb.</>, <>A két hatásvonal között, pontosan középen.</>, <>Nincs eredő ereje, csak nyomatéka.</>],
+    helyes: 0,
+    magyarazat: <>Azonos irányú erőknél az eredő közéjük esik (a nagyobbhoz közelebb); ellentétes irányúaknál kívülre, a nagyobb oldalára — a nyomatéki egyenletből így jön ki. Csak akkor nincs eredő erő, ha a két erő egyenlő nagyságú: az az erőpár.</>,
+  },
+  {
+    k: <>Mikor nulla egy erő nyomatéka egy <M>{"t"}</M> tengelyre?</>,
+    v: [<>Ha a hatásvonala metszi a tengelyt, vagy párhuzamos vele.</>, <>Csak akkor, ha az erő átmegy az origón.</>, <>Ha az erő merőleges a tengelyre.</>, <>Soha, ha az erő nem nulla.</>],
+    helyes: 0,
+    magyarazat: <>Metsző hatásvonalnál a kar nulla; párhuzamosnál az erő „a tengely irányában tol”, nem forgat körülötte. Egy erő tehát csak a hozzá képest <em>kitérő</em> tengelyek körül forgat. A merőlegesség önmagában nem elég — egy merőleges, de kitérő erő pont hogy forgat.</>,
+  },
+  {
+    k: <>Egy erőrendszert az A pontra redukáltunk: társerő <M>{"\\underline{F}_A"}</M>, társnyomaték <M>{"M_A"}</M>. Ha a B pontra redukáljuk, melyik változik?</>,
+    v: [<>Csak a társnyomaték; a társerő ugyanaz marad.</>, <>Csak a társerő; a társnyomaték ugyanaz.</>, <>Mindkettő megváltozik.</>, <>Egyik sem, a redukálás pontfüggetlen.</>],
+    helyes: 0,
+    magyarazat: <>A társerő az erők összege, ez nem függ a ponttól. A társnyomaték viszont az adott ponton átmenő társerőhöz tartozik: B-re redukálva hozzáadódik az A-ban ülő <M>{"\\underline{F}_A"}</M> nyomatéka B-re. Kivétel: ha <M>{"\\underline{F}_A = 0"}</M>, akkor a nyomaték is pontfüggetlen (tiszta nyomaték).</>,
   },
 ];
 
@@ -80,5 +104,15 @@ export const HIBAK = [
       { szoveg: <>A háromszög területe a számoláshoz nem kell.</> },
     ],
     tanulsag: <>„Nem mozdul el” ≠ „egyensúlyban van”: a forgás is mozgás. Mindig három egyenlet: ΣFx, ΣFy, ΣM.</>,
+  },
+  {
+    cim: "Dinámrendszer: a nyomaték nem erő",
+    feladat: <>Egy vízszintes egyenesen F₁ = 4 kN felfelé (x = 1 m), F₂ = 6 kN lefelé (x = 5 m) és egy M = 10 kNm, óramutatóval ellentétes nyomaték hat. Mi az eredő, és hol van?</>,
+    lepesek: [
+      { szoveg: <><M>{"(\\underline{F}_1, \\underline{F}_2, M) \\ekv \\mathcal{D}"}</M> — először a típus: vetületi egyenlet.</> },
+      { szoveg: <><M>{"\\Fy +4 - 6 + 10 = 8\\ \\text{kN}"}</M>, tehát az eredő egy 8 kN-os, felfelé mutató erő.</>, hibas: true, javitas: <>A koncentrált nyomaték <em>nem</em> erő: a vetületi egyenletbe nem kerül bele (erőpárrá alakítva két egyenlő, ellentétes erő lenne, amelyek kiejtik egymást). Helyesen: <M>{"\\Fy +4 - 6 = -2\\ \\text{kN}"}</M>, az eredő 2 kN lefelé. A nyomaték csak a nyomatéki egyenletben jelenik meg: <M>{"\\Mp{O} 1\\cdot 4 + 5\\cdot(-6) + 10 = x_R\\cdot(-2)"}</M>, azaz <M>{"-16 = -2x_R"}</M>, <M>{"x_R = 8\\ \\text{m}"}</M>.</> },
+      { szoveg: <>Az eredő helye a nyomatéki egyenletből jön, a nyomaték előjelesen kerül bele.</> },
+    ],
+    tanulsag: <>Dinámrendszerben az erők a vetületi <em>és</em> a nyomatéki egyenletben szerepelnek, a nyomatékok csak a nyomatékiban. A mértékegység is elárulja: kNm-t nem lehet kN-hoz adni.</>,
   },
 ];

@@ -326,3 +326,136 @@ export function AbraTerbeliErorendszer() {
     </svg>
   );
 }
+
+/* ---------------- GYF‑A: a tankönyv 3.7. ábrája ---------------- */
+
+export function AbraNegyfele() {
+  const OX = 70;
+  const OY = 236;
+  const L = 46; // képpont / méter
+  const px = (x) => OX + x * L;
+  const py = (y) => OY - y * L;
+  const P = { x: 2, y: 3 };
+  const talp = { x: 1.6, y: 3.2 }; // az origó merőleges vetülete a hatásvonalra
+  const k = 0.32; // az erőnyíl léptéke (m / kN)
+
+  return (
+    <svg viewBox="0 0 520 300" className="abra w-full">
+      <defs>
+        <Hegy id="nf-ero" szin="#e2590a" />
+        <Hegy id="nf-r" szin="#0f766e" />
+        <Hegy id="nf-t" szin="#475569" />
+      </defs>
+
+      <line x1={OX - 30} y1={OY} x2={OX + 420} y2={OY} stroke="#475569" strokeWidth="1.3" markerEnd="url(#nf-t)" />
+      <line x1={OX} y1={OY + 30} x2={OX} y2={OY - 220} stroke="#475569" strokeWidth="1.3" markerEnd="url(#nf-t)" />
+      <text x={OX + 426} y={OY + 5} fontSize="13" fontStyle="italic" fill="#1d3c48">x</text>
+      <text x={OX + 8} y={OY - 222} fontSize="13" fontStyle="italic" fill="#1d3c48">y</text>
+      <text x={OX - 14} y={OY + 16} fontSize="12" fontWeight="600" fill="#475569">O</text>
+
+      {/* hatásvonal a két tengelymetszet között */}
+      <line x1={px(0)} y1={py(4)} x2={px(8)} y2={py(0)} stroke="#94a3b8" strokeWidth="1.2" strokeDasharray="6 4" />
+      <circle cx={px(8)} cy={py(0)} r="3.5" fill="#94a3b8" />
+      <circle cx={px(0)} cy={py(4)} r="3.5" fill="#94a3b8" />
+      <text x={px(8)} y={OY + 18} textAnchor="middle" fontSize="11.5" fill="#64748b">8 m</text>
+      <text x={OX - 10} y={py(4) + 4} textAnchor="end" fontSize="11.5" fill="#64748b">4 m</text>
+
+      {/* méretvonalak a P ponthoz */}
+      <line x1={px(P.x)} y1={py(P.y)} x2={px(P.x)} y2={OY} stroke="#cbd5e1" strokeWidth="1" strokeDasharray="3 3" />
+      <line x1={px(P.x)} y1={py(P.y)} x2={OX} y2={py(P.y)} stroke="#cbd5e1" strokeWidth="1" strokeDasharray="3 3" />
+      <text x={px(P.x)} y={OY + 18} textAnchor="middle" fontSize="11.5" fill="#64748b">2 m</text>
+      <text x={OX - 10} y={py(P.y) + 4} textAnchor="end" fontSize="11.5" fill="#64748b">3 m</text>
+
+      {/* helyvektor */}
+      <line x1={OX} y1={OY} x2={px(P.x)} y2={py(P.y)} stroke="#0f766e" strokeWidth="2.8" strokeLinecap="round" markerEnd="url(#nf-r)" />
+      <text x={px(P.x) - 18} y={py(P.y) + 30} fontSize="13" fontWeight="650" fill="#0f766e" fontStyle="italic">r</text>
+
+      {/* az erő karja */}
+      <line x1={OX} y1={OY} x2={px(talp.x)} y2={py(talp.y)} stroke="#7c3aed" strokeWidth="2" strokeDasharray="5 3" />
+      <text x={px(talp.x / 2) - 16} y={py(talp.y / 2) - 4} fontSize="13" fontWeight="650" fill="#7c3aed" fontStyle="italic">d</text>
+      <path d={`M ${px(talp.x) - 6} ${py(talp.y) + 4} l 4 8 l 8 -4`} fill="none" stroke="#94a3b8" strokeWidth="1.1" />
+
+      {/* az erő */}
+      <line x1={px(P.x)} y1={py(P.y)} x2={px(P.x + 6 * k)} y2={py(P.y - 3 * k)} stroke="#e2590a" strokeWidth="3.4" strokeLinecap="round" markerEnd="url(#nf-ero)" />
+      <circle cx={px(P.x)} cy={py(P.y)} r="4" fill="#1d3c48" />
+      <text x={px(P.x + 6 * k) + 4} y={py(P.y - 3 * k) - 8} fontSize="14" fontWeight="650" fill="#e2590a" fontStyle="italic">F</text>
+      <text x={px(P.x + 6 * k) + 4} y={py(P.y - 3 * k) + 10} fontSize="11.5" fill="#e2590a">(6; −3) kN</text>
+      <text x={px(P.x) + 8} y={py(P.y) - 8} fontSize="11.5" fill="#475569">P (2; 3)</text>
+
+      <text x="16" y="292" fontSize="11.5" fill="#94a3b8">
+        a hatásvonal az x tengelyt 8 m-nél, az y tengelyt 4 m-nél metszi
+      </text>
+    </svg>
+  );
+}
+
+/* ---------------- GYF‑B: a tankönyv 3.10. ábrája (dinámrendszer) ---------------- */
+
+export function AbraDinam({ kiemelt = null }) {
+  const OX = 70;
+  const OY = 150;
+  const L = 46; // képpont / méter
+  const E = 9; // képpont / kN
+  const px = (x) => OX + x * L;
+  const halvany = (nev) => (kiemelt && !kiemelt.includes(nev) ? 0.22 : 1);
+
+  const pont = (x, nev) => (
+    <g key={nev}>
+      <line x1={px(x) - 5} y1={OY - 5} x2={px(x) + 5} y2={OY + 5} stroke="#1d3c48" strokeWidth="1.4" />
+      <line x1={px(x) - 5} y1={OY + 5} x2={px(x) + 5} y2={OY - 5} stroke="#1d3c48" strokeWidth="1.4" />
+      <text x={px(x) - 9} y={OY - 10} textAnchor="end" fontSize="12.5" fontWeight="650" fill="#1d3c48">{nev}</text>
+    </g>
+  );
+
+  return (
+    <svg viewBox="0 0 520 250" className="abra w-full">
+      <defs>
+        <Hegy id="dn-ero" szin="#e2590a" />
+        <Hegy id="dn-m" szin="#be123c" />
+        <Hegy id="dn-mer" szin="#94a3b8" />
+      </defs>
+
+      {/* a közös egyenes */}
+      <line x1={px(0) - 30} y1={OY} x2={px(8) + 30} y2={OY} stroke="#94a3b8" strokeWidth="1.2" strokeDasharray="6 4" />
+      {pont(0, "A")}
+      {pont(3, "B")}
+      {pont(8, "C")}
+
+      {/* F1 = 2 kN lefelé A-ban */}
+      <g opacity={halvany("F1")}>
+        <line x1={px(0)} y1={OY + 6} x2={px(0)} y2={OY + 6 + 2 * E} stroke="#e2590a" strokeWidth="3" strokeLinecap="round" markerEnd="url(#dn-ero)" />
+        <text x={px(0) + 8} y={OY + 6 + 2 * E + 4} fontSize="12" fontWeight="650" fill="#e2590a">F₁ = 2 kN</text>
+      </g>
+      {/* F2 = 5 kN felfelé B-ben */}
+      <g opacity={halvany("F2")}>
+        <line x1={px(3)} y1={OY - 6} x2={px(3)} y2={OY - 6 - 5 * E} stroke="#e2590a" strokeWidth="3" strokeLinecap="round" markerEnd="url(#dn-ero)" />
+        <text x={px(3) + 8} y={OY - 6 - 5 * E + 4} fontSize="12" fontWeight="650" fill="#e2590a">F₂ = 5 kN</text>
+      </g>
+      {/* F3 = 3 kN lefelé C-ben */}
+      <g opacity={halvany("F3")}>
+        <line x1={px(8)} y1={OY + 6} x2={px(8)} y2={OY + 6 + 3 * E} stroke="#e2590a" strokeWidth="3" strokeLinecap="round" markerEnd="url(#dn-ero)" />
+        <text x={px(8) + 8} y={OY + 6 + 3 * E + 4} fontSize="12" fontWeight="650" fill="#e2590a">F₃ = 3 kN</text>
+      </g>
+
+      {/* M1 = 3 kNm ↷ (A és B között) */}
+      <g opacity={halvany("M1")}>
+        <path d={`M ${px(1.5) - 20} ${OY - 40} A 20 20 0 1 1 ${px(1.5) + 20} ${OY - 40}`} fill="none" stroke="#be123c" strokeWidth="2.6" markerEnd="url(#dn-m)" />
+        <text x={px(1.5)} y={OY - 72} textAnchor="middle" fontSize="12" fontWeight="650" fill="#be123c">M₁ = 3 kNm</text>
+      </g>
+      {/* M2 = 12 kNm ↶ (B és C között) */}
+      <g opacity={halvany("M2")}>
+        <path d={`M ${px(5.5) + 20} ${OY - 40} A 20 20 0 1 0 ${px(5.5) - 20} ${OY - 40}`} fill="none" stroke="#be123c" strokeWidth="2.6" markerEnd="url(#dn-m)" />
+        <text x={px(5.5)} y={OY - 72} textAnchor="middle" fontSize="12" fontWeight="650" fill="#be123c">M₂ = 12 kNm</text>
+      </g>
+
+      {/* méretek */}
+      <line x1={px(0)} y1={OY + 56} x2={px(3)} y2={OY + 56} stroke="#94a3b8" strokeWidth="1" markerStart="url(#dn-mer)" markerEnd="url(#dn-mer)" />
+      <line x1={px(3)} y1={OY + 56} x2={px(8)} y2={OY + 56} stroke="#94a3b8" strokeWidth="1" markerStart="url(#dn-mer)" markerEnd="url(#dn-mer)" />
+      <text x={px(1.5)} y={OY + 71} textAnchor="middle" fontSize="11.5" fill="#64748b">3 m</text>
+      <text x={px(5.5)} y={OY + 71} textAnchor="middle" fontSize="11.5" fill="#64748b">5 m</text>
+      <text x="16" y="244" fontSize="11.5" fill="#94a3b8">
+        M₁ az óramutató járásával egyezően, M₂ azzal ellentétesen forgat
+      </text>
+    </svg>
+  );
+}

@@ -31,8 +31,8 @@ function egyenletesFeladat() {
     ],
     megoldas: (
       <>
-        <MB>{`R = p\\,L = ${sz(p, 1)}\\cdot ${sz(L, 1)} = ${sz(R, 2)}\\ \\text{kN}`}</MB>
-        <MB>{`k = \\frac{L}{2} = ${sz(k, 2)}\\ \\text{m}`}</MB>
+        <MB>{`(p) \\ekv \\underline{R}:\\qquad \\Fle p\\,L = ${sz(p, 1)}\\cdot ${sz(L, 1)} = R = ${sz(R, 2)}\\ \\text{kN}`}</MB>
+        <MB>{`k = \\frac{L}{2} = ${sz(k, 2)}\\ \\text{m}\\quad(\\text{a téglalap súlypontja})`}</MB>
       </>
     ),
   };
@@ -67,7 +67,7 @@ function haromszogFeladat() {
     ],
     megoldas: (
       <>
-        <MB>{`R = \\tfrac12\\,p\\,L = \\tfrac12\\cdot ${sz(p, 1)}\\cdot ${sz(L, 1)} = ${sz(R, 2)}\\ \\text{kN}`}</MB>
+        <MB>{`(p) \\ekv \\underline{R}:\\qquad \\Fle \\tfrac12\\,p\\,L = \\tfrac12\\cdot ${sz(p, 1)}\\cdot ${sz(L, 1)} = R = ${sz(R, 2)}\\ \\text{kN}`}</MB>
         <MB>{balra ? `k = \\frac{L}{3} = ${sz(k, 3)}\\ \\text{m}` : `k = L - \\frac{L}{3} = \\frac{2L}{3} = ${sz(k, 3)}\\ \\text{m}`}</MB>
         <p className="mt-2 text-[13px] text-petrol-600">
           A magas oldal {balra ? "balra" : "jobbra"} van, ezért az eredő a{" "}
@@ -114,8 +114,8 @@ function trapezFeladat() {
       <>
         <MB>{`R_1 = ${sz(pMin, 1)}\\cdot ${sz(L, 1)} = ${sz(pMin * L, 2)}\\ \\text{kN}\\quad (\\text{téglalap, } x_1 = ${sz(L / 2, 2)}\\ \\text{m})`}</MB>
         <MB>{`R_2 = \\tfrac12\\cdot ${sz(pD, 1)}\\cdot ${sz(L, 1)} = ${sz((pD * L) / 2, 2)}\\ \\text{kN}\\quad (\\text{háromszög, } x_2 = ${sz(xH, 3)}\\ \\text{m})`}</MB>
-        <MB>{`R = R_1 + R_2 = ${sz(R, 2)}\\ \\text{kN}`}</MB>
-        <MB>{`k = \\frac{R_1 x_1 + R_2 x_2}{R} = \\frac{${sz(pMin * L, 2)}\\cdot ${sz(L / 2, 2)} + ${sz((pD * L) / 2, 2)}\\cdot ${sz(xH, 3)}}{${sz(R, 2)}} = ${sz(k, 3)}\\ \\text{m}`}</MB>
+        <MB>{`(\\underline{R}_1, \\underline{R}_2) \\ekv \\underline{R}:\\qquad \\Fle R_1 + R_2 = R = ${sz(R, 2)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Mj{O} R_1 x_1 + R_2 x_2 = R\\,k\\ \\Rightarrow\\ k = \\frac{${sz(pMin * L, 2)}\\cdot ${sz(L / 2, 2)} + ${sz((pD * L) / 2, 2)}\\cdot ${sz(xH, 3)}}{${sz(R, 2)}} = ${sz(k, 3)}\\ \\text{m}`}</MB>
       </>
     ),
   };
@@ -186,11 +186,12 @@ function szakaszosFeladat() {
     ],
     megoldas: (
       <>
+        <MB>{`(${reszek.map((_, i) => `\\underline{R}_${i + 1}`).join(", ")}) \\ekv \\underline{R}`}</MB>
         {reszek.map((r, i) => (
           <MB key={i}>{`R_${i + 1} = ${zarojel(r.p, 1)}\\cdot ${sz(r.L, 1)} = ${sz(r.R, 2)}\\ \\text{kN},\\quad x_${i + 1} = ${sz(r.kezd, 1)} + \\tfrac{${sz(r.L, 1)}}{2} = ${sz(r.x, 2)}\\ \\text{m}`}</MB>
         ))}
-        <MB>{`R = ${reszek.map((r) => zarojel(r.R, 2)).join(" + ")} = ${sz(R, 2)}\\ \\text{kN}`}</MB>
-        <MB>{`k = \\frac{${reszek.map((r) => `${zarojel(r.R, 2)}\\cdot ${sz(r.x, 2)}`).join(" + ")}}{${zarojel(R, 2)}} = ${sz(k, 3)}\\ \\text{m}`}</MB>
+        <MB>{`\\Fle ${reszek.map((r) => zarojel(r.R, 2)).join(" + ")} = R = ${sz(R, 2)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Mj{O} \\sum R_i x_i = R\\,k\\ \\Rightarrow\\ k = \\frac{${reszek.map((r) => `${zarojel(r.R, 2)}\\cdot ${sz(r.x, 2)}`).join(" + ")}}{${zarojel(R, 2)}} = ${sz(k, 3)}\\ \\text{m}`}</MB>
       </>
     ),
   };
@@ -228,8 +229,8 @@ function vegyesFeladat() {
     megoldas: (
       <>
         <MB>{`R_p = p\\,L = ${sz(p, 1)}\\cdot ${sz(L, 1)} = ${sz(Rp, 2)}\\ \\text{kN},\\quad x_p = \\tfrac{L}{2} = ${sz(L / 2, 2)}\\ \\text{m}`}</MB>
-        <MB>{`R = R_p + F = ${sz(Rp, 2)} + ${F} = ${sz(R, 2)}\\ \\text{kN}`}</MB>
-        <MB>{`k = \\frac{R_p x_p + F a}{R} = \\frac{${sz(Rp, 2)}\\cdot ${sz(L / 2, 2)} + ${F}\\cdot ${sz(a, 1)}}{${sz(R, 2)}} = ${sz(k, 3)}\\ \\text{m}`}</MB>
+        <MB>{`(\\underline{R}_p, \\underline{F}) \\ekv \\underline{R}:\\qquad \\Fle R_p + F = ${sz(Rp, 2)} + ${F} = R = ${sz(R, 2)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Mj{O} R_p x_p + F a = R\\,k\\ \\Rightarrow\\ k = \\frac{${sz(Rp, 2)}\\cdot ${sz(L / 2, 2)} + ${F}\\cdot ${sz(a, 1)}}{${sz(R, 2)}} = ${sz(k, 3)}\\ \\text{m}`}</MB>
       </>
     ),
   };

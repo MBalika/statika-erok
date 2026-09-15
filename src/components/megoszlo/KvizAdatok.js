@@ -49,6 +49,45 @@ export const KVIZ = [
     helyes: 0,
     magyarazat: <>A nyomás a mélységgel lineárisan nő (γ·z), ezért a teherábra háromszög, aminek a magas oldala a fenéknél van; a súlypontja onnan h/3-ra.</>,
   },
+  {
+    k: <>Egy lemezen felület mentén megoszló q [kN/m²] teher működik. Mi az eredője, és hol hat?</>,
+    v: [
+      <>A terhelési test térfogata (q × terhelt terület), a terhelési test súlypontján át.</>,
+      <>q szorozva a lemez hosszával, a lemez közepén.</>,
+      <>q szorozva a lemez kerületével, a súlypontban.</>,
+      <>Nem lehet egyetlen erővel helyettesíteni.</>,
+    ],
+    helyes: 0,
+    magyarazat: <>A felületre merőlegesen q-val arányosan felmért (fiktív) test a <em>terhelési test</em>; az eredő ennek a térfogata (egyenletes q-nál q·A), és a súlypontján megy át. Síkbeli feladatban a b szélességű tehermezőt „összegyűjtve” ebből lesz a p = q·b vonal menti teher.</>,
+  },
+  {
+    k: <>Ferde rúdra a felületre merőleges, p intenzitású teher hat. Hogyan helyettesíthető két vetületi teherrel?</>,
+    v: [
+      <>Függőleges p a vízszintes vetületen és vízszintes p a függőleges vetületen — <em>azonos</em> p intenzitással.</>,
+      <>Függőleges p·cos α és vízszintes p·sin α a ferde hossz mentén.</>,
+      <>Csak függőleges teherrel, p·cos α intenzitással a ferde hosszon.</>,
+      <>Sehogy — a merőleges terhet integrálni kell.</>,
+    ],
+    helyes: 0,
+    magyarazat: <>A tankönyv 3.21. ábrája: a két vetületi teher intenzitása ugyanaz a p, csak a hosszuk más (L cos α és L sin α). Így R_y = pL cos α és R_x = pL sin α — pontosan a merőleges R = pL komponensei.</>,
+  },
+  {
+    k: <>Egy R sugarú félkörívre mindenütt az ívre merőleges p teher hat. Mekkora és milyen irányú az eredő?</>,
+    v: [<>2Rp, függőleges, a kör középpontján át.</>, <>πRp, függőleges, a kör középpontján át.</>, <>2Rp, az ív közepére merőlegesen, de nem O-n át.</>, <>Nulla — a merőleges terhek kioltják egymást.</>],
+    helyes: 0,
+    magyarazat: <>Negyedkörönként vetületi terhekkel: a két vízszintes Rp kiejti egymást (közös hatásvonal, ellentétes irány), a két függőleges Rp összeadódik: 2Rp. A πRp az ívhossz × p volna — az elemi erők nem párhuzamosak, ezért nem adhatók össze skalárisan.</>,
+  },
+  {
+    k: <>Egy ferde vagy görbe gátfalra ható víznyomásról melyik állítás igaz?</>,
+    v: [
+      <>Mindenütt merőleges a falra; a függőleges komponense a fal vonala és a vízszint közötti síkidom területe × γ.</>,
+      <>Mindig vízszintes, ezért csak a ½γh² háromszöggel kell számolni.</>,
+      <>Mindig függőleges, mert a víz súlya lefelé hat.</>,
+      <>Merőleges a falra, és a függőleges komponense mindig nulla.</>,
+    ],
+    helyes: 0,
+    magyarazat: <>A víznyomás felületre merőleges, intenzitása γ·z. Vízszintes komponens: háromszög a függőleges vetületen (½γh², h/3-ra a fenéktől). Függőleges komponens: a fal fölötti „vízoszlop” súlya — a fal vonala és a vízszint közötti síkidom területe × γ, a síkidom súlypontján át. Függőleges falnál ez utóbbi valóban nulla, ferdénél nem.</>,
+  },
 ];
 
 export const HIBAK = [
@@ -81,5 +120,15 @@ export const HIBAK = [
       { szoveg: <>A két rész eredője egyforma nagyságú, mert a szakaszok és az intenzitások egyformák.</> },
     ],
     tanulsag: <>„Nulla eredő erő” nem jelenti, hogy „nincs teher”. Mindig nézd meg a nyomatékot is — ahogy a 2. modulban.</>,
+  },
+  {
+    cim: "kN/m² × hossz?",
+    feladat: <>Egy födémre q = 4 kN/m² teher jut. A födémet egymástól 2,5 m-re fekvő, 6 m hosszú gerendák tartják. Mekkora egy gerenda terhének eredője?</>,
+    lepesek: [
+      { szoveg: <>A gerenda 6 m hosszú, tehát az eredő <M>{"R = 4\\cdot 6 = 24\\ \\text{kN}"}</M>.</>, hibas: true, javitas: <>kN/m²-t hosszal szorozva kN/m-t kapunk, nem kN-t — kimaradt a <em>tehermező szélessége</em>. Előbb a vonal menti teher: <M>{"p = q\\,b = 4\\cdot 2{,}5 = 10\\ \\text{kN/m}"}</M>, aztán <M>{"R = p\\,L = 10\\cdot 6 = 60\\ \\text{kN}"}</M>. Ellenőrzés a terhelési testtel: 4 · (2,5 · 6) = 60 kN.</> },
+      { szoveg: <>Az eredő a gerenda közepén, 3 m-nél hat.</> },
+      { szoveg: <>A teher lefelé mutat, tehát R pozitív.</> },
+    ],
+    tanulsag: <>Nézd a mértékegységet: kN/m² · m = kN/m, ez még intenzitás. Erő csak területtel szorozva lesz belőle.</>,
   },
 ];

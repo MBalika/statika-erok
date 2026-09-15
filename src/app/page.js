@@ -1,7 +1,11 @@
 import Link from "next/link";
-import { Szakasz, Kartya, Kiemelo, AbraKeret, Cimke } from "@/components/ui/Elemek";
+import { Szakasz, Kartya, Kiemelo, AbraKeret, Cimke, TankonyvJel, Szotar } from "@/components/ui/Elemek";
 import { M, MB } from "@/components/ui/Keplet";
 import { modulok, kurzus, extraOldalak } from "@/lib/oldalterkep";
+import { JobbkezFelfedezo3D } from "@/components/harom/Film3D";
+import Kerekito from "@/components/abrak/Kerekito";
+import { TomegSulyAbra, RadianAbra } from "@/components/abrak/BevezetesAbrak";
+import HaladasKartyak, { HaladasJelzo } from "@/components/HaladasKartyak";
 
 export const metadata = {
   title: "Erők és erőrendszerek – interaktív tananyag",
@@ -53,7 +57,7 @@ export default function Kezdolap() {
         id="utmutato"
         cimke="Bevezetés"
         cim="Útmutató ehhez az anyaghoz"
-        bevezeto="Minden modul ugyanazt a négy lépést járja végig. A sorrend nem véletlen: a megértés az ábráknál kezdődik, és csak a gyakorlásnál rögzül."
+        bevezeto="Minden modul ugyanazt a négy lépést járja végig, és mindegyikhez tartozik egy játék meg egy fogalmi kvíz is. A sorrend nem véletlen: a megértés az ábráknál kezdődik, és csak a gyakorlásnál rögzül."
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
@@ -79,7 +83,7 @@ export default function Kezdolap() {
               szam: "4",
               cim: "Gyakorlás",
               szoveg:
-                "Véletlen számokkal generált feladatok azonnali javítással. Addig nyomd az „új feladat” gombot, amíg magabiztos nem leszel.",
+                "Véletlen számokkal generált feladatok azonnali javítással, a modul végén játék és kvíz. Addig nyomd az „új feladat” gombot, amíg magabiztos nem leszel.",
             },
           ].map((l) => (
             <Kartya key={l.szam}>
@@ -103,6 +107,16 @@ export default function Kezdolap() {
             azt kérdezd meg magadtól: <em>mit is akarok kiszámolni, és milyen
             egyensúlyi vagy egyenértékűségi kijelentést tudok felírni?</em> A
             kidolgozott feladatokban ez mindig az első lépés.
+          </p>
+          <p>
+            A levezetések a tankönyv (Hincz–Németh: <em>Statika</em>) írásmódját
+            követik: a vetületi és nyomatéki egyenletek elején ott áll az
+            egyenlet jellege és a pozitív irány, a helyettesítés pedig egy
+            egyenértékűségi kijelentéssel indul. Ahol a gyakorlat jelölése
+            eltér a könyvétől, lila „A tankönyvben így” doboz mutatja a
+            párját. Minden modul végén <strong>játék</strong> és{" "}
+            <strong>kvíz</strong> vár — az eredményeidet a kezdőlap
+            modulkártyái mutatják.
           </p>
         </Kiemelo>
       </Szakasz>
@@ -155,9 +169,24 @@ export default function Kezdolap() {
                   "Síkban előjeles skalár, térben vektor.",
                 ],
                 [
-                  "(\\underline{F}_1,\\ \\underline{F}_2) \\doteq \\underline{R}",
+                  "(\\underline{F}_1,\\ \\underline{F}_2) \\ekv \\underline{R}",
                   "Egyenértékűségi kijelentés",
-                  "„Az erőrendszer helyettesíthető az eredővel.”",
+                  "„Az erőrendszer helyettesíthető az eredővel.” Ez kijelentés, nem egyenlet: a ≐ jel két erőrendszer azonos hatását állítja, nem két szám egyenlőségét.",
+                ],
+                [
+                  "(\\underline{F}_1,\\ \\underline{F}_2,\\ \\underline{F}_3) \\ekv \\underline{O}",
+                  "Egyensúlyi kijelentés",
+                  "Az erőrendszer a zérusrendszerrel egyenértékű: eredője nincs, egyensúlyban van.",
+                ],
+                [
+                  "\\Fx \\ldots = R_x",
+                  "Vetületi egyenlet",
+                  "A sor elején az egyenlet jellege és a pozitív irány (→, ↑). Az egyenértékűségi kijelentésből következik.",
+                ],
+                [
+                  "\\Mp{O} \\ldots = M^{(O)}",
+                  "Nyomatéki egyenlet az O pontra",
+                  "A ↶ jelzi, hogy az óramutatóval ellentétes forgatás a pozitív. Egyensúlynál a jobb oldal 0.",
                 ],
                 ["p", "Megoszló teher intenzitása", "Mértékegysége kN/m."],
               ].map(([jel, jelentes, megj]) => (
@@ -184,6 +213,56 @@ export default function Kezdolap() {
             nem hiba: azt jelenti, hogy az erő balra mutat.
           </p>
         </Kiemelo>
+
+        <TankonyvJel fejezet="2.4, 3.1–3.3" cim="A tankönyv jelölései és az oldalé">
+          <p>
+            A könyv nyomtatásban <strong>vastag dőlt</strong> betűvel írja a
+            vektort, kézírásban aláhúzással — mi mindenhol az aláhúzást
+            használjuk, mert a zh-n is azt fogod írni. Néhány jelölés, ami
+            máshogy néz ki a könyvben és itt:
+          </p>
+          <Szotar
+            sorok={[
+              {
+                itt: <M>{"\\underline{F}"}</M>,
+                konyv: (
+                  <>
+                    <strong>
+                      <em>F</em>
+                    </strong>{" "}
+                    (vastag dőlt) vagy <M>{"\\underline{F}"}</M>
+                  </>
+                ),
+                megjegyzes: "Nyomtatásban vastag, kézírásban aláhúzott — ugyanaz a vektor.",
+              },
+              {
+                itt: <M>{"M^{(P)}"}</M>,
+                konyv: <M>{"M_P"}</M>,
+                megjegyzes: "Nyomaték a P pontra. A könyv alsó indexbe teszi a pontot.",
+              },
+              {
+                itt: <M>{"k"}</M>,
+                konyv: <M>{"x_R"}</M>,
+                megjegyzes: "Az eredő hatásvonalának helye párhuzamos erőknél, megoszló tehernél.",
+              },
+              {
+                itt: <M>{"p"}</M>,
+                konyv: <M>{"q"}</M>,
+                megjegyzes: "A megoszló teher intenzitása (kN/m).",
+              },
+              {
+                itt: <>„erőrendszer”</>,
+                konyv: <M>{"\\mathcal{F} = (\\underline{F}_1, \\underline{F}_2, \\ldots)"}</M>,
+                megjegyzes: "A könyv kalligrafikus 𝓕-fel jelöli az erőrendszert mint halmazt.",
+              },
+              {
+                itt: <M>{"\\Fx"}</M>,
+                konyv: <M>{"\\Fx"}</M>,
+                megjegyzes: "Ugyanaz: a könyv írásmódját vettük át a vetületi és nyomatéki egyenleteknél.",
+              },
+            ]}
+          />
+        </TankonyvJel>
       </Szakasz>
 
       {/* ---------- Koordinátarendszer ---------- */}
@@ -216,6 +295,57 @@ export default function Kezdolap() {
             </div>
           </Kartya>
         </div>
+
+        <h3 className="mt-10 text-xl font-semibold text-petrol-900">Jobbkezes koordináta-rendszer</h3>
+        <div className="proza mt-3 text-[15px] leading-relaxed text-petrol-700">
+          <p>
+            Térben három tengelyünk van, és a <strong>sorrendjük számít</strong>.
+            A tankönyv „koordináta-akrobatikája”: a jobb kezed hüvelykujja az{" "}
+            <em>x</em>, a tenyér síkjában kinyújtott mutatóujjad az <em>y</em>, a
+            tenyérre merőlegesen behajlított középső ujjad a <em>z</em> tengely.
+            A kézfej megfelelő csavargatásával bármelyik tengelykeresztre rá
+            tudod illeszteni — és ha nem megy, akkor az a tengelykereszt
+            balkezes.
+          </p>
+          <p>
+            Ebből következik: ha az előtted lévő papírlapon az <em>x</em> jobbra,
+            az <em>y</em> felfelé mutat, akkor a <em>z</em> a lapból{" "}
+            <strong>kifelé, feléd</strong> mutat. Ha az <em>x</em> balra, az{" "}
+            <em>y</em> feléd mutat, akkor a <em>z</em> felfelé.
+          </p>
+          <p>
+            A jobbkezesség a <strong>forgatási értelemben</strong> is megjelenik.
+            A forgatás mindig egy tengely körül történik, és a másik két
+            tengelyt azok síkjában fordítja el. A pozitív forgatás az, amelyik
+            90° után az <em>x</em>-ből az <em>y</em>-t, az <em>y</em>-ból a{" "}
+            <em>z</em>-t, a <em>z</em>-ből az <em>x</em>-et adja — ez a{" "}
+            <strong>ciklikus</strong> sorrend: <M>{"x \\to y \\to z \\to x"}</M>.
+            Ha a forgatás tengelye feléd mutat, a pozitív forgatás az{" "}
+            <strong>óramutatóval ellentétes</strong>; ha a tengely tőled elfelé
+            mutat, ugyanaz a forgatás az óramutató járásával egyezőnek látszik.
+            Ezért pozitív a síkbeli feladatokban az óramutatóval ellentétes
+            nyomaték: a <em>z</em> tengely a lapból feléd mutat.
+          </p>
+        </div>
+
+        <div className="mt-5">
+          <JobbkezFelfedezo3D />
+        </div>
+
+        <TankonyvJel fejezet="2.1.3" cim="Tessék játszani vele">
+          <p>
+            A könyv megjegyzi: ha csak vízszintes és függőleges tengelyeket
+            engedünk meg, az <em>x</em> tengely 6 irányba mutathat (jobbra,
+            balra, fel, le, felénk, tőlünk el), az <em>y</em> a maradék 4-be, a{" "}
+            <em>z</em>-t pedig a jobbkezesség már egyértelműen megadja: ez
+            6 · 4 = 24 kombináció (a könyv számolásával{" "}
+            <M>{"3 \\times 2 \\times 4 = 24"}</M>: három tengelypár, két
+            sorrend, négy állás). „Mindet nem nézzük
+            végig, tessék játszani vele.” — a fenti jelenetet forgatva mindet
+            végig tudod nézni: forgasd úgy, hogy az <em>x</em> balra, az <em>y</em>{" "}
+            feléd mutasson, és nézd meg, merre áll a <em>z</em>.
+          </p>
+        </TankonyvJel>
       </Szakasz>
 
       {/* ---------- Mértékegységek ---------- */}
@@ -242,6 +372,46 @@ export default function Kezdolap() {
                 felhalmozódik: egy háromlépéses feladatnál ez már a második
                 tizedesjegyet is elronthatja.
               </p>
+              <p>
+                A mértékegységek elé írt <strong>prefixum</strong> (előtag)
+                mindig 10 valamelyik hatványa: 530 cm = 530 · 10<sup>−2</sup> m =
+                5,3 m. Prefixumot <strong>nem halmozunk</strong>: 1000 MPa nem
+                „1 kMPa”, hanem 1 GPa; 1000 kg pedig nem „1 kkg”, hanem 1 t
+                (tonna) — a kilogramm alapegység már tartalmaz egy prefixumot.
+              </p>
+            </div>
+
+            <div className="mt-4 overflow-hidden rounded-xl border border-[color:var(--keret)]">
+              <table className="w-full text-[13.5px]">
+                <thead className="bg-petrol-50 text-[10.5px] tracking-wider text-petrol-500 uppercase">
+                  <tr>
+                    <th className="px-3 py-2 text-left font-semibold">Előtag</th>
+                    <th className="px-3 py-2 text-left font-semibold">Jele</th>
+                    <th className="px-3 py-2 text-left font-semibold">Szorzó</th>
+                    <th className="hidden px-3 py-2 text-left font-semibold sm:table-cell">Példa</th>
+                  </tr>
+                </thead>
+                <tbody className="szamok bg-white">
+                  {[
+                    ["giga-", "G", "10^{9}", "1 GPa = 1000 MPa"],
+                    ["mega-", "M", "10^{6}", "1 MN = 1000 kN"],
+                    ["kilo-", "k", "10^{3}", "1 kN = 1000 N"],
+                    ["deci-", "d", "10^{-1}", "1 dm = 0,1 m"],
+                    ["centi-", "c", "10^{-2}", "1 cm = 0,01 m"],
+                    ["milli-", "m", "10^{-3}", "1 mm = 0,001 m"],
+                    ["mikro-", "µ", "10^{-6}", "1 µm = 0,000 001 m"],
+                  ].map(([nev, jel, szorzo, pelda]) => (
+                    <tr key={nev} className="border-t border-petrol-100">
+                      <td className="px-3 py-1.5 text-petrol-800">{nev}</td>
+                      <td className="px-3 py-1.5 font-semibold text-petrol-900">{jel}</td>
+                      <td className="px-3 py-1.5 text-petrol-800">
+                        <M>{szorzo}</M>
+                      </td>
+                      <td className="hidden px-3 py-1.5 text-[12.5px] text-petrol-500 sm:table-cell">{pelda}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             <Kiemelo tipus="kulcs" cim="Ökölszabály">
@@ -270,6 +440,8 @@ export default function Kezdolap() {
                   "G = V \\rho\\, g = V \\gamma",
                   "térfogatból súly (γ: térfogatsúly)",
                 ],
+                ["1\\ \\text{t} = 1000\\ \\text{kg} \\;\\Rightarrow\\; G \\approx 9{,}81\\ \\text{kN}", "1 tonna tömeg súlya a Földön"],
+                ["360^\\circ = 2\\pi\\ \\text{rad},\\quad 1\\ \\text{rad} \\approx 57{,}30^\\circ", "fok és radián"],
               ].map(([k, cimke]) => (
                 <div
                   key={k}
@@ -281,6 +453,65 @@ export default function Kezdolap() {
               ))}
             </div>
           </Kartya>
+        </div>
+
+        <h3 className="mt-10 text-xl font-semibold text-petrol-900">Tömeg és súly — nem ugyanaz</h3>
+        <div className="grid items-start gap-6 lg:grid-cols-2 [&>*]:min-w-0">
+          <div className="proza mt-3 text-[15px] leading-relaxed text-petrol-700">
+            <p>
+              A <strong>tömeg</strong> (kg, t) a test tehetetlenségének mértéke,
+              a <strong>súly</strong> (N, kN) pedig erő: a gravitációs vonzásból
+              ered, <M>{"G = m\\,g"}</M>. A kettő összefügg, de nem azonos
+              fogalom. A tankönyv holdbázisos példája: a Holdon a gravitációs
+              gyorsulás a földinek nagyjából a hatoda, így egy ládát ott hatod
+              akkora erővel lehet felemelni — a tömege viszont ugyanannyi
+              marad. Statikában mindig <strong>erővel</strong> számolunk: ha a
+              feladat tömeget ad meg, első lépésben súlyt csinálsz belőle.
+            </p>
+            <p>
+              Szögeknél a fok mellett a <strong>radián</strong> is előfordul:
+              az ívhossz és a sugár hányadosa, ezért dimenziótlan. Az
+              átváltást a teljes körből jegyezd meg: <M>{"360^\\circ = 2\\pi\\ \\text{rad}"}</M>.
+              A számológépen ellenőrizd, melyik módban van (DEG / RAD) — a
+              sin 30 két módban két különböző számot ad.
+            </p>
+          </div>
+          <div className="mt-3 grid gap-4">
+            <AbraKeret szam="B1" cim="Ugyanaz az 1 t tömeg a Földön 9,81 kN, a Holdon 1,62 kN súlyú.">
+              <TomegSulyAbra />
+            </AbraKeret>
+          </div>
+        </div>
+
+        <h3 className="mt-10 text-xl font-semibold text-petrol-900">Kerekítés: négy értékes jegy</h3>
+        <div className="grid items-start gap-6 lg:grid-cols-[1fr_1.2fr] [&>*]:min-w-0">
+          <div className="proza mt-3 text-[15px] leading-relaxed text-petrol-700">
+            <p>
+              Az eredményt tizedes tört alakban adjuk meg, sosem közönséges
+              törtként (a 7/11 pontosnak tűnik, de a bemenő adatok maguk sem
+              pontosak). A tankönyv szabálya: a legnagyobb helyi értékű, nem
+              nulla számjegyet és az azt követő hármat írjuk le, azaz{" "}
+              <strong>négy értékes jegyet</strong>; ha az{" "}
+              <strong>ötödik jegy 5, 6, 7, 8 vagy 9</strong>, felfelé
+              kerekítünk, egyébként lefelé.
+            </p>
+            <p>
+              A 2,34 és a 2,340 <strong>nem ugyanaz</strong>: a 2,34 kerekítés
+              nélküli érték, a 2,340 viszont azt mondja, hogy a valódi szám
+              2,3395 és 2,3405 közé esik. A záró nulla tehát információ — a
+              kerekítés jelzi a pontosságot. És a szabály független a
+              mértékegységtől: a 0,0002345 km, a 0,2345 m és a 234,5 mm nem
+              csak ugyanakkora, hanem ugyanolyan pontos is.
+            </p>
+            <AbraKeret szam="B2" cim="1 radián az a szög, amelyhez a sugárral egyenlő hosszú ív tartozik; a teljes kör 2π rad.">
+              <div className="flex justify-center">
+                <RadianAbra />
+              </div>
+            </AbraKeret>
+          </div>
+          <div className="mt-3">
+            <Kerekito />
+          </div>
         </div>
       </Szakasz>
 
@@ -320,12 +551,14 @@ export default function Kezdolap() {
                     </p>
                   </div>
                 </div>
-                <span className="absolute right-5 bottom-4 text-[13px] font-semibold text-naracs-600 opacity-0 transition group-hover:opacity-100">
+                <HaladasJelzo slug={m.slug} />
+                <span className="absolute right-5 bottom-5 text-[13px] font-semibold text-naracs-600 opacity-0 transition group-hover:opacity-100">
                   Megnyitás →
                 </span>
               </Link>
             ))}
         </div>
+        <HaladasKartyak />
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {extraOldalak.map((o) => (
             <Link

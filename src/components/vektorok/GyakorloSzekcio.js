@@ -107,6 +107,8 @@ function eredoFeladat() {
     ],
     megoldas: (
       <>
+        <p className="mb-1 text-[13px] text-petrol-600">Egyenértékűségi kijelentés (helyettesítés: az ismertek balra, az ismeretlen eredő jobbra):</p>
+        <MB>{`(${erok.map((_, i) => `\\underline{F}_${i + 1}`).join(", ")}) \\ekv \\underline{R}`}</MB>
         <div className="finom-gorgeto mb-3 overflow-x-auto">
           <table className="szamok w-full text-[13px]">
             <thead className="text-[11px] text-petrol-500 uppercase">
@@ -132,6 +134,8 @@ function eredoFeladat() {
             </tbody>
           </table>
         </div>
+        <MB>{`\\Fx ${osszegLanc(k.map((v) => v.x), 3)} = R_x \\;\\Rightarrow\\; R_x = ${sz(Rx, 3)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Fy ${osszegLanc(k.map((v) => v.y), 3)} = R_y \\;\\Rightarrow\\; R_y = ${sz(Ry, 3)}\\ \\text{kN}`}</MB>
         <MB>{`R = \\sqrt{${zarojel(Rx, 3)}^2 + ${zarojel(Ry, 3)}^2} = ${sz(
           R.nagysag,
           3,
@@ -212,9 +216,9 @@ function egyensulyFeladat() {
     ),
     sugo: (
       <p>
-        Egyensúly esetén <M>{"\\sum F_{ix} = 0"}</M> és{" "}
-        <M>{"\\sum F_{iy} = 0"}</M>. Ebből a harmadik erő komponensei az első
-        kettő összegének mínusz egyszeresei.
+        Egyensúlyi kijelentés: <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv \\underline{O}"}</M>, ebből{" "}
+        <M>{"\\Fx \\dots = 0"}</M> és <M>{"\\Fy \\dots = 0"}</M>, az ismeretlen a bal oldalon. A harmadik erő
+        komponensei az első kettő összegének ellentettjei.
       </p>
     ),
     mezok: [
@@ -225,10 +229,12 @@ function egyensulyFeladat() {
     ],
     megoldas: (
       <>
+        <p className="mb-1 text-[13px] text-petrol-600">Egyensúlyi kijelentés — az ismeretlen erő is a bal oldalon:</p>
+        <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv \\underline{O}"}</MB>
         <MB>{`F_{1x} = ${sz(k1.x, 3)},\\quad F_{1y} = ${sz(k1.y, 3)}`}</MB>
         <MB>{`F_{2x} = ${sz(k2.x, 3)},\\quad F_{2y} = ${sz(k2.y, 3)}`}</MB>
-        <MB>{`F_{3x} = -(${sz(k1.x, 3)} ${szEl(k2.x, 3)}) = ${sz(F3x, 3)}\\ \\text{kN}`}</MB>
-        <MB>{`F_{3y} = -(${sz(k1.y, 3)} ${szEl(k2.y, 3)}) = ${sz(F3y, 3)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Fx ${osszegLanc([k1.x, k2.x], 3)} + F_{3x} = 0 \\;\\Rightarrow\\; F_{3x} = ${sz(F3x, 3)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Fy ${osszegLanc([k1.y, k2.y], 3)} + F_{3y} = 0 \\;\\Rightarrow\\; F_{3y} = ${sz(F3y, 3)}\\ \\text{kN}`}</MB>
         <MB>{`F_3 = \\sqrt{F_{3x}^2+F_{3y}^2} = ${sz(F3.nagysag, 3)}\\ \\text{kN},\\quad \\alpha_3 = ${sz(alfa3, 2)}^\\circ`}</MB>
       </>
     ),
@@ -280,6 +286,8 @@ function terbeliFeladat() {
     ],
     megoldas: (
       <>
+        <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv \\underline{R}"}</MB>
+        <MB>{`\\Fx ${osszegLanc(v.map((e) => e.x))} = R_x,\\quad \\Fy ${osszegLanc(v.map((e) => e.y))} = R_y,\\quad \\Fz ${osszegLanc(v.map((e) => e.z))} = R_z`}</MB>
         <MB>{`\\underline{R} = \\begin{bmatrix} ${osszegLanc(
           v.map((e) => e.x),
         )} \\\\ ${osszegLanc(v.map((e) => e.y))} \\\\ ${osszegLanc(

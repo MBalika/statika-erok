@@ -9,13 +9,17 @@ véletlenszerűen generált gyakorlófeladatok.
 
 | Modul | Tartalom | Állapot |
 | --- | --- | --- |
-| Bevezetés | útmutató, jelölések, koordináta-rendszerek, mértékegységek | kész |
-| 1. Vektorok, erők megadása | komponensek, összeadás, vetítés, egyensúly, térbeli vektorok | kész |
-| 2. Nyomaték, eredő, redukálás | forgatónyomaték, erőpár, redukálás, az eredő három esete | kész |
-| 3. Megoszló erők | eredő nagysága és helye, felbontási technikák, szakaszos teher | kész |
+| Bevezetés | útmutató, jelölések (tankönyvi írásmód), jobbkezes koordináta-rendszer (3D), mértékegységek, kerekítő | kész |
+| 1. Vektorok, erők megadása | komponensek, vektorműveletek, erőrendszerek fajtái, egyenértékűségi kijelentés, skaláris és vektoriális szorzat, egyensúly, térbeli vektorok | kész |
+| 2. Nyomaték, eredő, redukálás | forgatónyomaték pontra és tengelyre, erőpár és erőpárrá alakítás, dinámrendszer redukálása, az eredő esetei síkban és térben (erőcsavar) | kész |
+| 3. Megoszló erők | megoszló erők fajtái, vonal- és felületmenti teher, terhelési test, felbontás, ferde és ívmenti teher, víznyomás | kész |
+| 4. Súlypont | statikai nyomaték és eltolása, alapidomok, részekre bontás, kivonásos módszer, köríves idomok | kész |
 | Zh-szimulátor (/zh) | 4 véletlen feladat órával, pontozás, mentett előzmények | kész |
-| Puska (/puska) | nyomtatható egyoldalas összefoglaló modulonként | kész |
-| 4. Súlypont | statikai nyomaték, alapidomok, részekre bontás, kivonásos módszer, köríves idomok | kész |
+| Puska (/puska) | nyomtatható összefoglaló modulonként + „a tankönyv nyelve” lap | kész |
+
+Minden modulban: elmélet interaktív felfedezőkkel, kidolgozott feladatok filmmel (2D/3D), kalkulátorok,
+**játék**, fogalmi kvíz, hibakereső és 12–14 gyakorló feladattípus. A haladás (feladatok, kvíz, játék)
+a böngészőben tárolódik és a kezdőlapon látszik.
 
 ## Futtatás helyben
 
@@ -197,6 +201,26 @@ képletet renderel. A magyar tizedesvesszőt automatikusan kezeli, elég
 **Színek:** a paletta a `globals.css` `@theme` blokkjában van (`petrol-*`
 alapszínek, `naracs-*` kiemelés, `jel-*` az ábrák jelölőszínei). Egy új
 oldalhoz elég ezeket átírni.
+
+## 5. kör: a tankönyvhöz igazítás és a játékok
+
+- **Tankönyvi írásmód**: minden kidolgozott feladat első lépése az egyenértékűségi / egyensúlyi kijelentés
+  (`\ekv`), az egyenletek `ΣF_ix →:`, `ΣM_iO ↶:` alakban (KaTeX-makrók a `Keplet.js`-ben: `\Fx`, `\Fy`,
+  `\Fz`, `\Fle`, `\Mp{O}`, `\Mj{O}`, `\ekv`).
+- **`TankonyvJel`** (lila „A tankönyvben így” doboz) és **`Szotar`** (jelölés-szótár) az `ui/Elemek.js`-ben.
+- **Játékok** (`ui/JatekKeret.js` keret, konfetti 80+ pontnál): `vektorok/JatekEgyensuly` (zárd be a
+  sokszöget), `nyomatek/JatekMerleg` (hova tedd az erőt), `megoszlo/JatekEredo` (hol az eredő),
+  `sulypont/JatekSulypont` (súlypont-találó, a tűre ültetett idom billen).
+- **Haladás**: `lib/haladas.js` (localStorage `statika-haladas`), a `GyakorloDoboz`, a `Kviz` és a
+  `JatekKeret` írja, a kezdőlap `HaladasKartyak` mutatja.
+- **Új felfedezők**: `harom/JobbkezFelfedezo` (3D), `vektorok/VektorMuveletFelfedezo`,
+  `SkalarisSzorzatFelfedezo`, `DeterminansAnimacio`, `VektorsokszogEpito`; `nyomatek/ErroparAlakito`,
+  `harom/TengelyNyomatekFelfedezo` (3D), `abrak/TerbeliEredoOsztalyozo`; `megoszlo/OnsulySzamolo`,
+  `FerdeTeherFelfedezo`, `GatFelfedezo`, `harom/TeherLepelFelfedezo` (3D); `sulypont/EltolasFelfedezo`,
+  `SulypontTablazat`; `abrak/Kerekito`.
+- **Új kidolgozott feladatok a tankönyv példáiból**: GYF‑A/B a 2. modulban (3.7. ábra: M = −24 kNm
+  négyféleképpen; 3.10. ábra: dinámrendszer négy esete) és a 3. modulban (3.22: félkörív; 3.23: ferde
+  gát), mindegyik filmmel.
 
 ## Háttéranyag
 

@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Konfetti from "@/components/ui/Konfetti";
+import { usePathname } from "next/navigation";
+import { feladatMegoldva } from "@/lib/haladas";
 
 /**
  * Általános gyakorlófeladat-motor.
@@ -30,6 +32,7 @@ export default function GyakorloDoboz({
   const [sorozat, setSorozat] = useState(0); // egymás utáni hibátlan megoldások
   const [konfetti, setKonfetti] = useState(false);
   const konfettiVege = useCallback(() => setKonfetti(false), []);
+  const utvonal = usePathname();
 
   const ujFeladat = useCallback(() => {
     setFeladat(generator());
@@ -55,6 +58,7 @@ export default function GyakorloDoboz({
     if (ellenorizve) return;
     setEllenorizve(true);
     const mind = feladat.mezok.every((m) => jo(m, valaszok[m.id]));
+    if (mind) feladatMegoldva(utvonal);
     setStatisztika((s) => ({ jo: s.jo + (mind ? 1 : 0), osszes: s.osszes + 1 }));
     setSorozat((n) => {
       const uj = mind ? n + 1 : 0;

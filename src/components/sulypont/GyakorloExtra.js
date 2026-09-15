@@ -161,11 +161,218 @@ function haromszogFeladat() {
   };
 }
 
+
+/* ---------- 10. Statikai nyomaték eltolt tengelyre ---------- */
+
+function eltolasFeladat() {
+  const A = lepes(1000, 8000, 100);
+  const ys = lepes(20, 150, 5);
+  const zs = lepes(20, 150, 5);
+  const y0 = lepes(-60, 200, 10);
+  const z0 = lepes(-60, 200, 10);
+  const Sy1 = zs * A; // S_y' = z_S' A
+  const Sz1 = ys * A;
+  const Sy2 = Sy1 - z0 * A; // S_y'' = S_y' − z_0 A
+  const Sz2 = Sz1 - y0 * A;
+  const tag = (v) => `${v < 0 ? "+" : "-"} ${sz(Math.abs(v), 0)}`;
+  if (Math.random() < 0.5) {
+    return {
+      szoveg: (
+        <p>
+          Egy síkidom területe <M>{`A = ${sz(A, 0)}`}</M> mm², súlypontja az <M>{"O'"}</M> koordináta-rendszerben{" "}
+          <M>{`(y_S';\\ z_S') = (${ys};\\ ${zs})`}</M> mm. Mekkora az idom statikai nyomatéka az{" "}
+          <M>{"O''"}</M> rendszer tengelyeire, ha <M>{"O''"}</M> origója az <M>{"O'"}</M> rendszerben{" "}
+          <M>{`(y_0;\\ z_0) = (${y0};\\ ${z0})`}</M> mm-nél van? (y balra, z lefelé; a vesszős tengelyek egymással párhuzamosak.)
+        </p>
+      ),
+      sugo: (
+        <p>
+          Kétféleképpen is mehet: <M>{"S_{y'} = z_S' A"}</M>, majd eltolás: <M>{"S_{y''} = S_{y'} - z_0 A"}</M> —
+          vagy rögtön a súlypont új koordinátájával: <M>{"S_{y''} = (z_S' - z_0)\\,A"}</M>. Az eredmény ugyanaz.
+        </p>
+      ),
+      mezok: [
+        { id: "sy", cimke: "Sy″ (az y″ tengelyre)", egyseg: "mm³", helyes: Sy2, tizedes: 0 },
+        { id: "sz", cimke: "Sz″ (a z″ tengelyre)", egyseg: "mm³", helyes: Sz2, tizedes: 0 },
+      ],
+      megoldas: (
+        <>
+          <MB>{`S_{y'} = z_S' A = ${zs}\\cdot ${sz(A, 0)} = ${sz(Sy1, 0)}\\ \\text{mm}^3,\\qquad S_{z'} = y_S' A = ${ys}\\cdot ${sz(A, 0)} = ${sz(Sz1, 0)}\\ \\text{mm}^3`}</MB>
+          <MB>{`S_{y''} = S_{y'} - z_0 A = ${sz(Sy1, 0)} ${tag(z0)}\\cdot ${sz(A, 0)} = ${sz(Sy2, 0)}\\ \\text{mm}^3`}</MB>
+          <MB>{`S_{z''} = S_{z'} - y_0 A = ${sz(Sz1, 0)} ${tag(y0)}\\cdot ${sz(A, 0)} = ${sz(Sz2, 0)}\\ \\text{mm}^3`}</MB>
+          <p className="mt-2 text-[13px] text-petrol-600">
+            Ellenőrzés: a súlypont az új rendszerben <M>{`(${sz(ys - y0, 0)};\\ ${sz(zs - z0, 0)})`}</M>, és{" "}
+            <M>{`${sz(zs - z0, 0)}\\cdot ${sz(A, 0)} = ${sz(Sy2, 0)}`}</M> — a statikai nyomaték az eltolás × terület szorzatával változott, a pont nem mozdult.
+          </p>
+        </>
+      ),
+    };
+  }
+  return {
+    szoveg: (
+      <p>
+        Egy <M>{`A = ${sz(A, 0)}`}</M> mm² területű síkidom statikai nyomatékai az <M>{"O'"}</M> rendszerben:{" "}
+        <M>{`S_{y'} = ${sz(Sy1, 0)}`}</M> mm³, <M>{`S_{z'} = ${sz(Sz1, 0)}`}</M> mm³. Hol a súlypont? Mekkora lesz{" "}
+        <M>{"S_{y''}"}</M>, ha az origót az <M>{"O'"}</M>-ben <M>{`(y_0;\\ z_0) = (${y0};\\ ${z0})`}</M> mm-be toljuk?
+      </p>
+    ),
+    sugo: (
+      <p>
+        A súlypont definíciója: <M>{"0 = S_{y'} - z_S' A"}</M>, innen <M>{"z_S' = S_{y'}/A"}</M>. Az eltolásnál{" "}
+        <M>{"S_{y''} = S_{y'} - z_0 A"}</M>.
+      </p>
+    ),
+    mezok: [
+      { id: "ys", cimke: "yₛ′", egyseg: "mm", helyes: ys, tizedes: 1 },
+      { id: "zs", cimke: "zₛ′", egyseg: "mm", helyes: zs, tizedes: 1 },
+      { id: "sy", cimke: "Sy″", egyseg: "mm³", helyes: Sy2, tizedes: 0 },
+    ],
+    megoldas: (
+      <>
+        <MB>{`z_S' = \\frac{S_{y'}}{A} = \\frac{${sz(Sy1, 0)}}{${sz(A, 0)}} = ${zs}\\ \\text{mm},\\qquad y_S' = \\frac{S_{z'}}{A} = \\frac{${sz(Sz1, 0)}}{${sz(A, 0)}} = ${ys}\\ \\text{mm}`}</MB>
+        <MB>{`S_{y''} = S_{y'} - z_0 A = ${sz(Sy1, 0)} ${tag(z0)}\\cdot ${sz(A, 0)} = ${sz(Sy2, 0)}\\ \\text{mm}^3`}</MB>
+        <p className="mt-2 text-[13px] text-petrol-600">
+          Ha az origót éppen a súlypontba tolnánk (<M>{`z_0 = ${zs}`}</M>), akkor <M>{"S_{y''} = 0"}</M> lenne: ez a súlyponti tengely.
+        </p>
+      </>
+    ),
+  };
+}
+
+/* ---------- 11. Súlypontból statikai nyomaték ---------- */
+
+function sulypontNyomatekFeladat() {
+  const b1 = lepes(60, 240, 20);
+  const h1 = lepes(20, 60, 10);
+  const b2 = lepes(20, 100, 10);
+  const h2 = lepes(60, 200, 10);
+  // felső téglalap b1×h1 (jobb felső sarok az origó), alatta a jobb élhez igazítva b2×h2
+  const A1 = b1 * h1, z1 = h1 / 2;
+  const A2 = b2 * h2, z2 = h1 + h2 / 2;
+  const A = A1 + A2;
+  const Sy = A1 * z1 + A2 * z2;
+  const zs = Sy / A;
+  return {
+    szoveg: (
+      <p>
+        Egy idom két téglalapból áll: felül egy <M>{`${b1}\\times${h1}`}</M> mm-es, alatta — a jobb élhez igazítva — egy{" "}
+        <M>{`${b2}\\times${h2}`}</M> mm-es (szélesség × magasság). Mekkora a terület, a <strong>felső élre</strong> (az y tengelyre)
+        vett statikai nyomaték, és milyen mélyen van a súlypont?{rendszer}
+      </p>
+    ),
+    sugo: (
+      <p>
+        <M>{"S_y = \\sum A_i z_i"}</M>, ahol <M>{"z_i"}</M> a részek súlypontjának mélysége a felső éltől. Az alsó téglalap közepe{" "}
+        <M>{`${h1} + ${h2}/2`}</M> mélyen van. A végén nézd meg: a súlyponti tengelyre mennyi jönne ki?
+      </p>
+    ),
+    mezok: [
+      { id: "a", cimke: "A", egyseg: "mm²", helyes: A, tizedes: 0 },
+      { id: "sy", cimke: "Sy (a felső élre)", egyseg: "mm³", helyes: Sy, tizedes: 0 },
+      { id: "zs", cimke: "zₛ", egyseg: "mm", helyes: zs, tizedes: 2 },
+    ],
+    megoldas: (
+      <>
+        <MB>{`A_1 = ${b1}\\cdot ${h1} = ${sz(A1, 0)},\\ z_1 = ${sz(z1, 1)};\\qquad A_2 = ${b2}\\cdot ${h2} = ${sz(A2, 0)},\\ z_2 = ${h1} + \\tfrac{${h2}}{2} = ${sz(z2, 1)}`}</MB>
+        <MB>{`A = ${sz(A, 0)}\\ \\text{mm}^2,\\qquad S_y = ${sz(A1, 0)}\\cdot ${sz(z1, 1)} + ${sz(A2, 0)}\\cdot ${sz(z2, 1)} = ${sz(Sy, 0)}\\ \\text{mm}^3`}</MB>
+        <MB>{`z_S = \\frac{S_y}{A} = ${sz(zs, 2)}\\ \\text{mm}`}</MB>
+        <MB>{`\\text{A súlyponti tengelyre: } S = A_1(z_1 - z_S) + A_2(z_2 - z_S) = ${sz(A1 * (z1 - zs), 0)} ${A2 * (z2 - zs) < 0 ? "-" : "+"} ${sz(Math.abs(A2 * (z2 - zs)), 0)} = 0`}</MB>
+        <p className="mt-2 text-[13px] text-petrol-600">
+          Tanulság: a felső élre a statikai nyomaték <M>{`${sz(Sy, 0)}`}</M>, a súlyponton átmenő tengelyre <strong>nulla</strong> — ez a súlypont definíciója (tankönyv 9.14). Ugyanez fordítva: <M>{"S_y = z_S A"}</M>.
+        </p>
+      </>
+    ),
+  };
+}
+
+/* ---------- 12. Félkörös idom átmérővel megadva ---------- */
+
+function felkorAtmeroFeladat() {
+  const D = lepes(40, 200, 10);
+  const h = lepes(20, 160, 10);
+  const r = D / 2;
+  if (Math.random() < 0.4) {
+    // egyetlen kör alakú idom, átmérővel: félkör vagy negyedkör
+    const negyed = Math.random() < 0.5;
+    const A = negyed ? (D * D * PI) / 16 : (D * D * PI) / 8;
+    const e = (2 * D) / (3 * PI);
+    return {
+      szoveg: (
+        <p>
+          Egy {negyed ? "negyedkör" : "félkör"} <strong>átmérője</strong> <M>{`D = ${D}`}</M> mm (tehát a sugara <M>{"R = D/2"}</M>).
+          Mekkora a területe, és milyen messze van a súlypontja {negyed ? "az egyik egyenes élétől" : "az egyenes élétől (az átmérőtől)"}?
+        </p>
+      ),
+      sugo: (
+        <p>
+          A tankönyv 9.4. ábrája átmérővel: félkör <M>{"D^2\\pi/8"}</M>, negyedkör <M>{"D^2\\pi/16"}</M>. A súlypont az egyenes éltől{" "}
+          <M>{"4R/3\\pi = 2D/3\\pi \\approx 0{,}2122\\,D"}</M> — a 424-es mozdony: <M>{"4/3\\pi \\approx 0{,}4244"}</M>, de <em>sugárral</em>.
+        </p>
+      ),
+      mezok: [
+        { id: "a", cimke: "A", egyseg: "mm²", helyes: A, tizedes: 1 },
+        { id: "e", cimke: "a súlypont távolsága az egyenes éltől", egyseg: "mm", helyes: e, tizedes: 2 },
+      ],
+      megoldas: (
+        <>
+          <MB>{`R = \\frac{D}{2} = ${sz(r, 0)}\\ \\text{mm},\\qquad A = \\frac{D^2\\pi}{${negyed ? 16 : 8}} = \\frac{${D}^2\\pi}{${negyed ? 16 : 8}} = \\frac{R^2\\pi}{${negyed ? 4 : 2}} = ${sz(A, 1)}\\ \\text{mm}^2`}</MB>
+          <MB>{`e = \\frac{4R}{3\\pi} = \\frac{4\\cdot ${sz(r, 0)}}{3\\pi} = \\frac{2D}{3\\pi} = ${sz(e, 2)}\\ \\text{mm}`}</MB>
+          <p className="mt-2 text-[13px] text-petrol-600">
+            {negyed
+              ? "Negyedkörnél ugyanez a távolság mindkét egyenes éltől (a kör középpontjától mérve) — a súlypont a szögfelezőn van."
+              : "Félkörnél a súlypont a szimmetriatengelyen, az átmérőtől e távolságra, a domború oldal felé."}{" "}
+            Ha D-t sugárnak nézed, a terület a négyszeresére, a távolság a kétszeresére nő.
+          </p>
+        </>
+      ),
+    };
+  }
+  const A1 = D * h, z1 = h / 2;
+  const A2 = (D * D * PI) / 8;
+  const e = (2 * D) / (3 * PI); // 4r/3π = 2D/3π
+  const z2 = h + e;
+  const A = A1 + A2;
+  const Sy = A1 * z1 + A2 * z2;
+  const zs = Sy / A;
+  return {
+    szoveg: (
+      <p>
+        Egy <M>{`D = ${D}`}</M> mm <strong>átmérőjű</strong> félkör domború oldalával lefelé egy <M>{`${D}\\times${h}`}</M> mm-es
+        téglalap alsó éléhez illeszkedik (az idom „U”-szerű, lekerekített aljú). Mekkora a terület, és milyen mélyen van a súlypont
+        a felső éltől?{rendszer}
+      </p>
+    ),
+    sugo: (
+      <p>
+        Vigyázz: <M>{"D"}</M> az átmérő, a sugár <M>{`R = D/2 = ${r}`}</M>. A félkör területe <M>{"R^2\\pi/2 = D^2\\pi/8"}</M>, a
+        súlypontja az átmérőtől <M>{"4R/3\\pi = 2D/3\\pi"}</M>-re van — itt lefelé, a téglalap alsó éle alatt.
+      </p>
+    ),
+    mezok: [
+      { id: "a", cimke: "A", egyseg: "mm²", helyes: A, tizedes: 0 },
+      { id: "zs", cimke: "zₛ (a felső éltől)", egyseg: "mm", helyes: zs, tizedes: 2 },
+    ],
+    megoldas: (
+      <>
+        <MB>{`A_1 = ${D}\\cdot ${h} = ${sz(A1, 0)},\\quad z_1 = ${sz(z1, 1)};\\qquad A_2 = \\frac{D^2\\pi}{8} = \\frac{${D}^2\\pi}{8} = ${sz(A2, 1)},\\quad z_2 = ${h} + \\frac{2\\cdot ${D}}{3\\pi} = ${h} + ${sz(e, 2)} = ${sz(z2, 2)}`}</MB>
+        <MB>{`A = ${sz(A, 1)}\\ \\text{mm}^2,\\qquad S_y = ${sz(A1, 0)}\\cdot ${sz(z1, 1)} + ${sz(A2, 1)}\\cdot ${sz(z2, 2)} = ${sz(Sy, 0)}\\ \\text{mm}^3`}</MB>
+        <MB>{`z_S = \\frac{S_y}{A} = ${sz(zs, 2)}\\ \\text{mm}`}</MB>
+        <p className="mt-2 text-[13px] text-petrol-600">
+          Ha D-t sugárnak nézed, a félkör területe négyszeres (<M>{`${sz(D * D * PI / 2, 0)}`}</M>) lesz, és a súlypont mélyen lecsúszik. A szimmetria miatt <M>{`y_S = D/2 = ${r}`}</M>.
+        </p>
+      </>
+    ),
+  };
+}
+
 export const EXTRA_GENERATOROK = [
   { cim: "Aszimmetrikus I-szelvény", fn: iSzelvenyFeladat },
   { cim: "U-szelvény", fn: uSzelvenyFeladat },
   { cim: "Kör alakú lyuk", fn: korLyukFeladat },
   { cim: "Háromszög három csúccsal", fn: haromszogFeladat },
+  { cim: "Statikai nyomaték eltolt tengelyre", fn: eltolasFeladat },
+  { cim: "Súlypontból statikai nyomaték", fn: sulypontNyomatekFeladat },
+  { cim: "Kör alakú idomok átmérővel", fn: felkorAtmeroFeladat },
 ];
 
 export default function GyakorloExtra() {
@@ -175,6 +382,9 @@ export default function GyakorloExtra() {
       <GyakorloDoboz cim="U-szelvény" leiras="A szárak és a talp — figyelj a szárak valódi magasságára." generator={uSzelvenyFeladat} oszlopok={1} />
       <GyakorloDoboz cim="Kör alakú lyuk" leiras="Kivonásos módszer a legkényelmesebb kivont idommal: a kör súlypontja a középpontja." generator={korLyukFeladat} />
       <GyakorloDoboz cim="Háromszög három csúccsal" leiras="Általános háromszög: a súlypont a csúcsok átlaga, a terület a keresztszorzatból." generator={haromszogFeladat} oszlopok={3} />
+      <GyakorloDoboz cim="Statikai nyomaték eltolt tengelyre" leiras="A tankönyv 9.12–9.16 képletei: S = z_S·A, és az eltolásnál S változik az eltolás × terület szorzatával." generator={eltolasFeladat} oszlopok={3} />
+      <GyakorloDoboz cim="Súlypontból statikai nyomaték" leiras="Két téglalap: terület, a felső élre vett Sy, súlypont — és a tanulság, hogy a súlyponti tengelyre nulla." generator={sulypontNyomatekFeladat} oszlopok={3} />
+      <GyakorloDoboz cim="Kör alakú idomok átmérővel" leiras="Félkör vagy negyedkör D-vel megadva, önmagában vagy téglalappal: D²π/8, D²π/16 és 2D/3π — ne nézd D-t sugárnak!" generator={felkorAtmeroFeladat} />
     </>
   );
 }

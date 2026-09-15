@@ -162,60 +162,98 @@ export function AbraSulypontFogalom() {
 
 export function AbraAlapidomok() {
   const PI = Math.PI;
+  const e60 = (4 * 60) / (3 * PI); // 25,46 – félkör (r = 60 px)
+  const e90 = (4 * 90) / (3 * PI); // 38,20 – negyedkör (r = 90 px)
+  const Cim = ({ x, y, betu, szoveg }) => (
+    <text x={x} y={y} textAnchor="middle" fontSize="12.5" fontWeight="600" fill="#1d3c48">
+      {`${betu}) ${szoveg}`}
+    </text>
+  );
+  const Keplet = ({ x, y, fo, masodik, harmadik }) => (
+    <g>
+      <text x={x} y={y} textAnchor="middle" fontSize="11.5" fontWeight="600" fill="#334155">{fo}</text>
+      {masodik && <text x={x} y={y + 15} textAnchor="middle" fontSize="11" fill="#475569">{masodik}</text>}
+      {harmadik && <text x={x} y={y + 30} textAnchor="middle" fontSize="11" fill="#475569">{harmadik}</text>}
+    </g>
+  );
   return (
-    <svg viewBox="-22 0 750 250" className="abra w-full" role="img" aria-label="Alapidomok súlypontja: téglalap, háromszög, félkör, negyedkör">
+    <svg viewBox="0 0 660 500" className="abra w-full" role="img" aria-label="Alapidomok területe és súlypontja: téglalap, derékszögű háromszög, kör, félkör, negyedkör">
       <defs>
         <Hegy id="hegy-al-m" szin="#94a3b8" />
       </defs>
 
-      {/* téglalap */}
+      {/* a) téglalap */}
       <g>
-        <text x={95} y={24} textAnchor="middle" fontSize="12.5" fontWeight="600" fill="#1d3c48">Téglalap</text>
-        <rect x={35} y={50} width="120" height="90" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" />
-        <SJel x={95} y={95} />
-        <Meret x0={35} y0={160} x1={95} y1={160} szoveg="b/2" tav={12} id="hegy-al-m" />
-        <Meret x0={95} y0={160} x1={155} y1={160} szoveg="b/2" tav={12} id="hegy-al-m" />
-        <Meret x0={20} y0={50} x1={20} y1={95} szoveg="h/2" tav={14} id="hegy-al-m" />
-        <Meret x0={20} y0={95} x1={20} y1={140} szoveg="h/2" tav={14} id="hegy-al-m" />
-        <text x={95} y={222} textAnchor="middle" fontSize="11.5" fontWeight="600" fill="#334155">A = b·h</text>
-        <text x={95} y={238} textAnchor="middle" fontSize="11" fill="#475569">S a közepén</text>
+        <Cim x={110} y={22} betu="a" szoveg="Téglalap" />
+        <rect x={50} y={46} width="120" height="90" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" />
+        <line x1={110} y1={46} x2={110} y2={136} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <line x1={50} y1={91} x2={170} y2={91} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <SJel x={110} y={91} />
+        <Meret x0={50} y0={156} x1={110} y1={156} szoveg="a/2" tav={12} id="hegy-al-m" />
+        <Meret x0={110} y0={156} x1={170} y1={156} szoveg="a/2" tav={12} id="hegy-al-m" />
+        <Meret x0={34} y0={46} x1={34} y1={91} szoveg="b/2" tav={14} id="hegy-al-m" />
+        <Meret x0={34} y0={91} x1={34} y1={136} szoveg="b/2" tav={14} id="hegy-al-m" />
+        <Keplet x={110} y={200} fo="A = a·b" masodik="S a középpont: a/2, b/2" />
       </g>
 
-      {/* háromszög */}
+      {/* b) derékszögű háromszög */}
       <g>
-        <text x={275} y={24} textAnchor="middle" fontSize="12.5" fontWeight="600" fill="#1d3c48">Derékszögű háromszög</text>
-        <path d="M 215 140 L 335 140 L 215 50 Z" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" strokeLinejoin="round" />
-        <SJel x={215 + 40} y={140 - 30} />
-        <Meret x0={215} y0={160} x1={255} y1={160} szoveg="a/3" tav={12} id="hegy-al-m" />
-        <Meret x0={255} y0={160} x1={335} y1={160} szoveg="2a/3" tav={12} id="hegy-al-m" />
-        <Meret x0={200} y0={110} x1={200} y1={140} szoveg="h/3" tav={14} id="hegy-al-m" />
-        <Meret x0={200} y0={50} x1={200} y1={110} szoveg="2h/3" tav={14} id="hegy-al-m" />
-        <text x={275} y={222} textAnchor="middle" fontSize="11.5" fontWeight="600" fill="#334155">A = a·h/2</text>
-        <text x={275} y={238} textAnchor="middle" fontSize="11" fill="#475569">S a csúcstól a/3, h/3</text>
+        <Cim x={330} y={22} betu="b" szoveg="Derékszögű háromszög" />
+        <path d="M 270 136 L 390 136 L 270 46 Z" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" strokeLinejoin="round" />
+        <line x1={310} y1={76} x2={310} y2={136} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <line x1={270} y1={106} x2={350} y2={106} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <SJel x={310} y={106} dx={9} dy={-8} />
+        <Meret x0={270} y0={156} x1={310} y1={156} szoveg="a/3" tav={12} id="hegy-al-m" />
+        <Meret x0={310} y0={156} x1={390} y1={156} szoveg="2a/3" tav={12} id="hegy-al-m" />
+        <Meret x0={254} y0={106} x1={254} y1={136} szoveg="b/3" tav={14} id="hegy-al-m" />
+        <Meret x0={254} y0={46} x1={254} y1={106} szoveg="2b/3" tav={14} id="hegy-al-m" />
+        <Keplet x={335} y={200} fo="A = a·b/2" masodik="S a derékszögű csúcstól a/3, b/3" harmadik="(a befogók harmadánál)" />
       </g>
 
-      {/* félkör */}
+      {/* c) kör */}
       <g>
-        <text x={455} y={24} textAnchor="middle" fontSize="12.5" fontWeight="600" fill="#1d3c48">Félkör</text>
-        <path d="M 395 140 A 60 60 0 0 1 515 140 Z" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" />
-        <line x1={455} y1={140} x2={455} y2={80} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
-        <SJel x={455} y={140 - (4 * 60) / (3 * PI)} dx={10} dy={4} />
-        <Meret x0={380} y0={140 - (4 * 60) / (3 * PI)} x1={380} y1={140} szoveg="4r/3π" tav={26} id="hegy-al-m" />
-        <Meret x0={395} y0={160} x1={455} y1={160} szoveg="r" tav={12} id="hegy-al-m" />
-        <text x={455} y={222} textAnchor="middle" fontSize="11.5" fontWeight="600" fill="#334155">A = r²π/2</text>
-        <text x={455} y={238} textAnchor="middle" fontSize="11" fill="#475569">S az átmérőtől 4r/3π</text>
+        <Cim x={550} y={22} betu="c" szoveg="Kör" />
+        <circle cx={550} cy={100} r="45" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" />
+        <line x1={550} y1={55} x2={550} y2={145} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <line x1={505} y1={100} x2={595} y2={100} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <SJel x={550} y={100} />
+        <Meret x0={505} y0={162} x1={550} y1={162} szoveg="R" tav={12} id="hegy-al-m" />
+        <Meret x0={550} y0={162} x1={595} y1={162} szoveg="R" tav={12} id="hegy-al-m" />
+        <Meret x0={505} y0={44} x1={595} y1={44} szoveg="D" tav={-9} id="hegy-al-m" />
+        <Keplet x={550} y={200} fo="A = R²π = D²π/4" masodik="S a középpont" />
       </g>
 
-      {/* negyedkör */}
+      {/* d) félkör */}
       <g>
-        <text x={630} y={24} textAnchor="middle" fontSize="12.5" fontWeight="600" fill="#1d3c48">Negyedkör</text>
-        <path d="M 585 140 L 585 50 A 90 90 0 0 1 675 140 Z" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" />
-        <SJel x={585 + (4 * 90) / (3 * PI)} y={140 - (4 * 90) / (3 * PI)} dx={9} dy={-8} />
-        <Meret x0={585} y0={160} x1={585 + (4 * 90) / (3 * PI)} y1={160} szoveg="4r/3π" tav={12} id="hegy-al-m" />
-        <Meret x0={570} y0={140 - (4 * 90) / (3 * PI)} x1={570} y1={140} szoveg="4r/3π" tav={26} id="hegy-al-m" />
-        <text x={630} y={222} textAnchor="middle" fontSize="11.5" fontWeight="600" fill="#334155">A = r²π/4</text>
-        <text x={630} y={238} textAnchor="middle" fontSize="11" fill="#475569">S az élektől 4r/3π</text>
+        <Cim x={200} y={272} betu="d" szoveg="Félkör" />
+        <path d="M 140 366 A 60 60 0 0 1 260 366 Z" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" />
+        <line x1={200} y1={366} x2={200} y2={306} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <SJel x={200} y={366 - e60} dx={10} dy={4} />
+        <Meret x0={124} y0={366 - e60} x1={124} y1={366} szoveg="4R/3π" tav={28} id="hegy-al-m" />
+        <Meret x0={140} y0={386} x1={200} y1={386} szoveg="R" tav={12} id="hegy-al-m" />
+        <Meret x0={200} y0={386} x1={260} y1={386} szoveg="R" tav={12} id="hegy-al-m" />
+        <Meret x0={140} y0={292} x1={260} y1={292} szoveg="D" tav={-10} id="hegy-al-m" />
+        <Keplet x={200} y={430} fo="A = R²π/2 = D²π/8" masodik="S az átmérőtől 4R/3π ≈ 0,4244 R" harmadik="a szimmetriatengelyen" />
       </g>
+
+      {/* e) negyedkör */}
+      <g>
+        <Cim x={460} y={272} betu="e" szoveg="Negyedkör" />
+        <path d="M 410 366 L 410 276 A 90 90 0 0 1 500 366 Z" fill={IDOM} stroke={IDOM_KERET} strokeWidth="1.6" />
+        <line x1={410 + e90} y1={276} x2={410 + e90} y2={366} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <line x1={410} y1={366 - e90} x2={500} y2={366 - e90} stroke="#94a3b8" strokeWidth="1" strokeDasharray="3 3" />
+        <SJel x={410 + e90} y={366 - e90} dx={9} dy={-8} />
+        <Meret x0={410} y0={386} x1={410 + e90} y1={386} szoveg="4R/3π" tav={12} id="hegy-al-m" />
+        <Meret x0={410 + e90} y0={386} x1={500} y1={386} szoveg="" tav={12} id="hegy-al-m" />
+        <Meret x0={394} y0={366 - e90} x1={394} y1={366} szoveg="4R/3π" tav={28} id="hegy-al-m" />
+        <Meret x0={394} y0={276} x1={394} y1={366 - e90} szoveg="" tav={28} id="hegy-al-m" />
+        <Meret x0={520} y0={276} x1={520} y1={366} szoveg="R" tav={-12} id="hegy-al-m" />
+        <Keplet x={460} y={430} fo="A = R²π/4 = D²π/16" masodik="S mindkét egyenes éltől 4R/3π" harmadik="(a középponttól mérve)" />
+      </g>
+
+      <text x={330} y={488} textAnchor="middle" fontSize="11.5" fill="#475569">
+        A tankönyv 9.4. ábrája. R a sugár, D = 2R az átmérő — a feladatokban gyakran D-t adnak meg!
+      </text>
     </svg>
   );
 }

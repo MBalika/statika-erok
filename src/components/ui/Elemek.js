@@ -126,6 +126,60 @@ export function KetOszlop({ children, forditott = false }) {
   );
 }
 
+/**
+ * „A tankönyvben így” – a Hincz–Németh: Statika jelölésére, szóhasználatára
+ * utaló doboz. Használat: <TankonyvJel fejezet="3.3.2"> … </TankonyvJel>
+ */
+export function TankonyvJel({ fejezet, cim, children }) {
+  return (
+    <div className="my-5 rounded-xl border border-violet-300 bg-violet-50 p-4 sm:p-5">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <span className="grid h-5 w-5 place-items-center rounded-md bg-violet-600 text-[11px] text-white" aria-hidden="true">
+          ▤
+        </span>
+        <span className="text-[10.5px] font-bold tracking-[0.16em] text-violet-800 uppercase">
+          {cim ?? "A tankönyvben így"}
+        </span>
+        {fejezet && (
+          <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-medium text-violet-700 ring-1 ring-violet-200">
+            Hincz–Németh {fejezet}
+          </span>
+        )}
+      </div>
+      <div className="proza text-[14.5px] leading-relaxed text-petrol-800">{children}</div>
+    </div>
+  );
+}
+
+/**
+ * Kétnyelvű szótár: az oldal / a gyakorlat szava ↔ a tankönyv szava.
+ * sorok: [{ itt, konyv, megjegyzes? }]
+ */
+export function Szotar({ sorok, balCim = "Itt és a gyakorlaton", jobbCim = "A tankönyvben" }) {
+  return (
+    <div className="my-4 overflow-hidden rounded-xl border border-[color:var(--keret)] bg-white">
+      <table className="w-full text-[13.5px]">
+        <thead className="bg-petrol-50 text-[10.5px] tracking-wider text-petrol-500 uppercase">
+          <tr>
+            <th className="px-3 py-2 text-left font-semibold">{balCim}</th>
+            <th className="px-3 py-2 text-left font-semibold">{jobbCim}</th>
+            <th className="hidden px-3 py-2 text-left font-semibold sm:table-cell">Megjegyzés</th>
+          </tr>
+        </thead>
+        <tbody>
+          {sorok.map((s, i) => (
+            <tr key={i} className="border-t border-petrol-100 align-top">
+              <td className="px-3 py-2 text-petrol-900">{s.itt}</td>
+              <td className="px-3 py-2 text-petrol-900">{s.konyv}</td>
+              <td className="hidden px-3 py-2 text-[12.5px] text-petrol-500 sm:table-cell">{s.megjegyzes}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export function Cimke({ children, szin = "petrol" }) {
   const szinek = {
     petrol: "bg-petrol-100 text-petrol-700",

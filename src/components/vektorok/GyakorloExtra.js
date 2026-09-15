@@ -2,7 +2,7 @@
 
 import GyakorloDoboz from "@/components/GyakorloDoboz";
 import { M, MB } from "@/components/ui/Keplet";
-import { derekszogu, polaris, sz, zarojel, normalizalSzog, siknegyed } from "@/lib/szamok";
+import { derekszogu, polaris, sz, zarojel, siknegyed, osszegLanc } from "@/lib/szamok";
 
 const egesz = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 const valaszt = (tomb) => tomb[Math.floor(Math.random() * tomb.length)];
@@ -163,8 +163,8 @@ function kotelFeladat() {
     ),
     sugo: (
       <p>
-        Három erő egyensúlya a csomóponton: <M>{"S_1"}</M> az α, <M>{"S_2"}</M> a β irányban húz, G lefelé.
-        Két egyenlet (ΣFx = 0, ΣFy = 0), két ismeretlen.
+        Három erő egyensúlya a csomóponton: <M>{"(\\underline{G}, \\underline{S}_1, \\underline{S}_2) \\ekv \\underline{O}"}</M>;{" "}
+        <M>{"S_1"}</M> az α, <M>{"S_2"}</M> a β irányban húz, G lefelé. Két vetületi egyenlet, két ismeretlen.
       </p>
     ),
     mezok: [
@@ -173,11 +173,113 @@ function kotelFeladat() {
     ],
     megoldas: (
       <>
-        <MB>{`\\sum F_x = S_1\\cos ${alfa}^\\circ + S_2\\cos ${beta}^\\circ = 0`}</MB>
-        <MB>{`\\sum F_y = S_1\\sin ${alfa}^\\circ + S_2\\sin ${beta}^\\circ - ${G} = 0`}</MB>
+        <MB>{"(\\underline{G}, \\underline{S}_1, \\underline{S}_2) \\ekv \\underline{O}"}</MB>
+        <MB>{`\\Fx S_1\\cos ${alfa}^\\circ + S_2\\cos ${beta}^\\circ = 0`}</MB>
+        <MB>{`\\Fy -${G} + S_1\\sin ${alfa}^\\circ + S_2\\sin ${beta}^\\circ = 0`}</MB>
         <MB>{`S_1 = ${sz(S1, 2)}\\ \\text{kN},\\qquad S_2 = ${sz(S2, 2)}\\ \\text{kN}`}</MB>
         <p className="mt-2 text-[13px] text-petrol-600">
           Ellenőrzés: a két kötélerő és G zárt vektorháromszöget alkot. Minél laposabb a kötél, annál nagyobb az erő benne.
+        </p>
+      </>
+    ),
+  };
+}
+
+/* ---------- 10. Vektoriális szorzat ---------- */
+
+function vektorialisFeladat() {
+  const a = { x: nemNulla(-6, 6), y: nemNulla(-6, 6), z: nemNulla(-6, 6) };
+  let b = { x: nemNulla(-6, 6), y: nemNulla(-6, 6), z: nemNulla(-6, 6) };
+  const kereszt = (p, q) => ({ x: p.y * q.z - p.z * q.y, y: p.z * q.x - p.x * q.z, z: p.x * q.y - p.y * q.x });
+  let c = kereszt(a, b);
+  while (c.x === 0 && c.y === 0 && c.z === 0) {
+    b = { x: nemNulla(-6, 6), y: nemNulla(-6, 6), z: nemNulla(-6, 6) };
+    c = kereszt(a, b);
+  }
+  const z = (v) => (v < 0 ? `(${v})` : `${v}`);
+  return {
+    szoveg: (
+      <p>
+        Számítsd ki az <M>{`\\underline{a} = (${a.x};\\ ${a.y};\\ ${a.z})`}</M> és{" "}
+        <M>{`\\underline{b} = (${b.x};\\ ${b.y};\\ ${b.z})`}</M> vektorok{" "}
+        <M>{"\\underline{a}\\times\\underline{b}"}</M> vektoriális szorzatának három komponensét!
+      </p>
+    ),
+    sugo: (
+      <p>
+        Írd fel a determinánst (első sor <M>{"\\underline{i}, \\underline{j}, \\underline{k}"}</M>, alatta a, alatta b), és fejtsd
+        ki: jobbra-lefelé átlók +, balra-lefelé átlók −. Vagy a képlet:{" "}
+        <M>{"(a_y b_z - a_z b_y;\\ a_z b_x - a_x b_z;\\ a_x b_y - a_y b_x)"}</M>.
+      </p>
+    ),
+    mezok: [
+      { id: "x", cimke: "(a×b)x", egyseg: "", helyes: c.x, tizedes: 0, tures: 0.001 },
+      { id: "y", cimke: "(a×b)y", egyseg: "", helyes: c.y, tizedes: 0, tures: 0.001 },
+      { id: "z", cimke: "(a×b)z", egyseg: "", helyes: c.z, tizedes: 0, tures: 0.001 },
+    ],
+    megoldas: (
+      <>
+        <MB>{`\\underline{a}\\times\\underline{b} = \\begin{vmatrix} \\underline{i} & \\underline{j} & \\underline{k} \\\\ ${a.x} & ${a.y} & ${a.z} \\\\ ${b.x} & ${b.y} & ${b.z} \\end{vmatrix}`}</MB>
+        <MB>{`= \\big(${a.y}\\cdot${z(b.z)} - ${z(a.z)}\\cdot${z(b.y)}\\big)\\underline{i} + \\big(${a.z}\\cdot${z(b.x)} - ${z(a.x)}\\cdot${z(b.z)}\\big)\\underline{j} + \\big(${a.x}\\cdot${z(b.y)} - ${z(a.y)}\\cdot${z(b.x)}\\big)\\underline{k}`}</MB>
+        <MB>{`\\underline{a}\\times\\underline{b} = \\begin{bmatrix} ${c.x} \\\\ ${c.y} \\\\ ${c.z} \\end{bmatrix}`}</MB>
+        <p className="mt-2 text-[13px] text-petrol-600">
+          Ellenőrzés: merőleges mindkettőre —{" "}
+          <M>{`\\underline{a}\\cdot(\\underline{a}\\times\\underline{b}) = ${a.x * c.x + a.y * c.y + a.z * c.z}`}</M>,{" "}
+          <M>{`\\underline{b}\\cdot(\\underline{a}\\times\\underline{b}) = ${b.x * c.x + b.y * c.y + b.z * c.z}`}</M>.
+        </p>
+      </>
+    ),
+  };
+}
+
+/* ---------- 11. Egyensúlyozás: az eredő ellentettje ---------- */
+
+function egyensulyozasFeladat() {
+  const erok = [0, 1, 2].map(() => ({ F: egesz(3, 20), a: egesz(0, 35) * 10 }));
+  const k = erok.map((e) => derekszogu(e.F, e.a));
+  const Rx = k.reduce((s, v) => s + v.x, 0);
+  const Ry = k.reduce((s, v) => s + v.y, 0);
+  const Ex = -Rx;
+  const Ey = -Ry;
+  const E = polaris(Ex, Ey);
+  return {
+    szoveg: (
+      <p>
+        Egy csomópontban három ismert erő hat:{" "}
+        {erok.map((e, i) => (
+          <span key={i}>
+            <M>{`F_${i + 1} = ${e.F}\\ \\text{kN},\\ \\alpha_${i + 1} = ${e.a}^\\circ`}</M>
+            {i < 2 ? "; " : "."}
+          </span>
+        ))}{" "}
+        Egyensúlyozd az erőrendszert egyetlen <M>{"\\underline{E}"}</M> erővel: add meg az egyensúlyozó erő komponenseit és
+        nagyságát!
+      </p>
+    ),
+    sugo: (
+      <p>
+        Egyensúlyi kijelentés: <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, \\underline{E}) \\ekv \\underline{O}"}</M>. A
+        vetületi egyenletekben az ismeretlen <M>{"E_x, E_y"}</M> a bal oldalon áll — az egyensúlyozó erő az eredő ellentettje
+        (tankönyv 3.5).
+      </p>
+    ),
+    mezok: [
+      { id: "ex", cimke: "Ex", egyseg: "kN", helyes: Ex, tizedes: 2 },
+      { id: "ey", cimke: "Ey", egyseg: "kN", helyes: Ey, tizedes: 2 },
+      { id: "e", cimke: "|E|", egyseg: "kN", helyes: E.nagysag, tizedes: 2 },
+    ],
+    megoldas: (
+      <>
+        <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, \\underline{E}) \\ekv \\underline{O}"}</MB>
+        {erok.map((e, i) => (
+          <MB key={i}>{`F_{${i + 1}x} = ${e.F}\\cos ${e.a}^\\circ = ${sz(k[i].x, 2)},\\quad F_{${i + 1}y} = ${e.F}\\sin ${e.a}^\\circ = ${sz(k[i].y, 2)}`}</MB>
+        ))}
+        <MB>{`\\Fx ${osszegLanc(k.map((v) => v.x), 2)} + E_x = 0 \\;\\Rightarrow\\; E_x = ${sz(Ex, 2)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Fy ${osszegLanc(k.map((v) => v.y), 2)} + E_y = 0 \\;\\Rightarrow\\; E_y = ${sz(Ey, 2)}\\ \\text{kN}`}</MB>
+        <MB>{`|\\underline{E}| = \\sqrt{${zarojel(Ex, 2)}^2 + ${zarojel(Ey, 2)}^2} = ${sz(E.nagysag, 2)}\\ \\text{kN}`}</MB>
+        <p className="mt-2 text-[13px] text-petrol-600">
+          Ugyanez másképp: az eredő <M>{`\\underline{R} = (${sz(Rx, 2)};\\ ${sz(Ry, 2)})`}</M> kN, és{" "}
+          <M>{"\\underline{E} = -\\underline{R}"}</M> — a vektorsokszöget az eredő ellentettje zárja be.
         </p>
       </>
     ),
@@ -189,6 +291,8 @@ export const EXTRA_GENERATOROK = [
   { cim: "Két erő közti szög", fn: szogFeladat },
   { cim: "Eredő poláris alakban", fn: polarisFeladat },
   { cim: "Kötélerők egyensúlya", fn: kotelFeladat },
+  { cim: "Vektoriális szorzat", fn: vektorialisFeladat },
+  { cim: "Egyensúlyozás: az eredő ellentettje", fn: egyensulyozasFeladat },
 ];
 
 export default function GyakorloExtra() {
@@ -198,6 +302,8 @@ export default function GyakorloExtra() {
       <GyakorloDoboz cim="Két erő közti szög" leiras="Skaláris szorzat — így nem kell irányszögeket kivonni." generator={szogFeladat} />
       <GyakorloDoboz cim="Eredő poláris alakban" leiras="Három erő nagysággal és irányszöggel: eredő nagysága és iránya, síknegyeddel." generator={polarisFeladat} />
       <GyakorloDoboz cim="Kötélerők egyensúlya" leiras="Két ismeretlen nagyságú erő adott irányban — a csomóponti egyensúly klasszikusa." generator={kotelFeladat} />
+      <GyakorloDoboz cim="Vektoriális szorzat" leiras="Két térbeli vektor keresztszorzata determinánssal — a 2. modul nyomatékának előszobája." generator={vektorialisFeladat} oszlopok={3} />
+      <GyakorloDoboz cim="Egyensúlyozás: az eredő ellentettje" leiras="Három ismert erő és egy ismeretlen egyensúlyozó erő — egyensúlyi kijelentéssel, az ismeretlen a bal oldalon." generator={egyensulyozasFeladat} oszlopok={3} />
     </>
   );
 }

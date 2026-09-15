@@ -24,7 +24,7 @@ const FEJEZETEK = [
     t0: 0,
     cim: "Két fűrészfog",
     szoveg: "Két egyforma háromszög alakú szakasz, 6–6 m, mindkettőnek a bal végén 4 kN/m az intenzitás, a jobb végén nulla.",
-    kepletek: ["p_{max} = 4\\ \\text{kN/m},\\quad 2\\times 6\\ \\text{m}"],
+    kepletek: ["(p_1, p_2) \\ekv \\underline{R},\\qquad p_{max} = 4\\ \\text{kN/m},\\quad 2\\times 6\\ \\text{m}"],
   },
   {
     t0: 2.8,
@@ -42,7 +42,7 @@ const FEJEZETEK = [
     t0: 9.2,
     cim: "Összevonás — nem a közép!",
     szoveg: "Két egyforma erő eredője a kettő felezőjén van: 5 m-nél. Nem 6 m-nél, a tartó közepén — mert mindkét háromszög a bal oldalán nehezebb.",
-    kepletek: ["R = 24\\ \\text{kN},\\qquad k = \\frac{12\\cdot 2 + 12\\cdot 8}{24} = 5\\ \\text{m}"],
+    kepletek: ["\\Fle 12 + 12 = R = 24\\ \\text{kN}", "\\Mj{O} 12\\cdot 2 + 12\\cdot 8 = R\\,k\\ \\Rightarrow\\ k = \\frac{120}{24} = 5\\ \\text{m}"],
   },
 ];
 

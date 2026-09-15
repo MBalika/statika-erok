@@ -30,20 +30,20 @@ function nyomatekFeladat() {
         Egy <M>{`F = ${F}\\ \\text{kN}`}</M> nagyságú erő támadáspontja a{" "}
         <M>{`P(${x};\\ ${y})`}</M> pont (méterben), iránya az <M>{"x"}</M>{" "}
         tengelytől mérve <M>{`\\alpha = ${alfa}^\\circ`}</M>. Mekkora az erő
-        nyomatéka az origóra, és mekkora az erőkar?
+        nyomatéka az origóra, és mekkora az erő karja?
       </p>
     ),
     sugo: (
       <p>
         Bontsd az erőt komponensekre, majd használd az{" "}
-        <M>{"M^{(O)} = x F_y - y F_x"}</M> képletet. Az erőkar ebből{" "}
+        <M>{"M^{(O)} = x F_y - y F_x"}</M> képletet. Az erő karja ebből{" "}
         <M>{"k = |M| / F"}</M>. A pozitív nyomaték az óramutatóval ellentétes
         forgatást jelent.
       </p>
     ),
     mezok: [
       { id: "m", cimke: "M⁽ᴼ⁾", egyseg: "kNm", helyes: Mo, tizedes: 2 },
-      { id: "k", cimke: "erőkar, k", egyseg: "m", helyes: kar, tizedes: 3 },
+      { id: "k", cimke: "az erő karja, k", egyseg: "m", helyes: kar, tizedes: 3 },
     ],
     megoldas: (
       <>
@@ -158,12 +158,16 @@ function parhuzamosFeladat() {
     ],
     megoldas: (
       <>
-        <MB>{`R_y = ${erok.map((e) => zarojel(-e.ero, 0)).join(" + ")} = ${sz(R, 1)}\\ \\text{kN}`}</MB>
-        <MB>{`M^{(O)} = ${erok.map((e) => `${e.hely}\\cdot ${zarojel(-e.ero, 0)}`).join(" + ")} = ${sz(Mo, 1)}\\ \\text{kNm}`}</MB>
+        <MB>{`(${erok.map((_, i) => `\\underline{F}_${i + 1}`).join(", ")}) \\ekv ${xR !== null ? "\\underline{R}" : "M"}`}</MB>
+        <MB>{`\\Fy ${erok.map((e) => zarojel(-e.ero, 0)).join(" + ")} = R_y \\;\\Rightarrow\\; R_y = ${sz(R, 1)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Mp{O} ${erok.map((e) => `${e.hely}\\cdot ${zarojel(-e.ero, 0)}`).join(" + ")} = ${sz(Mo, 1)}\\ \\text{kNm}`}</MB>
         {xR !== null ? (
-          <MB>{`x_R = \\frac{M^{(O)}}{R_y} = \\frac{${sz(Mo, 1)}}{${sz(R, 1)}} = ${sz(xR, 3)}\\ \\text{m}`}</MB>
+          <>
+            <p>Az eredő erő, a helyét abból kapjuk, hogy ugyanezt a nyomatékot adja az origóra:</p>
+            <MB>{`x_R R_y = M^{(O)} \\;\\Rightarrow\\; x_R = \\frac{${sz(Mo, 1)}}{${sz(R, 1)}} = ${sz(xR, 3)}\\ \\text{m}`}</MB>
+          </>
         ) : (
-          <p>Az eredő erő zérus, ezért az erőrendszer erőpárra redukálódik.</p>
+          <p>Az eredő erő zérus, ezért az eredő maga a nyomaték: <M>{`M = ${sz(Mo, 1)}\\ \\text{kNm}`}</M>, minden pontra ugyanennyi.</p>
         )}
       </>
     ),
@@ -249,15 +253,16 @@ function redukalasFeladat() {
     ],
     megoldas: (
       <>
-        <MB>{`R_x = ${erok.map((e) => zarojel(e.Fx, 0)).join(" + ")} = ${sz(Rx, 1)}\\ \\text{kN}`}</MB>
-        <MB>{`R_y = ${erok.map((e) => zarojel(e.Fy, 0)).join(" + ")} = ${sz(Ry, 1)}\\ \\text{kN}`}</MB>
-        <MB>{`M^{(O)} = ${erok
+        <MB>{`(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv (\\underline{R}, M^{(O)})`}</MB>
+        <MB>{`\\Fx ${erok.map((e) => zarojel(e.Fx, 0)).join(" + ")} = R_x \\;\\Rightarrow\\; R_x = ${sz(Rx, 1)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Fy ${erok.map((e) => zarojel(e.Fy, 0)).join(" + ")} = R_y \\;\\Rightarrow\\; R_y = ${sz(Ry, 1)}\\ \\text{kN}`}</MB>
+        <MB>{`\\Mp{O} ${erok
           .map((e) =>
             e.Fx !== 0
               ? `\\left(-${sz(e.y, 0)}\\cdot ${zarojel(e.Fx, 0)}\\right)`
               : `\\left(${zarojel(e.x, 0)}\\cdot ${zarojel(e.Fy, 0)}\\right)`,
           )
-          .join(" + ")} = ${sz(Mo, 1)}\\ \\text{kNm}`}</MB>
+          .join(" + ")} = M^{(O)} \\;\\Rightarrow\\; M^{(O)} = ${sz(Mo, 1)}\\ \\text{kNm}`}</MB>
         <MB>{`R = \\sqrt{${zarojel(Rx, 1)}^2 + ${zarojel(Ry, 1)}^2} = ${sz(R.nagysag, 3)}\\ \\text{kN}`}</MB>
         {x0 !== null && (
           <MB>{`x_0 = \\frac{M^{(O)}}{R_y} = \\frac{${sz(Mo, 1)}}{${sz(Ry, 1)}} = ${sz(x0, 3)}\\ \\text{m}`}</MB>
@@ -333,7 +338,7 @@ export default function GyakorloSzekcio() {
     <>
       <GyakorloDoboz
         cim="Nyomaték egy pontra"
-        leiras="Egyetlen erő nyomatéka és az erőkar. Ez a modul alapművelete."
+        leiras="Egyetlen erő nyomatéka és az erő karja. Ez a modul alapművelete."
         generator={nyomatekFeladat}
       />
       <GyakorloDoboz

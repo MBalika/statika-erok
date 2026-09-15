@@ -31,7 +31,7 @@ const FEJEZETEK = [
     t0: 0,
     cim: "Az erőrendszer",
     szoveg: "Négy tengelyirányú erő, mindegyik más hatásvonalon. Redukálás: minden erőt az origóba tolunk, és a „mozgatás árát” nyomatékkal fizetjük meg.",
-    kepletek: ["(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, \\underline{F}_4) \\doteq (\\underline{R},\\ M^{(O)})"],
+    kepletek: ["(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, \\underline{F}_4) \\ekv (\\underline{R},\\ M^{(O)})"],
   },
   {
     t0: 4,
@@ -49,19 +49,19 @@ const FEJEZETEK = [
     t0: 10,
     cim: "Az erők összege O-ban",
     szoveg: "Az origóban ülő négy erőt egymás után fűzzük. Csak a vízszintesek adnak Rx-et, csak a függőlegesek Ry-t.",
-    kepletek: ["R_x = 23 + 20 = 43,\\quad R_y = -9 + 19 = 10\\ \\text{kN},\\quad |\\underline{R}| = 44{,}15\\ \\text{kN},\\ \\alpha = 13{,}09^\\circ"],
+    kepletek: ["\\Fx 23 + 0 + 20 + 0 = R_x = 43\\ \\text{kN}", "\\Fy 0 - 9 + 0 + 19 = R_y = 10\\ \\text{kN}", "|\\underline{R}| = 44,15\\ \\text{kN},\\ \\alpha = 13,09^\\circ"],
   },
   {
     t0: 13.6,
     cim: "A nyomatékok összege",
     szoveg: "A négy erőpár egyetlen erőpárrá olvad össze. Az eredmény negatív: az egész rendszer az óramutató irányába forgat az origó körül.",
-    kepletek: ["M^{(O)} = -161 - 72 + 80 - 57 = -210\\ \\text{kNm}"],
+    kepletek: ["\\Mp{O} -161 - 72 + 80 - 57 = M^{(O)} = -210\\ \\text{kNm}"],
   },
   {
     t0: 15.4,
     cim: "Az eredő a saját hatásvonalán",
     szoveg: "R ≠ 0, ezért az eredő egyetlen erő. Ha R-t az x tengely mentén odébb toljuk, a nyomaték eltűnik — ott, ahol x₀·Ry = M. A negatív x₀: az origótól balra.",
-    kepletek: ["x_0 = \\frac{M^{(O)}}{R_y} = \\frac{-210}{10} = -21\\ \\text{m}"],
+    kepletek: ["\\Mp{O} -210 = x_0 R_y = x_0\\cdot 10 \\;\\Rightarrow\\; x_0 = -21\\ \\text{m}"],
   },
 ];
 

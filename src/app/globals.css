@@ -393,3 +393,27 @@ body {
     overflow: visible;
   }
 }
+
+/* ---- 5. kör: tankönyv-dobozok, játékok (lila), haladás ---- */
+.dark .bg-violet-50,
+.dark [class~="bg-violet-50/60"] {
+  background-color: #241a3d;
+}
+.dark .text-violet-950,
+.dark .text-violet-900,
+.dark .text-violet-700 {
+  color: #d6ccff;
+}
+.dark .border-violet-200,
+.dark .border-violet-300 {
+  border-color: #5b4a8f;
+}
+.dark .ring-violet-200 {
+  --tw-ring-color: #5b4a8f;
+}
+.dark .ring-rose-300 {
+  --tw-ring-color: #8a2a44;
+}
+.dark .from-violet-800 {
+  --tw-gradient-from: #3b2a6b;
+}

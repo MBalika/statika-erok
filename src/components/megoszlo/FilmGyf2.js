@@ -21,7 +21,7 @@ const FEJEZETEK = [
     t0: 0,
     cim: "Három szakasz, a középső felfelé",
     szoveg: "Három egyforma, 1,2 m hosszú szakasz, 7 kN/m. A középső felfelé hat, ezért a tartó alá rajzoljuk, és negatív előjelet kap.",
-    kepletek: ["p = 7\\ \\text{kN/m},\\quad 3\\times 1{,}2\\ \\text{m}"],
+    kepletek: ["(p_1, p_2, p_3) \\ekv \\underline{R},\\qquad p = 7\\ \\text{kN/m},\\quad 3\\times 1{,}2\\ \\text{m}"],
   },
   {
     t0: 3,
@@ -33,13 +33,13 @@ const FEJEZETEK = [
     t0: 7.2,
     cim: "Előjeles összeg",
     szoveg: "Lefelé pozitív, felfelé negatív: a középső kivonódik. Az eredő pont akkora, mint egyetlen szakaszé, és lefelé mutat.",
-    kepletek: ["R = 8{,}4 - 8{,}4 + 8{,}4 = 8{,}4\\ \\text{kN}\\ (\\downarrow)"],
+    kepletek: ["\\Fle 8{,}4 - 8{,}4 + 8{,}4 = R = 8{,}4\\ \\text{kN}\\ (\\downarrow)"],
   },
   {
     t0: 10.2,
     cim: "Az eredő helye — nyomatéki egyenlet",
     szoveg: "A két szélső erő szimmetrikus a középre, a középső is a középen hat: az eredő a teljes szakasz közepére kerül. A nyomatéki egyenlet ugyanezt adja.",
-    kepletek: ["R\\,k = 8{,}4\\cdot 0{,}6 - 8{,}4\\cdot 1{,}8 + 8{,}4\\cdot 3{,}0 = 15{,}12\\ \\text{kNm}", "k = \\frac{15{,}12}{8{,}4} = 1{,}8\\ \\text{m}"],
+    kepletek: ["\\Mj{O} 8{,}4\\cdot 0{,}6 - 8{,}4\\cdot 1{,}8 + 8{,}4\\cdot 3{,}0 = R\\,k = 15{,}12\\ \\text{kNm}", "k = \\frac{15{,}12}{8{,}4} = 1{,}8\\ \\text{m}"],
   },
 ];
 

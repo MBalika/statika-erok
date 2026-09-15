@@ -3,7 +3,7 @@ import NyomtatasGomb from "@/components/NyomtatasGomb";
 
 export const metadata = {
   title: "Puska",
-  description: "Nyomtatható egyoldalas összefoglaló mind a négy modulhoz: képletek, szabályok, tipikus hibák.",
+  description: "Nyomtatható egyoldalas összefoglaló mind a négy modulhoz és a tankönyv nyelvéhez: képletek, szabályok, tipikus hibák.",
 };
 
 function Lap({ szam, cim, gyerekek }) {
@@ -37,10 +37,11 @@ export default function PuskaOldal() {
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-naracs-500 text-[15px] font-bold text-white">✎</span>
             <span className="text-[11px] font-semibold tracking-[0.2em] text-petrol-300 uppercase">Összefoglaló</span>
           </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Puska — négy modul, négy oldal</h1>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Puska — négy modul, öt oldal</h1>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-petrol-200">
-            A legfontosabb képletek, szabályok és a tipikus hibák, modulonként egy oldalon. Nyomtasd ki, vagy mentsd
-            PDF-be — de előbb próbáld meg fejből leírni, aztán hasonlítsd össze.
+            A legfontosabb képletek, szabályok és a tipikus hibák, modulonként egy oldalon, plusz egy lap a tankönyv
+            nyelvéről (kijelentések, egyenletek írásmódja, szótár). Nyomtasd ki, vagy mentsd PDF-be — de előbb próbáld
+            meg fejből leírni, aztán hasonlítsd össze.
           </p>
           <div className="mt-5">
             <NyomtatasGomb />
@@ -98,11 +99,11 @@ export default function PuskaOldal() {
           gyerekek={
             <>
               <Doboz cim="Nyomaték egy pontra (sík)">
-                <MB>{"M^{(O)} = x F_y - y F_x = \\pm F\\,d"}</MB>
-                <p>Pozitív: az óramutatóval ellentétes forgatás. d az erőkar: a pont távolsága a hatásvonaltól.</p>
+                <MB>{"M^{(O)} = x F_y - y F_x = \\pm F\\,k"}</MB>
+                <p>Pozitív: az óramutatóval ellentétes forgatás. k az erő karja: a pont távolsága a hatásvonaltól.</p>
               </Doboz>
               <Doboz cim="Erőpár">
-                <p>Két egyenlő, ellentétes, párhuzamos erő: R = 0, M = F·d minden pontra ugyanaz. Szabad vektor — bárhová eltolható.</p>
+                <p>Két egyenlő, ellentétes, párhuzamos erő: R = 0, M = F·k minden pontra ugyanaz. Szabad vektor — bárhová eltolható.</p>
               </Doboz>
               <Doboz cim="Redukálás egy pontra">
                 <MB>{"\\underline{R} = \\sum \\underline{F}_i"}</MB>
@@ -191,6 +192,48 @@ export default function PuskaOldal() {
               </Doboz>
               <Doboz cim="Tipikus hibák" szeles>
                 <p>A rész súlypontját a saját szélétől mérni a közös origó helyett · Sy és Sz felcserélése · a kivont rész nyomatékát pozitívan venni · negatív koordinátát „hibának” hinni.</p>
+              </Doboz>
+            </>
+          }
+        />
+
+        <Lap
+          szam={5}
+          cim="A tankönyv nyelve"
+          gyerekek={
+            <>
+              <Doboz cim="Egyenértékűségi kijelentés">
+                <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv \\underline{R}"}</MB>
+                <p>Két erőrendszer egyenértékű, ha ugyanaz a hatásuk — a ≐ kijelentés, nem egyenlet. Tulajdonságai: <strong>tranzitív</strong> (𝓐 ≐ 𝓑 és 𝓐 ≐ 𝓒 ⇒ 𝓒 ≐ 𝓑) · mindkét oldalt <strong>ugyanazzal az erővel</strong> kiegészíthetjük vagy csökkenthetjük · egy erő <strong>átvihető</strong> a másik oldalra, ha az előjelét megfordítjuk. Egyensúlyi rendszer hozzáadása az eredőt nem változtatja.</p>
+              </Doboz>
+              <Doboz cim="Egyensúlyi kijelentés">
+                <MB>{"(\\underline{F}_1, \\ldots, \\underline{F}_n) \\ekv \\underline{O}"}</MB>
+                <p>Olyan egyenértékűségi kijelentés, amelynek egyik oldalán zéruserő áll. Ismert és ismeretlen erők <em>ugyanazon</em> az oldalon. Síkban 3, térben 6 skalár egyenlet következik belőle — nem több.</p>
+              </Doboz>
+              <Doboz cim="Három feladattípus">
+                <p><strong>Helyettesítés</strong>: az ismert erőrendszer egyik oldalon, a keresett eredő (egyetlen hatás) a másikon: (F₁, F₂, F₃) ≐ R. <strong>Egyensúlyozás</strong>: az ismert erőket ismeretlenekkel egészítjük ki zéruserőre: (F₁, F₂, F₃, C, D) ≐ O. <strong>Kiegészítés</strong>: a kettő keveréke, mindkét oldalon van ismeretlen: (A, B, P) ≐ R, ahol R pl. vízszintes.</p>
+              </Doboz>
+              <Doboz cim="Az egyenletek írásmódja">
+                <p>A sor elején az egyenlet jellege és a pozitív irány:</p>
+                <MB>{"\\Fx F_1\\cos\\alpha_1 + F_2 = R_x"}</MB>
+                <MB>{"\\Fy F_1\\sin\\alpha_1 - F_3 = R_y"}</MB>
+                <MB>{"\\Mp{A} F_2\\,k_2 - F_3\\,k_3 = M_A"}</MB>
+                <MB>{"\\Fle q\\,L - A_z - B_z = 0"}</MB>
+                <MB>{"\\Mj{O} q\\,L\\,\\tfrac{L}{2} - B_z\\,L = 0"}</MB>
+                <p>Tartóknál ↓ és ↷ a pozitív (z lefelé); egyensúlynál a jobb oldal 0.</p>
+              </Doboz>
+              <Doboz cim="Erőrendszerek fajtái (2 × 4)">
+                <p><strong>Síkbeli</strong> vagy <strong>térbeli</strong>, és ezen belül: <strong>közös hatásvonalú</strong> · <strong>közös metszéspontú</strong> · <strong>párhuzamos</strong> · <strong>általános helyzetű</strong> (szétszórt). A fajta dönti el, hány egyenletet írhatsz: közös metszéspontú síkban 2, általános síkban 3, térben 6.</p>
+              </Doboz>
+              <Doboz cim="Az eredő esetei">
+                <p><strong>Síkban (3)</strong>: egyetlen erő (R ≠ 0) · erőpár (R = 0, M ≠ 0) · egyensúly (R = 0, M = 0).</p>
+                <p><strong>Térben (4)</strong>, a társerő R és a társnyomaték M alapján: egyensúly (R = 0, M = 0) · nyomaték (R = 0, M ≠ 0) · egyetlen erő (R ≠ 0, <M>{"\\underline{R}\\cdot\\underline{M} = 0"}</M>: M merőleges R-re, eltolással eltüntethető) · <strong>erőcsavar</strong> (R ≠ 0, <M>{"\\underline{R}\\cdot\\underline{M} \\ne 0"}</M>: erő + a hatásvonalával párhuzamos nyomaték).</p>
+              </Doboz>
+              <Doboz cim="Szótár: itt ↔ a tankönyvben" szeles>
+                <p>zérusrendszer ↔ egyensúlyi erőrendszer (zéruserő) · <M>{"M^{(O)}"}</M> ↔ <M>{"M_O"}</M> · <M>{"k"}</M> (az erő karja) ↔ <M>{"k"}</M> · <M>{"k"}</M> (az eredő helye, 3. modul) ↔ <M>{"x_R"}</M> · <M>{"p"}</M> ↔ <M>{"q"}</M> · <M>{"S_y"}</M> (4. modul, z lefelé) ↔ <M>{"S_{x'}"}</M> · vastag dőlt <strong><em>F</em></strong> ↔ aláhúzott <M>{"\\underline{F}"}</M> · erőrendszer ↔ 𝓕 = (F₁, F₂, …).</p>
+              </Doboz>
+              <Doboz cim="Tipikus hibák" szeles>
+                <p>Kijelentés nélkül nekiállni az egyenleteknek (mit mivel helyettesítesz?) · a nyomatéki egyenletbe erőt, a vetületibe nyomatékot írni · az előjel-nyíl (→ ↑ ↶) hiánya a sor elejéről, majd elrontott előjel · „≐” helyett „=” — az erőrendszer nem szám · kevesebb vagy több egyenlet, mint amennyit a rendszer fajtája megenged.</p>
               </Doboz>
             </>
           }

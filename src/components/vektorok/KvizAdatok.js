@@ -49,6 +49,30 @@ export const KVIZ = [
     helyes: 0,
     magyarazat: <>Az egységvektor a vektor osztva a hosszával: csak az irányt hordozza. Ezért kényelmes, ha a hatásvonalat két pont adja: <M>{"\\underline{F} = F\\,\\underline{e}"}</M>.</>,
   },
+  {
+    k: <>Mit jelent a tankönyv <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv \\underline{R}"}</M> egyenértékűségi kijelentése?</>,
+    v: [<>A három erő együtt ugyanazt a hatást fejti ki a testre, mint az egyetlen R erő — R az erőrendszer eredője.</>, <>A három erővektor számtani közepe R.</>, <>A három erő és R együtt egyensúlyban van.</>, <>A három erő nagyságának összege egyenlő R nagyságával.</>],
+    helyes: 0,
+    magyarazat: <>A ≐ jel kötött vektorokból álló erőrendszerek <em>azonos hatását</em> jelenti, ezért kijelentésnek és nem egyenletnek hívjuk. Ez helyettesítési feladat: ismertek balra, az ismeretlen eredő jobbra. Az egyensúlyhoz a jobb oldalon O állna, és −R szerepelne a bal oldalon.</>,
+  },
+  {
+    k: <>Egy lemezre három erő hat: az egyik függőleges, a másik kettő ferde, és a három hatásvonal páronként más-más pontban metszi egymást. Milyen az erőrendszer?</>,
+    v: [<>Általános helyzetű (szétszórt) síkbeli erőrendszer.</>, <>Közös metszéspontú síkbeli erőrendszer.</>, <>Párhuzamos síkbeli erőrendszer.</>, <>Közös hatásvonalú erőrendszer.</>],
+    helyes: 0,
+    magyarazat: <>Közös metszéspontú csak akkor volna, ha <em>mind a három</em> hatásvonal ugyanazon a ponton menne át; párhuzamos, ha mind párhuzamos. Ha egyik feltétel sem teljesül — akár egyetlen erő miatt —, az erőrendszer szétszórt. Az eredőjét a 2. modulban, nyomatékkal számoljuk.</>,
+  },
+  {
+    k: <>Mi a feltétele annak, hogy három erő egyensúlyban legyen?</>,
+    v: [<>Közös metszéspontúak, egy síkban vannak, és zárt vektorháromszög szerkeszthető belőlük.</>, <>Egyforma nagyságúak és 120°-os szögeket zárnak be.</>, <>Párhuzamosak és a nagyságuk összege nulla.</>, <>Elég, ha a nagyságaik összege nulla.</>],
+    helyes: 0,
+    magyarazat: <>Tankönyv 3.3.1.1: közös metszéspont + zárt vektorháromszög, ami egyben közös síkot is jelent. A 120°-os eset csak egy speciális példa erre. A nagyságok összege nem lehet nulla (mind pozitív) — a vektorok összege nulla.</>,
+  },
+  {
+    k: <>Két vektor 130°-os szöget zár be. Mit tudunk a szorzataikról?</>,
+    v: [<>A skaláris szorzat negatív; a vektoriális szorzat merőleges mindkettőre, iránya a jobbkéz-szabály szerint.</>, <>A skaláris szorzat pozitív, mert a szög 90°-nál nagyobb.</>, <>A vektoriális szorzat nullvektor, mert a szög tompaszög.</>, <>Mindkét szorzat negatív.</>],
+    helyes: 0,
+    magyarazat: <><M>{"\\underline{a}\\cdot\\underline{b} = |a||b|\\cos 130^\\circ < 0"}</M>: tompaszögnél a skaláris szorzat negatív. A vektoriális szorzat vektor, „negatív” nem lehet; nagysága <M>{"|a||b|\\sin 130^\\circ > 0"}</M>, tehát nem nullvektor (az csak párhuzamosaknál), iránya a két vektor síkjára merőleges, a jobbkéz-szabály szerint.</>,
+  },
 ];
 
 export const HIBAK = [
@@ -83,5 +107,16 @@ export const HIBAK = [
       { szoveg: <><M>{"\\cos 120^\\circ = 0{,}5"}</M>, ezért <M>{"F_t = 5\\ \\text{kN}"}</M>.</>, hibas: true, javitas: <><M>{"\\cos 120^\\circ = -0{,}5"}</M>, tehát <M>{"F_t = -5\\ \\text{kN}"}</M>: az erő a t tengellyel <em>ellentétes</em> irányba mutat. Tompaszögnél a vetület negatív — az előjel a lényeg, nem csak a szám.</> },
     ],
     tanulsag: <>Ha a bezárt szög 90°-nál nagyobb, a vetület negatív. Rajzold be a t tengelyt és az erőt: azonnal látszik, „vele” vagy „ellene” mutat.</>,
+  },
+  {
+    cim: "Egyensúlyozás — melyik oldalra kerül az ismeretlen?",
+    feladat: <>Egy csomópontban <M>{"\\underline{F}_1 = (4;\\ 3)"}</M> kN és <M>{"\\underline{F}_2 = (-1;\\ 5)"}</M> kN hat. Egyensúlyozd az erőrendszert egyetlen <M>{"\\underline{E}"}</M> erővel!</>,
+    lepesek: [
+      { szoveg: <>Egyensúlyi kijelentés: <M>{"(\\underline{F}_1, \\underline{F}_2, \\underline{E}) \\ekv \\underline{O}"}</M>.</> },
+      { szoveg: <><M>{"\\Fx 4 - 1 = E_x \\;\\Rightarrow\\; E_x = 3\\ \\text{kN}"}</M></>, hibas: true, javitas: <>Egyensúlyozásnál az ismeretlen erő <em>ugyanazon az oldalon</em> áll, mint az ismertek, a jobb oldalon a zéruserő: <M>{"\\Fx 4 - 1 + E_x = 0 \\;\\Rightarrow\\; E_x = -3\\ \\text{kN}"}</M>. Aki az ismeretlent a jobb oldalra írja, az eredőt számolja ki, nem az egyensúlyozó erőt — az előjel fordul meg.</> },
+      { szoveg: <><M>{"\\Fy 3 + 5 + E_y = 0 \\;\\Rightarrow\\; E_y = -8\\ \\text{kN}"}</M></> },
+      { szoveg: <><M>{"|\\underline{E}| = \\sqrt{3^2 + 8^2} = 8{,}544\\ \\text{kN}"}</M></> },
+    ],
+    tanulsag: <>A kijelentés dönti el az egyenlet alakját. <M>{"(\\dots) \\ekv \\underline{R}"}</M>: az ismeretlen jobbra, ez az eredő. <M>{"(\\dots, \\underline{E}) \\ekv \\underline{O}"}</M>: az ismeretlen balra, ez az egyensúlyozó erő, ami éppen <M>{"-\\underline{R}"}</M>. Ha a két sor összekeveredik, minden előjel megfordul.</>,
   },
 ];

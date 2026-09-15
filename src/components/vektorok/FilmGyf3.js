@@ -9,9 +9,9 @@ const OY = 200;
 const E = 1.1; // képpont / N
 const RAD = Math.PI / 180;
 
-const F1 = { x: -150 * Math.cos(55 * RAD), y: 150 * Math.sin(55 * RAD) }; // (−86,04; 122,9)
-const F2 = { x: 150 * Math.sin(25 * RAD), y: -150 * Math.cos(25 * RAD) }; // (63,39; −135,9)
-const P = { x: F1.x + F2.x, y: F1.y + F2.y }; // (−22,65; −13,0)
+const F1 = { x: -150 * Math.cos(55 * RAD), y: 150 * Math.sin(55 * RAD) }; // (−86,04; 122,87)
+const F2 = { x: 150 * Math.sin(25 * RAD), y: -150 * Math.cos(25 * RAD) }; // (63,39; −135,95)
+const P = { x: F1.x + F2.x, y: F1.y + F2.y }; // (−22,65; −13,08)
 const F3 = { x: -P.x, y: -P.y };
 
 const px = (x) => OX + x * E;
@@ -25,32 +25,32 @@ const FEJEZETEK = [
   {
     t0: 0,
     cim: "A két ismert erő",
-    szoveg: "F₁ a második síknegyedbe mutat (55° a negatív x tengelytől), F₂ a negyedikbe (25° a függőlegestől). Mindkettő 150 N. A harmadik erőt keressük, amellyel a három erő egyensúlyban van.",
-    kepletek: ["\\underline{F}_1 + \\underline{F}_2 + \\underline{F}_3 = \\underline{0}"],
+    szoveg: "F₁ a második síknegyedbe mutat (55° a negatív x tengelytől), F₂ a negyedikbe (25° a függőlegestől). Mindkettő 150 N. A harmadik erőt keressük, amellyel a három erő egyensúlyban van — ez egyensúlyi kijelentés: az ismeretlen is a bal oldalon áll.",
+    kepletek: ["(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3) \\ekv \\underline{O}"],
   },
   {
     t0: 3,
     cim: "Komponensek",
-    szoveg: "F₁-nél a szög az x tengelytől indul, de a vízszintes komponens negatív. F₂-nél a szög a függőlegestől indul, ezért a szinusz és a koszinusz szerepet cserél.",
-    kepletek: ["\\underline{F}_1 = \\begin{bmatrix} -86{,}04 \\\\ 122{,}9 \\end{bmatrix},\\quad \\underline{F}_2 = \\begin{bmatrix} 63{,}39 \\\\ -135{,}9 \\end{bmatrix}\\ \\text{N}"],
+    szoveg: "F₁-nél a szög az x tengelytől indul, de a vízszintes komponens negatív. F₂-nél a szög a függőlegestől indul, ezért a szinusz és a koszinusz szerepet cserél. (A függőleges komponenseket egy jeggyel pontosabban visszük tovább, mert később két közeli szám különbsége kell.)",
+    kepletek: ["\\underline{F}_1 = \\begin{bmatrix} -86{,}04 \\\\ 122{,}87 \\end{bmatrix},\\quad \\underline{F}_2 = \\begin{bmatrix} 63{,}39 \\\\ -135{,}95 \\end{bmatrix}\\ \\text{N}"],
   },
   {
     t0: 6.2,
     cim: "F₁ + F₂ láncban",
     szoveg: "F₂-t az F₁ hegyéhez toljuk. A lánc vége az első két erő összege — közel az origóhoz, de nem ott.",
-    kepletek: ["\\underline{F}_1 + \\underline{F}_2 = \\begin{bmatrix} -22{,}65 \\\\ -13{,}0 \\end{bmatrix}\\ \\text{N}"],
+    kepletek: ["\\underline{F}_1 + \\underline{F}_2 = \\begin{bmatrix} -22{,}65 \\\\ -13{,}08 \\end{bmatrix}\\ \\text{N}"],
   },
   {
     t0: 9.2,
     cim: "Egyensúly: a sokszög bezárul",
-    szoveg: "Ha a három erő egyensúlyban van, a lánc vissza kell, hogy érjen az origóba. F₃ tehát a lánc végétől az origóba mutat — az első kettő összegének az ellentettje.",
-    kepletek: ["\\underline{F}_3 = -(\\underline{F}_1 + \\underline{F}_2) = \\begin{bmatrix} 22{,}65 \\\\ 13{,}0 \\end{bmatrix}\\ \\text{N}"],
+    szoveg: "Ha a három erő egyensúlyban van, a lánc vissza kell, hogy érjen az origóba. F₃ tehát a lánc végétől az origóba mutat — az első kettő összegének az ellentettje. Számítással ugyanez a két vetületi egyenlet, ismeretlennel a bal oldalon.",
+    kepletek: ["\\Fx -86{,}04 + 63{,}39 + F_{3x} = 0 \\;\\Rightarrow\\; F_{3x} = 22{,}65\\ \\text{N}", "\\Fy 122{,}87 - 135{,}95 + F_{3y} = 0 \\;\\Rightarrow\\; F_{3y} = 13{,}08\\ \\text{N}"],
   },
   {
     t0: 12.2,
     cim: "F₃ nagysága és iránya",
     szoveg: "Mindkét komponens pozitív, ezért F₃ az első síknegyedbe mutat, és az arctg közvetlenül adja az irányszöget.",
-    kepletek: ["|\\underline{F}_3| = \\sqrt{22{,}65^2 + 13{,}0^2} = 26{,}12\\ \\text{N},\\qquad \\alpha = \\operatorname{arctg}\\tfrac{13{,}0}{22{,}65} = 29{,}85^\\circ"],
+    kepletek: ["|\\underline{F}_3| = \\sqrt{22{,}65^2 + 13{,}08^2} = 26{,}16\\ \\text{N},\\qquad \\alpha = \\operatorname{arctg}\\tfrac{13{,}08}{22{,}65} = 30{,}0^\\circ"],
   },
 ];
 
@@ -95,7 +95,7 @@ function Rajz(t) {
         <VonalA x1={px(F1.x)} y1={py(F1.y)} x2={px(F1.x)} y2={OY} szin={NAR} />
         <VonalA x1={px(F1.x)} y1={py(F1.y)} x2={OX} y2={py(F1.y)} szin={NAR} />
         <FeliratA x={px(F1.x / 2)} y={OY + 15} szin={NAR} meret={11}>−86,04</FeliratA>
-        <FeliratA x={OX + 6} y={py(F1.y / 2)} szin={NAR} meret={11} horgony="start">122,9</FeliratA>
+        <FeliratA x={OX + 6} y={py(F1.y / 2)} szin={NAR} meret={11} horgony="start">122,87</FeliratA>
       </g>
 
       {/* F2 – az origóból, majd F1 hegyére csúszik */}
@@ -110,7 +110,7 @@ function Rajz(t) {
         <VonalA x1={px(F2.x)} y1={py(F2.y)} x2={px(F2.x)} y2={OY} szin={TEAL} />
         <VonalA x1={px(F2.x)} y1={py(F2.y)} x2={OX} y2={py(F2.y)} szin={TEAL} />
         <FeliratA x={px(F2.x / 2)} y={OY - 8} szin={TEAL} meret={11}>63,39</FeliratA>
-        <FeliratA x={OX - 6} y={py(F2.y / 2)} szin={TEAL} meret={11} horgony="end">−135,9</FeliratA>
+        <FeliratA x={OX - 6} y={py(F2.y / 2)} szin={TEAL} meret={11} horgony="end">−135,95</FeliratA>
       </g>
       {/* halvány F2 az eredeti helyén, miután elcsúszott */}
       {csusz > 0.05 && <NyilA x1={OX} y1={OY} x2={px(F2.x)} y2={py(F2.y)} szin={TEAL} hegy="g3-b" opacitas={0.2} />}
@@ -118,7 +118,7 @@ function Rajz(t) {
       {/* a lánc vége */}
       <PontA x={px(P.x)} y={py(P.y)} r={4} szin="#475569" u={pFel} />
       <VonalA x1={OX} y1={OY} x2={px(P.x)} y2={py(P.y)} u={pFel} szin="#475569" vastag={1.3} />
-      <FeliratA x={px(P.x) - 16} y={py(P.y) + 36} szin="#475569" meret={11.5} opacitas={pFel} horgony="end">F₁ + F₂ = (−22,65; −13,0)</FeliratA>
+      <FeliratA x={px(P.x) - 16} y={py(P.y) + 36} szin="#475569" meret={11.5} opacitas={pFel} horgony="end">F₁ + F₂ = (−22,65; −13,08)</FeliratA>
 
       {/* F3: a lánc végétől az origóba, majd másolat az origóból */}
       <NyilA x1={px(P.x)} y1={py(P.y)} x2={OX} y2={OY} u={f3U} szin={LILA} hegy="g3-c" vastag={3.4} opacitas={1 - 0.6 * masol} />
@@ -158,9 +158,9 @@ function Rajz(t) {
       {masol > 0.02 && (
         <>
           <NyilA x1={px(s3.x)} y1={py(s3.y)} x2={px(s3.x + F3.x)} y2={py(s3.y + F3.y)} szin={LILA} hegy="g3-c" vastag={3.4} />
-          <IvA cx={OX} cy={OY} r={30} kezdoFok={0} vegFok={29.85} u={vegFel} szin={LILA} />
-          <FeliratA x={OX + 38} y={OY - 8} szin={LILA} meret={11.5} vastag={false} opacitas={vegFel}>29,85°</FeliratA>
-          <FeliratA x={px(F3.x) + 10} y={py(F3.y) - 8} szin={LILA} meret={13} opacitas={vegFel} horgony="start">F₃ = 26,12 N</FeliratA>
+          <IvA cx={OX} cy={OY} r={30} kezdoFok={0} vegFok={30} u={vegFel} szin={LILA} />
+          <FeliratA x={OX + 38} y={OY - 8} szin={LILA} meret={11.5} vastag={false} opacitas={vegFel}>30,0°</FeliratA>
+          <FeliratA x={px(F3.x) + 10} y={py(F3.y) - 8} szin={LILA} meret={13} opacitas={vegFel} horgony="start">F₃ = 26,16 N</FeliratA>
         </>
       )}
     </svg>

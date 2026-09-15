@@ -6,6 +6,17 @@ const beallitasok = {
   trust: true,
   macros: {
     "\\vect": "\\underline{#1}",
+    // A tankönyv írásmódja: a sor elején az egyenlet jellege és a pozitív irány.
+    //   \Fx  →  ΣF_ix →:      \Fy  →  ΣF_iy ↑:      \Fz  →  ΣF_iz ↗:
+    //   \Fle →  ΣF_i ↓:  (tartóknál, z lefelé)
+    //   \Mp{A} → ΣM_iA ↶:   \Mj{A} → ΣM_iA ↷:  (óramutató szerint pozitív)
+    "\\Fx": "\\textstyle\\sum F_{ix}\\!\\rightarrow\\,:\\ ",
+    "\\Fy": "\\textstyle\\sum F_{iy}\\!\\uparrow\\,:\\ ",
+    "\\Fz": "\\textstyle\\sum F_{iz}\\!\\nearrow\\,:\\ ",
+    "\\Fle": "\\textstyle\\sum F_{i}\\!\\downarrow\\,:\\ ",
+    "\\Mp": "\\textstyle\\sum M_{i#1}\\!\\curvearrowleft\\,:\\ ",
+    "\\Mj": "\\textstyle\\sum M_{i#1}\\!\\curvearrowright\\,:\\ ",
+    "\\ekv": "\\;\\dot{=}\\;",
   },
 };
 

@@ -35,13 +35,13 @@ const FEJEZETEK = [
     t0: 0,
     cim: "A trapéz alakú teher",
     szoveg: "Az intenzitás a bal végen 1,8 kN/m, a jobb végen 3,6 kN/m, a szakasz 4,5 m. Az eredő nagysága a teherábra területe, a helye a súlypontja.",
-    kepletek: ["p_1 = 1{,}8,\\ p_2 = 3{,}6\\ \\text{kN/m},\\quad L = 4{,}5\\ \\text{m}"],
+    kepletek: ["(q) \\ekv \\underline{R},\\qquad p_1 = 1{,}8,\\ p_2 = 3{,}6\\ \\text{kN/m},\\quad L = 4{,}5\\ \\text{m}"],
   },
   {
     t0: 2.4,
     cim: "Felbontás: téglalap + háromszög",
     szoveg: "A trapéz egy 1,8 kN/m-es téglalap és egy 0-tól 1,8 kN/m-ig növekvő háromszög összege.",
-    kepletek: ["(\\underline{R}_1, \\underline{R}_2) \\doteq \\underline{R}"],
+    kepletek: ["(\\underline{R}_1, \\underline{R}_2) \\ekv \\underline{R}"],
   },
   {
     t0: 4.6,
@@ -59,13 +59,13 @@ const FEJEZETEK = [
     t0: 8.6,
     cim: "A két erő összevonása",
     szoveg: "Párhuzamos erők: az eredő az összegük, a helye a nyomatéki egyenletből. Az eredő a nagyobbik erőhöz esik közelebb.",
-    kepletek: ["R = 8{,}1 + 4{,}05 = 12{,}15\\ \\text{kN}", "k = \\frac{8{,}1\\cdot 2{,}25 + 4{,}05\\cdot 3{,}0}{12{,}15} = \\frac{30{,}375}{12{,}15} = 2{,}5\\ \\text{m}"],
+    kepletek: ["\\Fle 8{,}1 + 4{,}05 = R = 12{,}15\\ \\text{kN}", "\\Mj{O} 8{,}1\\cdot 2{,}25 + 4{,}05\\cdot 3{,}0 = R\\,k\\ \\Rightarrow\\ k = \\frac{30{,}375}{12{,}15} = 2{,}5\\ \\text{m}"],
   },
   {
     t0: 11,
     cim: "Ellenőrzés: két háromszögből",
     szoveg: "Ugyanez a trapéz két háromszög összege is. Más részek, más helyek — de az eredő ugyanoda, ugyanakkorára áll össze.",
-    kepletek: ["R = 4{,}05 + 8{,}1 = 12{,}15\\ \\text{kN}", "k = \\frac{4{,}05\\cdot 1{,}5 + 8{,}1\\cdot 3{,}0}{12{,}15} = 2{,}5\\ \\text{m}\\ \\checkmark"],
+    kepletek: ["\\Fle 4{,}05 + 8{,}1 = R = 12{,}15\\ \\text{kN}", "\\Mj{O} 4{,}05\\cdot 1{,}5 + 8{,}1\\cdot 3{,}0 = R\\,k\\ \\Rightarrow\\ k = 2{,}5\\ \\text{m}\\ \\checkmark"],
   },
 ];
 
