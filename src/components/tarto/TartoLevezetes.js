@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { levezetes, igenybevetelSzoveg } from "@/lib/tarto/levezetes";
 import { M as Keplet, MB } from "@/components/ui/Keplet";
 
-const SZINEK = { N: "#059669", V: "#e2590a", M: "#7c3aed" };
+// a terhek narancs, a reakciók lila színétől eltérő: N zöld, V kék, M bordó
+const SZINEK = { N: "#059669", V: "#0369a1", M: "#be123c" };
 
 /**
  * A kalkulátor „Levezetés” panelje: a tankönyv receptje szerinti, lépésenként

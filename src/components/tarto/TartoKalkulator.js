@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { elemez, ertekek, mintak } from "@/lib/tarto";
 import { SABLONOK, alapParameterek } from "@/lib/tarto/sablonok";
-import { TartoHegyek, Gorgo, Csuklo, Befogas, SZIN } from "@/components/tartok/TartoElemek";
+import { TartoHegyek, Gorgo, Csuklo, Befogas, TeherNyil, KoncentraltNyomatek, SZIN } from "@/components/tartok/TartoElemek";
 import { Csuszka } from "@/components/abrak/ErovektorBonto";
 import { M as Keplet } from "@/components/ui/Keplet";
 import { sz } from "@/lib/szamok";
@@ -11,9 +11,87 @@ import TartoLevezetes from "./TartoLevezetes";
 
 const SZ = 680;
 const MA = 460;
-const SZINEK = { N: "#059669", V: "#e2590a", M: "#7c3aed" };
+// a terhek narancs, a reakciók lila színétől eltérő: N zöld, V kék, M bordó
+const SZINEK = { N: "#059669", V: "#0369a1", M: "#be123c" };
 const NEVEK = { N: "Normálerő, N", V: "Nyíróerő, V", M: "Hajlítónyomaték, M" };
 const EGYSEG = { N: "kN", V: "kN", M: "kNm" };
+
+/**
+ * A terhek rajza a normalizált modellből: koncentrált erők (csomóponti és rúdon),
+ * koncentrált nyomatékok, megoszló terhek (ferde rúdon is). A csúszkával együtt
+ * mozognak, így látszik, hová kerül az erő és hogyan követi az ábra.
+ */
+function Terhek({ m, kx, ky }) {
+  const elemek = [];
+  let maxQ = 0;
+  for (const rud of m.rudak) for (const q of rud.megoszlok) maxQ = Math.max(maxQ, Math.hypot(q.qx1, q.qy1), Math.hypot(q.qx2, q.qy2));
+  const qLeptek = maxQ > 1e-9 ? 34 / maxQ : 0;
+  const H = 56; // koncentrált erő nyílhossza
+
+  const ero = (kulcs, X, Y, Fx, Fy) => {
+    const n = Math.hypot(Fx, Fy);
+    if (n < 1e-9) return;
+    const szog = (Math.atan2(Fy, Fx) * 180) / Math.PI;
+    // a felirat a nyíl farkánál
+    const ex = Fx / n, ey = Fy / n;
+    elemek.push(
+      <TeherNyil key={kulcs} x={X} y={Y} hossz={H} szog={szog} cimke={`${sz(n, n % 1 ? 1 : 0)} kN`}
+        cimkeEltolas={[-ex * 4 + (Math.abs(ex) < 0.3 ? 8 : -ex * 26 - 14), ey * 4 + (Math.abs(ey) < 0.3 ? -8 : ey * 10 + 4)]} />
+    );
+  };
+
+  m.csomopontiTerhek.forEach((t, i) => {
+    const cs = m.csomopontok[i];
+    ero(`cs${i}`, kx(cs.x), ky(cs.y), t.Fx, t.Fy);
+    if (Math.abs(t.M) > 1e-9) elemek.push(<KoncentraltNyomatek key={`csm${i}`} x={kx(cs.x)} y={ky(cs.y)} irany={t.M > 0 ? 1 : -1} cimke={`${sz(Math.abs(t.M), 0)} kNm`} />);
+  });
+
+  for (const rud of m.rudak) {
+    const { cos: c, sin: s } = rud;
+    rud.pontTerhek.forEach((p, i) => {
+      const X = kx(rud.x1 + p.a * c), Y = ky(rud.y1 + p.a * s);
+      ero(`p${rud.id}-${i}`, X, Y, p.Px * c - p.Py * s, p.Px * s + p.Py * c);
+      if (Math.abs(p.Mz) > 1e-9) elemek.push(<KoncentraltNyomatek key={`pm${rud.id}-${i}`} x={X} y={Y} irany={p.Mz > 0 ? 1 : -1} cimke={`${sz(Math.abs(p.Mz), 0)} kNm`} />);
+    });
+    rud.megoszlok.forEach((q, i) => {
+      const dL = q.a2 - q.a1;
+      if (dL < 1e-9 || qLeptek === 0) return;
+      const pxHossz = dL * Math.hypot(kx(1) - kx(0), ky(1) - ky(0));
+      const n = Math.max(2, Math.round(pxHossz / 22));
+      const nyilak = [], farkak = [];
+      for (let k = 0; k <= n; k++) {
+        const u = k / n;
+        const a = q.a1 + dL * u;
+        const qx = q.qx1 + (q.qx2 - q.qx1) * u, qy = q.qy1 + (q.qy2 - q.qy1) * u;
+        const Fx = qx * c - qy * s, Fy = qx * s + qy * c;
+        const nagy = Math.hypot(Fx, Fy);
+        const X = kx(rud.x1 + a * c), Y = ky(rud.y1 + a * s);
+        if (nagy < 1e-9) { farkak.push([X, Y]); continue; }
+        const h = nagy * qLeptek;
+        const tx = X - (Fx / nagy) * h, ty = Y + (Fy / nagy) * h;
+        farkak.push([tx, ty]);
+        nyilak.push(<line key={k} x1={tx} y1={ty} x2={X} y2={Y} stroke={SZIN.teher} strokeWidth="1.6" markerEnd="url(#th-teher)" />);
+      }
+      // a felirat a szakasz első harmadánál, hogy ne takarja a középre eső koncentrált erő címkéjét
+      const kozep = farkak[Math.max(1, Math.floor(farkak.length * 0.3))] ?? farkak[0];
+      const q1 = Math.hypot(q.qx1, q.qy1), q2 = Math.hypot(q.qx2, q.qy2);
+      const cimke = Math.abs(q1 - q2) < 1e-9 ? `${sz(q1, q1 % 1 ? 1 : 0)} kN/m` : `${sz(q1, q1 % 1 ? 1 : 0)} … ${sz(q2, q2 % 1 ? 1 : 0)} kN/m`;
+      // a felirat a farkak vonalától kifelé (a teherrel ellentétes irányban)
+      const Fy0 = q.qx1 * s + q.qy1 * c + q.qx2 * s + q.qy2 * c;
+      elemek.push(
+        <g key={`q${rud.id}-${i}`}>
+          <polyline points={farkak.map((f) => f.join(",")).join(" ")} fill="none" stroke={SZIN.teher} strokeWidth="1.8" />
+          {nyilak}
+          <text x={kozep[0]} y={kozep[1] + (Fy0 <= 0 ? -7 : 15)} textAnchor="middle" fontSize="12.5" fontWeight="650"
+            style={{ fill: SZIN.teher, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+            {cimke}
+          </text>
+        </g>
+      );
+    });
+  }
+  return <g>{elemek}</g>;
+}
 
 export default function TartoKalkulator() {
   const [sablonId, setSablonId] = useState(SABLONOK[0].id);
@@ -51,7 +129,7 @@ export default function TartoKalkulator() {
     const mag = Math.max(maxY - minY, 0.5);
     const L = Math.min((SZ - 150) / szel, (MA - 230) / Math.max(mag, 1.5));
     const OX = (SZ - szel * L) / 2 - minX * L;
-    const OY = MA * 0.42 + maxY * L;
+    const OY = MA * 0.46 + maxY * L;
     const kx = (x) => OX + x * L;
     const ky = (y) => OY - y * L;
 
@@ -229,6 +307,9 @@ export default function TartoKalkulator() {
               );
             })}
 
+            {/* terhek */}
+            <Terhek m={r.modell} kx={r.kx} ky={r.ky} />
+
             {/* reakciók */}
             {eredmeny.reakciok.map((re, i) => {
               const cs = r.modell.csomopontok.find((c) => c.id === re.csomopont);
@@ -255,10 +336,10 @@ export default function TartoKalkulator() {
               const nev = String(kiemeles.nev).replace(/_\{(\d+)\}/, "$1");
               return (
                 <g>
-                  <circle cx={X} cy={Y} r="9" fill="none" stroke="#7c3aed" strokeWidth="2" strokeDasharray="3 2.5" />
-                  <circle cx={X} cy={Y} r="3" fill="#7c3aed" />
+                  <circle cx={X} cy={Y} r="9" fill="none" stroke="#6d28d9" strokeWidth="2" strokeDasharray="3 2.5" />
+                  <circle cx={X} cy={Y} r="3" fill="#6d28d9" />
                   <text x={X + 12} y={Y - 9} fontSize="12" fontWeight="700"
-                    style={{ fill: "#7c3aed", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+                    style={{ fill: "#6d28d9", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
                     {nev} (főpont)
                   </text>
                 </g>
