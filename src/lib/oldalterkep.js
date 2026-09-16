@@ -157,7 +157,7 @@ export const modulok = [
     leiras:
       "Mikor oldható meg a feladat egyensúlyi egyenletekkel: ismeretlenek és egyenletek, kritikus elrendezés, mechanizmus és határozatlan tartó.",
     ikon: "hatarozottsag",
-    kesz: false,
+    kesz: true,
     szakaszok: [
       { id: "elmelet", cim: "Elmélet" },
       { id: "peldak", cim: "Kidolgozott feladatok" },
@@ -225,7 +225,7 @@ export const extraOldalak = [
     slug: "/zh",
     rovid: "Zh-szimulátor",
     menu: "Zh",
-    leiras: "Hét véletlen feladat órával, segítség nélkül – mint a zárthelyin.",
+    leiras: "Nyolc véletlen feladat órával, segítség nélkül – mint a zárthelyin.",
   },
   {
     slug: "/puska",

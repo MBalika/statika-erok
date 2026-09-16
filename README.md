@@ -250,6 +250,14 @@ oldalhoz elég ezeket átírni.
 - Bekötések: útvonal (5–7. hét, vizsgatípusok), zh-szimulátor 7 feladattal (30/45/60 perc), puska 7–8. lap, a 8–10. modul
   „hamarosan” oldalai, fejléc: a modulok számozott gombokkal (csak az aktív felirata látszik), `fokszamMerleg` testszámlálás javítva.
 
+## 10. kör: 8. modul – Statikai határozottság
+
+- `/hatarozottsag`, `src/components/hatarozottsag/`, számítómag `src/lib/hatarozottsag.js` (e/i számlálás, r + k = 2c, kinematikai
+  rangvizsgálat → szabad mozgások, fölös kényszerek, kritikus elrendezés, a nulltér = a mechanizmus mozgása az animációkhoz).
+- Szerkezet-építő (támaszok/csuklók ki-be, élő mérleg, összecsuklás- vagy „megfeszülés”-animáció), kritikus elrendezés felfedező,
+  rácsos ellenőrző, „Stabil vagy mozog?” játék; 7 GYF (3 filmmel, köztük a H04/5), határozottság-számláló kalkulátor, 9 generátor,
+  14 kvíz, 6 hibakereső, puska-lap. Zh: 8 feladat.
+
 ## 7–8. kör: igénybevétel-számító motor és levezetés
 
 - 7. kör: `src/lib/tarto/` (lásd lent), `/tartokalkulator` oldal a paraméteres sablonokkal, metszet-csúszkával.

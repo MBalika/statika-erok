@@ -22,6 +22,8 @@ import { GENERATOROK as O1 } from "@/components/osszetett/GyakorloSzekcio";
 import { EXTRA_GENERATOROK as O2 } from "@/components/osszetett/GyakorloExtra";
 import { GENERATOROK as R1 } from "@/components/racsos/GyakorloSzekcio";
 import { EXTRA_GENERATOROK as R2 } from "@/components/racsos/GyakorloExtra";
+import { GENERATOROK as H1 } from "@/components/hatarozottsag/GyakorloSzekcio";
+import { EXTRA_GENERATOROK as H2 } from "@/components/hatarozottsag/GyakorloExtra";
 
 import { KVIZ as VK, HIBAK as VH } from "@/components/vektorok/KvizAdatok";
 import { KVIZ as NK, HIBAK as NH } from "@/components/nyomatek/KvizAdatok";
@@ -30,6 +32,7 @@ import { KVIZ as SK, HIBAK as SH } from "@/components/sulypont/KvizAdatok";
 import { KVIZ as TK, HIBAK as TH } from "@/components/tartok/KvizAdatok";
 import { KVIZ as OK, HIBAK as OH } from "@/components/osszetett/KvizAdatok";
 import { KVIZ as RK, HIBAK as RH } from "@/components/racsos/KvizAdatok";
+import { KVIZ as HK, HIBAK as HH } from "@/components/hatarozottsag/KvizAdatok";
 
 import { jsxSzoveg } from "@/lib/hibanaplo";
 
@@ -41,6 +44,7 @@ export const MODULOK = [
   { slug: "/tartok", nev: "Tartók reakciói", gen: [...T1, ...T2], kviz: TK, hibak: TH },
   { slug: "/osszetett", nev: "Összetett tartók", gen: [...O1, ...O2], kviz: OK, hibak: OH },
   { slug: "/racsos", nev: "Rácsos tartók", gen: [...R1, ...R2], kviz: RK, hibak: RH },
+  { slug: "/hatarozottsag", nev: "Statikai határozottság", gen: [...H1, ...H2], kviz: HK, hibak: HH },
 ];
 
 /** Az összes generátor egy tömbben: [{ cim, fn, modul }]. */
