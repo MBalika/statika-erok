@@ -295,7 +295,7 @@ export default function SzerkezetEpito({ kezdoMod = "gerenda" }) {
               <>
                 <circle cx={X - 14} cy={Y} r="16" fill="transparent" />
                 <path d={`M ${X - 4} ${Y} L ${X - 22} ${Y - 11} L ${X - 22} ${Y + 11} Z`} fill="white" stroke="#94a3b8" strokeWidth="1.2" strokeDasharray="3 2" />
-                <text x={X - 26} y={Y + 4} textAnchor="end" fontSize="10" style={{ fill: "#94a3b8" }}>
+                <text x={X - 24} y={Y + 24} textAnchor="end" fontSize="10" style={{ fill: "#94a3b8" }}>
                   + falgörgő
                 </text>
               </>
@@ -335,7 +335,7 @@ export default function SzerkezetEpito({ kezdoMod = "gerenda" }) {
     // ítélet-jelvény
     const szin = itelet.tipus === "hatarozott" ? SZINEK.zold : itelet.tipus === "hatarozatlan" ? SZINEK.lila : SZINEK.bordo;
     const szoveg = itelet.tipus === "hatarozott" ? "✓ határozott tartó" : itelet.tipus === "hatarozatlan" ? `${itelet.folos}-szeresen határozatlan` : itelet.kritikus ? "kritikus elrendezés — mozog!" : "mechanizmus — mozog!";
-    el.push(<Jelveny key="j" x={300} y={22} szoveg={szoveg} szin={szin} w={Math.max(150, 9 * szoveg.length)} />);
+    el.push(<Jelveny key="j" x={455} y={22} szoveg={szoveg} szin={szin} w={Math.max(150, 9 * szoveg.length)} />);
     return el;
   };
 

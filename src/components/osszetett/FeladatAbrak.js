@@ -211,9 +211,9 @@ export function AbraGyf6() {
       <TamaszCimke x={kx(2)} y={ky(0) + 20}>P</TamaszCimke>
       <TamaszCimke x={kx(6)} y={ky(0) + 20}>Q</TamaszCimke>
       <RudJel x={kx(0.7)} y={ky(1.3)} alap="S" index="1" />
-      <RudJel x={kx(2) + 6} y={ky(1)} alap="S" index="2" />
+      <RudJel x={kx(2) + 6} y={ky(0.55)} alap="S" index="2" />
       <RudJel x={kx(4) - 8} y={ky(2) - 8} alap="S" index="3" />
-      <RudJel x={kx(6) + 6} y={ky(1)} alap="S" index="4" />
+      <RudJel x={kx(6) + 6} y={ky(0.55)} alap="S" index="4" />
       <RudJel x={kx(7.1)} y={ky(1.3)} alap="S" index="5" />
       <Rom x={kx(1)} y={ky(0) + 40}>I</Rom>
       <Rom x={kx(7)} y={ky(0) + 40}>II</Rom>

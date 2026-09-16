@@ -16,9 +16,10 @@ export const fel = (min, max) => egesz(Math.round(min * 2), Math.round(max * 2))
 
 /** Rajz a feladathoz: a tartó a terhekkel, méretekkel, csomópont-sorszámokkal. */
 export function FeladatRajz({ modell, kiemelt = [], magassag = 300, cimke, extra }) {
+  // a felső margó akkora, hogy a legmagasabb csomópont fölé rajzolt (max. 70 px-es) erőnyíl felirata is a cím alá férjen
   return (
     <div className="racs-vilagos overflow-hidden rounded-xl border border-[color:var(--keret)] p-2">
-      <RacsosRajz modell={modell} szinez={false} meretek kiemeltRudak={kiemelt} magassag={magassag} className="abra mx-auto h-auto w-full max-w-xl" cimke={cimke} atmenet={false} extra={extra} />
+      <RacsosRajz modell={modell} szinez={false} meretek kiemeltRudak={kiemelt} magassag={magassag + 40} margo={{ bal: 56, jobb: 56, fel: 114, le: 96 }} className="abra mx-auto h-auto w-full max-w-xl" cimke={cimke} atmenet={false} extra={extra} />
     </div>
   );
 }
@@ -164,7 +165,7 @@ function rudjanTerheltFeladat() {
   const rajzExtra = (kx, ky) => (
     <g>
       <line x1={kx(xP)} y1={ky(0) - 56} x2={kx(xP)} y2={ky(0) - 4} stroke="var(--color-jel-ero)" strokeWidth="3" strokeLinecap="round" markerEnd="url(#th-teher)" />
-      <text x={kx(xP) + 7} y={ky(0) - 60} fontSize="12.5" fontWeight="650" style={{ fill: "var(--color-jel-ero)", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+      <text x={kx(xP) + 7} y={ky(0) - 26} fontSize="12.5" fontWeight="650" style={{ fill: "var(--color-jel-ero)", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
         {`P = ${P} kN`}
       </text>
     </g>

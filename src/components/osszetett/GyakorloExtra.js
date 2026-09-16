@@ -40,24 +40,37 @@ export function OsszetettRajz({ rudak = [], tamaszok = [], csuklok = [], rudElem
   const OY = 0;
   const kx = (x) => OX + x * PX;
   const ky = (y) => OY - (y - maxY) * PX;
-  const fent = ky(maxY) - 100;
+  let fent = ky(maxY) - 100;
   let lent = ky(minY) + 60;
   const leptek = 5;
 
   const elemek = [];
+  const feliratDobozok = []; // a már elhelyezett feliratok téglalapjai (ütközés-elkerüléshez)
+  const metszi = (a, b) => a.x1 < b.x2 && b.x1 < a.x2 && a.y1 < b.y2 && b.y1 < a.y2;
   tamaszok.forEach((t, i) => {
     const x = kx(t.x), y = ky(t.y);
     if (t.tipus === "csuklo") elemek.push(<Csuklo key={`t${i}`} x={x} y={y} />);
     else if (t.tipus === "gorgo") elemek.push(<Gorgo key={`t${i}`} x={x} y={y} szog={t.szog ?? 0} />);
     else if (t.tipus === "befogas") elemek.push(<Befogas key={`t${i}`} x={x} y={y} irany={t.irany ?? "jobb"} hossz={48} />);
-    if (t.cimke) elemek.push(<TamaszCimke key={`tc${i}`} x={x + (t.tipus === "befogas" ? 14 : 0) + (t.dx ?? 0)} y={y + (t.dy ?? 44)}>{t.cimke}</TamaszCimke>);
+    if (t.cimke) {
+      const cx = x + (t.tipus === "befogas" ? 14 : 0) + (t.dx ?? 0), cy = y + (t.dy ?? 44);
+      feliratDobozok.push({ x1: cx - 7, x2: cx + 7, y1: cy - 13, y2: cy + 3 });
+      elemek.push(<TamaszCimke key={`tc${i}`} x={cx} y={cy}>{t.cimke}</TamaszCimke>);
+    }
   });
+  /** A megoszló teher feliratának helye: a szakasz három jelölt pontja közül az, amelyik a legtávolabb esik a csuklók betűitől és az erőktől. */
+  const megoszloCimkeX = (mm) => {
+    const w = mm.x2 - mm.x1;
+    const jeloltek = [mm.x1 + 0.5 * w, mm.x1 + 0.25 * w, mm.x2 - 0.25 * w];
+    const tav = (x) => Math.min(Infinity, ...csuklok.filter((c) => c[2]).map((c) => Math.abs(c[0] - x)), ...erok.map((e) => Math.abs(e.x - x)));
+    return jeloltek.reduce((legjobb, x) => (tav(x) > tav(legjobb) + 1e-9 ? x : legjobb), jeloltek[0]);
+  };
   megoszlok.forEach((mm, i) => {
     elemek.push(
       <g key={`m${i}`}>
         <MegoszloTeher x1={kx(mm.x1)} x2={kx(mm.x2)} y={ky(mm.y ?? 0) - 3} p1={mm.p} leptek={leptek} />
         {mm.cimke && (
-          <text x={(kx(mm.x1) + kx(mm.x2)) / 2} y={ky(mm.y ?? 0) - 3 - mm.p * leptek - 8} textAnchor="middle" fontSize="12.5" fontWeight="650" style={{ fill: SZIN.teher, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+          <text x={kx(megoszloCimkeX(mm))} y={ky(mm.y ?? 0) - 3 - mm.p * leptek - 8} textAnchor="middle" fontSize="12.5" fontWeight="650" style={{ fill: SZIN.teher, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
             {mm.cimke}
           </text>
         )}
@@ -97,25 +110,49 @@ export function OsszetettRajz({ rudak = [], tamaszok = [], csuklok = [], rudElem
   );
   erok.forEach((e, i) => {
     const rad = (e.szog * Math.PI) / 180;
-    const h = Math.min(80, 36 + 2.2 * Math.abs(e.F));
+    let h = Math.min(80, 36 + 2.2 * Math.abs(e.F));
     const fugg = Math.abs(Math.cos(rad)) < 1e-6;
-    elemek.push(<TeherNyil key={`e${i}`} x={kx(e.x)} y={ky(e.y ?? 0) - (Math.sin(rad) < 0 ? 3 : -3)} hossz={h} szog={e.szog} cimke={e.cimke} cimkeEltolas={fugg ? [6, -4] : Math.cos(rad) > 0 ? [-6.4 * (e.cimke?.length ?? 4) - 4, -4] : [8, -4]} />);
+    const szeles = 6.4 * (e.cimke?.length ?? 4);
+    const eltolas = fugg ? [6, -4] : Math.cos(rad) > 0 ? [-szeles - 4, -4] : [8, -4];
+    const X = kx(e.x), Y = ky(e.y ?? 0) - (Math.sin(rad) < 0 ? 3 : -3);
+    const doboz = () => {
+      const x1 = X - h * Math.cos(rad) + eltolas[0], y1 = Y + h * Math.sin(rad) + eltolas[1];
+      return { x1, x2: x1 + szeles, y1: y1 - 13, y2: y1 + 3 };
+    };
+    let d = doboz();
+    // ha a felirat egy korábbi feliratra esne, a függőleges nyilat hosszabbra vesszük
+    for (let k = 0; fugg && k < 3 && feliratDobozok.some((b) => metszi(b, d)); k++) {
+      h += 26;
+      d = doboz();
+    }
+    feliratDobozok.push(d);
+    fent = Math.min(fent, d.y1 - 8);
+    elemek.push(<TeherNyil key={`e${i}`} x={X} y={Y} hossz={h} szog={e.szog} cimke={e.cimke} cimkeEltolas={eltolas} />);
   });
   csuklok.forEach((c, i) => {
     elemek.push(<BelsoCsuklo key={`c${i}`} x={kx(c[0])} y={ky(c[1])} />);
     if (c[2]) elemek.push(<TamaszCimke key={`cc${i}`} x={kx(c[0])} y={ky(c[1]) - 12}>{c[2]}</TamaszCimke>);
   });
   pontok.forEach((p, i) => elemek.push(<TamaszCimke key={`p${i}`} x={kx(p.x) + (p.dx ?? 0)} y={ky(p.y ?? 0) + (p.dy ?? -10)}>{p.cimke}</TamaszCimke>));
+  const testY = testek.map((t) => {
+    // ha a test-címke egy támaszbetűre esne, 20 px-szel lejjebb tesszük
+    let y = ky(t.y);
+    const d = () => ({ x1: kx(t.x) - 11, x2: kx(t.x) + 11, y1: y - 10, y2: y + 5 });
+    if (feliratDobozok.some((b) => metszi(b, d()))) y += 20;
+    return y;
+  });
   testek.forEach((t, i) =>
     elemek.push(
       <g key={`te${i}`}>
-        <rect x={kx(t.x) - 11} y={ky(t.y) - 10} width={22} height={15} rx="3" fill="white" stroke="#334155" strokeWidth="1.2" />
-        <text x={kx(t.x)} y={ky(t.y) + 1.5} textAnchor="middle" fontSize="10.5" fontWeight="700" style={{ fill: "#334155" }}>{t.cimke}</text>
+        <rect x={kx(t.x) - 11} y={testY[i] - 10} width={22} height={15} rx="3" fill="white" stroke="#334155" strokeWidth="1.2" />
+        <text x={kx(t.x)} y={testY[i] + 1.5} textAnchor="middle" fontSize="10.5" fontWeight="700" style={{ fill: "#334155" }}>{t.cimke}</text>
       </g>,
     ),
   );
   if (meretek.length) {
-    const yM = ky(minY) + 66;
+    // a méretvonal a test-címkék alá kerüljön (a címke doboza y − 10 … + 5)
+    const testAlja = Math.max(-Infinity, ...testY.map((y) => y + 5));
+    const yM = Math.max(ky(minY) + 66, testAlja + 22);
     meretek.forEach((mm, i) => elemek.push(<Meret key={`me${i}`} x1={kx(mm.x1)} x2={kx(mm.x2)} y={yM} cimke={mm.cimke} />));
     lent = yM + 14;
   }

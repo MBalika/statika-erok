@@ -190,10 +190,10 @@ export function AbraTerbeliNyomatekElv() {
       </defs>
 
       <line x1="140" y1="220" x2="420" y2="220" stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
-      <line x1="140" y1="220" x2="140" y2="40" stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
+      <line x1="140" y1="220" x2="140" y2="66" stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
       <line x1="140" y1="220" x2="55" y2="285" stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
       <text x="426" y="225" fontSize="13" fontStyle="italic" fill="#1d3c48">x</text>
-      <text x="130" y="36" fontSize="13" fontStyle="italic" fill="#1d3c48">y</text>
+      <text x="128" y="70" fontSize="13" fontStyle="italic" fill="#1d3c48">y</text>
       <text x="46" y="298" fontSize="13" fontStyle="italic" fill="#1d3c48">z</text>
 
       {/* helyvektor */}

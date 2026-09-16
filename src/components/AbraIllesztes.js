@@ -30,14 +30,16 @@ function illeszt(svg) {
   const vb = svg.viewBox?.baseVal;
   if (!vb || !vb.width || !vb.height) return;
   const most = svg.getAttribute("viewBox");
-  // ha nem mi írtuk az aktuális értéket (a komponens állította át), az az új „eredeti”
+  // ha nem mi írtuk az aktuális értéket (a komponens állította át), az az új „eredeti”, és elölről kezdjük
   if (!svg.dataset.vbEredeti || (most !== svg.dataset.vbUtolso && most !== svg.dataset.vbEredeti)) {
     svg.dataset.vbEredeti = `${vb.x} ${vb.y} ${vb.width} ${vb.height}`;
+    svg.dataset.vbUtolso = svg.dataset.vbEredeti;
   }
-  const eredeti = svg.dataset.vbEredeti;
-  const [ox, oy, ow, oh] = eredeti.split(" ").map(Number);
-
-  let x1 = ox, y1 = oy, x2 = ox + ow, y2 = oy + oh;
+  const [ox, oy, ow, oh] = svg.dataset.vbEredeti.split(" ").map(Number);
+  // az alap a legutóbb beállított keret: csak tágítunk, sosem szűkítünk vissza — így nincs
+  // oda-vissza ugrálás (a szöveg mért mérete a lépték függvényében kicsit változhat)
+  const [ax, ay, aw, ah] = svg.dataset.vbUtolso.split(" ").map(Number);
+  let x1 = ax, y1 = ay, x2 = ax + aw, y2 = ay + ah;
   const elemek = svg.querySelectorAll(FIGYELT);
   for (const el of elemek) {
     if (el.closest("defs, marker, clipPath, mask, pattern")) continue;
@@ -59,13 +61,17 @@ function illeszt(svg) {
     }
   }
   const M = 5; // margó a vonalvastagságnak, nyílhegynek
-  x1 = Math.floor(x1 - M); y1 = Math.floor(y1 - M); x2 = Math.ceil(x2 + M); y2 = Math.ceil(y2 + M);
-  // csak akkor, ha tényleg kilóg (a margón túl)
-  const kilog = x1 < ox - 1 || y1 < oy - 1 || x2 > ox + ow + 1 || y2 > oy + oh + 1;
-  const ujW = x2 - x1, ujH = y2 - y1;
-  const uj = kilog && ujW <= ow * 1.6 && ujH <= oh * 1.8 ? `${x1} ${y1} ${ujW} ${ujH}` : eredeti;
+  const T = 3; // ennyi (viewBox-egység) kilógás alatt nem nyúlunk hozzá
+  const nx1 = x1 < ax - T ? Math.floor(x1 - M) : ax;
+  const ny1 = y1 < ay - T ? Math.floor(y1 - M) : ay;
+  const nx2 = x2 > ax + aw + T ? Math.ceil(x2 + M) : ax + aw;
+  const ny2 = y2 > ay + ah + T ? Math.ceil(y2 + M) : ay + ah;
+  const ujW = nx2 - nx1, ujH = ny2 - ny1;
+  if (ujW === aw && ujH === ah && nx1 === ax && ny1 === ay) return; // nincs változás
+  if (ujW > ow * 1.6 || ujH > oh * 1.8) return; // szándékosan kívül lévő elem – békén hagyjuk
+  const uj = `${nx1} ${ny1} ${ujW} ${ujH}`;
   svg.dataset.vbUtolso = uj;
-  if (svg.getAttribute("viewBox") !== uj) svg.setAttribute("viewBox", uj);
+  svg.setAttribute("viewBox", uj);
 }
 
 function mindetIlleszt(csakLathato = false) {
@@ -98,7 +104,6 @@ export default function AbraIllesztes() {
     // az drága lenne); a felhasználói beavatkozás után a képernyőn lévő ábrákat számoljuk újra
     figyelo.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["viewBox"] });
     window.addEventListener("resize", kesobb);
-    window.addEventListener("scroll", kesobb, { passive: true });
     document.addEventListener("input", kesobb, true);
     document.addEventListener("click", kesobb, true);
     document.addEventListener("pointerup", kesobb, true);
@@ -106,7 +111,6 @@ export default function AbraIllesztes() {
       window.clearTimeout(t1); window.clearTimeout(t2); if (idozito) window.clearTimeout(idozito);
       figyelo.disconnect();
       window.removeEventListener("resize", kesobb);
-      window.removeEventListener("scroll", kesobb);
       document.removeEventListener("input", kesobb, true);
       document.removeEventListener("click", kesobb, true);
       document.removeEventListener("pointerup", kesobb, true);

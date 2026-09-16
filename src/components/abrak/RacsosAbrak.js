@@ -203,7 +203,7 @@ export function AbraVakrudak() {
     </g>
   );
   return (
-    <svg viewBox="0 0 600 236" className="abra w-full h-auto">
+    <svg viewBox="0 0 800 236" className="abra w-full h-auto">
       <TartoHegyek />
       <defs>
         <marker id="th-zold" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -211,8 +211,8 @@ export function AbraVakrudak() {
         </marker>
       </defs>
       <Eset ox={10} cim="a) terheletlen, két rúd" rudak={[[-70, 0], [-50, -60]]} vakok={[0, 1]} tIrany={[0, 1]} szoveg={["ΣF_t = 0 (t ⊥ az 1. rúdra) → a 2. rúd 0,", "aztán fordítva → az 1. rúd is 0:", "mindkettő vakrúd"]} />
-      <Eset ox={205} cim="b) terheletlen, két rúd egy egyenesben" rudak={[[-72, 0], [72, 0], [-45, -60]]} vakok={[2]} tIrany={[0, 1]} szoveg={["a közös egyenesre merőleges", "vetületben csak a 3. rúd szerepel", "→ a 3. rúd vakrúd"]} />
-      <Eset ox={400} cim="c) a teher az egyik rúd egyenesében" rudak={[[-72, 0], [-45, -60]]} vakok={[1]} teher={-180} tIrany={[0, 1]} szoveg={["F és az 1. rúd közös hatásvonalú;", "a rá merőleges vetületből", "a 2. rúd vakrúd"]} />
+      <Eset ox={280} cim="b) két rúd egy egyenesben" rudak={[[-72, 0], [72, 0], [-45, -60]]} vakok={[2]} tIrany={[0, 1]} szoveg={["a közös egyenesre merőleges", "vetületben csak a 3. rúd szerepel", "→ a 3. rúd vakrúd"]} />
+      <Eset ox={560} cim="c) teher a rúd egyenesében" rudak={[[-72, 0], [-45, -60]]} vakok={[1]} teher={-180} tIrany={[0, 1]} szoveg={["F és az 1. rúd közös hatásvonalú;", "a rá merőleges vetületből", "a 2. rúd vakrúd"]} />
     </svg>
   );
 }
@@ -412,10 +412,10 @@ function KResz({ ox, oy, mod }) {
 
 export function AbraNegyes() {
   return (
-    <svg viewBox="0 0 600 350" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 366" className="abra w-full h-auto">
       <TartoHegyek />
       <KekHegy />
-      <text x={12} y={18} fontSize="11" fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b" }}>
+      <text x={12} y={18} fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b", fontSize: 11 }}>
         a) K-RÁCSOZÁSÚ TARTÓ — B: FERDE, C: EGYENES NÉGYES ÁTMETSZÉS
       </text>
       <RacsosRajz
@@ -435,18 +435,21 @@ export function AbraNegyes() {
           </g>
         )}
       />
-      <text x={12} y={200} fontSize="11" fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b" }}>
-        b) B: 2 ÖVERŐ + 2 KÖZÖS HATÁSVONALÚ OSZLOPERŐ
+      <text x={12} y={196} fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b", fontSize: 11 }}>
+        b) B: 2 ÖVERŐ + 2 KÖZÖS
       </text>
-      <text x={330} y={200} fontSize="11" fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b" }}>
+      <text x={12} y={211} fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b", fontSize: 11 }}>
+        HATÁSVONALÚ OSZLOPERŐ
+      </text>
+      <text x={330} y={196} fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b", fontSize: 11 }}>
         c) C: 2 ÖVERŐ + 2 FERDE RÁCSRÚD
       </text>
-      <KResz ox={90} oy={230} mod="B" />
-      <KResz ox={400} oy={230} mod="C" />
-      <text x={160} y={330} textAnchor="middle" fontSize="10" style={{ fill: "#475569" }}>
+      <KResz ox={90} oy={246} mod="B" />
+      <KResz ox={400} oy={246} mod="C" />
+      <text x={150} y={346} textAnchor="middle" style={{ fill: "#475569", fontSize: 10.5 }}>
         nyomaték az oszlop végpontjaira → Sᵃ, Sᶠ külön-külön
       </text>
-      <text x={455} y={330} textAnchor="middle" fontSize="10" style={{ fill: "#475569" }}>
+      <text x={450} y={346} textAnchor="middle" style={{ fill: "#475569", fontSize: 10.5 }}>
         az övek már ismertek → S₃, S₄ vetületi egyenletekből
       </text>
     </svg>
@@ -546,7 +549,7 @@ export function AbraRudjanTerhelt() {
         <line x1={x1 + ux * gap} y1={y1 - uy * gap} x2={x2 - ux * gap} y2={y2 + uy * gap} stroke={RACS_SZIN.rud} strokeWidth="5" strokeLinecap="round" />
         <circle cx={x1} cy={y1} r="4.5" fill="white" stroke="#0f172a" strokeWidth="1.8" />
         <circle cx={x2} cy={y2} r="4.5" fill="white" stroke="#0f172a" strokeWidth="1.8" />
-        <Cimke x={x1 - 9} y={y1 + 14} szin="#0f172a">j</Cimke>
+        <Cimke x={x1 - 9} y={mod === "b" ? y1 - 8 : y1 + 14} szin="#0f172a">j</Cimke>
         <Cimke x={x2 + 10} y={y2 - 6} szin="#0f172a">k</Cimke>
         {/* a szomszédos rudak erői */}
         {[[x1, y1, -1, 0.35, "S₁"], [x1, y1, -0.3, -1, "S₂"], [x2, y2, 1, 0.3, "S₃"], [x2, y2, 0.25, 1, "S₄"]].map(([qx, qy, dx, dy, c], i) => {

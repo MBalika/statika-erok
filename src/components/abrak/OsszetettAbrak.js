@@ -21,7 +21,7 @@ const KEK = "#2563eb";
 /** Betűjel alsó indexszel: <Jel x y alap="C" index="x" vesszo /> */
 function Jel({ x, y, alap, index, vesszo = false, szin = SZIN.tarto, meret = 13, horgony = "middle" }) {
   return (
-    <text x={x} y={y} textAnchor={horgony} fontSize={meret} fontStyle="italic" fontWeight="650" style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+    <text x={x} y={y} textAnchor={horgony} fontStyle="italic" fontWeight="650" style={{ fill: szin, fontSize: meret, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
       {alap}
       {vesszo && <tspan fontSize={meret * 0.8}>′</tspan>}
       {index && (
@@ -35,7 +35,7 @@ function Jel({ x, y, alap, index, vesszo = false, szin = SZIN.tarto, meret = 13,
 
 function Felirat({ x, y, children, szin = "#275767", meret = 12.5, horgony = "start", vastag = 650 }) {
   return (
-    <text x={x} y={y} textAnchor={horgony} fontSize={meret} fontWeight={vastag} style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+    <text x={x} y={y} textAnchor={horgony} fontWeight={vastag} style={{ fill: szin, fontSize: meret, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
       {children}
     </text>
   );
@@ -46,7 +46,7 @@ function TestCimke({ x, y, children, szin = "#334155" }) {
   return (
     <g>
       <rect x={x - 11} y={y - 10} width={22} height={15} rx="3" fill="white" stroke={szin} strokeWidth="1.2" />
-      <text x={x} y={y + 1.5} textAnchor="middle" fontSize="10.5" fontWeight="700" style={{ fill: szin }}>
+      <text x={x} y={y + 1.5} textAnchor="middle" fontWeight="700" style={{ fill: szin, fontSize: 10.5 }}>
         {children}
       </text>
     </g>
@@ -70,12 +70,12 @@ function ErokompNyil({ x, y, irany, hossz = 34, szin = LILA, hegy = "th-reakcio"
    1. ábra: a belső csukló és az elkülönítésekor felvett erőpár (5.1.b, c)
    ============================================================ */
 export function AbraBelsoCsuklo() {
-  const Y = 90;
+  const Y = 100;
   return (
-    <svg viewBox="0 0 600 190" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 200" className="abra w-full h-auto">
       <TartoHegyek />
       {/* bal: a szerkezet */}
-      <Felirat x={16} y={22} szin={SZURKE} meret={11} vastag={700}>a) belső csukló a gerendán</Felirat>
+      <Felirat x={16} y={16} szin={SZURKE} meret={11} vastag={700}>a) belső csukló a gerendán</Felirat>
       <Tarto x1={30} y1={Y} x2={230} y2={Y} />
       <BelsoCsuklo x={130} y={Y} />
       <Csuklo x={40} y={Y} />
@@ -87,7 +87,7 @@ export function AbraBelsoCsuklo() {
       <TestCimke x={195} y={Y + 32}>II</TestCimke>
 
       {/* jobb: elkülönítés */}
-      <Felirat x={290} y={22} szin={SZURKE} meret={11} vastag={700}>b) elkülönítés: a csuklóban ellentett erőpár</Felirat>
+      <Felirat x={280} y={16} szin={SZURKE} meret={11} vastag={700}>b) elkülönítés: a csuklóban ellentett erőpár</Felirat>
       {/* I. test */}
       <Tarto x1={290} y1={Y - 22} x2={400} y2={Y - 22} />
       <ReakcioNyil x={300} y={Y - 25} hossz={30} szog={90} />
@@ -111,77 +111,81 @@ export function AbraBelsoCsuklo() {
 }
 
 /* ============================================================
-   2. ábra: hová kapcsolódik a csukló? (5.2.a–d)
+   2. ábra: hová kapcsolódik a csukló? (5.2.a–d) – 2 × 2 panel
    ============================================================ */
 export function AbraCsukloHelye() {
-  const Panel = ({ x0, cim, gyerek }) => (
-    <g transform={`translate(${x0} 0)`}>
-      <Felirat x={0} y={16} szin={SZURKE} meret={10.5} vastag={700}>{cim}</Felirat>
+  const Panel = ({ x0, y0, cim, gyerek }) => (
+    <g transform={`translate(${x0} ${y0})`}>
+      <Felirat x={0} y={16} szin={SZURKE} meret={11} vastag={700}>{cim}</Felirat>
       {gyerek}
     </g>
   );
-  const Y = 60;
+  const Y = 72; // a gerenda a panel tetejétől mérve
   return (
-    <svg viewBox="0 0 600 150" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 330" className="abra w-full h-auto">
       <TartoHegyek />
       <Panel
-        x0={12}
+        x0={14}
+        y0={0}
         cim="a) az oszlop csuklóval kapcsolódik"
         gyerek={
           <>
-            <Tarto x1={0} y1={Y} x2={130} y2={Y} />
-            <Tarto x1={65} y1={Y} x2={65} y2={Y + 60} />
-            <BelsoCsuklo x={65} y={Y} />
-            <TestCimke x={110} y={Y - 14}>I</TestCimke>
-            <TestCimke x={84} y={Y + 46}>II</TestCimke>
+            <Tarto x1={0} y1={Y} x2={160} y2={Y} />
+            <Tarto x1={80} y1={Y} x2={80} y2={Y + 60} />
+            <BelsoCsuklo x={80} y={Y} />
+            <TestCimke x={130} y={Y - 14}>I</TestCimke>
+            <TestCimke x={100} y={Y + 46}>II</TestCimke>
             <Felirat x={0} y={Y + 80} szin="#475569" meret={10.5}>2 test: gerenda + oszlop</Felirat>
           </>
         }
       />
       <Panel
-        x0={162}
-        cim="b) a jobb gerenda csatlakozik"
+        x0={314}
+        y0={0}
+        cim="b) a jobb gerenda csatlakozik a csuklóhoz"
         gyerek={
           <>
-            <Tarto x1={0} y1={Y} x2={65} y2={Y} />
-            <Tarto x1={65} y1={Y} x2={65} y2={Y + 60} />
-            <Tarto x1={65} y1={Y} x2={130} y2={Y} />
-            <BelsoCsuklo x={65} y={Y} />
-            <TestCimke x={30} y={Y - 14}>I</TestCimke>
-            <TestCimke x={110} y={Y - 14}>II</TestCimke>
-            <Felirat x={0} y={Y + 80} szin="#475569" meret={10.5}>2 test: bal gerenda+oszlop, jobb gerenda</Felirat>
+            <Tarto x1={0} y1={Y} x2={80} y2={Y} />
+            <Tarto x1={80} y1={Y} x2={80} y2={Y + 60} />
+            <Tarto x1={80} y1={Y} x2={160} y2={Y} />
+            <BelsoCsuklo x={80} y={Y} />
+            <TestCimke x={35} y={Y - 14}>I</TestCimke>
+            <TestCimke x={130} y={Y - 14}>II</TestCimke>
             {/* a sarok merev: kis ívvel jelöljük a merev kapcsolatot */}
-            <path d={`M 52 ${Y + 12} Q 52 ${Y} 65 ${Y}`} fill="none" stroke="#94a3b8" strokeWidth="1" />
+            <path d={`M 67 ${Y + 12} Q 67 ${Y} 80 ${Y}`} fill="none" stroke="#94a3b8" strokeWidth="1" />
+            <Felirat x={0} y={Y + 80} szin="#475569" meret={10.5}>2 test: bal gerenda + oszlop, jobb gerenda</Felirat>
           </>
         }
       />
       <Panel
-        x0={312}
-        cim="c) mindhárom elem a csuklóhoz"
+        x0={14}
+        y0={170}
+        cim="c) mindhárom elem a csuklóhoz kapcsolódik"
         gyerek={
           <>
-            <Tarto x1={0} y1={Y} x2={65} y2={Y} />
-            <Tarto x1={65} y1={Y} x2={130} y2={Y} />
-            <Tarto x1={65} y1={Y} x2={65} y2={Y + 60} />
-            <BelsoCsuklo x={65} y={Y} r={5.5} />
-            <TestCimke x={30} y={Y - 14}>I</TestCimke>
-            <TestCimke x={110} y={Y - 14}>III</TestCimke>
-            <TestCimke x={84} y={Y + 46}>II</TestCimke>
+            <Tarto x1={0} y1={Y} x2={80} y2={Y} />
+            <Tarto x1={80} y1={Y} x2={160} y2={Y} />
+            <Tarto x1={80} y1={Y} x2={80} y2={Y + 60} />
+            <BelsoCsuklo x={80} y={Y} r={5.5} />
+            <TestCimke x={35} y={Y - 14}>I</TestCimke>
+            <TestCimke x={130} y={Y - 14}>III</TestCimke>
+            <TestCimke x={100} y={Y + 46}>II</TestCimke>
             <Felirat x={0} y={Y + 80} szin="#475569" meret={10.5}>3 test — a csuklót külön kell elkülöníteni</Felirat>
           </>
         }
       />
       <Panel
-        x0={462}
+        x0={314}
+        y0={170}
         cim="d) terhelt csukló"
         gyerek={
           <>
-            <Tarto x1={0} y1={Y} x2={65} y2={Y} />
-            <Tarto x1={65} y1={Y} x2={130} y2={Y} />
-            <BelsoCsuklo x={65} y={Y} r={5.5} />
-            <TeherNyil x={65} y={Y - 6} hossz={38} szog={-90} cimke="F" cimkeEltolas={[6, 0]} />
-            <TestCimke x={30} y={Y + 18}>I</TestCimke>
-            <TestCimke x={110} y={Y + 18}>II</TestCimke>
+            <Tarto x1={0} y1={Y} x2={80} y2={Y} />
+            <Tarto x1={80} y1={Y} x2={160} y2={Y} />
+            <BelsoCsuklo x={80} y={Y} r={5.5} />
+            <TeherNyil x={80} y={Y - 6} hossz={34} szog={-90} cimke="F" cimkeEltolas={[6, 0]} />
+            <TestCimke x={35} y={Y + 18}>I</TestCimke>
+            <TestCimke x={130} y={Y + 18}>II</TestCimke>
             <Felirat x={0} y={Y + 80} szin="#475569" meret={10.5}>a csuklóra 3 erő hat: F, −C_I, −C_II</Felirat>
           </>
         }
@@ -194,14 +198,14 @@ export function AbraCsukloHelye() {
    3. ábra: Gerber-tartó – váz és elkülönítés (5.4)
    ============================================================ */
 export function AbraGerber() {
-  const Y = 60;
+  const Y = 80;
   const OX = 30, L = 60; // px / m; A=0, B=4, C=6, D=9
   const kx = (x) => OX + x * L;
-  const Y2 = 160;
+  const Y2 = 250;
   return (
-    <svg viewBox="0 0 600 235" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 352" className="abra w-full h-auto">
       <TartoHegyek />
-      <Felirat x={16} y={18} szin={SZURKE} meret={11} vastag={700}>a) Gerber-tartó: fix rész (I) + befüggesztett rész (II)</Felirat>
+      <Felirat x={16} y={16} szin={SZURKE} meret={11} vastag={700}>a) Gerber-tartó: fix rész (I) + befüggesztett rész (II)</Felirat>
       <Tarto x1={kx(0)} y1={Y} x2={kx(9)} y2={Y} />
       <Csuklo x={kx(0)} y={Y} />
       <Gorgo x={kx(4)} y={Y} />
@@ -215,26 +219,27 @@ export function AbraGerber() {
       <TamaszCimke x={kx(9) + 16} y={Y + 26}>D</TamaszCimke>
       <TestCimke x={kx(5)} y={Y + 34}>I</TestCimke>
       <TestCimke x={kx(7.4)} y={Y + 34}>II</TestCimke>
-      <Felirat x={kx(4.2)} y={Y - 34} szin="#475569" meret={10.5} horgony="middle">I: csukló + görgő = 3 → önmagában tartó</Felirat>
-      <Felirat x={kx(7.5)} y={Y + 58} szin="#475569" meret={10.5} horgony="middle">II: egy görgő = 1 → befüggesztve C-ben</Felirat>
+      <Felirat x={kx(0)} y={Y + 58} szin="#475569" meret={10.5}>I: csukló + görgő = 3 → önmagában tartó</Felirat>
+      <Felirat x={590} y={Y + 58} szin="#475569" meret={10.5} horgony="end">II: egy görgő = 1 → befüggesztve C-ben</Felirat>
 
       {/* elkülönítés */}
-      <Felirat x={16} y={Y2 - 52} szin={SZURKE} meret={11} vastag={700}>b) elkülönítés — a II. test olyan, mint egy kéttámaszú tartó</Felirat>
+      <Felirat x={16} y={Y2 - 84} szin={SZURKE} meret={11} vastag={700}>b) elkülönítés — a II. test olyan, mint egy kéttámaszú tartó</Felirat>
       <Tarto x1={kx(0)} y1={Y2 + 20} x2={kx(6)} y2={Y2 + 20} />
-      <ReakcioNyil x={kx(0)} y={Y2 + 20} hossz={30} szog={0} cimke="Aₓ" cimkeEltolas={[-6, -6]} />
+      <ReakcioNyil x={kx(0)} y={Y2 + 20} hossz={30} szog={0} cimke="Aₓ" cimkeEltolas={[2, -6]} />
       <ReakcioNyil x={kx(0)} y={Y2 + 23} hossz={30} szog={90} cimke="Aᵧ" cimkeEltolas={[6, 6]} />
       <ReakcioNyil x={kx(4)} y={Y2 + 23} hossz={30} szog={90} cimke="B" cimkeEltolas={[6, 6]} />
       <TeherNyil x={kx(2)} y={Y2 + 17} hossz={40} szog={-60} cimke="F₁" cimkeEltolas={[-18, -2]} />
       <ErokompNyil x={kx(6)} y={Y2 + 20} irany="le" hossz={28} alap="C" index="y" vesszo eltol={[6, 4]} />
       <ErokompNyil x={kx(6)} y={Y2 + 20} irany="bal" hossz={28} alap="C" index="x" vesszo eltol={[-2, -8]} />
       <TestCimke x={kx(1.2)} y={Y2 + 44}>I</TestCimke>
-      <Tarto x1={kx(6.4)} y1={Y2 - 22} x2={kx(9.4)} y2={Y2 - 22} />
-      <ReakcioNyil x={kx(9.4)} y={Y2 - 19} hossz={30} szog={90} cimke="D" cimkeEltolas={[6, 6]} />
+      <Tarto x1={kx(6.4)} y1={Y2 - 22} x2={kx(9.3)} y2={Y2 - 22} />
+      <ReakcioNyil x={kx(9.3)} y={Y2 - 19} hossz={30} szog={90} cimke="D" cimkeEltolas={[-15, 5]} />
       <TeherNyil x={kx(8.2)} y={Y2 - 25} hossz={36} szog={-90} cimke="F₂" cimkeEltolas={[6, 0]} />
       <ErokompNyil x={kx(6.4)} y={Y2 - 22} irany="fel" hossz={28} alap="C" index="y" eltol={[6, 2]} />
       <ErokompNyil x={kx(6.4)} y={Y2 - 22} irany="jobb" hossz={28} alap="C" index="x" eltol={[2, 14]} />
       <TestCimke x={kx(7.4)} y={Y2 - 32}>II</TestCimke>
-      <Felirat x={kx(6.4) + 6} y={Y2 + 72} szin="#7c3aed" meret={10.5}>sorrend: II (ΣM_C→D, ΣM_D→C_y, ΣF_x→C_x), majd I (ΣM_A→B, ΣM_B→A_y, ΣF_x→A_x)</Felirat>
+      <Felirat x={16} y={Y2 + 80} szin="#7c3aed" meret={10.5}>sorrend: II (ΣM_C→D, ΣM_D→C_y, ΣF_x→C_x),</Felirat>
+      <Felirat x={16} y={Y2 + 94} szin="#7c3aed" meret={10.5}>majd I (ΣM_A→B, ΣM_B→A_y, ΣF_x→A_x)</Felirat>
     </svg>
   );
 }
@@ -243,12 +248,13 @@ export function AbraGerber() {
    4. ábra: Gerber-változatok (5.5 befogással, 5.6 lánc és rúd)
    ============================================================ */
 export function AbraGerberValtozatok() {
-  const Y = 52;
+  const Y = 78;
+  const Yc2 = 248, Yc1 = 288; // c) felső és alsó gerenda
   return (
-    <svg viewBox="0 0 600 215" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 340" className="abra w-full h-auto">
       <TartoHegyek />
       {/* a) befogással */}
-      <Felirat x={14} y={16} szin={SZURKE} meret={10.5} vastag={700}>a) befogott fix rész (5.5): I befüggesztett, II fix</Felirat>
+      <Felirat x={14} y={16} szin={SZURKE} meret={11} vastag={700}>a) befogott fix rész (5.5)</Felirat>
       <Tarto x1={20} y1={Y} x2={270} y2={Y} />
       <Gorgo x={60} y={Y} />
       <BelsoCsuklo x={190} y={Y} />
@@ -260,8 +266,10 @@ export function AbraGerberValtozatok() {
       <TamaszCimke x={282} y={Y + 24}>B</TamaszCimke>
       <TestCimke x={110} y={Y + 24}>I</TestCimke>
       <TestCimke x={230} y={Y + 24}>II</TestCimke>
+      <Felirat x={14} y={Y + 62} szin="#475569" meret={10.5}>I befüggesztett, II fix</Felirat>
       {/* b) lánc: befüggesztett a befüggesztettre */}
-      <Felirat x={300} y={16} szin={SZURKE} meret={10.5} vastag={700}>b) lánc (5.6.b): befüggesztett rész egy másikra támaszkodik</Felirat>
+      <Felirat x={300} y={16} szin={SZURKE} meret={11} vastag={700}>b) lánc (5.6.b): befüggesztett rész</Felirat>
+      <Felirat x={300} y={30} szin={SZURKE} meret={11} vastag={700}>egy másikra támaszkodik</Felirat>
       <Tarto x1={310} y1={Y} x2={585} y2={Y} />
       <Csuklo x={318} y={Y} />
       <BelsoCsuklo x={380} y={Y} />
@@ -275,25 +283,31 @@ export function AbraGerberValtozatok() {
       <TestCimke x={345} y={Y + 24}>I</TestCimke>
       <TestCimke x={430} y={Y + 44}>II</TestCimke>
       <TestCimke x={530} y={Y + 44}>III</TestCimke>
-      <Felirat x={312} y={Y + 70} szin="#475569" meret={10.5}>I: 2 (csukló) + 2 (csukló) — csak II-re támaszkodva áll; II: 1+2+2; III: 1+1+2 → III-mal kezdünk</Felirat>
+      <Felirat x={300} y={Y + 62} szin="#475569" meret={10.5}>I: 2 (csukló) + 2 (csukló) — csak</Felirat>
+      <Felirat x={300} y={Y + 76} szin="#475569" meret={10.5}>II-re támaszkodva áll; II: 1+2+2;</Felirat>
+      <Felirat x={300} y={Y + 90} szin="#475569" meret={10.5}>III: 1+1+2 → III-mal kezdünk</Felirat>
       {/* c) rúddal kapcsolt */}
-      <Felirat x={14} y={128} szin={SZURKE} meret={10.5} vastag={700}>c) egyetlen rúddal befüggesztett rész (5.6.c): a kapcsolat 1 fokú, ezért a II. test csuklót kap</Felirat>
-      <Tarto x1={30} y1={190} x2={190} y2={190} />
-      <Gorgo x={40} y={190} />
-      <Csuklo x={130} y={190} />
-      <Rud x1={190} y1={190} x2={250} y2={150} />
-      <Tarto x1={250} y1={150} x2={400} y2={150} />
-      <Csuklo x={392} y={150} />
-      <TeherNyil x={90} y={187} hossz={30} szog={-60} cimke="F₁" cimkeEltolas={[-16, -2]} />
-      <TeherNyil x={330} y={147} hossz={30} szog={-90} cimke="F₂" cimkeEltolas={[6, 0]} />
-      <TamaszCimke x={40} y={230}>A</TamaszCimke>
-      <TamaszCimke x={130} y={230}>B</TamaszCimke>
-      <TamaszCimke x={225} y={166}>S</TamaszCimke>
-      <TamaszCimke x={392} y={190}>D</TamaszCimke>
-      <TestCimke x={170} y={210}>I</TestCimke>
-      <TestCimke x={300} y={170}>II</TestCimke>
-      <Felirat x={420} y={160} szin="#475569" meret={10.5}>II: rúd (1) + csukló (2) = 3 → II-vel kezdünk,</Felirat>
-      <Felirat x={420} y={176} szin="#475569" meret={10.5}>ΣM_D → S; utána a rúderő ellentettje terheli I-et.</Felirat>
+      <Felirat x={14} y={196} szin={SZURKE} meret={11} vastag={700}>c) egyetlen rúddal befüggesztett rész (5.6.c)</Felirat>
+      <Tarto x1={30} y1={Yc1} x2={190} y2={Yc1} />
+      <Gorgo x={40} y={Yc1} />
+      <Csuklo x={130} y={Yc1} />
+      <Rud x1={190} y1={Yc1} x2={250} y2={Yc2} />
+      <Tarto x1={250} y1={Yc2} x2={400} y2={Yc2} />
+      <Csuklo x={392} y={Yc2} />
+      <TeherNyil x={90} y={Yc1 - 3} hossz={30} szog={-60} cimke="F₁" cimkeEltolas={[-16, -2]} />
+      <TeherNyil x={330} y={Yc2 - 3} hossz={30} szog={-90} cimke="F₂" cimkeEltolas={[6, 0]} />
+      <TamaszCimke x={40} y={Yc1 + 40}>A</TamaszCimke>
+      <TamaszCimke x={130} y={Yc1 + 40}>B</TamaszCimke>
+      <TamaszCimke x={225} y={Yc2 + 16}>S</TamaszCimke>
+      <TamaszCimke x={392} y={Yc2 + 40}>D</TamaszCimke>
+      <TestCimke x={170} y={Yc1 + 20}>I</TestCimke>
+      <TestCimke x={300} y={Yc2 + 20}>II</TestCimke>
+      <Felirat x={420} y={Yc2 - 12} szin="#475569" meret={10.5}>a kapcsolat 1 fokú, ezért</Felirat>
+      <Felirat x={420} y={Yc2 + 3} szin="#475569" meret={10.5}>a II. test csuklót kap;</Felirat>
+      <Felirat x={420} y={Yc2 + 18} szin="#475569" meret={10.5}>II: rúd (1) + csukló (2) = 3</Felirat>
+      <Felirat x={420} y={Yc2 + 33} szin="#475569" meret={10.5}>→ II-vel kezdünk, ΣM_D → S;</Felirat>
+      <Felirat x={420} y={Yc2 + 48} szin="#475569" meret={10.5}>utána a rúderő ellentettje</Felirat>
+      <Felirat x={420} y={Yc2 + 63} szin="#475569" meret={10.5}>terheli I-et.</Felirat>
     </svg>
   );
 }
@@ -302,12 +316,12 @@ export function AbraGerberValtozatok() {
    5. ábra: háromcsuklós tartó – váz és elkülönítés (5.7, 5.8)
    ============================================================ */
 export function AbraHaromcsuklos() {
-  // keret: A(30,150) – (30,50) – C(150,50) – (270,50) – B(270,150)
-  const A = [40, 150], C = [160, 50], B = [280, 150];
+  // keret: A(40,180) – (40,80) – C(160,80) – (280,80) – B(280,180)
+  const A = [40, 180], C = [160, 80], B = [280, 180];
   return (
-    <svg viewBox="0 0 600 215" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 276" className="abra w-full h-auto">
       <TartoHegyek />
-      <Felirat x={14} y={16} szin={SZURKE} meret={11} vastag={700}>a) háromcsuklós keret — mindkét test 2 + 2 fokszámú</Felirat>
+      <Felirat x={14} y={16} szin={SZURKE} meret={11} vastag={700}>a) háromcsuklós keret: mindkét test 2 + 2 fokú</Felirat>
       <Tarto x1={A[0]} y1={A[1]} x2={A[0]} y2={C[1]} />
       <Tarto x1={A[0]} y1={C[1]} x2={B[0]} y2={C[1]} />
       <Tarto x1={B[0]} y1={C[1]} x2={B[0]} y2={B[1]} />
@@ -319,14 +333,13 @@ export function AbraHaromcsuklos() {
       <TamaszCimke x={A[0] - 16} y={A[1] + 26}>A</TamaszCimke>
       <TamaszCimke x={B[0] + 16} y={B[1] + 26}>B</TamaszCimke>
       <TamaszCimke x={C[0]} y={C[1] - 12}>C</TamaszCimke>
-      <TestCimke x={70} y={100}>I</TestCimke>
-      <TestCimke x={250} y={100}>II</TestCimke>
-      <Felirat x={14} y={200} szin="#475569" meret={10.5}>4 ismeretlen testenként, 3 egyenlet: az egész szerkezetre írt ΣM_A és ΣM_B segít ki (azonos magasságú támaszoknál közvetlenül).</Felirat>
+      <TestCimke x={70} y={130}>I</TestCimke>
+      <TestCimke x={250} y={130}>II</TestCimke>
 
       {/* elkülönítés */}
-      <Felirat x={330} y={16} szin={SZURKE} meret={11} vastag={700}>b) elkülönítés</Felirat>
+      <Felirat x={370} y={16} szin={SZURKE} meret={11} vastag={700}>b) elkülönítés</Felirat>
       {(() => {
-        const a = [350, 150], c1 = [430, 60], c2 = [470, 60], b = [560, 150];
+        const a = [350, 180], c1 = [430, 80], c2 = [470, 80], b = [560, 180];
         return (
           <>
             <Tarto x1={a[0]} y1={a[1]} x2={a[0]} y2={c1[1]} />
@@ -336,19 +349,21 @@ export function AbraHaromcsuklos() {
             <TeherNyil x={395} y={c1[1] - 3} hossz={34} szog={-90} cimke="F₁" cimkeEltolas={[6, 0]} />
             <ErokompNyil x={c1[0]} y={c1[1]} irany="jobb" hossz={26} alap="C" index="x" eltol={[2, -6]} />
             <ErokompNyil x={c1[0]} y={c1[1]} irany="le" hossz={26} alap="C" index="y" eltol={[4, 6]} />
-            <TestCimke x={375} y={110}>I</TestCimke>
+            <TestCimke x={375} y={140}>I</TestCimke>
             <Tarto x1={c2[0]} y1={c2[1]} x2={b[0]} y2={c2[1]} />
             <Tarto x1={b[0]} y1={c2[1]} x2={b[0]} y2={b[1]} />
-            <ReakcioNyil x={b[0]} y={b[1]} hossz={28} szog={180} cimke="Bₓ" cimkeEltolas={[2, -6]} />
+            <ReakcioNyil x={b[0]} y={b[1]} hossz={28} szog={180} cimke="Bₓ" cimkeEltolas={[-12, -7]} />
             <ReakcioNyil x={b[0]} y={b[1] + 3} hossz={28} szog={90} cimke="Bᵧ" cimkeEltolas={[6, 6]} />
             <TeherNyil x={530} y={c2[1] - 3} hossz={34} szog={-60} cimke="F₂" cimkeEltolas={[-18, -2]} />
             <ErokompNyil x={c2[0]} y={c2[1]} irany="bal" hossz={26} alap="C" index="x" vesszo eltol={[-30, -6]} />
             <ErokompNyil x={c2[0]} y={c2[1]} irany="fel" hossz={26} alap="C" index="y" vesszo eltol={[4, 0]} />
-            <TestCimke x={535} y={110}>II</TestCimke>
-            <Felirat x={330} y={200} szin="#7c3aed" meret={10.5}>I: (F₁, A, C) ≐ O · II: (F₂, C′, B) ≐ O · Σ: (F₁, F₂, A, B) ≐ O</Felirat>
+            <TestCimke x={535} y={140}>II</TestCimke>
           </>
         );
       })()}
+      <Felirat x={14} y={238} szin="#7c3aed" meret={10.5}>I: (F₁, A, C) ≐ O · II: (F₂, C′, B) ≐ O · Σ: (F₁, F₂, A, B) ≐ O</Felirat>
+      <Felirat x={14} y={253} szin="#475569" meret={10.5}>4 ismeretlen testenként, 3 egyenlet: az egész szerkezetre írt ΣM_A és ΣM_B</Felirat>
+      <Felirat x={14} y={267} szin="#475569" meret={10.5}>segít ki (azonos magasságú támaszoknál közvetlenül).</Felirat>
     </svg>
   );
 }
@@ -359,9 +374,9 @@ export function AbraHaromcsuklos() {
 export function AbraTerheltCsuklo() {
   const Y = 130;
   return (
-    <svg viewBox="0 0 600 210" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 232" className="abra w-full h-auto">
       <TartoHegyek />
-      <Felirat x={14} y={16} szin={SZURKE} meret={11} vastag={700}>Csuklóján terhelt Gerber-tartó (5.9): a csuklót külön különítjük el — rá három erő hat</Felirat>
+      <Felirat x={14} y={16} szin={SZURKE} meret={11} vastag={700}>Csuklóján terhelt Gerber-tartó (5.9): a csuklót külön különítjük el</Felirat>
       {/* I. test */}
       <Tarto x1={30} y1={Y} x2={230} y2={Y} />
       <ReakcioNyil x={40} y={Y} hossz={28} szog={0} cimke="Aₓ" cimkeEltolas={[-8, -6]} />
@@ -379,15 +394,16 @@ export function AbraTerheltCsuklo() {
       <ErokompNyil x={291} y={Y - 50} irany="bal" hossz={30} alap="C" index="Ix" vesszo eltol={[-34, -6]} />
       <ErokompNyil x={307} y={Y - 44} irany="le" hossz={30} alap="C" index="IIy" vesszo eltol={[4, 6]} />
       <ErokompNyil x={309} y={Y - 50} irany="jobb" hossz={30} alap="C" index="IIx" vesszo eltol={[2, -6]} />
-      <Felirat x={300} y={Y + 30} szin="#7c3aed" meret={10.5} horgony="middle">C: (F₂, C′_I, C′_II) ≐ O — két vetületi egyenlet</Felirat>
       {/* II. test */}
       <Tarto x1={370} y1={Y} x2={570} y2={Y} />
       <ReakcioNyil x={560} y={Y + 3} hossz={28} szog={90} cimke="D" cimkeEltolas={[6, 6]} />
       <TeherNyil x={480} y={Y - 3} hossz={36} szog={-90} cimke="F₃" cimkeEltolas={[6, 0]} />
       <ErokompNyil x={370} y={Y} irany="fel" hossz={26} alap="C" index="IIy" eltol={[6, 0]} />
-      <ErokompNyil x={370} y={Y} irany="bal" hossz={26} alap="C" index="IIx" eltol={[-34, -6]} />
+      <ErokompNyil x={370} y={Y} irany="bal" hossz={26} alap="C" index="IIx" eltol={[-30, 14]} />
       <TestCimke x={470} y={Y + 30}>II</TestCimke>
-      <Felirat x={14} y={Y + 66} szin="#475569" meret={10.5}>Sorrend: II (befüggesztett) → a C csukló (F₂ + C′_II-ből C′_I) → I (fix rész), amelyre −C′_I = C_I hat.</Felirat>
+      <Felirat x={14} y={Y + 62} szin="#7c3aed" meret={10.5}>C: (F₂, C′_I, C′_II) ≐ O — a csuklóra három erő hat, két vetületi egyenlet</Felirat>
+      <Felirat x={14} y={Y + 77} szin="#475569" meret={10.5}>Sorrend: II (befüggesztett) → a C csukló (F₂ + C′_II-ből C′_I)</Felirat>
+      <Felirat x={14} y={Y + 91} szin="#475569" meret={10.5}>→ I (fix rész), amelyre −C′_I = C_I hat.</Felirat>
     </svg>
   );
 }
@@ -396,42 +412,48 @@ export function AbraTerheltCsuklo() {
    7. ábra: egyszerű tartóra visszavezethető kialakítások (5.11, 5.12)
    ============================================================ */
 export function AbraEgyszeruVissza() {
+  const Yu = 86, Yl = 146; // felső és alsó gerenda
   return (
-    <svg viewBox="0 0 600 190" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 246" className="abra w-full h-auto">
       <TartoHegyek />
-      <Felirat x={14} y={16} szin={SZURKE} meret={10.5} vastag={700}>a) csukló + rúd köti a két testet (5.11): a belső kényszerek fokszáma 2 + 1 = 3</Felirat>
-      <Tarto x1={30} y1={120} x2={250} y2={120} />
-      <Csuklo x={40} y={120} />
-      <Tarto x1={130} y1={120} x2={130} y2={60} />
-      <Tarto x1={130} y1={60} x2={250} y2={60} />
-      <BelsoCsuklo x={130} y={120} />
-      <Rud x1={210} y1={60} x2={210} y2={120} />
-      <Gorgo x={245} y={60} />
-      <TeherNyil x={80} y={117} hossz={34} szog={-60} cimke="F₁" cimkeEltolas={[-16, -2]} />
-      <TeherNyil x={170} y={57} hossz={34} szog={-90} cimke="F₂" cimkeEltolas={[6, 0]} />
-      <TamaszCimke x={40} y={160}>A</TamaszCimke>
-      <TamaszCimke x={118} y={136}>C</TamaszCimke>
-      <TamaszCimke x={222} y={96}>S</TamaszCimke>
-      <TamaszCimke x={262} y={56}>B</TamaszCimke>
-      <TestCimke x={90} y={142}>I</TestCimke>
-      <TestCimke x={150} y={80}>II</TestCimke>
-      <Felirat x={14} y={178} szin="#475569" meret={10.5}>Külső: csukló (2) + görgő (1) = 3 → az egész szerkezet egyszerű tartóként kezdhető: ΣM_A → B.</Felirat>
+      <Felirat x={14} y={16} szin={SZURKE} meret={11} vastag={700}>a) csukló + rúd köti a két testet (5.11):</Felirat>
+      <Felirat x={14} y={30} szin={SZURKE} meret={11} vastag={700}>a belső kényszerek fokszáma 2 + 1 = 3</Felirat>
+      <Tarto x1={30} y1={Yl} x2={250} y2={Yl} />
+      <Csuklo x={40} y={Yl} />
+      <Tarto x1={130} y1={Yl} x2={130} y2={Yu} />
+      <Tarto x1={130} y1={Yu} x2={250} y2={Yu} />
+      <BelsoCsuklo x={130} y={Yl} />
+      <Rud x1={210} y1={Yu} x2={210} y2={Yl} />
+      <Gorgo x={245} y={Yu} />
+      <TeherNyil x={80} y={Yl - 3} hossz={34} szog={-60} cimke="F₁" cimkeEltolas={[-16, -2]} />
+      <TeherNyil x={170} y={Yu - 3} hossz={34} szog={-90} cimke="F₂" cimkeEltolas={[6, 0]} />
+      <TamaszCimke x={40} y={Yl + 40}>A</TamaszCimke>
+      <TamaszCimke x={118} y={Yl + 16}>C</TamaszCimke>
+      <TamaszCimke x={222} y={Yu + 36}>S</TamaszCimke>
+      <TamaszCimke x={262} y={Yu - 4}>B</TamaszCimke>
+      <TestCimke x={90} y={Yl + 22}>I</TestCimke>
+      <TestCimke x={150} y={Yu + 20}>II</TestCimke>
+      <Felirat x={14} y={208} szin="#475569" meret={10.5}>Külső: csukló (2) + görgő (1) = 3 →</Felirat>
+      <Felirat x={14} y={222} szin="#475569" meret={10.5}>az egész szerkezet egyszerű tartóként</Felirat>
+      <Felirat x={14} y={236} szin="#475569" meret={10.5}>kezdhető: ΣM_A → B.</Felirat>
 
-      <Felirat x={320} y={16} szin={SZURKE} meret={10.5} vastag={700}>b) a II. test csak az I.-hez kapcsolódik (5.12)</Felirat>
-      <Tarto x1={330} y1={120} x2={580} y2={120} />
-      <Csuklo x={340} y={120} />
-      <Gorgo x={570} y={120} />
-      <Tarto x1={430} y1={120} x2={430} y2={60} />
-      <Tarto x1={430} y1={60} x2={540} y2={60} />
-      <BelsoCsuklo x={430} y={120} />
-      <Rud x1={510} y1={60} x2={510} y2={120} />
-      <TeherNyil x={385} y={117} hossz={34} szog={-60} cimke="F₁" cimkeEltolas={[-16, -2]} />
-      <TeherNyil x={470} y={57} hossz={34} szog={-90} cimke="F₂" cimkeEltolas={[6, 0]} />
-      <TamaszCimke x={340} y={160}>A</TamaszCimke>
-      <TamaszCimke x={570} y={160}>B</TamaszCimke>
-      <TestCimke x={390} y={142}>I</TestCimke>
-      <TestCimke x={450} y={80}>II</TestCimke>
-      <Felirat x={320} y={178} szin="#475569" meret={10.5}>A II. test önmagában egyszerű tartó (csukló + rúd) → vele is kezdhetünk.</Felirat>
+      <Felirat x={320} y={16} szin={SZURKE} meret={11} vastag={700}>b) a II. test csak az I.-hez</Felirat>
+      <Felirat x={320} y={30} szin={SZURKE} meret={11} vastag={700}>kapcsolódik (5.12)</Felirat>
+      <Tarto x1={330} y1={Yl} x2={580} y2={Yl} />
+      <Csuklo x={340} y={Yl} />
+      <Gorgo x={570} y={Yl} />
+      <Tarto x1={430} y1={Yl} x2={430} y2={Yu} />
+      <Tarto x1={430} y1={Yu} x2={540} y2={Yu} />
+      <BelsoCsuklo x={430} y={Yl} />
+      <Rud x1={510} y1={Yu} x2={510} y2={Yl} />
+      <TeherNyil x={385} y={Yl - 3} hossz={34} szog={-60} cimke="F₁" cimkeEltolas={[-16, -2]} />
+      <TeherNyil x={470} y={Yu - 3} hossz={34} szog={-90} cimke="F₂" cimkeEltolas={[6, 0]} />
+      <TamaszCimke x={340} y={Yl + 40}>A</TamaszCimke>
+      <TamaszCimke x={570} y={Yl + 40}>B</TamaszCimke>
+      <TestCimke x={390} y={Yl + 22}>I</TestCimke>
+      <TestCimke x={450} y={Yu + 20}>II</TestCimke>
+      <Felirat x={320} y={208} szin="#475569" meret={10.5}>A II. test önmagában egyszerű tartó</Felirat>
+      <Felirat x={320} y={222} szin="#475569" meret={10.5}>(csukló + rúd) → vele is kezdhetünk.</Felirat>
     </svg>
   );
 }
@@ -440,12 +462,13 @@ export function AbraEgyszeruVissza() {
    8. ábra: függesztőmű és feszítőmű (5.13, 5.14)
    ============================================================ */
 export function AbraFuggesztomu() {
-  const Y = 120, OX = 30, L = 30; // px / m, L = 8 m
+  const Y = 132, OX = 30, L = 30; // px / m, L = 8 m
   const kx = (x) => OX + x * L;
   return (
-    <svg viewBox="0 0 600 200" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 214" className="abra w-full h-auto">
       <TartoHegyek />
-      <Felirat x={14} y={16} szin={SZURKE} meret={10.5} vastag={700}>a) függesztőmű (5.13): a gerenda C-ben csuklós, a rudak felülről tartják</Felirat>
+      <Felirat x={14} y={16} szin={SZURKE} meret={11} vastag={700}>a) függesztőmű (5.13): a gerenda</Felirat>
+      <Felirat x={14} y={30} szin={SZURKE} meret={11} vastag={700}>C-ben csuklós, a rudak felülről tartják</Felirat>
       <Tarto x1={kx(0)} y1={Y} x2={kx(8)} y2={Y} />
       <Csuklo x={kx(0)} y={Y} />
       <Gorgo x={kx(8)} y={Y} />
@@ -467,11 +490,13 @@ export function AbraFuggesztomu() {
       <Jel x={kx(4)} y={Y - 66} alap="S" index="3" szin={KEK} meret={11} />
       <Jel x={kx(6) + 12} y={Y - 26} alap="S" index="4" szin={KEK} meret={11} />
       <Jel x={kx(7.3)} y={Y - 36} alap="S" index="5" szin={KEK} meret={11} />
-      <Felirat x={14} y={Y + 56} szin="#475569" meret={10.5}>10 ismeretlen (A_x, A_y, B, C_x, C_y, S₁…S₅), egyenletek: I (3) + II (3) + D (2) + E (2) = 10.</Felirat>
+      <Felirat x={14} y={180} szin="#475569" meret={10.5}>10 ismeretlen (A_x, A_y, B, C_x, C_y, S₁…S₅),</Felirat>
+      <Felirat x={14} y={194} szin="#475569" meret={10.5}>egyenletek: I (3) + II (3) + D (2) + E (2) = 10.</Felirat>
 
-      <Felirat x={320} y={16} szin={SZURKE} meret={10.5} vastag={700}>b) feszítőmű (5.14): ugyanez az x tengelyre tükrözve</Felirat>
+      <Felirat x={320} y={16} szin={SZURKE} meret={11} vastag={700}>b) feszítőmű (5.14): ugyanez</Felirat>
+      <Felirat x={320} y={30} szin={SZURKE} meret={11} vastag={700}>az x tengelyre tükrözve</Felirat>
       {(() => {
-        const ox = 330, k = (x) => ox + x * L, Yb = 70;
+        const ox = 330, k = (x) => ox + x * L, Yb = 84;
         return (
           <>
             <Tarto x1={k(0)} y1={Yb} x2={k(8)} y2={Yb} />
@@ -490,7 +515,8 @@ export function AbraFuggesztomu() {
             <TamaszCimke x={k(4)} y={Yb - 10}>C</TamaszCimke>
             <TamaszCimke x={k(2) - 12} y={Yb + 66}>D</TamaszCimke>
             <TamaszCimke x={k(6) + 12} y={Yb + 66}>E</TamaszCimke>
-            <Felirat x={320} y={Yb + 100} szin="#475569" meret={10.5}>A rudak most alulról támasztanak: az alsó öv húzott, a függőlegesek nyomottak.</Felirat>
+            <Felirat x={320} y={180} szin="#475569" meret={10.5}>A rudak most alulról támasztanak:</Felirat>
+            <Felirat x={320} y={194} szin="#475569" meret={10.5}>az alsó öv húzott, a függőlegesek nyomottak.</Felirat>
           </>
         );
       })()}
@@ -564,50 +590,49 @@ export function AbraFokszamDoboz() {
    ============================================================ */
 export function AbraEgyebOsszetett() {
   return (
-    <svg viewBox="0 0 600 175" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 252" className="abra w-full h-auto">
       <TartoHegyek />
-      <Felirat x={14} y={16} szin={SZURKE} meret={10.5} vastag={700}>a) két rúddal összekötött testek (5.15)</Felirat>
-      <Tarto x1={40} y1={140} x2={40} y2={40} />
-      <Tarto x1={40} y1={40} x2={110} y2={40} />
-      <Tarto x1={170} y1={140} x2={170} y2={60} />
-      <Rud x1={110} y1={40} x2={170} y2={60} />
-      <Rud x1={80} y1={90} x2={170} y2={110} />
-      <Tarto x1={40} y1={90} x2={80} y2={90} />
-      <Csuklo x={40} y={140} />
-      <Csuklo x={170} y={140} />
-      <TeherNyil x={40} y={65} hossz={30} szog={0} cimke="F₁" cimkeEltolas={[-18, -4]} />
-      <TeherNyil x={170} y={80} hossz={30} szog={180} cimke="F₂" cimkeEltolas={[4, -4]} />
-      <TamaszCimke x={40} y={172}>A</TamaszCimke>
-      <TamaszCimke x={170} y={172}>B</TamaszCimke>
-      <Jel x={140} y={42} alap="S" index="1" szin={KEK} meret={11} />
-      <Jel x={125} y={112} alap="S" index="2" szin={KEK} meret={11} />
-      <Felirat x={200} y={60} szin="#475569" meret={10.5}>2 + 2 külső, 1 + 1 belső:</Felirat>
-      <Felirat x={200} y={76} szin="#475569" meret={10.5}>ΣM_B (egész) + ΣM_O (I, O = a</Felirat>
-      <Felirat x={200} y={92} szin="#475569" meret={10.5}>rudak metszéspontja) → A_x, A_y</Felirat>
+      <Felirat x={14} y={16} szin={SZURKE} meret={11} vastag={700}>a) két rúddal összekötött testek (5.15)</Felirat>
+      <Tarto x1={60} y1={162} x2={60} y2={62} />
+      <Tarto x1={60} y1={62} x2={130} y2={62} />
+      <Tarto x1={190} y1={162} x2={190} y2={82} />
+      <Rud x1={130} y1={62} x2={190} y2={82} />
+      <Rud x1={100} y1={112} x2={190} y2={132} />
+      <Tarto x1={60} y1={112} x2={100} y2={112} />
+      <Csuklo x={60} y={162} />
+      <Csuklo x={190} y={162} />
+      <TeherNyil x={60} y={87} hossz={30} szog={0} cimke="F₁" cimkeEltolas={[-20, -4]} />
+      <TeherNyil x={190} y={102} hossz={30} szog={180} cimke="F₂" cimkeEltolas={[4, -4]} />
+      <TamaszCimke x={60} y={194}>A</TamaszCimke>
+      <TamaszCimke x={190} y={194}>B</TamaszCimke>
+      <Jel x={160} y={64} alap="S" index="1" szin={KEK} meret={11} />
+      <Jel x={145} y={134} alap="S" index="2" szin={KEK} meret={11} />
+      <Felirat x={14} y={216} szin="#475569" meret={10.5}>2 + 2 külső, 1 + 1 belső:</Felirat>
+      <Felirat x={14} y={230} szin="#475569" meret={10.5}>ΣM_B (egész) + ΣM_O (I, O = a rudak</Felirat>
+      <Felirat x={14} y={244} szin="#475569" meret={10.5}>metszéspontja) → A_x, A_y</Felirat>
 
-      <Felirat x={330} y={16} szin={SZURKE} meret={10.5} vastag={700}>b) zárt keret (5.18)</Felirat>
-      <Tarto x1={350} y1={140} x2={350} y2={50} />
-      <Tarto x1={350} y1={50} x2={480} y2={50} />
-      <Tarto x1={480} y1={50} x2={480} y2={140} />
-      <Tarto x1={350} y1={140} x2={480} y2={140} />
-      <BelsoCsuklo x={350} y={80} />
-      <BelsoCsuklo x={415} y={50} />
-      <BelsoCsuklo x={480} y={80} />
-      <Csuklo x={360} y={140} />
-      <Gorgo x={470} y={140} />
-      <TamaszCimke x={338} y={80}>C</TamaszCimke>
-      <TamaszCimke x={415} y={40}>D</TamaszCimke>
-      <TamaszCimke x={492} y={80}>E</TamaszCimke>
-      <TamaszCimke x={360} y={172}>A</TamaszCimke>
-      <TamaszCimke x={470} y={172}>B</TamaszCimke>
-      <TeherNyil x={440} y={47} hossz={30} szog={-90} cimke="F" cimkeEltolas={[5, 0]} />
-      <TestCimke x={415} y={125}>I</TestCimke>
-      <TestCimke x={380} y={70}>II</TestCimke>
-      <TestCimke x={455} y={70}>III</TestCimke>
-      <Felirat x={505} y={70} szin="#475569" meret={10.5}>kívülről egy test:</Felirat>
-      <Felirat x={505} y={86} szin="#475569" meret={10.5}>A, B az egészből;</Felirat>
-      <Felirat x={505} y={102} szin="#475569" meret={10.5}>CDE = háromcsuklós</Felirat>
-      <Felirat x={505} y={118} szin="#475569" meret={10.5}>tartó C, E „támasszal”</Felirat>
+      <Felirat x={330} y={16} szin={SZURKE} meret={11} vastag={700}>b) zárt keret (5.18)</Felirat>
+      <Tarto x1={350} y1={162} x2={350} y2={72} />
+      <Tarto x1={350} y1={72} x2={480} y2={72} />
+      <Tarto x1={480} y1={72} x2={480} y2={162} />
+      <Tarto x1={350} y1={162} x2={480} y2={162} />
+      <BelsoCsuklo x={350} y={102} />
+      <BelsoCsuklo x={415} y={72} />
+      <BelsoCsuklo x={480} y={102} />
+      <Csuklo x={360} y={162} />
+      <Gorgo x={470} y={162} />
+      <TamaszCimke x={338} y={102}>C</TamaszCimke>
+      <TamaszCimke x={415} y={62}>D</TamaszCimke>
+      <TamaszCimke x={492} y={102}>E</TamaszCimke>
+      <TamaszCimke x={360} y={194}>A</TamaszCimke>
+      <TamaszCimke x={470} y={194}>B</TamaszCimke>
+      <TeherNyil x={440} y={69} hossz={30} szog={-90} cimke="F" cimkeEltolas={[5, 0]} />
+      <TestCimke x={415} y={147}>I</TestCimke>
+      <TestCimke x={380} y={92}>II</TestCimke>
+      <TestCimke x={455} y={92}>III</TestCimke>
+      <Felirat x={330} y={216} szin="#475569" meret={10.5}>kívülről egy test: A, B az egészből;</Felirat>
+      <Felirat x={330} y={230} szin="#475569" meret={10.5}>CDE = háromcsuklós tartó</Felirat>
+      <Felirat x={330} y={244} szin="#475569" meret={10.5}>C, E „támasszal”</Felirat>
     </svg>
   );
 }

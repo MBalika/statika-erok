@@ -67,6 +67,7 @@ export default function ErroparAlakito() {
 
   const dKep = d * L;
   const tulNagy = dKep > 400;
+  const mTav = Math.min(Fert * E, 150) / 2 + 34; // az M felirat a nyílhegyeken túl, az erőkkel ellentétes (−u) oldalon
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
@@ -130,8 +131,8 @@ export default function ErroparAlakito() {
                   markerEnd="url(#ea-m)"
                 />
                 <text
-                  x={CX}
-                  y={CY + 22}
+                  x={CX - u.x * mTav}
+                  y={CY + u.y * mTav + 4}
                   textAnchor="middle"
                   fontSize="13"
                   fontWeight="700"

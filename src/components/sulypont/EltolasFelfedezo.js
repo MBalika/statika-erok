@@ -199,7 +199,7 @@ export default function EltolasFelfedezo() {
               <line x1={OX} y1={OY} x2={OX - 60} y2={OY} stroke="#64748b" strokeWidth="1" strokeDasharray="3 3" />
               <line x1={OX} y1={OY} x2={OX} y2={OY + 60} stroke="#64748b" strokeWidth="1" strokeDasharray="3 3" />
               <circle cx={OX} cy={OY} r="2.5" fill="#64748b" />
-              <text x={OX + 6} y={OY - 6} fontSize="11.5" fontWeight="600" style={{ fill: "#475569" }}>O′</text>
+              <text x={OX + 7} y={OY + 15} fontSize="11.5" fontWeight="600" style={{ fill: "#475569" }}>O′</text>
             </g>
 
             {/* a súlypont – nem mozdul */}

@@ -44,6 +44,7 @@ export default function GerberCsuklohely() {
   }, [s, p]);
 
   const OX = 60, OY = 150, PX = 44;
+  const nyilH = (F) => Math.max(18, Math.min(40, Math.abs(F) * 1.4)); // az EroNyil hossza (leptek 1,4; maxHossz 40)
   const kx = (x) => OX + x * PX;
   const ky = (y) => OY - y * PX;
   const Mlep = adat ? 70 / Math.max(1, Math.abs(adat.Mmin), Math.abs(adat.Mmax)) : 1;
@@ -58,7 +59,7 @@ export default function GerberCsuklohely() {
             <TartoHegyek />
             <OsszetettHegyek />
             <text x={12} y={18} fontSize="11" fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b" }}>
-              HOVÁ TEDD A CSUKLÓT? — A NYOMATÉKI ÁBRA A HÚZOTT OLDALRA RAJZOLVA
+              HOVÁ TEDD A CSUKLÓT? — NYOMATÉKI ÁBRA A HÚZOTT OLDALON
             </text>
             {adat && (
               <>
@@ -87,9 +88,10 @@ export default function GerberCsuklohely() {
                 <Meret x1={kx(L1)} x2={kx(adat.xC)} y={OY + 118} cimke={`s = ${sz(s, 2)} m`} opacitas={0.85} />
                 <Meret x1={kx(0)} x2={kx(L1)} y={OY + 140} cimke="6 m" opacitas={0.7} />
                 <Meret x1={kx(L1)} x2={kx(L1 + L2)} y={OY + 140} cimke="6 m" opacitas={0.7} />
-                <EroNyil X={kx(0)} Y={OY + 40} Fx={0} Fy={adat.reak.A} leptek={1.4} maxHossz={40} cimke={`A = ${sz(adat.reak.A, 2)}`} cimkeEltolas={[-40, 16]} />
-                <EroNyil X={kx(L1)} Y={OY + 40} Fx={0} Fy={adat.reak.B} leptek={1.4} maxHossz={40} cimke={`B = ${sz(adat.reak.B, 2)}`} cimkeEltolas={[6, 16]} />
-                <EroNyil X={kx(L1 + L2)} Y={OY + 40} Fx={0} Fy={adat.reak.D} leptek={1.4} maxHossz={40} cimke={`D = ${sz(adat.reak.D, 2)}`} cimkeEltolas={[6, 16]} />
+                {/* a reakció-feliratok a nyíl talpa alatt, hogy ne fedjék a támaszbetűket */}
+                <EroNyil X={kx(0)} Y={OY + 40} Fx={0} Fy={adat.reak.A} leptek={1.4} maxHossz={40} cimke={`A = ${sz(adat.reak.A, 2)}`} cimkeEltolas={[-30, nyilH(adat.reak.A) + 14]} />
+                <EroNyil X={kx(L1)} Y={OY + 40} Fx={0} Fy={adat.reak.B} leptek={1.4} maxHossz={40} cimke={`B = ${sz(adat.reak.B, 2)}`} cimkeEltolas={[6, nyilH(adat.reak.B) + 14]} />
+                <EroNyil X={kx(L1 + L2)} Y={OY + 40} Fx={0} Fy={adat.reak.D} leptek={1.4} maxHossz={40} cimke={`D = ${sz(adat.reak.D, 2)}`} cimkeEltolas={[-58, nyilH(adat.reak.D) + 27]} />
               </>
             )}
           </svg>

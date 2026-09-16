@@ -39,7 +39,7 @@ const SZERKEZETEK = [
     ],
     terhek: [
       { nev: "F_1", x: 2, y: 0, Fx: 12 * Math.cos(-60 * FOK), Fy: 12 * Math.sin(-60 * FOK), test: 0, cimke: "F₁ = 12 kN (60°)" },
-      { nev: "F_2", x: 8, y: 0, Fx: 0, Fy: -8, test: 1, cimke: "F₂ = 8 kN" },
+      { nev: "F_2", x: 8, y: 0, Fx: 0, Fy: -8, test: 1, cimke: "F₂ = 8 kN", cimkeEltolas: [-62, -2] },
     ],
     ismeretlenek: [
       { id: "Ax", tex: "A_x", P: [0, 0], e: [1, 0], hat: [{ test: 0, elojel: 1 }] },
@@ -247,7 +247,7 @@ export default function SorrendValaszto() {
   const rajzTerhek = szk.terhek.map((t, i) => {
     const n = Math.hypot(t.Fx, t.Fy);
     const szog = (Math.atan2(t.Fy, t.Fx) * 180) / Math.PI;
-    return <TeherNyil key={i} x={kx(t.x)} y={ky(t.y) - 3} hossz={44} szog={szog} cimke={t.cimke} cimkeEltolas={Math.abs(t.Fx) < 0.3 ? [6, -2] : t.Fx > 0 ? [-34, -6] : [8, -6]} opacitas={aktivTest(t.test) ? 1 : 0.3} />;
+    return <TeherNyil key={i} x={kx(t.x)} y={ky(t.y) - 3} hossz={44} szog={szog} cimke={t.cimke} cimkeEltolas={t.cimkeEltolas ?? (Math.abs(t.Fx) < 0.3 ? [6, -2] : t.Fx > 0 ? [-34, -6] : [8, -6])} opacitas={aktivTest(t.test) ? 1 : 0.3} />;
   });
 
   return (

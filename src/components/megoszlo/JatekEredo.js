@@ -282,16 +282,17 @@ export default function JatekEredo() {
 
           {/* intenzitás-mérce balra */}
           <g>
-            <line x1={BAL - 40} y1={TY} x2={BAL - 40} y2={TY - 10 * PS} stroke="#94a3b8" strokeWidth="1" />
+            {/* a mérce elég messze balra, hogy az első szakasz (balra írt) intenzitás-felirata ne érje el */}
+            <line x1={BAL - 68} y1={TY} x2={BAL - 68} y2={TY - 10 * PS} stroke="#94a3b8" strokeWidth="1" />
             {[0, 5, 10].map((v) => (
               <g key={v}>
-                <line x1={BAL - 44} y1={TY - v * PS} x2={BAL - 36} y2={TY - v * PS} stroke="#94a3b8" strokeWidth="1" />
-                <text x={BAL - 48} y={TY - v * PS + 4} textAnchor="end" style={{ fontSize: 10, fill: "#64748b" }}>
+                <line x1={BAL - 72} y1={TY - v * PS} x2={BAL - 64} y2={TY - v * PS} stroke="#94a3b8" strokeWidth="1" />
+                <text x={BAL - 75} y={TY - v * PS + 4} textAnchor="end" style={{ fontSize: 10, fill: "#64748b" }}>
                   {v}
                 </text>
               </g>
             ))}
-            <text x={BAL - 40} y={TY - 10 * PS - 8} textAnchor="middle" style={{ fontSize: 10, fill: "#64748b" }}>
+            <text x={BAL - 64} y={TY - 10 * PS - 24} textAnchor="middle" style={{ fontSize: 10, fill: "#64748b" }}>
               kN/m
             </text>
           </g>

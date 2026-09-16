@@ -21,7 +21,7 @@ export function AbraGyf3() {
   return <RacsosRajz modell={M_GYF3} {...alap} cimke="H07: a = 2 m, b = 1,5 m — A RÁCSRUDAK HOSSZA 2,5 m" />;
 }
 export function AbraGyf4() {
-  return <RacsosRajz modell={M_GYF4} {...alap} magassag={360} cimke="H08/1: b = 2 m, a = 1,5 m — K-RÁCSOZÁS A SZÉLSŐ MEZŐKBEN" />;
+  return <RacsosRajz modell={M_GYF4} {...alap} magassag={390} margo={{ bal: 56, jobb: 56, fel: 110, le: 96 }} cimke="H08/1: b = 2 m, a = 1,5 m — K-RÁCSOZÁS A SZÉLSŐ MEZŐKBEN" />;
 }
 export function AbraGyf5() {
   return <RacsosRajz modell={M_GYF5} {...alap} magassag={360} cimke="H08/2: b = 2 m, a = 2 m, A FELSŐ ÖV 2 m-t EMELKEDIK; A ÉS B CSUKLÓ" />;

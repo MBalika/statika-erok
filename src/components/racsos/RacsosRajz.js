@@ -195,7 +195,10 @@ export default function RacsosRajz({
           const hossz = Math.min(70, 34 + 2.2 * F);
           const fugg = Math.abs(t.Fx) < 1e-9;
           const cim = t.cimke ?? `${sz(F, F % 1 ? 1 : 0)} kN`;
-          return <TeherNyil key={`f${i}`} x={kx(c.x)} y={ky(c.y) - (t.Fy < 0 ? 4 : -4)} hossz={hossz} szog={szog} cimke={cim} cimkeEltolas={fugg ? [7, -4] : t.Fx > 0 ? [-8 - 6 * cim.length, -4] : [8, -4]} />;
+          const szeles = 6.6 * cim.length;
+          // függőleges erő felirata a nyíl jobb oldalán; a jobb szélen (ahol kilógna) a bal oldalán
+          const fuggElt = kx(c.x) + 7 + szeles > szelesseg - 4 ? [-7 - szeles, -4] : [7, -4];
+          return <TeherNyil key={`f${i}`} x={kx(c.x)} y={ky(c.y) - (t.Fy < 0 ? 4 : -4)} hossz={hossz} szog={szog} cimke={cim} cimkeEltolas={fugg ? fuggElt : t.Fx > 0 ? [-8 - 6 * cim.length, -4] : [8, -4]} />;
         })}
 
       {/* reakciók */}

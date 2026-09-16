@@ -17,7 +17,7 @@ import { OsszetettHegyek, EroNyil, TestCimke } from "./Rajz";
  */
 
 const SZ = 640;
-const MA = 330;
+const MA = 380;
 const L = 8;
 
 export default function HaromcsuklosVandor() {
@@ -42,8 +42,8 @@ export default function HaromcsuklosVandor() {
     return { Ax: A.Fx, Ay: A.Fy, Bx: B.Fx, By: B.Fy, Cx: t.C_x ?? 0, Cy: t.C_y ?? 0, MC, Mmax, e };
   }, [xF, F, h, xC, hC]);
 
-  const OX = 120, OY = 270;
-  const PX = 50;
+  const OX = 120, OY = 300;
+  const PX = 44;
   const kx = (x) => OX + x * PX;
   const ky = (y) => OY - y * PX;
   const yF = xF <= xC ? h + ((hC - h) * xF) / xC : hC + ((h - hC) * (xF - xC)) / (L - xC);
@@ -99,13 +99,13 @@ export default function HaromcsuklosVandor() {
             {adat && (
               <>
                 <EroNyil X={kx(0)} Y={ky(0)} Fx={adat.Ax} Fy={0} leptek={LEPTEK} cimke={`Aₓ = ${sz(Math.abs(adat.Ax), 2)}`} />
-                <EroNyil X={kx(0)} Y={ky(0)} Fx={0} Fy={adat.Ay} leptek={LEPTEK} cimke={`Aᵧ = ${sz(Math.abs(adat.Ay), 2)}`} cimkeEltolas={[-46, adat.Ay >= 0 ? -6 : 14]} />
+                <EroNyil X={kx(0)} Y={ky(0)} Fx={0} Fy={adat.Ay} leptek={LEPTEK} cimke={`Aᵧ = ${sz(Math.abs(adat.Ay), 2)}`} cimkeEltolas={[-70, 4]} />
                 <EroNyil X={kx(L)} Y={ky(0)} Fx={adat.Bx} Fy={0} leptek={LEPTEK} cimke={`Bₓ = ${sz(Math.abs(adat.Bx), 2)}`} />
-                <EroNyil X={kx(L)} Y={ky(0)} Fx={0} Fy={adat.By} leptek={LEPTEK} cimke={`Bᵧ = ${sz(Math.abs(adat.By), 2)}`} cimkeEltolas={[8, adat.By >= 0 ? -6 : 14]} />
+                <EroNyil X={kx(L)} Y={ky(0)} Fx={0} Fy={adat.By} leptek={LEPTEK} cimke={`Bᵧ = ${sz(Math.abs(adat.By), 2)}`} cimkeEltolas={[8, 4]} />
                 {/* a csuklóerő a II. testre (kék, kisebb) */}
-                <EroNyil X={kx(xC) + 8} Y={ky(hC)} Fx={adat.Cx} Fy={0} leptek={LEPTEK * 0.8} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cₓ = ${sz(Math.abs(adat.Cx), 2)}`} />
+                <EroNyil X={kx(xC) + 8} Y={ky(hC)} Fx={adat.Cx} Fy={0} leptek={LEPTEK * 0.8} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cₓ = ${sz(Math.abs(adat.Cx), 2)}`} cimkeEltolas={[4, -8]} />
                 <EroNyil X={kx(xC) + 8} Y={ky(hC)} Fx={0} Fy={adat.Cy} leptek={LEPTEK * 0.8} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cᵧ = ${sz(Math.abs(adat.Cy), 2)}`} cimkeEltolas={[8, adat.Cy >= 0 ? -4 : 12]} />
-                <text x={kx(xC)} y={ky(hC) + 22} textAnchor="middle" fontSize="11" fontWeight="650" style={{ fill: "#0369a1", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                <text x={kx(xC) - 14} y={ky(hC) + 24} textAnchor="end" fontSize="11" fontWeight="650" style={{ fill: "#0369a1", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
                   M<tspan dy="3" fontSize="8">C</tspan>
                   <tspan dy="-3"> = {sz(Math.abs(adat.MC) < 1e-6 ? 0 : adat.MC, 2)} kNm</tspan>
                 </text>

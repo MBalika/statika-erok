@@ -148,6 +148,11 @@ body {
 /* --- SVG ábrák közös stílusa --- */
 .abra text {
   font-family: var(--font-sans);
+}
+/* alapértelmezett betűméret csak ott, ahol az ábra nem ad meg fontSize attribútumot —
+   a CSS-szabály különben a megadott attribútumot is felülírná (az SVG prezentációs
+   attribútum gyengébb minden CSS-szabálynál) */
+.abra text:not([font-size]) {
   font-size: 13px;
 }
 .abra .cimke-kicsi {

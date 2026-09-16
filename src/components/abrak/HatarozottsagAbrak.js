@@ -16,7 +16,7 @@ const KEK = "#2563eb";
 
 function Felirat({ x, y, children, szin = "#1d3c48", meret = 12, horgony = "middle", vastag = 650, dolt = false }) {
   return (
-    <text x={x} y={y} textAnchor={horgony} fontSize={meret} fontWeight={vastag} fontStyle={dolt ? "italic" : "normal"} style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+    <text x={x} y={y} textAnchor={horgony} fontWeight={vastag} fontStyle={dolt ? "italic" : "normal"} style={{ fill: szin, fontSize: meret, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
       {children}
     </text>
   );
@@ -32,12 +32,12 @@ function Betu({ x, y, children }) {
 }
 
 /** Kerek jelvény a számláláshoz: „3 = 3”, „4 &gt; 3”. */
-function Jelveny({ x, y, szoveg, szin = ZOLD, w = 52 }) {
-  const W = Math.max(w, 7 * String(szoveg).length + 16);
+function Jelveny({ x, y, szoveg, szin = ZOLD, w = 52, meret = 11.5 }) {
+  const W = Math.max(w, 0.62 * meret * String(szoveg).length + 16);
   return (
     <g>
       <rect x={x - W / 2} y={y - 10} width={W} height={19} rx="9" fill="white" stroke={szin} strokeWidth="1.3" />
-      <text x={x} y={y + 4} textAnchor="middle" fontSize="11.5" fontWeight="700" style={{ fill: szin }}>
+      <text x={x} y={y + 4} textAnchor="middle" fontWeight="700" style={{ fill: szin, fontSize: meret }}>
         {szoveg}
       </text>
     </g>
@@ -85,36 +85,39 @@ export function AbraFeladatok() {
   const Y = 96;
   const oszlop = (ox, cim, szin, tamaszok, terhek, felirat, jelveny) => (
     <g>
-      <rect x={ox - 92} y={14} width={184} height={166} rx="12" fill="white" stroke={szin} strokeWidth="1.2" opacity="0.9" />
+      <rect x={ox - 97} y={14} width={194} height={182} rx="12" fill="white" stroke={szin} strokeWidth="1.2" opacity="0.9" />
       <Felirat x={ox} y={34} szin={szin} meret={12}>
         {cim}
       </Felirat>
       <Tarto x1={ox - 70} y1={Y} x2={ox + 70} y2={Y} />
       {tamaszok}
       {terhek}
-      <Felirat x={ox} y={146} szin="#475569" meret={10.5} vastag={500}>
-        {felirat}
+      <Felirat x={ox} y={148} szin="#475569" meret={10.5} vastag={500}>
+        {felirat[0]}
       </Felirat>
-      <Jelveny x={ox} y={166} szoveg={jelveny} szin={szin} w={110} />
+      <Felirat x={ox} y={161} szin="#475569" meret={10.5} vastag={500}>
+        {felirat[1]}
+      </Felirat>
+      <Jelveny x={ox} y={181} szoveg={jelveny} szin={szin} w={110} meret={10} />
     </g>
   );
   return (
-    <svg viewBox="0 0 600 190" className="abra w-full h-auto select-none">
+    <svg viewBox="0 0 600 206" className="abra w-full h-auto select-none">
       <TartoHegyek />
       <HatarozottsagHegyek />
       {oszlop(
-        104,
+        100,
         "határozott feladat",
         ZOLD,
         <>
-          <Csuklo x={104 - 70} y={Y} meret={13} />
-          <Gorgo x={104 + 70} y={Y} meret={13} />
+          <Csuklo x={100 - 70} y={Y} meret={13} />
+          <Gorgo x={100 + 70} y={Y} meret={13} />
         </>,
         <>
-          <TeherNyil x={104 - 20} y={Y - 3} hossz={44} szog={-60} cimke="F₁" cimkeEltolas={[-14, -4]} />
-          <TeherNyil x={104 + 40} y={Y - 3} hossz={44} szog={-90} cimke="F₂" cimkeEltolas={[6, -2]} />
+          <TeherNyil x={100 - 20} y={Y - 3} hossz={44} szog={-60} cimke="F₁" cimkeEltolas={[-14, -4]} />
+          <TeherNyil x={100 + 40} y={Y - 3} hossz={44} szog={-90} cimke="F₂" cimkeEltolas={[6, -2]} />
         </>,
-        "csukló + görgő: 3 egyenlet = 3 ismeretlen",
+        ["csukló + görgő:", "3 egyenlet = 3 ismeretlen"],
         "egyértelmű megoldás",
       )}
       {oszlop(
@@ -129,23 +132,23 @@ export function AbraFeladatok() {
           <TeherNyil x={300 - 20} y={Y - 3} hossz={44} szog={-60} cimke="F₁" cimkeEltolas={[-14, -4]} />
           <TeherNyil x={300 + 40} y={Y - 3} hossz={44} szog={-90} cimke="F₂" cimkeEltolas={[6, -2]} />
         </>,
-        "két csukló: 4 ismeretlen, Aₓ+Bₓ csak együtt",
+        ["két csukló: 4 ismeretlen,", "Aₓ+Bₓ csak együtt"],
         "van megoldás, nem egyértelmű",
       )}
       {oszlop(
-        496,
+        500,
         "túlhatározott feladat",
         BORDO,
         <>
-          <Gorgo x={496 - 70} y={Y} meret={13} />
-          <Gorgo x={496 + 70} y={Y} meret={13} />
-          <Mozgas x={496} y={Y + 44} tipus="vizszintes" r={26} />
+          <Gorgo x={500 - 70} y={Y} meret={13} />
+          <Gorgo x={500 + 70} y={Y} meret={13} />
+          <Mozgas x={500} y={Y + 34} tipus="vizszintes" r={26} />
         </>,
         <>
-          <TeherNyil x={496 - 20} y={Y - 3} hossz={44} szog={-60} cimke="F₁" cimkeEltolas={[-14, -4]} />
-          <TeherNyil x={496 + 40} y={Y - 3} hossz={44} szog={-90} cimke="F₂" cimkeEltolas={[6, -2]} />
+          <TeherNyil x={500 - 20} y={Y - 3} hossz={44} szog={-60} cimke="F₁" cimkeEltolas={[-14, -4]} />
+          <TeherNyil x={500 + 40} y={Y - 3} hossz={44} szog={-90} cimke="F₂" cimkeEltolas={[6, -2]} />
         </>,
-        "két görgő: ΣFₓ-ben nincs ismeretlen",
+        ["két görgő:", "ΣFₓ-ben nincs ismeretlen"],
         "nincs megoldás",
       )}
     </svg>
@@ -195,7 +198,7 @@ export function AbraEgyszeru() {
       </g>
       {/* d) befogott konzol */}
       <g>
-        <Betu x={500} y={40}>d)</Betu>
+        <Betu x={548} y={40}>d)</Betu>
         <Befogas x={512} y={70} irany="bal" hossz={44} />
         <Tarto x1={512} y1={70} x2={590} y2={70} />
         <TamaszCimke x={526} y={104}>A</TamaszCimke>
@@ -260,11 +263,11 @@ export function AbraTulhatarozott() {
         <TamaszCimke x={300} y={112}>A</TamaszCimke>
         <TamaszCimke x={470} y={134}>B</TamaszCimke>
         <Mozgas x={300} y={120} tipus="forgas" r={22} />
-        <Jelveny x={410} y={44} szoveg="2 < 3 · forog a metszéspont körül" szin={BORDO} w={170} />
+        <Jelveny x={414} y={44} szoveg="2 < 3 · forog a metszéspont körül" szin={BORDO} w={170} />
       </g>
       {/* d) egy görgő */}
       <g>
-        <Betu x={500} y={40}>d)</Betu>
+        <Betu x={548} y={40}>d)</Betu>
         <Tarto x1={512} y1={80} x2={590} y2={80} />
         <Gorgo x={520} y={80} meret={12} />
         <Mozgas x={555} y={64} tipus="vizszintes" r={18} />

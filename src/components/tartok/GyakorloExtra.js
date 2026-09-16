@@ -71,6 +71,8 @@ export function TartoRajz({ xMin = 0, xMax, tamaszok = [], erok = [], megoszlok 
   const jellegzetes = new Set([xMin, xMax]);
 
   const elemek = [];
+  const feliratDobozok = []; // a már elhelyezett feliratok téglalapjai
+  const metszi = (a, b) => a.x1 < b.x2 && b.x1 < a.x2 && a.y1 < b.y2 && b.y1 < a.y2;
   tamaszok.forEach((t, i) => {
     jellegzetes.add(t.x);
     const x = kx(t.x);
@@ -93,6 +95,10 @@ export function TartoRajz({ xMin = 0, xMax, tamaszok = [], erok = [], megoszlok 
           )}
         </g>,
       );
+      if (t.cimke) {
+        const lx = x + 0.68 * (x2 - x) + 8, ly = Y + 0.68 * (y2 - Y) + (t.yVeg > 0 ? 10 : -6);
+        feliratDobozok.push({ x1: lx, x2: lx + 7 * t.cimke.length, y1: ly - 13, y2: ly + 3 });
+      }
     }
     if (t.cimke && t.tipus !== "rud") elemek.push(<TamaszCimke key={`tc${i}`} x={x + (t.tipus === "befogas" ? 14 : 0)} y={Y + 44}>{t.cimke}</TamaszCimke>);
   });
@@ -101,7 +107,7 @@ export function TartoRajz({ xMin = 0, xMax, tamaszok = [], erok = [], megoszlok 
   const cimkeHely = (m) => {
     const w = m.x2 - m.x1;
     const jeloltek = [m.x1 + 0.5 * w, m.x1 + 0.2 * w, m.x2 - 0.2 * w];
-    const tav = (x) => Math.min(Infinity, ...erok.map((e) => Math.abs(e.x - x)), ...nyomatekok.map((n) => Math.abs(n.x - x)));
+    const tav = (x) => Math.min(Infinity, ...erok.map((e) => Math.abs(e.x - x)), ...nyomatekok.map((n) => Math.abs(n.x - x)), ...pontok.filter((p) => (p.dy ?? -8) < 0).map((p) => Math.abs(p.x - x)));
     return jeloltek.reduce((legjobb, x) => (tav(x) > tav(legjobb) + 1e-9 ? x : legjobb), jeloltek[0]);
   };
   megoszlok.forEach((m, i) => {
@@ -124,7 +130,8 @@ export function TartoRajz({ xMin = 0, xMax, tamaszok = [], erok = [], megoszlok 
     jellegzetes.add(e.x);
     const r = e.szog * FOK;
     let h = eroHossz(e.F);
-    if (Math.abs(Math.cos(r)) < 1e-6) {
+    const fuggoleges = Math.abs(Math.cos(r)) < 1e-6;
+    if (fuggoleges) {
       // függőleges erő: ha megoszló teher fölé esik, a nyíl a teher tetejéről indul; a szomszédos feliratok ne fedjék egymást
       const alatta = megoszlok.find((m) => e.x >= m.x1 - 1e-9 && e.x <= m.x2 + 1e-9);
       h = (alatta ? alatta.p * leptek + 3 : 0) + 50 + (fuggSzam % 2) * 28;
@@ -133,14 +140,32 @@ export function TartoRajz({ xMin = 0, xMax, tamaszok = [], erok = [], megoszlok 
       const alatta = megoszlok.find((m) => e.x >= m.x1 - 1e-9 && e.x <= m.x2 + 1e-9);
       if (alatta && Math.abs(Math.sin(r)) > 0.3) h = Math.max(h, (alatta.p * leptek + 3 + 36) / Math.abs(Math.sin(r)));
     }
-    const x1 = kx(e.x) - h * Math.cos(r);
-    const y1 = Y + h * Math.sin(r);
-    fent = Math.min(fent, y1 - 24);
-    lent = Math.max(lent, y1 + 24);
-    const fuggoleges = Math.abs(Math.cos(r)) < 1e-6;
     const jobbra = Math.cos(r) > 0;
     const szeles = 6.4 * (e.cimke?.length ?? 4);
-    const eltolas = fuggoleges ? [6, -4] : jobbra || x1 + 8 + szeles > 596 ? [-4 - szeles, -4] : [8, -4];
+    let x1, y1, eltolas, doboz;
+    const szamol = () => {
+      x1 = kx(e.x) - h * Math.cos(r);
+      y1 = Y + h * Math.sin(r);
+      eltolas = fuggoleges ? [6, -4] : jobbra || x1 + 8 + szeles > 596 ? [-4 - szeles, -4] : [8, -4];
+      doboz = { x1: x1 + eltolas[0], x2: x1 + eltolas[0] + szeles, y1: y1 + eltolas[1] - 13, y2: y1 + eltolas[1] + 3 };
+    };
+    szamol();
+    // ha a felirat egy korábbi feliratra esne: függőleges nyílnál hosszabb nyíl, ferdénél a felirat a másik oldalra
+    for (let k = 0; fuggoleges && k < 3 && feliratDobozok.some((d) => metszi(d, doboz)); k++) {
+      h += 28;
+      szamol();
+    }
+    if (!fuggoleges && feliratDobozok.some((d) => metszi(d, doboz))) {
+      const masik = eltolas[0] < 0 ? [8, -4] : [-4 - szeles, -4];
+      const x1m = x1 + masik[0];
+      if (x1m > 4 && x1m + szeles < 596) {
+        eltolas = masik;
+        doboz = { x1: x1 + eltolas[0], x2: x1 + eltolas[0] + szeles, y1: y1 + eltolas[1] - 13, y2: y1 + eltolas[1] + 3 };
+      }
+    }
+    feliratDobozok.push(doboz);
+    fent = Math.min(fent, y1 - 24);
+    lent = Math.max(lent, y1 + 24);
     elemek.push(<TeherNyil key={`e${i}`} x={kx(e.x)} y={Y - (Math.sin(r) < 0 ? 3 : -3)} hossz={h} szog={e.szog} cimke={e.cimke} cimkeEltolas={eltolas} />);
   });
   nyomatekok.forEach((n, i) => {

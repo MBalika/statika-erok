@@ -144,7 +144,7 @@ export const GYF7 = {
 };
 
 /** Két szerkezet egymás mellett, jelvénnyel (a GYF-ek „jó / rossz” párjaihoz). */
-export function ParosAbra({ bal, jobb, balCim, jobbCim, magassag = 250, reakciokBal, reakciokJobb, cimkekBal, cimkekJobb, meretek }) {
+export function ParosAbra({ bal, jobb, balCim, jobbCim, magassag = 250, reakciokBal, reakciokJobb, cimkekBal, cimkekJobb, meretek, margoFel = 64 }) {
   const it = (sz) => kinematika(sz);
   const ib = it(bal);
   const ij = it(jobb);
@@ -153,8 +153,8 @@ export function ParosAbra({ bal, jobb, balCim, jobbCim, magassag = 250, reakciok
   return (
     <svg viewBox={`0 0 600 ${magassag}`} className="abra w-full h-auto select-none">
       <TartoHegyek />
-      <SzerkezetRajz szerkezet={bal} csoport eltolas={[0, 0]} szelesseg={300} magassag={magassag} margo={{ bal: 40, jobb: 30, fel: 64, le: 78 }} tamaszMeret={11} reakciok={reakciokBal} cimkek={cimkekBal} />
-      <SzerkezetRajz szerkezet={jobb} csoport eltolas={[300, 0]} szelesseg={300} magassag={magassag} margo={{ bal: 30, jobb: 40, fel: 64, le: 78 }} tamaszMeret={11} reakciok={reakciokJobb} cimkek={cimkekJobb} />
+      <SzerkezetRajz szerkezet={bal} csoport eltolas={[0, 0]} szelesseg={300} magassag={magassag} margo={{ bal: 40, jobb: 30, fel: margoFel, le: 78 }} tamaszMeret={11} reakciok={reakciokBal} cimkek={cimkekBal} />
+      <SzerkezetRajz szerkezet={jobb} csoport eltolas={[300, 0]} szelesseg={300} magassag={magassag} margo={{ bal: 30, jobb: 40, fel: margoFel, le: 78 }} tamaszMeret={11} reakciok={reakciokJobb} cimkek={cimkekJobb} />
       <line x1="300" y1="16" x2="300" y2={magassag - 12} stroke="#cbd5e1" strokeWidth="1" strokeDasharray="4 4" />
       {balCim && (
         <text x="150" y="20" textAnchor="middle" fontSize="12" fontWeight="700" style={{ fill: "#1d3c48" }}>
@@ -240,7 +240,8 @@ export function AbraGyf6() {
       jobb={GYF6_JO}
       balCim="a) mindhárom rúd az A ponton át"
       jobbCim="b) a 3. rúd a D pontba vezet"
-      magassag={260}
+      magassag={290}
+      margoFel={110}
       cimkekBal={["1", "2", "3"]}
       cimkekJobb={["1", "2", "3"]}
     />
