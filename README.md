@@ -236,6 +236,20 @@ oldalhoz elég ezeket átírni.
 - `/utvonal`: `lib/utvonal.js` (HETEK, VIZSGA_TIPUSOK), `components/Utvonal.js` (hét-választó, idővonal, haladás).
 - A zh-szimulátor öt feladatot ad (a tartók modulból is), és kirajzolja a feladat ábráját.
 
+## 9. kör: 6–7. modul, hibanapló
+
+- **6. modul – Összetett tartók** (`/osszetett`, `src/components/osszetett/`): belső csukló, elkülönítés, Gerber, háromcsuklós,
+  terhelt csukló, függesztőmű; szétszedő animáció, sorrend-választó, háromcsuklós teher-vándoroltató, Gerber csuklóhely-csúszka;
+  6 GYF (3 filmmel), kalkulátor levezetéssel (a `lib/tarto/levezetes` lépéseivel), 9 generátor, „Szedd szét és számold” játék, 13 kvíz, 6 hibakereső.
+- **7. modul – Rácsos tartók** (`/racsos`, `src/components/racsos/`, saját megoldó `src/lib/racsos.js`: csomóponti módszer,
+  vakrudak, hármas/négyes átmetszés, 593 ellenőrzés a merevségi motorral): erőáramlás, csomóponti hullám, átmetsző vonal húzása;
+  7 GYF (3 filmmel), kalkulátor 7 tartótípussal, 9 generátor, vakrúd-vadász játék, 15 kvíz, 6 hibakereső.
+- **Hibanapló** (`/hibanaplo`, `src/lib/hibanaplo.js`, `components/Hibanaplo.js`): a gyakorló dobozok, kvízek, hibakeresők és a
+  játékok rögzítik a rontásokat (localStorage `statika-hibanaplo`), az oldal modulonként listázza és „Ismételd a hibáidat” módban
+  újra felteszi őket (két sikeres ismétlés után javítva); `src/lib/generatorok.js` a közös generátor/kvíz/hibakereső-jegyzék.
+- Bekötések: útvonal (5–7. hét, vizsgatípusok), zh-szimulátor 7 feladattal (30/45/60 perc), puska 7–8. lap, a 8–10. modul
+  „hamarosan” oldalai, fejléc: a modulok számozott gombokkal (csak az aktív felirata látszik), `fokszamMerleg` testszámlálás javítva.
+
 ## 7–8. kör: igénybevétel-számító motor és levezetés
 
 - 7. kör: `src/lib/tarto/` (lásd lent), `/tartokalkulator` oldal a paraméteres sablonokkal, metszet-csúszkával.

@@ -1,5 +1,7 @@
 import { M, MB } from "@/components/ui/Keplet";
 import NyomtatasGomb from "@/components/NyomtatasGomb";
+import PuskaOsszetett from "@/components/osszetett/Puska";
+import PuskaRacsos from "@/components/racsos/Puska";
 
 export const metadata = {
   title: "Puska",
@@ -14,14 +16,14 @@ function Lap({ szam, cim, gyerekek }) {
         <h2 className="text-xl font-bold text-petrol-900">{cim}</h2>
         <span className="ml-auto text-[11px] tracking-[0.16em] text-petrol-400 uppercase">Statika · puska</span>
       </div>
-      <div className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2">{gyerekek}</div>
+      <div className="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2 [&>*]:min-w-0">{gyerekek}</div>
     </section>
   );
 }
 
 function Doboz({ cim, children, szeles = false }) {
   return (
-    <div className={`rounded-xl border border-petrol-100 bg-petrol-50/50 px-3.5 py-2.5 print:border-gray-300 print:bg-white ${szeles ? "sm:col-span-2" : ""}`}>
+    <div className={`min-w-0 overflow-hidden rounded-xl border border-petrol-100 bg-petrol-50/50 px-3.5 py-2.5 print:border-gray-300 print:bg-white ${szeles ? "sm:col-span-2" : ""}`}>
       <p className="text-[10.5px] font-bold tracking-[0.14em] text-naracs-700 uppercase">{cim}</p>
       <div className="proza szamok mt-1 text-[13px] leading-snug text-petrol-800 [&_.katex-display]:my-1">{children}</div>
     </div>
@@ -37,9 +39,9 @@ export default function PuskaOldal() {
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-naracs-500 text-[15px] font-bold text-white">✎</span>
             <span className="text-[11px] font-semibold tracking-[0.2em] text-petrol-300 uppercase">Összefoglaló</span>
           </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Puska — hat lap</h1>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Puska — nyolc lap</h1>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-petrol-200">
-            A legfontosabb képletek, szabályok és a tipikus hibák, modulonként egy oldalon, plusz egy lap a tankönyv nyelvéről (kijelentések, egyenletek írásmódja, szótár). Nyomtasd ki, vagy mentsd PDF-be — de előbb próbáld
+            A legfontosabb képletek, szabályok és a tipikus hibák, modulonként egy oldalon (az összetett és a rácsos tartókkal együtt), plusz egy lap a tankönyv nyelvéről (kijelentések, egyenletek írásmódja, szótár). Nyomtasd ki, vagy mentsd PDF-be — de előbb próbáld
             meg fejből leírni, aztán hasonlítsd össze.
           </p>
           <div className="mt-5">
@@ -277,6 +279,9 @@ export default function PuskaOldal() {
             </>
           }
         />
+
+        <Lap szam={7} cim="Összetett tartók" gyerekek={<PuskaOsszetett Doboz={Doboz} />} />
+        <Lap szam={8} cim="Rácsos tartók" gyerekek={<PuskaRacsos Doboz={Doboz} />} />
       </div>
     </>
   );

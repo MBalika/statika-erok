@@ -3,10 +3,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { kvizEredmeny } from "@/lib/haladas";
+import { hibaRogzit, hibaMegoldvaKulcs, jsxSzoveg, rovidSzoveg } from "@/lib/hibanaplo";
 
 /**
  * Fogalmi kvíz: feleletválasztós kérdések azonnali magyarázattal.
  *   kerdesek: [{ k: JSX|string, v: [JSX|string ×4], helyes: index, magyarazat: JSX|string }]
+ *   db       – opcionális: ennyi véletlen kérdést tesz fel a listából
+ *
+ * Hibanapló: rossz válasznál a kérdés (szövege alapján) a naplóba kerül, helyes
+ * válasznál a nyitott bejegyzés egy „javítást” kap.
+ *   modul    – opcionális útvonal (alapból usePathname()); a hibanapló-oldal adja meg
+ *   haladas  – false esetén a kvíz eredménye nem kerül a haladás-nyilvántartásba
+ *              (a hibanapló ismétlő módja egy-egy kérdést tesz fel, az nem „kvízeredmény”)
+ *   onValasz – opcionális visszahívás: (helyesE: boolean, kerdes) => void
  */
 function kever(tomb) {
   const t = [...tomb];
@@ -17,7 +26,7 @@ function kever(tomb) {
   return t;
 }
 
-export default function Kviz({ cim = "Fogalmi kvíz", leiras, kerdesek, db }) {
+export default function Kviz({ cim = "Fogalmi kvíz", leiras, kerdesek, db, modul, haladas = true, onValasz }) {
   const [sor, setSor] = useState(null); // kikevert kérdések, kikevert válaszokkal
   const [i, setI] = useState(0);
   const [valasz, setValasz] = useState(null);
@@ -44,18 +53,41 @@ export default function Kviz({ cim = "Fogalmi kvíz", leiras, kerdesek, db }) {
   }, []);
 
   const utvonal = usePathname();
+  const modulUt = modul || utvonal;
   const aktualis = sor ? sor[i] : null;
   const betuk = ["A", "B", "C", "D"];
 
   const valaszt = (k) => {
     if (valasz !== null) return;
     setValasz(k);
-    if (k === aktualis.helyes) setPont((p) => p + 1);
+    const helyesE = k === aktualis.helyes;
+    if (helyesE) setPont((p) => p + 1);
+    const azonosito = jsxSzoveg(aktualis.k).replace(/\s+/g, " ").trim();
+    if (azonosito) {
+      if (helyesE) {
+        hibaMegoldvaKulcs({ tipus: "kviz", modul: modulUt, azonosito });
+      } else {
+        hibaRogzit({
+          tipus: "kviz",
+          modul: modulUt,
+          cim: rovidSzoveg(aktualis.k),
+          azonosito,
+          reszlet: {
+            k: azonosito,
+            v: aktualis.v.map((o) => jsxSzoveg(o).replace(/\s+/g, " ").trim()),
+            helyes: aktualis.helyes,
+            valasz: k,
+            magyarazat: jsxSzoveg(aktualis.magyarazat).replace(/\s+/g, " ").trim(),
+          },
+        });
+      }
+    }
+    if (onValasz) onValasz(helyesE, aktualis);
   };
   const tovabb = () => {
     if (i + 1 >= sor.length) {
       setKesz(true);
-      kvizEredmeny(utvonal, pont, sor.length);
+      if (haladas) kvizEredmeny(modulUt, pont, sor.length);
     }
     else {
       setI(i + 1);

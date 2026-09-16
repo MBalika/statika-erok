@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Konfetti from "@/components/ui/Konfetti";
 import { usePathname } from "next/navigation";
 import { feladatMegoldva } from "@/lib/haladas";
+import { hibaRogzit, hibaMegoldvaKulcs } from "@/lib/hibanaplo";
 
 /**
  * Általános gyakorlófeladat-motor.
@@ -16,12 +17,21 @@ import { feladatMegoldva } from "@/lib/haladas";
  *   mezok:   [{ id, cimke, egyseg, helyes, tures?, tizedes? }]
  *   megoldas: JSX – a teljes levezetés
  * }
+ *
+ * Hibanapló: rossz ellenőrzésnél a feladat típusa (a `cim`, ill. az `azonosito`)
+ * bekerül a naplóba; hibátlan megoldásnál a nyitott bejegyzés egy „javítást” kap.
+ *   azonosito  – opcionális, alapból a `cim` (ezzel keresi vissza a hibanapló a generátort)
+ *   modul      – opcionális útvonal (alapból usePathname()); a hibanapló-oldal adja meg
+ *   onEredmeny – opcionális visszahívás: (hibatlan: boolean) => void
  */
 export default function GyakorloDoboz({
   cim,
   leiras,
   generator,
   oszlopok = 2,
+  azonosito,
+  modul,
+  onEredmeny,
 }) {
   const [feladat, setFeladat] = useState(null);
   const [valaszok, setValaszok] = useState({});
@@ -33,6 +43,8 @@ export default function GyakorloDoboz({
   const [konfetti, setKonfetti] = useState(false);
   const konfettiVege = useCallback(() => setKonfetti(false), []);
   const utvonal = usePathname();
+  const modulUt = modul || utvonal;
+  const naploKulcs = azonosito || cim;
 
   const ujFeladat = useCallback(() => {
     setFeladat(generator());
@@ -58,7 +70,26 @@ export default function GyakorloDoboz({
     if (ellenorizve) return;
     setEllenorizve(true);
     const mind = feladat.mezok.every((m) => jo(m, valaszok[m.id]));
-    if (mind) feladatMegoldva(utvonal);
+    if (mind) {
+      feladatMegoldva(modulUt);
+      if (naploKulcs) hibaMegoldvaKulcs({ tipus: "feladat", modul: modulUt, azonosito: naploKulcs });
+    } else if (naploKulcs) {
+      hibaRogzit({
+        tipus: "feladat",
+        modul: modulUt,
+        cim,
+        azonosito: naploKulcs,
+        reszlet: {
+          mezok: feladat.mezok.map((m) => ({
+            cimke: m.cimke,
+            egyseg: m.egyseg || "",
+            helyes: kerekit(m.helyes, m.tizedes ?? 2),
+            valasz: String(valaszok[m.id] ?? ""),
+          })),
+        },
+      });
+    }
+    if (onEredmeny) onEredmeny(mind);
     setStatisztika((s) => ({ jo: s.jo + (mind ? 1 : 0), osszes: s.osszes + 1 }));
     setSorozat((n) => {
       const uj = mind ? n + 1 : 0;

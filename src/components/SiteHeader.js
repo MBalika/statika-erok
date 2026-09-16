@@ -122,6 +122,7 @@ export default function SiteHeader() {
               >
                 <Link
                   href={m.slug}
+                  title={m.cim}
                   className={`flex h-12 items-center gap-1.5 border-b-2 px-2 text-[13.5px] font-medium whitespace-nowrap transition 2xl:px-3 ${
                     aktiv
                       ? "border-naracs-500 text-petrol-900"
@@ -139,19 +140,25 @@ export default function SiteHeader() {
                       {m.szam}
                     </span>
                   )}
-                  <span className="hidden 2xl:inline">{m.rovid}</span>
-                  <span className="2xl:hidden">{m.menu ?? m.rovid}</span>
-                  {!m.kesz && (
+                  {/* tíz modulnál csak az aktív (és a Bevezetés) felirata fér ki; a többi számmal, a nevük a lenyílóban */}
+                  {(aktiv || m.szam === null) && (
+                    <span className="max-w-[9rem] truncate">{m.menu ?? m.rovid}</span>
+                  )}
+                  {!m.kesz && aktiv && (
                     <span className="rounded bg-petrol-100 px-1.5 py-0.5 text-[9.5px] font-semibold tracking-wide text-petrol-500 uppercase">
                       hamarosan
                     </span>
                   )}
-                  <Nyilacska nyitva={nyitottFul === m.slug} />
+                  {(aktiv || m.szam === null) && <Nyilacska nyitva={nyitottFul === m.slug} />}
                 </Link>
 
                 {nyitottFul === m.slug && (
                   <div className="absolute top-full left-0 w-72 rounded-b-xl border border-t-0 border-[color:var(--keret)] bg-white p-2 shadow-xl shadow-petrol-900/5">
-                    <p className="px-2.5 pt-1.5 pb-2 text-[11.5px] leading-snug text-petrol-500">
+                    <p className="px-2.5 pt-1.5 text-[13px] font-semibold text-petrol-900">
+                      {m.szam !== null ? `${m.szam}. ` : ""}{m.cim}
+                      {!m.kesz && <span className="ml-2 rounded bg-petrol-100 px-1.5 py-0.5 text-[9.5px] font-semibold tracking-wide text-petrol-500 uppercase">hamarosan</span>}
+                    </p>
+                    <p className="px-2.5 pt-1 pb-2 text-[11.5px] leading-snug text-petrol-500">
                       {m.leiras}
                     </p>
                     {m.szakaszok.map((sz) => (

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Konfetti from "@/components/ui/Konfetti";
 import { haladasOlvas, jatekEredmeny } from "@/lib/haladas";
+import { hibaRogzit, hibaMegoldvaKulcs } from "@/lib/hibanaplo";
 
 /**
  * Közös játék-keret: fejléc, pontszám, körszámláló, legjobb eredmény, konfetti.
@@ -15,7 +16,11 @@ import { haladasOlvas, jatekEredmeny } from "@/lib/haladas";
  *   onUj          – „Új játék” gomb
  *   uzenet        – rövid visszajelzés-sáv (JSX), pl. „2,3 mm-re voltál – szép!”
  *   children      – maga a játéktér
+ *
+ * Hibanapló: ha a kör végén (kesz) a pont < 60, a játék (a címe alapján) a naplóba kerül;
+ * 60 pont fölött a nyitott bejegyzés egy „javítást” kap.
  */
+const JATEK_HATAR = 60;
 export default function JatekKeret({ cim, leiras, pont = 0, kor = 1, osszKor = 5, kesz = false, onUj, uzenet, children }) {
   const utvonal = usePathname();
   const [legjobb, setLegjobb] = useState(0);
@@ -31,6 +36,13 @@ export default function JatekKeret({ cim, leiras, pont = 0, kor = 1, osszKor = 5
     jatekEredmeny(utvonal, pont);
     setLegjobb((l) => Math.max(l, Math.round(pont)));
     if (pont >= 80) setKonfetti(true);
+    if (cim && utvonal) {
+      if (pont < JATEK_HATAR) {
+        hibaRogzit({ tipus: "jatek", modul: utvonal, cim, azonosito: cim, reszlet: Math.round(pont) });
+      } else {
+        hibaMegoldvaKulcs({ tipus: "jatek", modul: utvonal, azonosito: cim });
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [kesz]);
 

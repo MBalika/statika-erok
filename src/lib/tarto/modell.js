@@ -176,23 +176,29 @@ export function normalizal(be) {
  */
 export function fokszamMerleg(m) {
   const tamaszFok = m.tamaszok.reduce((s, t) => s + t.fokszam, 0);
-  // a szerkezet merev testekre bontása: minden rúd egy test, a merev
-  // (nem csuklós) kapcsolatok összekötik őket
-  const szuloe = m.csomopontok.map((_, i) => i);
-  const gyoker = (i) => (szuloe[i] === i ? i : (szuloe[i] = gyoker(szuloe[i])));
-  const egyesit = (i, j) => { const a = gyoker(i), b = gyoker(j); if (a !== b) szuloe[a] = b; };
-  // egy rúd merev kapcsolatai összekötik a végcsomópontokat egy testbe
-  for (const r of m.rudak) if (!r.csukloA && !r.csukloB) egyesit(r.ia, r.ib);
-  const testek = new Set();
-  for (const r of m.rudak) testek.add(r.csukloA || r.csukloB ? `r${r.index}` : `t${gyoker(r.ia)}`);
+  // merev testek: a rudak, amelyeket egy csomópontban merev (nem csuklós) végük köt össze
+  const szulo = m.rudak.map((_, i) => i);
+  const gyoker = (i) => (szulo[i] === i ? i : (szulo[i] = gyoker(szulo[i])));
+  const egyesit = (i, j) => { const a = gyoker(i), b = gyoker(j); if (a !== b) szulo[a] = b; };
+  const merevVegek = m.csomopontok.map(() => []);
+  const csuklosVegek = [];
+  for (const r of m.rudak) {
+    if (r.csukloA) csuklosVegek.push({ rud: r.index, cs: r.ia }); else merevVegek[r.ia].push(r.index);
+    if (r.csukloB) csuklosVegek.push({ rud: r.index, cs: r.ib }); else merevVegek[r.ib].push(r.index);
+  }
+  merevVegek.forEach((lista) => { for (let i = 1; i < lista.length; i++) egyesit(lista[0], lista[i]); });
+  // egy csuklós rúdvég kapcsolati erőpárt (2 ismeretlen) jelent, ha a csomópontot
+  // egy másik test „birtokolja”; ha ott csak csuklós végek vannak, az első a gazda
+  const gazda = m.csomopontok.map((_, cs) => merevVegek[cs][0] ?? null);
+  let kapcsolatok = 0;
+  for (const v of csuklosVegek) {
+    if (gazda[v.cs] === null) { gazda[v.cs] = v.rud; continue; }
+    if (gyoker(gazda[v.cs]) === gyoker(v.rud)) continue;
+    kapcsolatok += 2;
+  }
+  const testek = new Set(m.rudak.map((r) => gyoker(r.index)));
   const testSzam = testek.size || 1;
   const egyenletek = 3 * testSzam;
-  // ismeretlenek: támaszreakciók + a testek közötti kapcsolati erők
-  let kapcsolatok = 0;
-  for (const r of m.rudak) {
-    if (r.csukloA) kapcsolatok += 2;
-    if (r.csukloB) kapcsolatok += 2;
-  }
   const ismeretlenek = tamaszFok + kapcsolatok;
   return { tamaszFok, testSzam, egyenletek, ismeretlenek, fok: ismeretlenek - egyenletek };
 }

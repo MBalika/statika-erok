@@ -114,6 +114,91 @@ export const modulok = [
       { id: "gyakorlas", cim: "Gyakorlás" },
     ],
   },
+  {
+    slug: "/osszetett",
+    szam: 6,
+    cim: "Összetett tartók",
+    rovid: "Összetett tartók",
+    menu: "Összetett",
+    leiras:
+      "Belső csukló és elkülönítés, Gerber-tartó, háromcsuklós tartó, csuklón terhelt szerkezet, függesztőmű — a megoldás sorrendje.",
+    ikon: "osszetett",
+    kesz: true,
+    szakaszok: [
+      { id: "elmelet", cim: "Elmélet" },
+      { id: "peldak", cim: "Kidolgozott feladatok" },
+      { id: "kalkulator", cim: "Kalkulátorok" },
+      { id: "gyakorlas", cim: "Gyakorlás" },
+    ],
+  },
+  {
+    slug: "/racsos",
+    szam: 7,
+    cim: "Rácsos tartók",
+    rovid: "Rácsos tartók",
+    menu: "Rácsos",
+    leiras:
+      "Csomóponti módszer, vakrudak, hármas átmetszés, mellékrácsozás — a rúderők számítása és az erőáramlás.",
+    ikon: "racsos",
+    kesz: true,
+    szakaszok: [
+      { id: "elmelet", cim: "Elmélet" },
+      { id: "peldak", cim: "Kidolgozott feladatok" },
+      { id: "kalkulator", cim: "Kalkulátorok" },
+      { id: "gyakorlas", cim: "Gyakorlás" },
+    ],
+  },
+  {
+    slug: "/hatarozottsag",
+    szam: 8,
+    cim: "Statikai határozottság",
+    rovid: "Határozottság",
+    menu: "Határozottság",
+    leiras:
+      "Mikor oldható meg a feladat egyensúlyi egyenletekkel: ismeretlenek és egyenletek, kritikus elrendezés, mechanizmus és határozatlan tartó.",
+    ikon: "hatarozottsag",
+    kesz: false,
+    szakaszok: [
+      { id: "elmelet", cim: "Elmélet" },
+      { id: "peldak", cim: "Kidolgozott feladatok" },
+      { id: "kalkulator", cim: "Kalkulátorok" },
+      { id: "gyakorlas", cim: "Gyakorlás" },
+    ],
+  },
+  {
+    slug: "/igenybevetel",
+    szam: 9,
+    cim: "Igénybevételi ábrák",
+    rovid: "Igénybevételi ábrák",
+    menu: "Igénybevétel",
+    leiras:
+      "Normálerő, nyíróerő, hajlítónyomaték: számítás egy keresztmetszetben, függvények és ábrák, differenciális összefüggések, ferde és tört tengelyű tartó, Gerber-tartó.",
+    ikon: "igenybevetel",
+    kesz: false,
+    szakaszok: [
+      { id: "elmelet", cim: "Elmélet" },
+      { id: "peldak", cim: "Kidolgozott feladatok" },
+      { id: "kalkulator", cim: "Kalkulátorok" },
+      { id: "gyakorlas", cim: "Gyakorlás" },
+    ],
+  },
+  {
+    slug: "/terbeli",
+    szam: 10,
+    cim: "Térbeli tartók",
+    rovid: "Térbeli tartók",
+    menu: "Térbeli",
+    leiras:
+      "Térbeli kényszerek és hat egyensúlyi egyenlet, háromlábú bakállvány, befogott térbeli konzol, térbeli rácsos tartó, térbeli igénybevételek.",
+    ikon: "terbeli",
+    kesz: false,
+    szakaszok: [
+      { id: "elmelet", cim: "Elmélet" },
+      { id: "peldak", cim: "Kidolgozott feladatok" },
+      { id: "kalkulator", cim: "Kalkulátorok" },
+      { id: "gyakorlas", cim: "Gyakorlás" },
+    ],
+  },
 ];
 
 /** Kiegészítő oldalak – a modulok mellett, a navigáció jobb szélén. */
@@ -131,10 +216,16 @@ export const extraOldalak = [
     leiras: "Igénybevételi ábrák tetszőleges tartóra: N, V, M, reakciók, metszetértékek.",
   },
   {
+    slug: "/hibanaplo",
+    rovid: "Hibanapló",
+    menu: "Hibák",
+    leiras: "Amit elrontottál, itt gyűlik — ismételd, amíg megy.",
+  },
+  {
     slug: "/zh",
     rovid: "Zh-szimulátor",
     menu: "Zh",
-    leiras: "Öt véletlen feladat órával, segítség nélkül – mint a zárthelyin.",
+    leiras: "Hét véletlen feladat órával, segítség nélkül – mint a zárthelyin.",
   },
   {
     slug: "/puska",

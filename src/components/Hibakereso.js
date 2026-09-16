@@ -1,15 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { hibaRogzit, hibaMegoldvaKulcs, jsxSzoveg } from "@/lib/hibanaplo";
 
 /**
  * Hibakereső: egy kész, de hibás megoldás lépései; a tanuló megjelöli, melyik lépésben a hiba.
  *   feladatok: [{ cim, feladat: JSX, lepesek: [{ szoveg: JSX, hibas?: true, javitas?: JSX }], tanulsag?: JSX }]
+ *
+ * Hibanapló: rossz tipp esetén a feladat (a `cim`-e alapján) a naplóba kerül, elsőre
+ * eltalált hiba esetén a nyitott bejegyzés egy „javítást” kap.
+ *   modul      – opcionális útvonal (alapból usePathname()); a hibanapló-oldal adja meg
+ *   onEredmeny – opcionális visszahívás a megtaláláskor: (elsore: boolean, feladat) => void
  */
-export default function Hibakereso({ feladatok, cim = "Hibakereső" }) {
+export default function Hibakereso({ feladatok, cim = "Hibakereső", modul, onEredmeny }) {
   const [i, setI] = useState(0);
   const [tipp, setTipp] = useState(null);
   const [rossz, setRossz] = useState([]);
+  const utvonal = usePathname();
+  const modulUt = modul || utvonal;
   const f = feladatok[i];
   const hibasIdx = f.lepesek.findIndex((l) => l.hibas);
   const megvan = tipp === hibasIdx;
@@ -17,7 +26,30 @@ export default function Hibakereso({ feladatok, cim = "Hibakereső" }) {
   const valaszt = (k) => {
     if (megvan) return;
     setTipp(k);
-    if (k !== hibasIdx) setRossz((r) => [...r, k]);
+    if (k !== hibasIdx) {
+      setRossz((r) => [...r, k]);
+      hibaRogzit({
+        tipus: "hibakereso",
+        modul: modulUt,
+        cim: f.cim,
+        azonosito: f.cim,
+        reszlet: {
+          cim: f.cim,
+          feladat: jsxSzoveg(f.feladat),
+          lepesek: f.lepesek.map((l) => ({
+            szoveg: jsxSzoveg(l.szoveg),
+            hibas: !!l.hibas,
+            javitas: l.javitas ? jsxSzoveg(l.javitas) : "",
+          })),
+          tanulsag: f.tanulsag ? jsxSzoveg(f.tanulsag) : "",
+          tipp: k,
+        },
+      });
+    } else {
+      const elsore = rossz.length === 0;
+      if (elsore) hibaMegoldvaKulcs({ tipus: "hibakereso", modul: modulUt, azonosito: f.cim });
+      if (onEredmeny) onEredmeny(elsore, f);
+    }
   };
   const tovabb = () => {
     setI((i + 1) % feladatok.length);

@@ -6,6 +6,7 @@ import { JobbkezFelfedezo3D } from "@/components/harom/Film3D";
 import Kerekito from "@/components/abrak/Kerekito";
 import { TomegSulyAbra, RadianAbra } from "@/components/abrak/BevezetesAbrak";
 import HaladasKartyak, { HaladasJelzo } from "@/components/HaladasKartyak";
+import { HibanaploKartya } from "@/components/Hibanaplo";
 
 export const metadata = {
   title: "Erők és erőrendszerek – interaktív tananyag",
@@ -572,6 +573,9 @@ export default function Kezdolap() {
             ))}
         </div>
         <HaladasKartyak />
+        <div className="mt-4">
+          <HibanaploKartya />
+        </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {extraOldalak.map((o) => (
             <Link
