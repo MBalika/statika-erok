@@ -34,7 +34,7 @@ function CsomopontElkulonitve({ cx, cy, erok, cim, r = 44 }) {
             ) : (
               <line x1={cx} y1={cy} x2={x2} y2={y2} stroke={szin} strokeWidth="2.4" strokeLinecap="round" markerEnd={`url(#${hegy})`} />
             )}
-            <text x={x2 + ux * 12 + (e.dx ?? 0)} y={y2 - uy * 12 + (Math.abs(uy) < 0.3 ? -8 : 4) + (e.dy ?? 0)} textAnchor="middle" fontSize="11" fontStyle="italic" fontWeight="650" style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+            <text x={(Math.abs(uy) < 0.3 ? x2 - ux * 16 : x2 + ux * 12) + (e.dx ?? 0)} y={(Math.abs(uy) < 0.3 ? y2 - 9 : y2 - uy * 12 + 4) + (e.dy ?? 0)} textAnchor="middle" fontSize="11" fontStyle="italic" fontWeight="650" style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
               {e.cimke}
             </text>
           </g>
@@ -42,7 +42,7 @@ function CsomopontElkulonitve({ cx, cy, erok, cim, r = 44 }) {
       })}
       <circle cx={cx} cy={cy} r="4.5" fill="white" stroke="#0f172a" strokeWidth="1.8" />
       {cim && (
-        <text x={cx} y={cy - r - 18} textAnchor="middle" fontSize="12" fontWeight="700" style={{ fill: "#1d3c48" }}>
+        <text x={cx} y={cy - r - 14} textAnchor="middle" fontSize="12" fontWeight="700" style={{ fill: "#1d3c48" }}>
           {cim}
         </text>
       )}
@@ -76,13 +76,16 @@ export function AbraRacsosVaz() {
         <RacsosRajz modell={M61} szinez={false} meretek={false} szelesseg={600} magassag={210} margo={{ bal: 60, jobb: 60, fel: 40, le: 60 }} csoport />
       </g>
       <text x={12} y={240} fontSize="11" fontWeight="700" letterSpacing="1.5" style={{ fill: "#64748b" }}>
-        b) A CSUKLÓK ELKÜLÖNÍTÉSE (minden rúderő húzottnak felvéve, a csomópontból kifelé)
+        b) A CSUKLÓK ELKÜLÖNÍTÉSE
       </text>
-      <CsomopontElkulonitve cx={70} cy={345} cim="1" r={40} erok={[rud("1", "2"), rud("1", "3"), { ex: -1, ey: 0, cimke: "Aₓ", szin: LILA, hossz: 40 }, { ex: 0, ey: 1, cimke: "Aᵧ", szin: LILA, hossz: 40, dx: 14, dy: 24 }]} />
-      <CsomopontElkulonitve cx={195} cy={318} cim="2" r={40} erok={[rud("2", "1"), rud("2", "3"), rud("2", "4")]} />
-      <CsomopontElkulonitve cx={318} cy={345} cim="3" r={40} erok={[rud("3", "1"), rud("3", "2"), rud("3", "4"), rud("3", "5")]} />
-      <CsomopontElkulonitve cx={445} cy={345} cim="5" r={40} erok={[rud("5", "3"), rud("5", "4"), rud("5", "6"), rud("5", "7"), { ex: 0.5, ey: -0.866, cimke: "F", szin: NAR, hossz: 46, befele: false }]} />
-      <CsomopontElkulonitve cx={560} cy={345} cim="7" r={40} erok={[rud("7", "5"), rud("7", "6"), { ex: 0, ey: 1, cimke: "B", szin: LILA, hossz: 40, dx: 14, dy: 24 }]} />
+      <text x={12} y={256} fontSize="10.5" style={{ fill: "#64748b" }}>
+        minden rúderő húzottnak felvéve: a nyíl a csomópontból kifelé mutat
+      </text>
+      <CsomopontElkulonitve cx={62} cy={350} cim="1" r={50} erok={[rud("1", "2"), rud("1", "3"), { ex: -1, ey: 0, cimke: "Aₓ", szin: LILA, hossz: 40 }, { ex: 0, ey: 1, cimke: "Aᵧ", szin: LILA, hossz: 40, dx: 14, dy: 24 }]} />
+      <CsomopontElkulonitve cx={190} cy={338} cim="2" r={50} erok={[rud("2", "1"), rud("2", "3"), rud("2", "4")]} />
+      <CsomopontElkulonitve cx={318} cy={350} cim="3" r={50} erok={[rud("3", "1"), rud("3", "2"), rud("3", "4"), rud("3", "5")]} />
+      <CsomopontElkulonitve cx={448} cy={350} cim="5" r={50} erok={[rud("5", "3"), rud("5", "4"), rud("5", "6"), rud("5", "7"), { ex: 0.5, ey: -0.866, cimke: "F", szin: NAR, hossz: 46, befele: false }]} />
+      <CsomopontElkulonitve cx={568} cy={350} cim="7" r={50} erok={[rud("7", "5"), rud("7", "6"), { ex: 0, ey: 1, cimke: "B", szin: LILA, hossz: 40, dx: 14, dy: 24 }]} />
     </svg>
   );
 }
@@ -101,7 +104,7 @@ export function AbraElnevezesek() {
     </text>
   );
   return (
-    <svg viewBox="0 0 600 400" className="abra w-full h-auto">
+    <svg viewBox="-75 0 750 428" className="abra w-full h-auto">
       <TartoHegyek />
       <g>
         <RacsosRajz modell={M62} szinez={false} csomopontCimkek={false} szelesseg={600} magassag={200} margo={{ bal: 90, jobb: 90, fel: 42, le: 60 }} csoport />
@@ -124,8 +127,11 @@ export function AbraElnevezesek() {
         <line x1={44} y1={72} x2={120} y2={80} stroke="#64748b" strokeWidth="1" />
         <Cimke x={300} y={182}>a csomópontokba a csuklókat általában nem rajzoljuk be</Cimke>
       </g>
-      <text x={300} y={392} textAnchor="middle" fontSize="11" style={{ fill: "#64748b" }}>
-        Függőleges rúd: ha az egyik végén csak két, egy egyenesbe eső övrúd csatlakozik → összekötő rúd; különben oszlop.
+      <text x={300} y={400} textAnchor="middle" fontSize="11" style={{ fill: "#64748b" }}>
+        Függőleges rúd: ha az egyik végén csak két, egy egyenesbe eső övrúd csatlakozik → összekötő rúd;
+      </text>
+      <text x={300} y={416} textAnchor="middle" fontSize="11" style={{ fill: "#64748b" }}>
+        különben oszlop.
       </text>
     </svg>
   );

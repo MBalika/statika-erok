@@ -1,3 +1,4 @@
+import AbraIllesztes from "@/components/AbraIllesztes";
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
       <body className="flex min-h-full flex-col">
         <SiteHeader />
         <main className="flex-1">{children}</main>
+        <AbraIllesztes />
         <SiteFooter />
       </body>
     </html>
