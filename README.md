@@ -250,6 +250,18 @@ oldalhoz elég ezeket átírni.
 - Bekötések: útvonal (5–7. hét, vizsgatípusok), zh-szimulátor 7 feladattal (30/45/60 perc), puska 7–8. lap, a 8–10. modul
   „hamarosan” oldalai, fejléc: a modulok számozott gombokkal (csak az aktív felirata látszik), `fokszamMerleg` testszámlálás javítva.
 
+## 11. kör: 9. modul – Igénybevételi ábrák
+
+- `/igenybevetel`, `src/components/igenybevetel/`, ábrák `src/components/abrak/IgenybevetelAbrak.js`; a diagramokat a motor
+  (`src/lib/tarto`) számolja, a közös rajzoló a `Diagram.js` (M a húzott oldalra, töréspont-értékek, épülő ábra).
+- Elmélet a tankönyv 8. fejezetére; felfedezők: `VagdEl` (húzható keresztmetszet, két szabadtest-ábra, a vágásig épülő ábrák),
+  `QVMFelfedezo`, `ElojelFelfedezo`, `FerdeTarto`, `Szakaszolo`; 8 GYF (H09, vizsgaminta 2. és 4., tankönyv 8.7 Gerber) 4 filmmel
+  (`FilmIgenybevetel` közös film-motor); beágyazott ábrakalkulátor + `MetszetKalk`.
+- Gyakorlás: **ábrarajzoló játék** (`JatekAbrarajzolo`: fogópontokkal rajzolt V és M ábra, a pontos ráúszik és pontoz),
+  alakhelyesség-kvíz (`AlakKviz`, H09-mintára, programozottan torzított hibás ábrák), 9 generátor, 17 kvíz, 7 hibakereső, puska-lap.
+- `AbraIllesztes` és az ellenőrző szkriptek javítva: az elemek koordinátáit a viewBox rendszerébe kell vinni
+  (`svg.getScreenCTM().inverse() × el.getScreenCTM()`), nem a viewportéba. Zh: 9 feladat.
+
 ## 10. kör: 8. modul – Statikai határozottság
 
 - `/hatarozottsag`, `src/components/hatarozottsag/`, számítómag `src/lib/hatarozottsag.js` (e/i számlálás, r + k = 2c, kinematikai

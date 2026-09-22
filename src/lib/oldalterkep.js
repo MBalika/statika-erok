@@ -174,7 +174,7 @@ export const modulok = [
     leiras:
       "Normálerő, nyíróerő, hajlítónyomaték: számítás egy keresztmetszetben, függvények és ábrák, differenciális összefüggések, ferde és tört tengelyű tartó, Gerber-tartó.",
     ikon: "igenybevetel",
-    kesz: false,
+    kesz: true,
     szakaszok: [
       { id: "elmelet", cim: "Elmélet" },
       { id: "peldak", cim: "Kidolgozott feladatok" },
@@ -225,7 +225,7 @@ export const extraOldalak = [
     slug: "/zh",
     rovid: "Zh-szimulátor",
     menu: "Zh",
-    leiras: "Nyolc véletlen feladat órával, segítség nélkül – mint a zárthelyin.",
+    leiras: "Kilenc véletlen feladat órával, segítség nélkül – mint a zárthelyin.",
   },
   {
     slug: "/puska",

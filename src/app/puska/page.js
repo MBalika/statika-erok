@@ -3,6 +3,7 @@ import NyomtatasGomb from "@/components/NyomtatasGomb";
 import PuskaOsszetett from "@/components/osszetett/Puska";
 import PuskaRacsos from "@/components/racsos/Puska";
 import PuskaHatarozottsag from "@/components/hatarozottsag/Puska";
+import PuskaIgenybevetel from "@/components/igenybevetel/Puska";
 
 export const metadata = {
   title: "Puska",
@@ -40,7 +41,7 @@ export default function PuskaOldal() {
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-naracs-500 text-[15px] font-bold text-white">✎</span>
             <span className="text-[11px] font-semibold tracking-[0.2em] text-petrol-300 uppercase">Összefoglaló</span>
           </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Puska — kilenc lap</h1>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">Puska — tíz lap</h1>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-petrol-200">
             A legfontosabb képletek, szabályok és a tipikus hibák, modulonként egy oldalon (az összetett és a rácsos tartókkal együtt), plusz egy lap a tankönyv nyelvéről (kijelentések, egyenletek írásmódja, szótár). Nyomtasd ki, vagy mentsd PDF-be — de előbb próbáld
             meg fejből leírni, aztán hasonlítsd össze.
@@ -284,6 +285,7 @@ export default function PuskaOldal() {
         <Lap szam={7} cim="Összetett tartók" gyerekek={<PuskaOsszetett Doboz={Doboz} />} />
         <Lap szam={8} cim="Rácsos tartók" gyerekek={<PuskaRacsos Doboz={Doboz} />} />
         <Lap szam={9} cim="Statikai határozottság" gyerekek={<PuskaHatarozottsag Doboz={Doboz} />} />
+        <Lap szam={10} cim="Igénybevételi ábrák" gyerekek={<PuskaIgenybevetel Doboz={Doboz} />} />
       </div>
     </>
   );

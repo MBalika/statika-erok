@@ -40,6 +40,10 @@ function illeszt(svg) {
   // oda-vissza ugrálás (a szöveg mért mérete a lépték függvényében kicsit változhat)
   const [ax, ay, aw, ah] = svg.dataset.vbUtolso.split(" ").map(Number);
   let x1 = ax, y1 = ay, x2 = ax + aw, y2 = ay + ah;
+  // az elemek koordinátáit a viewBox (felhasználói) rendszerébe visszük: a getCTM a
+  // viewport (képernyő-pixel) rendszerbe vinne, ami a rajz megjelenített méretétől függ
+  const gyokerInv = svg.getScreenCTM()?.inverse();
+  if (!gyokerInv) return;
   const elemek = svg.querySelectorAll(FIGYELT);
   for (const el of elemek) {
     if (el.closest("defs, marker, clipPath, mask, pattern")) continue;
@@ -47,8 +51,9 @@ function illeszt(svg) {
     let b;
     try { b = el.getBBox(); } catch { continue; }
     if (!b || (!b.width && !b.height)) continue;
-    const m = el.getCTM();
-    if (!m) continue;
+    const sm = el.getScreenCTM();
+    if (!sm) continue;
+    const m = gyokerInv.multiply(sm);
     const sarkok = [[b.x, b.y], [b.x + b.width, b.y], [b.x, b.y + b.height], [b.x + b.width, b.y + b.height]];
     for (const [px, py] of sarkok) {
       const p = svg.createSVGPoint();
