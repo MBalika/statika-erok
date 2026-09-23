@@ -1,7 +1,7 @@
 "use client";
 
 import GyakorloDoboz from "@/components/GyakorloDoboz";
-import GyakorloExtra, { OsszetettRajz, egesz, valaszt, fel, tag, tagE } from "./GyakorloExtra";
+import GyakorloExtra, { OsszetettRajz, egesz, valaszt, fel, tag, tagE, meretLanc } from "./GyakorloExtra";
 import { M, MB } from "@/components/ui/Keplet";
 import { sz, szK } from "@/lib/szamok";
 import { gerberSzamit, gerberBefogasSzamit, haromcsuklosSzamit, fuggesztettCsukloSzamit, FOK } from "./szamitas";
@@ -12,8 +12,11 @@ import { gerberSzamit, gerberBefogasSzamit, haromcsuklosSzamit, fuggesztettCsukl
 function gerberFeladat() {
   const L1 = fel(3, 6), L2 = fel(1, 3), L3 = fel(2, 5);
   const xB = L1, xC = L1 + L2, xD = xC + L3;
-  const x1 = fel(0.5, xC - 0.5), F1 = egesz(6, 20);
-  const x2 = fel(xC + 0.5, xD - 0.5), F2 = egesz(4, 16);
+  // az erők legalább 1 m-re a csuklótól, hogy a feliratok ne fedjék egymást a rajzon
+  let x1 = fel(0.5, xC - 1);
+  if (Math.abs(x1 - xB) < 0.3) x1 = xB - 0.5; // ne pont a görgőre essen
+  const F1 = egesz(6, 20);
+  const x2 = fel(xC + 1, xD - 0.5), F2 = egesz(4, 16);
   const ferde = Math.random() < 0.35;
   const alfa = ferde ? valaszt([30, 45, 60]) : 90;
   const jobbra = Math.random() < 0.5;
@@ -21,7 +24,7 @@ function gerberFeladat() {
   const F1x = F1 * Math.cos(szog * FOK), F1y = F1 * Math.sin(szog * FOK);
   const r = gerberSzamit({ xB, xC, xD, terhekI: [{ x: x1, y: 0, Fx: F1x, Fy: F1y }], terhekII: [{ x: x2, y: 0, Fx: 0, Fy: -F2 }] });
   return {
-    adat: { gerber: true },
+    adat: { gerber: true, par: { xB, xC, xD, x1, F1, szog, x2, F2 } },
     szoveg: (
       <p>
         Gerber-tartó: <M>{"A"}</M> csukló (<M>{"x = 0"}</M>), <M>{"B"}</M> görgő (<M>{`x = ${szK(xB, 1)}`}</M> m), <M>{"C"}</M> belső csukló (<M>{`x = ${szK(xC, 1)}`}</M> m), <M>{"D"}</M> görgő (<M>{`x = ${szK(xD, 1)}`}</M> m).
@@ -37,7 +40,7 @@ function gerberFeladat() {
         csuklok={[[xC, 0, "C"]]}
         erok={[{ x: x1, y: 0, F: F1, szog, cimke: `F₁ = ${F1} kN${ferde ? `, ${alfa}°` : ""}` }, { x: x2, y: 0, F: F2, szog: -90, cimke: `F₂ = ${F2} kN` }]}
         testek={[{ x: xC / 2 + 0.3, y: -1, cimke: "I" }, { x: xC + L3 / 2, y: -1, cimke: "II" }]}
-        meretek={[{ x1: 0, x2: x1, cimke: sz(x1, 1) }, { x1: x1, x2: xB, cimke: sz(xB - x1, 1) }, { x1: xB, x2: xC, cimke: sz(L2, 1) }, { x1: xC, x2: x2, cimke: sz(x2 - xC, 1) }, { x1: x2, x2: xD, cimke: sz(xD - x2, 1) }]}
+        meretek={meretLanc([0, x1, xB, xC, x2, xD])}
       />
     ),
     sugo: (
@@ -81,12 +84,14 @@ function gerberFeladat() {
    ============================================================ */
 function haromcsuklosFeladat() {
   const L = fel(6, 12), h = fel(3, 6);
-  const xC = valaszt([L / 2, L / 2, fel(Math.max(2, L / 2 - 2), L / 2 + 2)]);
-  const xF1 = fel(0.5, xC - 0.5), F1 = egesz(6, 20);
-  const xF2 = fel(xC + 0.5, L - 0.5), F2 = egesz(4, 16);
+  // a csukló helye is fél méterre kerekített, hogy a szöveg és a számítás ugyanazt az értéket használja
+  const kozep = fel(L / 2, L / 2);
+  const xC = valaszt([kozep, kozep, fel(Math.max(2, L / 2 - 2), L / 2 + 2)]);
+  const xF1 = fel(0.5, xC - 1), F1 = egesz(6, 20);
+  const xF2 = fel(xC + 1, L - 0.5), F2 = egesz(4, 16);
   const r = haromcsuklosSzamit({ xB: L, yB: 0, xC, yC: h, terhekI: [{ x: xF1, y: h, Fx: 0, Fy: -F1 }], terhekII: [{ x: xF2, y: h, Fx: 0, Fy: -F2 }] });
   return {
-    adat: { harom: true },
+    adat: { harom: true, par: { L, h, xC, xF1, F1, xF2, F2 } },
     szoveg: (
       <p>
         Háromcsuklós keret: <M>{"A"}</M> csukló <M>{"(0;\\ 0)"}</M>, <M>{"B"}</M> csukló <M>{`(${szK(L, 1)};\\ 0)`}</M>, a gerenda <M>{`h = ${szK(h, 1)}`}</M> m magasan, <M>{"C"}</M> belső csukló az{" "}
@@ -97,7 +102,7 @@ function haromcsuklosFeladat() {
     abra: (
       <OsszetettRajz
         rudak={[[0, 0, 0, h], [0, h, L, h], [L, h, L, 0]]}
-        tamaszok={[{ x: 0, y: 0, tipus: "csuklo", cimke: "A", dx: -18, dy: 26 }, { x: L, y: 0, tipus: "csuklo", cimke: "B", dx: 18, dy: 26 }]}
+        tamaszok={[{ x: 0, y: 0, tipus: "csuklo", cimke: "A" }, { x: L, y: 0, tipus: "csuklo", cimke: "B" }]}
         csuklok={[[xC, h, "C"]]}
         erok={[{ x: xF1, y: h, F: F1, szog: -90, cimke: `F₁ = ${F1} kN` }, { x: xF2, y: h, F: F2, szog: -90, cimke: `F₂ = ${F2} kN` }]}
         testek={[{ x: 0.6, y: h * 0.45, cimke: "I" }, { x: L - 0.6, y: h * 0.45, cimke: "II" }]}
@@ -144,11 +149,13 @@ function haromcsuklosFeladat() {
 function gerberBefogasFeladat() {
   const xA = fel(1, 3), LAC = fel(3, 7), LCB = fel(2, 5);
   const xC = xA + LAC, xB = xC + LCB;
-  const x1 = fel(0, xC - 0.5), F1 = egesz(6, 20);
-  const x2 = fel(xC + 0.5, xB - 0.5), F2 = egesz(4, 16);
+  let x1 = fel(0, xC - 1);
+  if (Math.abs(x1 - xA) < 0.3) x1 = xA + 0.5; // ne pont a görgőre essen
+  const F1 = egesz(6, 20);
+  const x2 = fel(xC + 1, xB - 0.5), F2 = egesz(4, 16);
   const r = gerberBefogasSzamit({ xA, xC, xB, terhekI: [{ x: x1, y: 0, Fx: 0, Fy: -F1 }], terhekII: [{ x: x2, y: 0, Fx: 0, Fy: -F2 }] });
   return {
-    adat: { befogas: true },
+    adat: { befogas: true, par: { xA, xC, xB, x1, F1, x2, F2 } },
     szoveg: (
       <p>
         A gerenda bal vége (<M>{"x = 0"}</M>) szabad, az <M>{"A"}</M> görgő az <M>{`x = ${szK(xA, 1)}`}</M> m, a <M>{"C"}</M> belső csukló az <M>{`x = ${szK(xC, 1)}`}</M> m helyen van, a jobb vég (<M>{"B"}</M>,{" "}
@@ -200,14 +207,15 @@ function gerberBefogasFeladat() {
    4. Csuklón terhelt szerkezet (tankönyv 5.9)
    ============================================================ */
 function terheltCsukloFeladat() {
-  const L1 = fel(3, 6), L2 = fel(1, 3), L3 = fel(2, 5);
+  // rövidebb tartó és a csuklótól távolabbi erők: három erő felirata is elférjen a rajzon
+  const L1 = fel(3, 5), L2 = fel(1, 2.5), L3 = fel(2.5, 4.5);
   const xB = L1, xC = L1 + L2, xD = xC + L3;
-  const x1 = fel(0.5, L1 - 0.5), F1 = egesz(6, 20);
-  const x2 = fel(xC + 0.5, xD - 0.5), F3 = egesz(4, 14);
+  const x1 = fel(0.5, L1 - 1), F1 = egesz(6, 20);
+  const x2 = fel(xC + 2, xD - 0.5), F3 = egesz(4, 14);
   const FC = egesz(4, 16);
   const r = gerberSzamit({ xB, xC, xD, terhekI: [{ x: x1, y: 0, Fx: 0, Fy: -F1 }], terhekII: [{ x: x2, y: 0, Fx: 0, Fy: -F3 }], FC: { Fx: 0, Fy: -FC } });
   return {
-    adat: { terhelt: true },
+    adat: { terhelt: true, par: { xB, xC, xD, x1, F1, x2, F3, FC } },
     szoveg: (
       <p>
         Gerber-tartó (<M>{"A"}</M> csukló 0, <M>{"B"}</M> görgő <M>{`${szK(xB, 1)}`}</M> m, <M>{"C"}</M> csukló <M>{`${szK(xC, 1)}`}</M> m, <M>{"D"}</M> görgő <M>{`${szK(xD, 1)}`}</M> m), amelynek a{" "}
@@ -224,7 +232,7 @@ function terheltCsukloFeladat() {
         pontok={[{ x: xC, y: 0, cimke: "C", dy: 20 }]}
         erok={[{ x: x1, y: 0, F: F1, szog: -90, cimke: `F₁ = ${F1} kN` }, { x: xC, y: 0, F: FC, szog: -90, cimke: `F₂ = ${FC} kN` }, { x: x2, y: 0, F: F3, szog: -90, cimke: `F₃ = ${F3} kN` }]}
         testek={[{ x: xC / 2 + 0.3, y: -1, cimke: "I" }, { x: xC + L3 / 2 + 0.3, y: -1, cimke: "II" }]}
-        meretek={[{ x1: 0, x2: x1, cimke: sz(x1, 1) }, { x1: x1, x2: xB, cimke: sz(xB - x1, 1) }, { x1: xB, x2: xC, cimke: sz(L2, 1) }, { x1: xC, x2: x2, cimke: sz(x2 - xC, 1) }, { x1: x2, x2: xD, cimke: sz(xD - x2, 1) }]}
+        meretek={meretLanc([0, x1, xB, xC, x2, xD])}
       />
     ),
     sugo: (
@@ -276,7 +284,7 @@ function fuggesztomuRudFeladat() {
   const F = egesz(6, 24);
   const r = fuggesztettCsukloSzamit({ xA, xB, xE, h, Fx: 0, Fy: -F });
   return {
-    adat: { fuggeszto: true },
+    adat: { fuggeszto: true, par: { xA, xB, xE, h, F } },
     szoveg: (
       <p>
         A gerendát (0-tól <M>{`${szK(xB, 1)}`}</M> m-ig) az <M>{"A"}</M> görgő (<M>{`x = ${szK(xA, 1)}`}</M>) és a <M>{"B"}</M> csukló (a jobb végen) támasztja. Az <M>{"E"}</M> pontban (<M>{`x = ${szK(xE, 1)}`}</M>){" "}

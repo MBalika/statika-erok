@@ -98,7 +98,7 @@ function Rajz(t) {
   const fopont = fazis === "d" ? { x: kx(6) + dII[0], y: Y + dII[1], nev: "C", test: 2 } : fazis === "cy" ? { x: kx(9) + dII[0], y: Y + dII[1], nev: "D", test: 2 } : fazis === "b" ? { x: kx(0) + dI[0], y: Y + dI[1], nev: "A", test: 1 } : fazis === "ay" ? { x: kx(4) + dI[0], y: Y + dI[1], nev: "B", test: 1 } : null;
 
   return (
-    <svg viewBox="0 0 600 340" className="abra w-full select-none">
+    <svg viewBox="0 0 600 352" className="abra w-full select-none">
       <TartoHegyek />
       <FilmHegyek />
       <Kijelentes opacitas={kijU * (fazis === "kij" ? 1 : 0.35)} y={22}>
@@ -135,9 +135,9 @@ function Rajz(t) {
         <TamaszCimke x={kx(9) + 16} y={Y + 26}>D</TamaszCimke>
         <FeliratA x={kx(7.5)} y={Y - 44} szin="#334155" meret={11} opacitas={szetU}>II. test (befüggesztett)</FeliratA>
         <EroA x={kx(8)} y={Y} hossz={52} szog={-90} u={terhU} opacitas={op("F2")} szin={SZ.nar} hegy="fg-nar" cimke="F₂ = 8 kN" dx={6} dy={-2} />
-        <EroA x={kx(9)} y={Y + 2} hossz={44} szog={90} u={reakU} opacitas={op("D")} cimke={t > T.d + 1.5 ? "D = 5,333" : "D"} dx={6} dy={6} />
+        <EroA x={kx(9)} y={Y + 2} hossz={44} szog={90} u={reakU} opacitas={op("D")} cimke={t > T.d + 1.5 ? "D = 5,333" : "D"} dx={-8} dy={18} horgony="end" />
         <g opacity={op("Cy") * szetU}>
-          <EroA x={kx(6)} y={Y - 2 - 36} hossz={36} szog={90} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.6} cimke={t > T.cy + 1.5 ? "Cᵧ = 2,667" : "Cᵧ"} dx={-6} dy={-4} horgony="end" />
+          <EroA x={kx(6)} y={Y - 2 - 36} hossz={36} szog={90} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.6} cimke={t > T.cy + 1.5 ? "Cᵧ = 2,667" : "Cᵧ"} dx={-6} dy={-2} horgony="end" cimkeHegy />
         </g>
         <g opacity={op("Cx") * szetU}>
           <EroA x={kx(6) + 30} y={Y} hossz={30} szog={0} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.2} cimke={t > T.cy + 2.5 ? "Cₓ = 0" : "Cₓ"} dx={4} dy={-8} />
@@ -170,20 +170,20 @@ function Rajz(t) {
         </g>
       )}
 
-      {fazis === "d" && <Pipa x={300} y={318} opacitas={arany(t, T.d + 2.2, T.d + 2.8)}>D = 16 / 3 = 5,333 kN</Pipa>}
-      {fazis === "cy" && <Pipa x={300} y={318} opacitas={arany(t, T.cy + 2.2, T.cy + 2.8)}>Cᵧ = 8 / 3 = 2,667 kN — a II. testre felfelé, az I.-re lefelé</Pipa>}
-      {fazis === "b" && <Pipa x={300} y={318} opacitas={arany(t, T.b + 2.2, T.b + 2.8)}>B = (20,78 + 16,00) / 4 = 9,196 kN</Pipa>}
-      {fazis === "ay" && <Pipa x={300} y={318} opacitas={arany(t, T.ay + 2.2, T.ay + 2.8)}>Aᵧ = (20,78 − 5,333) / 4 = 3,863 kN · Aₓ = −6,000 kN</Pipa>}
+      {fazis === "d" && <Pipa x={300} y={336} opacitas={arany(t, T.d + 2.2, T.d + 2.8)}>D = 16 / 3 = 5,333 kN</Pipa>}
+      {fazis === "cy" && <Pipa x={300} y={336} opacitas={arany(t, T.cy + 2.2, T.cy + 2.8)}>Cᵧ = 8 / 3 = 2,667 kN — a II. testre felfelé, az I.-re lefelé</Pipa>}
+      {fazis === "b" && <Pipa x={300} y={336} opacitas={arany(t, T.b + 2.2, T.b + 2.8)}>B = (20,78 + 16,00) / 4 = 9,196 kN</Pipa>}
+      {fazis === "ay" && <Pipa x={300} y={336} opacitas={arany(t, T.ay + 2.2, T.ay + 2.8)}>Aᵧ = (20,78 − 5,333) / 4 = 3,863 kN · Aₓ = −6,000 kN</Pipa>}
       {fazis === "ell" && (
         <g opacity={arany(t, T.ell + 0.2, T.ell + 0.8)}>
           <VonalA x1={30} y1={Y + 120} x2={570} y2={Y + 120} szin="#94a3b8" vastag={1} />
-          <FeliratA x={300} y={Y + 136} szin={SZ.szurke} meret={11.5} vastag={false}>függőleges vetület az egészre: a csuklóerő nincs benne</FeliratA>
-          <Pipa x={300} y={318} opacitas={arany(t, T.ell + 1.6, T.ell + 2.2)}>3,863 + 9,196 + 5,333 − 10,39 − 8 = 0,00 ✓</Pipa>
+          <FeliratA x={300} y={Y + 134} szin={SZ.szurke} meret={11.5} vastag={false}>függőleges vetület az egészre: a csuklóerő nincs benne</FeliratA>
+          <Pipa x={300} y={336} opacitas={arany(t, T.ell + 1.6, T.ell + 2.2)}>3,863 + 9,196 + 5,333 − 10,39 − 8 = 0,00 ✓</Pipa>
         </g>
       )}
       {fazis === "ered" && (
         <g opacity={eredU}>
-          <FeliratA x={300} y={318} szin={SZ.zold} meret={12.5}>Eredményvázlat testenként: 6 új szám, tényleges irányokkal</FeliratA>
+          <FeliratA x={300} y={336} szin={SZ.zold} meret={12.5}>Eredményvázlat testenként: 6 új szám, tényleges irányokkal</FeliratA>
         </g>
       )}
     </svg>

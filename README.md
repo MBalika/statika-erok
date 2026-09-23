@@ -250,6 +250,21 @@ oldalhoz elég ezeket átírni.
 - Bekötések: útvonal (5–7. hét, vizsgatípusok), zh-szimulátor 7 feladattal (30/45/60 perc), puska 7–8. lap, a 8–10. modul
   „hamarosan” oldalai, fejléc: a modulok számozott gombokkal (csak az aktív felirata látszik), `fokszamMerleg` testszámlálás javítva.
 
+## 14. kör: ellenőrző kör — N/V ábrák a nyomaték oldalára, eltűnt vonalak, 5–6–9. modul tételes átnézése
+
+- **Rajzszabály (tankönyv 8.3.2., 8.9. ábra):** mindhárom igénybevételi ábra a rúd ugyanazon pozitív oldalára kerül — arra,
+  amelyiket a nyomaték pozitív definíciójához választottunk (vízszintes tartónál alulra). Eddig az N és a V a másik oldalra
+  került. Közös helyen javítva (`Diagram.js` `pozitivIrany`, `TartoKalkulator`, `FeladatRajz`, ábrarajzoló játék, alakkvíz,
+  tartóépítő), „+ / −” oldaljel minden diagramon, a szövegek/kvíz/puska/hibakereső ehhez igazítva.
+- **Eltűnő rúd- és nyílvonalak:** a `"use client"` `TartoElemek.js`-ből szerver-komponensbe importált `SZIN` objektum a szerveren
+  csak kliens-hivatkozás volt (`SZIN.tarto` undefined → stroke nélküli vonalak); ezért látszottak félkésznek a statikus ábrák.
+  A színek a `tartok/szinek.js` sima modulba kerültek; szerver-komponensben csak onnan importálandók.
+- 5–6. modul: minden film képkockánként, minden ábra/felfedező/generátor a motorral újraszámolva; javítva többek közt a terhelt
+  csukló ereje a `Szetszedo`/`JatekSzetszed` rajzán, fordított F-nyilak (GYF‑5, rudas csukló ábra), a kalkulátor rúdvonalba eső
+  reakciónyilai, kilógó keretek a filmekben, méretlánc-hibák a generátorokban. 9. modul: 7 elméleti ábra kiegészítve/újrarajzolva
+  (ferde konzol K₇, parabola-recept, konzol kívülről, sarok-példák, elágazás nyilai), GYF-ábrák szögjelekkel és szélsőérték-gyűrűkkel,
+  a filmek fejezetei a K helyéhez időzítve, globális x a K-kiírásban.
+
 ## 13. kör: Tartóépítő és ábrarajzoló (`/epito`)
 
 - Önálló gyakorló eszköz: a hallgató **maga épít** tetszőleges síkbeli tartót (rácsos vászon: csomópontok, rudak – ferde is –,

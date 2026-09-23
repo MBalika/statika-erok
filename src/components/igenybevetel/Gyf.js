@@ -1,7 +1,7 @@
 import { AbraKeret } from "@/components/ui/Elemek";
 import { M, MB } from "@/components/ui/Keplet";
 import { KidolgozottFeladat, Lepes } from "@/components/KidolgozottFeladat";
-import { FeladatAbra, MegoldasAbra } from "@/components/igenybevetel/FeladatAbrak";
+import { FeladatAbra, MegoldasAbra, gyf1Jelek, gyf3Jelek, gyf8Jelek } from "@/components/igenybevetel/FeladatAbrak";
 import FilmGyf1 from "@/components/igenybevetel/FilmGyf1";
 import FilmGyf2 from "@/components/igenybevetel/FilmGyf2";
 import FilmGyf4 from "@/components/igenybevetel/FilmGyf4";
@@ -19,9 +19,10 @@ const FilmCim = ({ children }) => (
   <h3 className="mt-4 mb-2 text-[13px] font-semibold text-petrol-500 uppercase tracking-wider">{children}</h3>
 );
 
-const Abrak = ({ kulcs, cim, abrak, amp }) => (
+/** A megoldás ábrái; szelso: a V = 0 helyek és az M szélsőértékeinek kiemelése (gyűrű). */
+const Abrak = ({ kulcs, cim, abrak, amp, szelso = false, gyerekek, teherCimkek }) => (
   <AbraKeret cim={cim}>
-    <MegoldasAbra kulcs={kulcs} abrak={abrak} amp={amp} />
+    <MegoldasAbra kulcs={kulcs} abrak={abrak} amp={amp} kiemelSzelso={szelso ? 1 : 0} gyerekek={gyerekek} teherCimkek={teherCimkek} />
   </AbraKeret>
 );
 
@@ -41,7 +42,7 @@ export default function GyfBlokkok() {
             <M>{"a = 2\\ \\text{m},\\ F_1 = 10\\ \\text{kN},\\ \\alpha = 30^\\circ,\\ F_2 = 5\\ \\text{kN}"}</M>.
           </p>
         }
-        abra={<AbraKeret cim="A feladat rajza. Az F₁ komponensei: 10·cos 30° = 8,660 kN jobbra és 10·sin 30° = 5,000 kN lefelé."><FeladatAbra kulcs="gyf1" /></AbraKeret>}
+        abra={<AbraKeret cim="A feladat rajza (H09/1). Az F₁ komponensei: 10·cos 30° = 8,660 kN jobbra és 10·sin 30° = 5,000 kN lefelé."><FeladatAbra kulcs="gyf1" gyerekek={gyf1Jelek} /></AbraKeret>}
         tanulsag={
           <p>
             Konzolon a szabad vég felől haladva a reakciókra nincs is szükség: minden keresztmetszetben a K-tól jobbra eső erőket redukáljuk. A befogásnál kapott végértékek
@@ -67,7 +68,11 @@ export default function GyfBlokkok() {
           <p>Az <M>{"F_1"}</M> alatt: N ugrik 8,66-ot, V ugrik 5-öt, M törik. V sehol nem nulla, az M-nek nincs belső szélsőértéke: a legnagyobb a befogásnál (40 kNm, felül húzott).</p>
         </Lepes>
         <Lepes cim="Az ábrák">
-          <Abrak kulcs="gyf1" cim="GYF‑1 megoldása: N és V konstans szakaszokból, M lineáris; az M ábra a felső (húzott) oldalon." />
+          <p>
+            Mindhárom ábrát a tartó ugyanazon <strong>pozitív oldalára</strong> rajzoljuk — arra, amelyiket a nyomaték pozitív definíciójához választottunk (vízszintes tartónál alulra): a pozitív N és V
+            a tartó alatt van, a negatív M (felül húzott) fölötte. A tengely melletti + és − jel mutatja az oldalt.
+          </p>
+          <Abrak kulcs="gyf1" cim="GYF‑1 megoldása: N és V konstans szakaszokból (pozitív: a tartó alatt), M lineáris, negatív: a felső (húzott) oldalon." />
         </Lepes>
         <Lepes cim="Ellenőrzés">
           <p>A befogás keresztmetszetében az ábrák végértékei: <M>{"N = 8{,}66 = |A_x|"}</M>, <M>{"V = 10 = A_y"}</M>, <M>{"|M| = 40 = M_A"}</M> ✓. A szabad végen <M>{"N = M = 0"}</M>, <M>{"V = 5 = F_2"}</M> ✓.</p>
@@ -115,7 +120,7 @@ export default function GyfBlokkok() {
           <p>Az F alatt a V ugrik 12-t, az M törik; a maximum <M>{"M_{\\max} = 24{,}5"}</M> kNm az <M>{"x = 2{,}5"}</M> m helyen (alul húzott).</p>
         </Lepes>
         <Lepes cim="Az ábrák">
-          <Abrak kulcs="gyf2" abrak={["V", "M"]} cim="GYF‑2 megoldása: V lineáris szakaszok 12 kN-os ugrással, M parabola, csúcsa x = 2,5 m-nél (V = 0)." />
+          <Abrak kulcs="gyf2" abrak={["V", "M"]} szelso cim="GYF‑2 megoldása: V lineáris szakaszok 12 kN-os ugrással (pozitív alul), M parabola, csúcsa x = 2,5 m-nél (V = 0 — a bekarikázott pont)." />
         </Lepes>
         <Lepes cim="Ellenőrzés">
           <p>A tartóvégeken <M>{"M = 0"}</M> (nincs koncentrált nyomaték) ✓; <M>{"V(0) = A_y"}</M>, <M>{"V(6) = -B"}</M> ✓. Jobbról számolva <M>{"M(2{,}5) = 14\\cdot 3{,}5 - 4\\cdot 3{,}5\\cdot 1{,}75 = 49 - 24{,}5 = 24{,}5"}</M> ✓.</p>
@@ -137,7 +142,7 @@ export default function GyfBlokkok() {
             <M>{"a = 1{,}5\\ \\text{m},\\ F_1 = 12\\ \\text{kN},\\ \\alpha = 30^\\circ,\\ F_2 = 8\\ \\text{kN}"}</M>.
           </p>
         }
-        abra={<AbraKeret cim="A feladat rajza: mindkét vég túlnyúlik a támaszokon. F₁ komponensei 10,39 kN balra és 6 kN lefelé."><FeladatAbra kulcs="gyf3" /></AbraKeret>}
+        abra={<AbraKeret cim="A feladat rajza (H09/3): mindkét vég túlnyúlik a támaszokon. F₁ komponensei 10,39 kN balra és 6 kN lefelé."><FeladatAbra kulcs="gyf3" gyerekek={gyf3Jelek} /></AbraKeret>}
         tanulsag={
           <p>
             A konzolokon a reakciók nélkül, kívülről számolunk; a támaszok között az egyik támasztól a másikig ugyanarról az oldalról haladunk. A támaszoknál a V ugrik a reakcióval, az M törik.
@@ -208,7 +213,7 @@ export default function GyfBlokkok() {
           <p>Szélsőérték a V = 0 helyen: <M>{"-4x + 14 = 0 \\Rightarrow x = 3{,}5"}</M>, <M>{"M(3{,}5) = -24{,}5 + 21 = -3{,}5"}</M> kNm.</p>
         </Lepes>
         <Lepes cim="Az ábrák">
-          <Abrak kulcs="gyf4" abrak={["V", "M"]} cim="GYF‑4 megoldása: V ugrások a támaszoknál (+14, +2); M parabola 0–4 m között (csúcs x = 3,5-nél), lineáris 4–6, konstans 6–8, a végén 8 kNm ugrás nullára." />
+          <Abrak kulcs="gyf4" abrak={["V", "M"]} szelso cim="GYF‑4 megoldása: V ugrások a támaszoknál (+14, +2); M parabola 0–4 m között (csúcs x = 3,5-nél, ahol V = 0), lineáris 4–6, konstans 6–8, a végén 8 kNm ugrás nullára." />
         </Lepes>
         <Lepes cim="Ellenőrzés">
           <p>Jobbról: a jobb konzolon csak a 8 kNm ↷ hat, (↶) szerint <M>{"M = -8"}</M> és <M>{"V = 0"}</M> ✓ — egyezik a balról kapott értékekkel. A teher végénél (x = 4) a parabola érintője a folytatás egyenese (V folytonos) ✓.</p>
@@ -252,7 +257,7 @@ export default function GyfBlokkok() {
           <p>Ugyanez a belógással: <M>{"M_{\\max} = p_\\perp L^2/8 = 3{,}2\\cdot 25/8 = 10"}</M> kNm ✓. Vízszintes karokkal: <M>{"M(2{,}5) = 10\\cdot 2 - 10\\cdot 1 = 10"}</M> (az A_y karja 2 m, a fél teher 10 kN karja 1 m) ✓.</p>
         </Lepes>
         <Lepes cim="Az ábrák">
-          <Abrak kulcs="gyf5" cim="GYF‑5 megoldása: N −6-tól +6-ig (nyomásból húzás), V 8-tól −8-ig, M parabola 10 kNm csúccsal a közepén — mind a ferde tengelyre merőlegesen felmérve." amp={34} />
+          <Abrak kulcs="gyf5" szelso cim="GYF‑5 megoldása: N −6-tól +6-ig (nyomásból húzás), V 8-tól −8-ig, M parabola 10 kNm csúccsal a közepén — mind a ferde tengelyre merőlegesen felmérve, a pozitív értékek a rúd alsó-jobb (pozitív) oldalán." amp={34} />
         </Lepes>
         <Lepes cim="Ellenőrzés">
           <p>B-ben a görgő 10 kN függőleges reakciójának komponensei: <M>{"N = +6"}</M> (a tengely irányában húz), <M>{"V = -8"}</M> ✓; <M>{"M(5) = 40 - 40 = 0"}</M> ✓ (görgőn nincs nyomaték).</p>
@@ -344,7 +349,7 @@ export default function GyfBlokkok() {
           <MB>{"M(B) = 1{,}2\\cdot 5 - 30\\cdot 2{,}5 = -69\\ \\text{kNm (jobbról)},\\qquad M(B + 4{,}8) = -69 + 28{,}8\\cdot 4{,}8 - 3\\cdot 4{,}8^2 = +0{,}12\\ \\text{kNm}"}</MB>
         </Lepes>
         <Lepes cim="Az ábrák">
-          <Abrak kulcs="gyf7" abrak={["V", "M"]} cim="GYF‑7 megoldása: a V ábra a támaszoknál ugrik (36,75 és 58,05), a csuklónál folytonos; az M ábra a G csuklón átmegy (0), a támaszok fölött −27 és −69, a mezőkben kis pozitív csúcsok (2,30 és 0,12)." amp={40} />
+          <Abrak kulcs="gyf7" abrak={["V", "M"]} szelso cim="GYF‑7 megoldása: a V ábra a támaszoknál ugrik (36,75 és 58,05), a csuklónál folytonos; az M ábra a G csuklón átmegy (0), a támaszok fölött −27 és −69, a mezőkben kis pozitív csúcsok (2,30 és 0,12) a V = 0 helyeken." amp={40} />
         </Lepes>
         <Lepes cim="Ellenőrzés a tankönyv keresztmetszeteivel">
           <MB>{"K_1\\ (x=5):\\ V = 36{,}75 - 6\\cdot 5 = 6{,}75,\\quad M = 36{,}75\\cdot 2 - 30\\cdot 2{,}5 = -1{,}5\\ \\checkmark"}</MB>
@@ -364,7 +369,7 @@ export default function GyfBlokkok() {
             <M>{"4"}</M> kN/m függőleges teher. Határozd meg a reakciókat, és rajzold meg az igénybevételi ábrákat!
           </p>
         }
-        abra={<AbraKeret cim="A vizsgaminta 4. feladatának rajza. A terhek eredője 10 kN (x = 2,5) és 20 kN (x = 7,5); az ábrán a ferde hossz méterére átszámolt intenzitás (2·cos α = 1,86 és 4·cos α = 3,71 kN/m) szerepel."><FeladatAbra kulcs="gyf8" /></AbraKeret>}
+        abra={<AbraKeret cim="A vizsgaminta 4. feladatának rajza: 2, ill. 4 kN/m a vízszintes vetület méterére (a ferde hossz méterére ez 2·cos α = 1,86 és 4·cos α = 3,71 kN/m). A terhek eredője 10 kN (x = 2,5) és 20 kN (x = 7,5)."><FeladatAbra kulcs="gyf8" teherCimkek={false} gyerekek={gyf8Jelek} /></AbraKeret>}
         tanulsag={
           <p>
             Háromcsuklós tartón a vízszintes reakciót a csuklóra írt nyomatéki egyenlet adja — és ez a vízszintes erő a ferde rudakban jelentős <strong>nyomó normálerőt</strong> okoz.
@@ -392,7 +397,7 @@ export default function GyfBlokkok() {
           <MB>{"V(C^+) = +9{,}28,\\quad V(B) = -9{,}28\\ \\text{kN},\\qquad N(C^+) = -16{,}48\\ \\text{kN}"}</MB>
         </Lepes>
         <Lepes cim="Az ábrák">
-          <Abrak kulcs="gyf8" cim="GYF‑8 megoldása: N végig nyomás (−16,5 … −23,9), V lineáris mindkét rúdon, M parabolák 6,25 és 12,5 kNm csúccsal, a csuklókban nulla — a rudakra merőlegesen felmérve." amp={34} />
+          <Abrak kulcs="gyf8" szelso teherCimkek={false} gyerekek={gyf8Jelek} cim="GYF‑8 megoldása: N végig nyomás (−16,5 … −23,9, a rudak negatív, külső oldalán), V lineáris mindkét rúdon, M parabolák 6,25 és 12,5 kNm csúccsal a belső (pozitív) oldalon, a csuklókban nulla — a rudakra merőlegesen felmérve." amp={34} />
         </Lepes>
         <Lepes cim="Ellenőrzés a C csuklóban">
           <p>A csuklón nem hat koncentrált erő, ezért a két rúd C-beli belső ereje egyensúlyban van: a bal rúd <M>{"(N, V) = (-18{,}34;\\ -4{,}64)"}</M> és a jobb rúd <M>{"(-16{,}48;\\ +9{,}28)"}</M> vektorai globális komponensekre átszámolva ugyanazt az erőt adják: a bal rúdra C-ben <M>{"(-18{,}75;\\ -2{,}5)"}</M> kN hat (a bal rúd egyensúlyából: <M>{"18{,}75 - 18{,}75 = 0"}</M>, <M>{"12{,}5 - 10 - 2{,}5 = 0"}</M>), a jobb rúdra az ellentettje. <M>{"M(C) = 0"}</M> mindkét oldalról ✓.</p>

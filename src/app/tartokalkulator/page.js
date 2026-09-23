@@ -46,7 +46,10 @@ export default function TartoKalkulatorOldal() {
               A normálerő akkor pozitív, ha <strong>húzza</strong> a keresztmetszetet. A pozitív
               nyíróerő iránya a pozitív normálerő irányának óramutató szerinti 90°-os elforgatása.
               A hajlítónyomatékot a <strong>húzott oldalra</strong> rajzoljuk, ezért az ábrából
-              ránézésre látszik, hol feszül és hol nyomódik a tartó.
+              ránézésre látszik, hol feszül és hol nyomódik a tartó. Mindhárom ábrát a tartó{" "}
+              <strong>ugyanazon pozitív oldalára</strong> rajzoljuk — arra, amelyiket a nyomaték pozitív
+              definíciójához választottunk (vízszintes tartónál alulra): a pozitív N, V és M mindig a
+              tartó alatt, a negatív fölötte van (tankönyv 8.3.2, 8.9. ábra); a „+” jel mutatja az oldalt.
             </p>
           </Kartya>
           <Kartya cimke="Ellenőrzés" cim="Amit mindig érdemes megnézni">

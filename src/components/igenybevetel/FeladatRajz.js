@@ -11,7 +11,8 @@
  *   <TerhekRajz modell m kx ky />        – terhek a nyers modellből, ütközéskerülő feliratokkal
  *   <ReakciokRajz eredmeny kx ky />      – lila reakciónyilak a számított értékkel
  *   <Meretlanc xs y kx /> <MeretlancFugg ys x ky />
- *   diagramUt(ig, jel, kx, ky, leptek)   → { d, vonal } – az igénybevételi ábra útvonala a rúdon (M a húzott oldalra)
+ *   diagramUt(ig, jel, kx, ky, leptek)   → { d, vonal } – az igénybevételi ábra útvonala a rúdon (N, V, M egyaránt a rúd
+ *                                          pozitív, az M-hez választott oldalára: vízszintes tartónál a pozitív érték alul)
  *   <FeladatRajz modell eredmeny cimkek metszetek diagram reakciok />  – kész ábra keretben
  *
  * Színek: teher narancs, reakció lila, N zöld, V kék, M bordó (a kalkulátorral egyezően).
@@ -377,10 +378,20 @@ export function MeretlancFugg({ ys, x, ky, tizedes = 1 }) {
   );
 }
 
-/** Egy rúd igénybevételi ábrájának útvonala a rúdra rajzolva (M a húzott oldalra, N/V a +y oldalra). */
+/**
+ * A rúd pozitív oldala képernyő-egységvektorként (y lefelé): a kezdőponttól a végpont felé haladva a jobb oldal,
+ * vízszintes rúdnál lefelé. Mindhárom ábra (N, V, M) pozitív értéke erre az oldalra kerül (tankönyv 8.3.2, 8.9. ábra).
+ */
+export function pozitivIrany(ig) {
+  const c = Math.cos(ig.szogFok * FOK), s = Math.sin(ig.szogFok * FOK);
+  const po = ig.pozitivOldal === 1 ? -1 : 1;
+  return [po * s, po * c];
+}
+
+/** Egy rúd igénybevételi ábrájának útvonala a rúdra rajzolva (N, V, M egyaránt a rúd pozitív — az M-hez választott — oldalára). */
 export function diagramUt(ig, jel, kx, ky, leptek, db = 28) {
   const c = Math.cos(ig.szogFok * FOK), s = Math.sin(ig.szogFok * FOK);
-  const ir = jel === "M" ? [s, c] : [-s, -c];
+  const ir = pozitivIrany(ig);
   const pontok = mintak(ig, db).map((p) => {
     const mx = ig.kezdo[0] + p.x * c, my = ig.kezdo[1] + p.x * s;
     const e = p[jel] * leptek;
@@ -399,14 +410,29 @@ export function diagramLeptek(eredmeny, jel, px = 60) {
 }
 
 /** Igénybevételi ábra a szerkezetre rajzolva, a szélsőértékek és a szakaszhatár-értékek feliratával. */
-export function DiagramRajz({ eredmeny, jel, kx, ky, px = 60, feliratok = true, opacitas = 1 }) {
+export function DiagramRajz({ eredmeny, jel, kx, ky, px = 60, feliratok = true, opacitas = 1, oldalJelek = true }) {
   const leptek = diagramLeptek(eredmeny, jel, px);
   if (leptek === 0) return null;
   const szin = DSZIN[jel];
   const volt = [];
+  const igs = eredmeny.igenybevetelek;
   return (
     <g opacity={opacitas}>
-      {eredmeny.igenybevetelek.map((ig, i) => {
+      {/* a „+” és „−” oldal jele a rúd elejénél (tankönyv 8.9. ábra): az első rúdon és a szabad kezdetű rudakon (az előző rúd végéhez csatlakozó saroknál nem) */}
+      {oldalJelek && igs.map((ig, i) => {
+        const elozo = i > 0 ? igs[i - 1] : null;
+        if (elozo && Math.hypot(elozo.veg[0] - ig.kezdo[0], elozo.veg[1] - ig.kezdo[1]) < 1e-6) return null;
+        const c = Math.cos(ig.szogFok * FOK), s = Math.sin(ig.szogFok * FOK);
+        const ir = pozitivIrany(ig);
+        const hx = kx(ig.kezdo[0]) - c * 24, hy = ky(ig.kezdo[1]) + s * 24; // a támaszjel elé, a rúd kezdete előtt
+        return (
+          <g key={`oj${i}`} opacity="0.85">
+            <text x={hx + ir[0] * 15} y={hy + ir[1] * 15 + 3.5} textAnchor="middle" fontSize="11" fontWeight="700" style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>+</text>
+            <text x={hx - ir[0] * 15} y={hy - ir[1] * 15 + 3.5} textAnchor="middle" fontSize="11" fontWeight="700" style={{ fill: "#64748b", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>−</text>
+          </g>
+        );
+      })}
+      {igs.map((ig, i) => {
         const u = diagramUt(ig, jel, kx, ky, leptek);
         // feliratok: szakaszhatárok + belső szélsőérték
         const cimkek = [];

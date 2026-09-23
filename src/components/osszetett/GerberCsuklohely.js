@@ -43,7 +43,7 @@ export default function GerberCsuklohely() {
     return { e, pontok, Mmin, Mmax, xMin, xMax, reak, xC };
   }, [s, p]);
 
-  const OX = 60, OY = 150, PX = 44;
+  const OX = 80, OY = 150, PX = 44;
   const nyilH = (F) => Math.max(18, Math.min(40, Math.abs(F) * 1.4)); // az EroNyil hossza (leptek 1,4; maxHossz 40)
   const kx = (x) => OX + x * PX;
   const ky = (y) => OY - y * PX;

@@ -115,11 +115,11 @@ export function Ind({ alap, index, utana }) {
 }
 
 /** Kijelentés-sáv a rajz tetején. */
-export function Kijelentes({ x = 300, y = 24, opacitas = 1, children }) {
+export function Kijelentes({ x = 300, y = 24, opacitas = 1, szeles = 300, children }) {
   if (opacitas <= 0.01) return null;
   return (
     <g opacity={opacitas}>
-      <rect x={x - 150} y={y - 16} width={300} height={24} rx="7" fill="#f5f3ff" stroke="#c4b5fd" strokeWidth="1" />
+      <rect x={x - szeles / 2} y={y - 16} width={szeles} height={24} rx="7" fill="#f5f3ff" stroke="#c4b5fd" strokeWidth="1" />
       <FeliratA x={x} y={y + 1} szin="#5b21b6" meret={12.5}>
         {children}
       </FeliratA>
@@ -279,7 +279,7 @@ function Rajz(t) {
         <g opacity={ellU}>
           <Fokusz x={XB} y={Y} t={t} szin={SZ.zold} cimke="B" dx={12} dy={-14} />
           <Kar x1={X1} y1={Y + 28} x2={XB} y2={Y + 28} u={arany(ellKarU, 0, 0.5)} cimke="4 m" dy={-5} szin={SZ.zold} />
-          <Kar x1={XA} y1={Y + 42} x2={XB} y2={Y + 42} u={arany(ellKarU, 0.4, 1)} cimke="6 m" dy={-5} szin={SZ.zold} />
+          <Kar x1={XA} y1={Y + 42} x2={XB} y2={Y + 42} u={arany(ellKarU, 0.4, 1)} cimke="6 m" dy={16} szin={SZ.zold} />
           <Pipa x={300} y={Y - 110} opacitas={arany(t, T.ell + 2.4, T.ell + 3.0)}>61,32 − 87,96 + 34,64 − 8 = 0,00 ✓</Pipa>
         </g>
       )}

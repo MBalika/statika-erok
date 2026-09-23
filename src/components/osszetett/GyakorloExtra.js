@@ -21,6 +21,11 @@ export function tag(kar, ero, tizKar = 1, tizEro = 0) {
 export function tagE(ero, tiz = 0) {
   return `${ero < 0 ? "-" : "+"} ${szK(Math.abs(ero), tiz)}`;
 }
+/** Méretlánc a rajz aljára a megadott x-koordináták (támaszok, erők, csuklók) rendezett sorából. */
+export function meretLanc(xk) {
+  const s = [...new Set(xk.map((x) => Math.round(x * 1000) / 1000))].sort((a, b) => a - b);
+  return s.slice(1).map((x, i) => ({ x1: s[i], x2: x, cimke: sz(x - s[i], 1) }));
+}
 const KEK = "#2563eb";
 
 /**
@@ -35,14 +40,17 @@ export function OsszetettRajz({ rudak = [], tamaszok = [], csuklok = [], rudElem
   const ys = [...rudak.flatMap((r) => [r[1], r[3]]), ...rudElemek.flatMap((r) => [r[1], r[3]])];
   const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
   const szel = Math.max(1, maxX - minX), mag = maxY - minY;
-  const PX = Math.min(70, 470 / szel, mag > 0 ? 170 / mag : 70);
-  const OX = 300 - (PX * (maxX + minX)) / 2;
+  const leptek = 5;
+  // bal/jobb margó: az oszlopon lévő vízszintes teher feliratának, ill. a függőleges méretvonalnak is jusson hely a 600 px-en belül
+  const balMargo = vizszintesMegoszlo ? vizszintesMegoszlo.p * leptek + 92 : 65;
+  const jobbMargo = fuggMeretek.length ? 112 : 65;
+  const PX = Math.min(70, (600 - balMargo - jobbMargo) / szel, mag > 0 ? 170 / mag : 70);
+  const OX = balMargo + (600 - balMargo - jobbMargo - PX * szel) / 2 - minX * PX;
   const OY = 0;
   const kx = (x) => OX + x * PX;
   const ky = (y) => OY - (y - maxY) * PX;
   let fent = ky(maxY) - 100;
   let lent = ky(minY) + 60;
-  const leptek = 5;
 
   const elemek = [];
   const feliratDobozok = []; // a már elhelyezett feliratok téglalapjai (ütközés-elkerüléshez)
@@ -102,7 +110,12 @@ export function OsszetettRajz({ rudak = [], tamaszok = [], csuklok = [], rudElem
         <Rud x1={kx(r[0])} y1={ky(r[1])} x2={kx(r[2])} y2={ky(r[3])} />
         {r[4] && (
           <text x={(kx(r[0]) + kx(r[2])) / 2 + 8} y={(ky(r[1]) + ky(r[3])) / 2 - 6} fontSize="12.5" fontStyle="italic" fontWeight="650" style={{ fill: KEK, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-            {r[4]}
+            {r[4].includes("_") ? (
+              <>
+                {r[4].split("_")[0]}
+                <tspan dy="4" fontSize="9.5">{r[4].split("_")[1]}</tspan>
+              </>
+            ) : r[4]}
           </text>
         )}
       </g>,
@@ -113,25 +126,35 @@ export function OsszetettRajz({ rudak = [], tamaszok = [], csuklok = [], rudElem
     let h = Math.min(80, 36 + 2.2 * Math.abs(e.F));
     const fugg = Math.abs(Math.cos(rad)) < 1e-6;
     const szeles = 6.4 * (e.cimke?.length ?? 4);
-    const eltolas = fugg ? [6, -4] : Math.cos(rad) > 0 ? [-szeles - 4, -4] : [8, -4];
+    let eltolas = fugg ? [6, -4] : Math.cos(rad) > 0 ? [-szeles - 4, -4] : [8, -4];
     const X = kx(e.x), Y = ky(e.y ?? 0) - (Math.sin(rad) < 0 ? 3 : -3);
-    const doboz = () => {
-      const x1 = X - h * Math.cos(rad) + eltolas[0], y1 = Y + h * Math.sin(rad) + eltolas[1];
+    // ferde erő felirata: ha a rajz szélén kilógna, a farok másik oldalára kerül
+    const farokX = X - h * Math.cos(rad);
+    if (!fugg && farokX + eltolas[0] < 2) eltolas = [8, -4];
+    else if (!fugg && farokX + eltolas[0] + szeles > 598) eltolas = [-szeles - 4, -4];
+    const doboz = (el) => {
+      const x1 = X - h * Math.cos(rad) + el[0], y1 = Y + h * Math.sin(rad) + el[1];
       return { x1, x2: x1 + szeles, y1: y1 - 13, y2: y1 + 3 };
     };
-    let d = doboz();
-    // ha a felirat egy korábbi feliratra esne, a függőleges nyilat hosszabbra vesszük
-    for (let k = 0; fugg && k < 3 && feliratDobozok.some((b) => metszi(b, d)); k++) {
-      h += 26;
-      d = doboz();
+    // függőleges nyílnál a felirat jobbra, ha ott ütközne (vagy kilógna), balra; ha egyik sem jó, a nyilat hosszabbra vesszük és újra próbáljuk
+    const jeloltek = fugg ? [[6, -4], [-szeles - 6, -4]] : [eltolas];
+    let d = null;
+    for (let k = 0; k < 4 && !d; k++) {
+      const jo = jeloltek.find((el) => { const dd = doboz(el); return dd.x1 >= 2 && dd.x2 <= 598 && !feliratDobozok.some((b) => metszi(b, dd)); });
+      if (jo) { eltolas = jo; d = doboz(jo); }
+      else if (!fugg) d = doboz(eltolas);
+      else h += 26;
     }
+    if (!d) d = doboz(eltolas);
     feliratDobozok.push(d);
     fent = Math.min(fent, d.y1 - 8);
     elemek.push(<TeherNyil key={`e${i}`} x={X} y={Y} hossz={h} szog={e.szog} cimke={e.cimke} cimkeEltolas={eltolas} />);
   });
   csuklok.forEach((c, i) => {
     elemek.push(<BelsoCsuklo key={`c${i}`} x={kx(c[0])} y={ky(c[1])} />);
-    if (c[2]) elemek.push(<TamaszCimke key={`cc${i}`} x={kx(c[0])} y={ky(c[1]) - 12}>{c[2]}</TamaszCimke>);
+    // a csukló betűje a rúd fölé kerül; ha ott megoszló teher fut, a rúd alá
+    const teherFolotte = megoszlok.some((mm) => c[0] >= mm.x1 - 1e-9 && c[0] <= mm.x2 + 1e-9 && Math.abs((mm.y ?? 0) - c[1]) < 1e-9);
+    if (c[2]) elemek.push(<TamaszCimke key={`cc${i}`} x={kx(c[0])} y={ky(c[1]) + (teherFolotte ? 22 : -12)}>{c[2]}</TamaszCimke>);
   });
   pontok.forEach((p, i) => elemek.push(<TamaszCimke key={`p${i}`} x={kx(p.x) + (p.dx ?? 0)} y={ky(p.y ?? 0) + (p.dy ?? -10)}>{p.cimke}</TamaszCimke>));
   const testY = testek.map((t) => {
@@ -179,7 +202,7 @@ function gerberMegoszloFeladat() {
   const QII = p * L3, xQII = xC + L3 / 2;
   const r = gerberSzamit({ xB, xC, xD, terhekI: [{ x: xQI, y: 0, Fx: 0, Fy: -QI }], terhekII: [{ x: xQII, y: 0, Fx: 0, Fy: -QII }] });
   return {
-    adat: { gerber: true },
+    adat: { gerber: true, par: { xB, xC, xD, p } },
     szoveg: (
       <p>
         Gerber-tartó: <M>{"A"}</M> csukló (<M>{"x = 0"}</M>), <M>{"B"}</M> görgő (<M>{`x = ${szK(xB, 1)}`}</M> m), <M>{"C"}</M> belső csukló (<M>{`x = ${szK(xC, 1)}`}</M> m), <M>{"D"}</M> görgő (
@@ -236,7 +259,7 @@ function gerberMegoszloFeladat() {
    ============================================================ */
 function haromcsuklosVizszintesFeladat() {
   const L = fel(6, 12), h = fel(3, 6);
-  const xC = valaszt([L / 2, fel(Math.max(2, L / 2 - 2), L / 2 + 2)]);
+  const xC = valaszt([fel(L / 2, L / 2), fel(Math.max(2, L / 2 - 2), L / 2 + 2)]);
   const p = egesz(2, 6);
   const F = egesz(6, 20);
   const xF = fel(1, L - 1);
@@ -247,7 +270,7 @@ function haromcsuklosVizszintesFeladat() {
   const r = haromcsuklosSzamit({ xB: L, yB: 0, xC, yC: h, terhekI, terhekII });
   const balOldalon = xF <= xC;
   return {
-    adat: { harom: true },
+    adat: { harom: true, par: { L, h, xC, p, F, xF } },
     szoveg: (
       <p>
         Háromcsuklós keret: <M>{"A"}</M> csukló <M>{"(0;\\ 0)"}</M>, <M>{"B"}</M> csukló <M>{`(${szK(L, 1)};\\ 0)`}</M>, a gerenda <M>{`h = ${szK(h, 1)}`}</M> m magasan, a <M>{"C"}</M> belső csukló az{" "}
@@ -258,12 +281,12 @@ function haromcsuklosVizszintesFeladat() {
     abra: (
       <OsszetettRajz
         rudak={[[0, 0, 0, h], [0, h, L, h], [L, h, L, 0]]}
-        tamaszok={[{ x: 0, y: 0, tipus: "csuklo", cimke: "A", dx: -18, dy: 26 }, { x: L, y: 0, tipus: "csuklo", cimke: "B", dx: 18, dy: 26 }]}
+        tamaszok={[{ x: 0, y: 0, tipus: "csuklo", cimke: "A" }, { x: L, y: 0, tipus: "csuklo", cimke: "B" }]}
         csuklok={[[xC, h, "C"]]}
         vizszintesMegoszlo={{ x: 0, y1: 0, y2: h, p, cimke: `p = ${p} kN/m` }}
         erok={[{ x: xF, y: h, F, szog: -90, cimke: `F = ${F} kN` }]}
         testek={[{ x: 0.6, y: h * 0.45, cimke: "I" }, { x: L - 0.6, y: h * 0.45, cimke: "II" }]}
-        meretek={[{ x1: 0, x2: xC, cimke: sz(xC, 1) }, { x1: xC, x2: L, cimke: sz(L - xC, 1) }]}
+        meretek={meretLanc([0, xF, xC, L])}
         fuggMeretek={[{ y1: 0, y2: h, cimke: `h = ${sz(h, 1)}` }]}
       />
     ),
@@ -318,7 +341,7 @@ function ruddalKapcsoltFeladat() {
   const x2 = fel(xQ + 0.5, xD - 0.5), F2 = egesz(6, 18);
   const r = ruddalKapcsoltSzamit({ xA, xB, xP, xQ, xD, h, x1, F1, x2, F2 });
   return {
-    adat: { rud: true },
+    adat: { rud: true, par: { xA, xB, xP, xQ, xD, h, x1, F1, x2, F2 } },
     szoveg: (
       <p>
         Az I. gerenda (0-tól <M>{`${szK(xP, 1)}`}</M> m-ig) az <M>{"A"}</M> görgőn (<M>{`x = ${szK(xA, 1)}`}</M>) és a <M>{"B"}</M> csuklón (<M>{`x = ${szK(xB, 1)}`}</M>) áll. A <M>{"P"}</M> végéből{" "}
@@ -334,7 +357,7 @@ function ruddalKapcsoltFeladat() {
         tamaszok={[{ x: xA, y: 0, tipus: "gorgo", cimke: "A" }, { x: xB, y: 0, tipus: "csuklo", cimke: "B" }, { x: xD, y: h, tipus: "csuklo", cimke: "D" }]}
         erok={[{ x: x1, y: 0, F: F1, szog: -90, cimke: `F₁ = ${F1} kN` }, { x: x2, y: h, F: F2, szog: -90, cimke: `F₂ = ${F2} kN` }]}
         pontok={[{ x: xP, y: 0, cimke: "P", dy: 20 }, { x: xQ, y: h, cimke: "Q", dx: -12, dy: -10 }]}
-        testek={[{ x: xA + 0.6, y: -0.5, cimke: "I" }, { x: xD - 1, y: h - 0.5, cimke: "II" }]}
+        testek={[{ x: (xA + xB) / 2, y: -0.6, cimke: "I" }, { x: xD - 1.5, y: h - 0.5, cimke: "II" }]}
         meretek={[{ x1: 0, x2: xA, cimke: sz(xA, 1) }, { x1: xA, x2: xB, cimke: sz(xB - xA, 1) }, { x1: xB, x2: xP, cimke: sz(xP - xB, 1) }, { x1: xP, x2: xQ, cimke: sz(xQ - xP, 1) }, { x1: xQ, x2: xD, cimke: sz(xD - xQ, 1) }]}
         fuggMeretek={[{ y1: 0, y2: h, cimke: `h = ${sz(h, 1)}` }]}
       />

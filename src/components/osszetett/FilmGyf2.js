@@ -12,9 +12,9 @@ import { EroA, Kar, Fokusz, Pipa, Kijelentes, FilmHegyek, SZ } from "@/component
  * Eredmény: B_y = 15; A_y = −3; B_x = −9; A_x = −15; C (a II. testre) = (9; −3).
  */
 
-const OX = 96;
-const OY = 286;
-const L = 27;
+const OX = 150;
+const OY = 250;
+const L = 24;
 const kx = (x) => OX + x * L;
 const ky = (y) => OY - y * L;
 const KEK = "#0369a1";
@@ -103,10 +103,10 @@ function Rajz(t) {
   const fopont = fazis === "by" ? { x: kx(0) + dI[0], y: ky(0), nev: "A" } : fazis === "ay" ? { x: kx(12) + dII[0], y: ky(0), nev: "B" } : fazis === "bx" || fazis === "ell" ? { x: kx(6) + (fazis === "bx" ? dII[0] : dI[0]), y: ky(6), nev: "C" } : null;
 
   return (
-    <svg viewBox="0 0 600 340" className="abra w-full select-none">
+    <svg viewBox="0 0 600 352" className="abra w-full select-none">
       <TartoHegyek />
       <FilmHegyek />
-      <Kijelentes opacitas={kijU * (fazis === "kij" ? 1 : 0.35)} y={22}>
+      <Kijelentes opacitas={kijU * (fazis === "kij" ? 1 : 0.35)} y={22} szeles={440}>
         Σ: (R, F, A, B) ≐ O · I: (R, A, C′) ≐ O · II: (F, B, C) ≐ O
       </Kijelentes>
 
@@ -124,7 +124,7 @@ function Rajz(t) {
         <EroA x={kx(0)} y={ky(0)} hossz={44} szog={0} u={reakU} opacitas={op("Ax") * (1 - fordulU)} cimke="Aₓ" dx={-4} dy={-10} horgony="end" />
         <EroA x={kx(0) - 2} y={ky(0) - 10} hossz={44} szog={180} u={fordulU} cimke="Aₓ = 15" dx={4} dy={-8} />
         <EroA x={kx(0)} y={ky(0) + 2} hossz={40} szog={90} u={reakU} opacitas={op("Ay") * (1 - fordulU)} cimke={szamU ? "Aᵧ = −3" : "Aᵧ"} dx={6} dy={8} />
-        <EroA x={kx(0) + 8} y={ky(0) + 42} hossz={40} szog={-90} u={fordulU} cimke="Aᵧ = 3" dx={6} dy={-2} />
+        <EroA x={kx(0) + 8} y={ky(0) + 42} hossz={40} szog={-90} u={fordulU} cimke="Aᵧ = 3" dx={6} dy={14} cimkeHegy />
         {/* csuklóerő az I. testen: C′ = (−9; +3) → balra, felfelé */}
         <g opacity={op("Cxi")}>
           <EroA x={kx(6) - 34 * szetU} y={ky(6)} hossz={34 * szetU} szog={180} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.4} cimke={szamU ? "C′ₓ = 9" : "C′ₓ"} dx={-2} dy={-8} horgony="end" cimkeHegy />
@@ -163,41 +163,41 @@ function Rajz(t) {
         <MeretFugg x={kx(12) + 44} y1={ky(0)} y2={ky(4)} cimke="4 m" opacitas={0.8} />
       </g>
 
-      {fopont && <Fokusz x={fopont.x} y={fopont.y} t={t} cimke={fopont.nev} dx={fazis === "ay" ? 12 : -26} dy={-14} />}
+      {fopont && <Fokusz x={fopont.x} y={fopont.y} t={t} />}
       {fazis === "by" && (
         <g>
           <Kar x1={kx(0) + dI[0] + 40} y1={ky(0)} x2={kx(0) + dI[0] + 40} y2={ky(3)} u={arany(t, T.by + 0.6, T.by + 1.2)} cimke="3 m" dx={22} dy={4} />
           <Kar x1={kx(0) + dI[0]} y1={ky(0) + 20} x2={kx(9) + dII[0]} y2={ky(0) + 20} u={arany(t, T.by + 1.0, T.by + 1.8)} cimke="9 m" dy={14} />
-          <Kar x1={kx(0) + dI[0]} y1={ky(0) + 34} x2={kx(12) + dII[0]} y2={ky(0) + 34} u={arany(t, T.by + 1.6, T.by + 2.4)} cimke="12 m" dy={14} />
-          <Pipa x={300} y={322} opacitas={arany(t, T.by + 2.4, T.by + 3.0)}>Bᵧ = (72 + 108) / 12 = 15,00 kN</Pipa>
+          <Kar x1={kx(0) + dI[0]} y1={ky(0) + 40} x2={kx(12) + dII[0]} y2={ky(0) + 40} u={arany(t, T.by + 1.6, T.by + 2.4)} cimke="12 m" dy={14} />
+          <Pipa x={300} y={336} opacitas={arany(t, T.by + 2.4, T.by + 3.0)}>Bᵧ = (72 + 108) / 12 = 15,00 kN</Pipa>
         </g>
       )}
       {fazis === "ay" && (
         <g>
           <Kar x1={kx(9) + dII[0]} y1={ky(0) + 20} x2={kx(12) + dII[0]} y2={ky(0) + 20} u={arany(t, T.ay + 0.6, T.ay + 1.2)} cimke="3 m" dy={14} />
-          <Kar x1={kx(0) + dI[0]} y1={ky(0) + 34} x2={kx(12) + dII[0]} y2={ky(0) + 34} u={arany(t, T.ay + 1.2, T.ay + 2.0)} cimke="12 m" dy={14} />
-          <Pipa x={300} y={322} opacitas={arany(t, T.ay + 2.4, T.ay + 3.0)}>Aᵧ = (−72 + 36) / 12 = −3,000 kN → lefelé</Pipa>
+          <Kar x1={kx(0) + dI[0]} y1={ky(0) + 40} x2={kx(12) + dII[0]} y2={ky(0) + 40} u={arany(t, T.ay + 1.2, T.ay + 2.0)} cimke="12 m" dy={14} />
+          <Pipa x={300} y={336} opacitas={arany(t, T.ay + 2.4, T.ay + 3.0)}>Aᵧ = (−72 + 36) / 12 = −3,000 kN → lefelé</Pipa>
         </g>
       )}
       {fazis === "bx" && (
         <g>
-          <Kar x1={kx(6) + dII[0]} y1={ky(6) - 30} x2={kx(12) + dII[0]} y2={ky(6) - 30} u={arany(t, T.bx + 0.6, T.bx + 1.2)} cimke="6 m" dy={-6} />
+          <Kar x1={kx(6) + dII[0]} y1={ky(6) - 46} x2={kx(12) + dII[0]} y2={ky(6) - 46} u={arany(t, T.bx + 0.6, T.bx + 1.2)} cimke="6 m" dy={-6} />
           <Kar x1={kx(12) + dII[0] + 28} y1={ky(6)} x2={kx(12) + dII[0] + 28} y2={ky(0)} u={arany(t, T.bx + 1.0, T.bx + 1.6)} cimke="6 m" dx={20} dy={4} />
           <Kar x1={kx(6) + dII[0]} y1={ky(6) - 16} x2={kx(9) + dII[0]} y2={ky(6) - 16} u={arany(t, T.bx + 1.4, T.bx + 2.0)} cimke="3 m" dy={-6} />
-          <Pipa x={300} y={322} opacitas={arany(t, T.bx + 2.4, T.bx + 3.0)}>Bₓ = (36 − 90) / 6 = −9,000 kN → balra</Pipa>
+          <Pipa x={300} y={336} opacitas={arany(t, T.bx + 2.4, T.bx + 3.0)}>Bₓ = (36 − 90) / 6 = −9,000 kN → balra</Pipa>
         </g>
       )}
       {fazis === "vet" && (
         <g opacity={arany(t, T.vet + 0.2, T.vet + 0.8)}>
-          <VonalA x1={30} y1={ky(0) + 60} x2={570} y2={ky(0) + 60} szin="#94a3b8" vastag={1} />
-          <FeliratA x={300} y={ky(0) + 76} szin={SZ.szurke} meret={11.5} vastag={false}>vízszintes vetület az egészre: 24 + Aₓ − 9 = 0 → Aₓ = −15</FeliratA>
-          <Pipa x={300} y={322} opacitas={arany(t, T.vet + 1.6, T.vet + 2.2)}>II: Cₓ = 9,000 kN, Cᵧ = −3,000 kN (a II. testre)</Pipa>
+          <VonalA x1={30} y1={ky(0) + 52} x2={570} y2={ky(0) + 52} szin="#94a3b8" vastag={1} />
+          <FeliratA x={300} y={ky(0) + 68} szin={SZ.szurke} meret={11.5} vastag={false}>Σ: ΣFᵢₓ: 24 + Aₓ − 9 = 0 → Aₓ = −15</FeliratA>
+          <Pipa x={300} y={336} opacitas={arany(t, T.vet + 1.6, T.vet + 2.2)}>II: Cₓ = 9,000 kN, Cᵧ = −3,000 kN (a II. testre)</Pipa>
         </g>
       )}
-      {fazis === "ell" && <Pipa x={300} y={322} opacitas={arany(t, T.ell + 1.6, T.ell + 2.2)}>I: ΣM_C = 18 − 90 + 72 = 0 ✓</Pipa>}
+      {fazis === "ell" && <Pipa x={300} y={336} opacitas={arany(t, T.ell + 1.6, T.ell + 2.2)}>I: ΣM_C = 18 − 90 + 72 = 0 ✓</Pipa>}
       {fazis === "ered" && (
         <g opacity={eredU}>
-          <FeliratA x={300} y={322} szin={SZ.zold} meret={12.5}>Eredményvázlat: 24 jobbra − (15 + 9) balra; 15 fel − (12 + 3) le</FeliratA>
+          <FeliratA x={300} y={336} szin={SZ.zold} meret={12.5}>Eredményvázlat: 24 jobbra − (15 + 9) balra; 15 fel − (12 + 3) le</FeliratA>
         </g>
       )}
     </svg>

@@ -58,8 +58,8 @@ const SZERKEZETEK = [
   {
     id: "befogas",
     cim: "Gerber befogással",
-    origo: [40, 170],
-    L: 37,
+    origo: [100, 170],
+    L: 32,
     rudak: [[0, 0, 14, 0]],
     testHatar: { 0: [0, 10], 1: [10, 14] },
     tamaszok: [
@@ -73,10 +73,10 @@ const SZERKEZETEK = [
       { id: "C", x: 10, y: 0 },
       { id: "B", x: 14, y: 0 },
     ],
-    terhek: [{ nev: "F", x: 0, y: 0, Fx: 12 * Math.cos(150 * FOK), Fy: 12 * Math.sin(150 * FOK), test: 0, cimke: "F = 12 kN (30°)" }],
+    terhek: [{ nev: "F", x: 0, y: 0, Fx: 12 * Math.cos(150 * FOK), Fy: 12 * Math.sin(150 * FOK), test: 0, cimke: "F = 12 kN (30°)", vegpontbol: true }],
     ismeretlenek: [
       { id: "A", tex: "A", P: [2, 0], e: [0, 1], hat: [{ test: 0, elojel: 1 }] },
-      { id: "Bx", tex: "B_x", P: [14, 0], e: [1, 0], hat: [{ test: 1, elojel: 1 }] },
+      { id: "Bx", tex: "B_x", P: [14, 0], e: [1, 0], hat: [{ test: 1, elojel: 1 }], cimkeEltolas: [0, 18], horgony: "end" },
       { id: "By", tex: "B_y", P: [14, 0], e: [0, 1], hat: [{ test: 1, elojel: 1 }] },
       { id: "MB", tex: "M_B", tipus: "nyomatek", hat: [{ test: 1, elojel: 1 }] },
       { id: "Cx", tex: "C_x", P: [10, 0], e: [1, 0], hat: [{ test: 1, elojel: 1 }, { test: 0, elojel: -1 }] },
@@ -247,8 +247,22 @@ export default function SorrendValaszto() {
   const rajzTerhek = szk.terhek.map((t, i) => {
     const n = Math.hypot(t.Fx, t.Fy);
     const szog = (Math.atan2(t.Fy, t.Fx) * 180) / Math.PI;
+    if (t.vegpontbol) {
+      // a tartó végét húzó erő: a nyíl a végpontból indul kifelé (mint a feladatlap rajzán)
+      const ex = t.Fx / n, ey = -t.Fy / n;
+      const x1 = kx(t.x), y1 = ky(t.y) - 2;
+      return (
+        <g key={i} opacity={aktivTest(t.test) ? 1 : 0.3}>
+          <line x1={x1} y1={y1} x2={x1 + 44 * ex} y2={y1 + 44 * ey} stroke="var(--color-jel-ero)" strokeWidth="3" strokeLinecap="round" markerEnd="url(#th-teher)" />
+          <text x={x1 + 22 * ex - 4} y={y1 + 44 * ey - 12} textAnchor="middle" fontSize="12.5" fontWeight="650" style={{ fill: "var(--color-jel-ero)", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+            {t.cimke}
+          </text>
+        </g>
+      );
+    }
     return <TeherNyil key={i} x={kx(t.x)} y={ky(t.y) - 3} hossz={44} szog={szog} cimke={t.cimke} cimkeEltolas={t.cimkeEltolas ?? (Math.abs(t.Fx) < 0.3 ? [6, -2] : t.Fx > 0 ? [-34, -6] : [8, -6])} opacitas={aktivTest(t.test) ? 1 : 0.3} />;
   });
+  const rovidPontNev = egy?.tipus === "nyom" ? (egy.nev.length <= 2 ? egy.nev : "P") : "";
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
@@ -352,7 +366,9 @@ export default function SorrendValaszto() {
               const X = kx(u.P[0]) + (belso ? oldal * 10 : 0) + (u.e[0] ? 0 : 0);
               const Y = ky(u.P[1]) + (belso && u.e[0] ? 0 : 0);
               const cimke = `${u.tex.replace("_x", "ₓ").replace("_y", "ᵧ")}${kesz ? ` = ${sz(megoldott[u.id], 2)}` : ""}`;
-              return <EroNyil key={u.id} X={X} Y={Y} Fx={u.e[0] * elojel} Fy={u.e[1] * elojel} minHossz={36} leptek={0} szin={kesz ? "#15803d" : "#7c3aed"} hegy={kesz ? "oh-zold" : "oh-lila"} cimke={cimke} opacitas={belso && test === "mind" ? 0.25 : benne ? 1 : 0.3} szaggatott={belso && test === "mind"} />;
+              // a tartó tengelyében ható (vízszintes) erők feliratát a tengely alá tesszük, hogy ne fedje a rudat
+              const vizszintes = Math.abs(u.e[1]) < 1e-9;
+              return <EroNyil key={u.id} X={X} Y={Y} Fx={u.e[0] * elojel} Fy={u.e[1] * elojel} minHossz={36} leptek={0} szin={kesz ? "#15803d" : "#7c3aed"} hegy={kesz ? "oh-zold" : "oh-lila"} cimke={cimke} cimkeEltolas={u.cimkeEltolas ?? (vizszintes ? [0, 18] : undefined)} horgony={u.horgony} opacitas={belso && test === "mind" ? 0.25 : benne ? 1 : 0.3} szaggatott={belso && test === "mind"} />;
             })}
             {/* a választott pont és a karok */}
             {egy?.tipus === "nyom" && (
@@ -369,7 +385,7 @@ export default function SorrendValaszto() {
                 <circle cx={kx(egy.P[0])} cy={ky(egy.P[1])} r="9" fill="none" stroke="#e2590a" strokeWidth="2.2" />
                 <circle cx={kx(egy.P[0])} cy={ky(egy.P[1])} r="2.5" fill="#e2590a" />
                 <text x={kx(egy.P[0]) + 12} y={ky(egy.P[1]) - 12} fontSize="12" fontWeight="700" style={{ fill: "#e2590a", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
-                  ΣM erre a pontra
+                  ΣM ({rovidPontNev})
                 </text>
               </g>
             )}

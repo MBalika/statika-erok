@@ -14,6 +14,10 @@ export default function Puska({ Doboz }) {
           <li><M>{"V > 0"}</M>: a pozitív <M>{"N"}</M> irányát az óramutató <strong>szerint</strong> 90°-kal elforgatva (bal részen lefelé, jobb részen felfelé).</li>
           <li><M>{"M > 0"}</M>: a kijelölt pozitív oldal (vízszintesnél az <strong>alsó</strong>) húzott; az ábra <strong>a húzott oldalra</strong>.</li>
         </ul>
+        <p>
+          <strong>A rajz oldala (8.3.2):</strong> mindhárom ábrát a tartó ugyanazon pozitív oldalára rajzoljuk — arra, amelyiket a nyomaték pozitív definíciójához választottunk (vízszintes tartónál alulra). Így a pozitív{" "}
+          <M>{"N"}</M>, <M>{"V"}</M> és <M>{"M"}</M> mindig a tartó alatt, a negatív fölötte van (8.9. ábra); a „+” jel a tengely alatt.
+        </p>
         <p>Bal rész, óramutató szerint pozitív egyenlet: <M>{"\\Mj{K} +A_y x_K - F(x_K - x_F) - M_K = 0"}</M>; <M>{"\\Fy A_y - F - V_K = 0"}</M>; <M>{"\\Fx A_x + F_x + N_K = 0"}</M>.</p>
       </Doboz>
       <Doboz cim="Teher → V → M alak (8.3.3 táblázat)">
@@ -54,7 +58,7 @@ export default function Puska({ Doboz }) {
         <MB>{"N = -R\\sin\\alpha,\\qquad V = R\\cos\\alpha,\\qquad M = \\text{vízszintes karokkal, mint vízszintes tartón}"}</MB>
         <p>
           Függőleges teher ferde tartón <strong>normálerőt is ad</strong>. Megoszló teher: hossz mentén vagy vetületre? (<M>{"q_\\perp = p\\cos\\alpha"}</M>, parabola-belógás <M>{"q_\\perp\\ell^2/8"}</M> a ferde hosszal.) Az N és V ábra
-          a rúdra merőlegesen mérve.
+          a rúdra merőlegesen mérve, az M-mel azonos (pozitív) oldalra.
         </p>
       </Doboz>
       <Doboz cim="Tört tengely, sarok, elágazás (8.4.3–8.4.4)">
@@ -75,7 +79,7 @@ export default function Puska({ Doboz }) {
       </Doboz>
       <Doboz cim="Tipikus hibák" szeles>
         <ul className="list-disc space-y-0.5 pl-4">
-          <li>V előjel: „felfelé pozitív” — nem: a bal részen a <em>felfelé</em> mutató erők adnak +V-t, a jobb részen a lefelé mutatók.</li>
+          <li>V előjel: „felfelé pozitív” — nem: a bal részen a <em>felfelé</em> mutató erők adnak +V-t, a jobb részen a lefelé mutatók. És a rajzon a +V nem fölé, hanem a tartó <em>alá</em> kerül, ugyanoda, ahová a +M.</li>
           <li>A bal részről az <strong>A reakció lemarad</strong> („csak a terheket írom”), vagy a megoszló teherből a K-ig eső darab hiányzik.</li>
           <li>Megoszló teher alatt egyenes M (parabola helyett), vagy a parabola a rossz irányba domborodik — a kötélalak a teher irányába lóg.</li>
           <li>Koncentrált nyomatéknál az ugrás iránya tippelve — számold a másik oldalról is.</li>
@@ -83,7 +87,7 @@ export default function Puska({ Doboz }) {
           <li>Konzol ábrája a rossz végről indul: a szabad végen V = M = 0 (ha nincs ott koncentrált hatás).</li>
           <li>Ferde tartón N = 0 „mert csak függőleges a teher” — nem: <M>{"N = -R\\sin\\alpha"}</M>.</li>
           <li>Sarokban a két csonk nyomatéka különböző, vagy az ábra átmegy a tengelyen a sarkon.</li>
-          <li>Az M ábra a nyomott oldalra rajzolva; a vizsgán a helyes N, V, M ábra együtt ér pontot — részpont nincs.</li>
+          <li>Az M ábra a nyomott oldalra rajzolva, vagy az N és V ábra a nyomatékkal ellentétes oldalra; a vizsgán a helyes N, V, M ábra együtt ér pontot — részpont nincs.</li>
         </ul>
       </Doboz>
     </>

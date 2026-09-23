@@ -1,5 +1,6 @@
 import { ertekek } from "@/lib/tarto";
-import { TartoHegyek, Gorgo, Csuklo, Befogas, BelsoCsuklo, KoncentraltNyomatek, Meret, MeretFugg, TamaszCimke, SZIN } from "@/components/tartok/TartoElemek";
+import { TartoHegyek, Gorgo, Csuklo, Befogas, BelsoCsuklo, KoncentraltNyomatek, Meret, MeretFugg, TamaszCimke } from "@/components/tartok/TartoElemek";
+import { SZIN } from "@/components/tartok/szinek";
 import { sz } from "@/lib/szamok";
 
 /**
@@ -12,8 +13,13 @@ import { sz } from "@/lib/szamok";
  *   hatar={s}     – az ábrák csak az s ívhosszig „épülnek” (film, Vágd el a tartót)
  *   metszet={s}   – szaggatott vágásvonal a szerkezeten és pont az ábrákon az s ívhossznál
  *   kiemelTorespontok / kiemelSzelso = 0…1 – gyűrűk a töréspontokon, ill. a V = 0 helyeken
+ *   oldalJelek={false} – a „+ / −” oldaljel elhagyása a rudak elejénél (alapból kirajzoljuk)
  *
- * Előjelek (tankönyv 8.1.2.2): M a húzott oldalra (vízszintes rúdnál alulra), N és V a +ȳ oldalra.
+ * Előjelek és a rajz oldala (tankönyv 8.1.2.2 és 8.3.2, 8.9. ábra): mindhárom ábrát a tartó ugyanazon
+ * pozitív oldalára rajzoljuk — arra, amelyiket a nyomaték pozitív definíciójához választottuk (a rúd
+ * kezdőpontjától a végpont felé haladva a jobb oldal; vízszintes tartónál alul). Így a pozitív N, V és M
+ * mindig a tartó alatt, a negatív fölötte van; keretnél és ferde rúdnál rudanként ugyanaz az oldal,
+ * mint az M-nél. (A `pozitivOldal: 1` rúdnál a bal oldal a pozitív — ezt is követjük.)
  * Színek: N #059669, V #0369a1, M #be123c (mint az Ábrakalkulátorban).
  */
 
@@ -50,6 +56,16 @@ export function helyIvhosszon(e, s) {
     m -= ig.hossz;
   }
   return null;
+}
+
+/**
+ * A rúd pozitív oldala képernyő-egységvektorként (y lefelé): a kezdőponttól a végpont felé haladva a
+ * jobb oldal (vízszintes rúdnál lefelé). Mindhárom ábra (N, V, M) pozitív értékei erre az oldalra kerülnek.
+ */
+export function pozitivIrany(ig) {
+  const c = Math.cos(ig.szogFok * FOK), s = Math.sin(ig.szogFok * FOK);
+  const po = ig.pozitivOldal === 1 ? -1 : 1;
+  return [po * s, po * c];
 }
 
 /** Polinom tényleges fokszáma (a záró nullák nélkül). */
@@ -300,7 +316,7 @@ function mintavetel(ig, lim) {
   return pontok;
 }
 
-export function AbraSav({ e, g, ky, jel, hatar, leptek, cimkek = true, kiemelTorespontok = 0, kiemelSzelso = 0, metszet, halvany = false }) {
+export function AbraSav({ e, g, ky, jel, hatar, leptek, cimkek = true, kiemelTorespontok = 0, kiemelSzelso = 0, metszet, halvany = false, oldalJelek = true }) {
   const { kx } = g;
   const szin = SZINEK[jel];
   const igs = e.igenybevetelek;
@@ -313,12 +329,29 @@ export function AbraSav({ e, g, ky, jel, hatar, leptek, cimkek = true, kiemelTor
 
   igs.forEach((ig, i) => {
     const c = Math.cos(ig.szogFok * FOK), s = Math.sin(ig.szogFok * FOK);
-    const ir = jel === "M" ? [s, c] : [-s, -c];
+    // N, V és M egyaránt a rúd pozitív (az M-hez választott) oldalára — vízszintes rúdnál lefelé
+    const ir = pozitivIrany(ig);
     const pont = (x, v) => [kx(ig.kezdo[0] + x * c) + ir[0] * v * leptek, ky(ig.kezdo[1] + x * s) + ir[1] * v * leptek];
     const tengely = (x) => [kx(ig.kezdo[0] + x * c), ky(ig.kezdo[1] + x * s)];
     const rudLim = Math.max(0, Math.min(ig.hossz, lim - elozo));
     const kezd = elozo;
     elozo += ig.hossz;
+
+    // a „+” és „−” oldal jele a rúd elejénél (tankönyv 8.9. ábra): az első rúdon, és azon a rúdon, amelynek a
+    // kezdete szabad (nem az előző rúd végéhez csatlakozó sarok) — egy vonalban futó rudaknál és a keret sarkaiban
+    // nem ismételjük (a tankönyv 8.11–8.12. ábrája sem jelöli), így a jel nem lóg bele a szomszéd rúd ábrájába
+    const elozoIg = i > 0 ? igs[i - 1] : null;
+    const sarok = elozoIg && Math.hypot(elozoIg.veg[0] - ig.kezdo[0], elozoIg.veg[1] - ig.kezdo[1]) < 1e-6;
+    if (oldalJelek && (!elozoIg || !sarok)) {
+      const a0 = tengely(0);
+      const hx = a0[0] - c * 10, hy = a0[1] + s * 10; // kicsit a rúd kezdete előtt
+      elemek.push(
+        <g key={`oj${i}`} opacity="0.85">
+          <text x={hx + ir[0] * 13} y={hy + ir[1] * 13 + 3.5} textAnchor="middle" fontSize="10.5" fontWeight="700" style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>+</text>
+          <text x={hx - ir[0] * 13} y={hy - ir[1] * 13 + 3.5} textAnchor="middle" fontSize="10.5" fontWeight="700" style={{ fill: "#64748b", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>−</text>
+        </g>,
+      );
+    }
 
     if (rudLim > 1e-9 && leptek > 0) {
       const pontok = mintavetel(ig, rudLim);
@@ -370,8 +403,10 @@ export function AbraSav({ e, g, ky, jel, hatar, leptek, cimkek = true, kiemelTor
         for (const { v, oldal, be } of ertekekItt) {
           if (Math.abs(v) < 1e-6) continue;
           const p = pont(h.x, v);
-          if (feliratHelyek.some((f) => Math.abs(f.X - p[0]) < 1 && Math.abs(f.Y - p[1]) < 1 && Math.abs(f.v - v) < 1e-6)) continue;
-          feliratHelyek.push({ X: p[0], Y: p[1], v });
+          // ugyanabban a tengelypontban (pl. keret sarkában, két rúd közös végén) ugyanaz az érték csak egyszer
+          const t0 = pont(h.x, 0);
+          if (feliratHelyek.some((f) => Math.abs(f.X - t0[0]) < 1 && Math.abs(f.Y - t0[1]) < 1 && Math.abs(f.v - v) < 1e-6)) continue;
+          feliratHelyek.push({ X: t0[0], Y: t0[1], v });
           const o = [ir[0] * Math.sign(v), ir[1] * Math.sign(v)];
           const menti = [c * oldal * be, -s * oldal * be];
           let horgony = Math.abs(o[0]) < 0.35 ? (be > 6 || oldal === 0 ? "middle" : oldal < 0 ? "end" : "start") : o[0] > 0 ? "start" : "end";
@@ -477,6 +512,7 @@ export default function Diagram({
   kiemelTorespontok = 0,
   kiemelSzelso = 0,
   halvany = false,
+  oldalJelek = true,
   className = "abra w-full h-auto",
   gyerekek,
 }) {
@@ -547,7 +583,7 @@ export default function Diagram({
           </text>
         )}
         {panelek.length > 0 && <line x1={12} y1={top + 2} x2={szel - 12} y2={top + 2} stroke="#cbd5e1" strokeWidth="1" strokeDasharray="2 4" />}
-        <AbraSav e={e} g={g} ky={ky} jel={jel} hatar={hatar} leptek={leptek[jel]} cimkek={cimkek} kiemelTorespontok={kiemelTorespontok} kiemelSzelso={kiemelSzelso} metszet={metszet} halvany={halvany} />
+        <AbraSav e={e} g={g} ky={ky} jel={jel} hatar={hatar} leptek={leptek[jel]} cimkek={cimkek} kiemelTorespontok={kiemelTorespontok} kiemelSzelso={kiemelSzelso} metszet={metszet} halvany={halvany} oldalJelek={oldalJelek} />
       </g>,
     );
     y0 += abraMag;

@@ -202,7 +202,7 @@ export default function IgenybevetelOldal() {
           behelyettesitve={"(\\curvearrowright):\\ M_7 = +2\\cdot 3{,}0 - 5\\cdot 4{,}0 + 21 = +7{,}0\\ \\text{kNm}"}
         />
         <div className="grid gap-4 lg:grid-cols-2 [&>*]:min-w-0">
-          <AbraKeret szam={5} cim="A tankönyv 8.5.a ábrájának ferde konzolja a számítómag ábráival: N = 4,6 kN (húzás), V = −2,8 kN konstans, M lineáris 21-től 0-ig; K₇-ben M = 7 kNm.">
+          <AbraKeret szam={5} cim="A tankönyv 8.5.a ábrájának ferde konzolja: eredményvázlat a K₇ keresztmetszettel, és a három ábra a ferde tengelyre merőlegesen felmérve — N = +4,6 kN (húzás) és M (21-től 0-ig, K₇-ben 7) a pozitív (alsó-jobb) oldalon, V = −2,8 kN a másikon.">
             <AbraFerdeK7 />
           </AbraKeret>
           <AbraKeret szam={6} cim="A ferde keresztmetszet szögei — a „virág” (8.5.b ábra): a tengely, az N és V iránya, és egy függőleges erő felbontása.">
@@ -228,7 +228,7 @@ export default function IgenybevetelOldal() {
           cimke="Tankönyv (8.71)–(8.73): a konzol igénybevételi függvényei"
           keplet={"(\\rightarrow):\\ N(x) = +F\\cos\\alpha\\qquad (\\downarrow):\\ V(x) = +F\\sin\\alpha\\qquad (\\curvearrowleft):\\ M(x) = -F\\sin\\alpha\\,(l - x)"}
         />
-        <AbraKeret szam={7} cim="Az igénybevételi függvények a tartó tengelyére rajzolva (tankönyv 8.9. ábra): l = 4 m, F = 10 kN, α = 30°. N és V konstans, M lineáris, a felső (húzott) oldalon.">
+        <AbraKeret szam={7} cim="Az igénybevételi függvények a tartó tengelyére rajzolva (tankönyv 8.9. ábra): l = 4 m, F = 10 kN, α = 30°. N és V konstans és pozitív — a tartó alatt; M lineáris és negatív — a felső (húzott) oldalon. A + és − jel minden ábrán ugyanott van.">
           <AbraFuggvenyek />
         </AbraKeret>
         <Kiemelo tipus="definicio" cim="Igénybevételi ábra">
@@ -236,6 +236,10 @@ export default function IgenybevetelOldal() {
             Az igénybevételi függvényt a tartó tengelyével azonos tengelyen ábrázolva kapjuk az <strong>igénybevételi ábrát</strong> (normálerő-, nyíróerő- és hajlítónyomatéki ábra). Az értéket a tartó{" "}
             <strong>tengelyére merőlegesen</strong> mérjük fel; a tengely pozitív oldala az, amelyet az M pozitív definíciójához választottunk — ezért a nyomatéki ábra mindig a{" "}
             <strong>húzott oldalra</strong> kerül. Az ábrát a tengelyre merőleges sűrű, vékony <strong>sraffozás</strong> teszi teljessé: jelzi a végeredményt és a leolvasás irányát.
+          </p>
+          <p className="mt-2">
+            <strong>Mindhárom ábrát a tartó ugyanazon pozitív oldalára rajzoljuk</strong> — arra, amelyiket a nyomaték pozitív definíciójához választottunk (vízszintes tartónál alulra). Így a pozitív
+            N, V és M mindig a tartó alatt, a negatív fölötte van (tankönyv 8.3.2., 8.9. ábra). A számításnál használt (↑) vagy (↓) irány csak az előjelet adja — a rajz oldalát a pozitív oldal.
           </p>
         </Kiemelo>
         <div className="proza text-[15px] leading-relaxed text-petrol-700">
@@ -391,7 +395,7 @@ export default function IgenybevetelOldal() {
             az oldalon van: <strong>befordul a sarkon</strong>.
           </p>
         </div>
-        <AbraKeret szam={12} cim="Nyomatéki ábra a sarokban (tankönyv 8.11. ábra nyomán), három szerkezeten a számítómagból: az ábra a sarok két oldalán ugyanazon az oldalon marad.">
+        <AbraKeret szam={12} cim="Nyomatéki ábra a sarokban (tankönyv 8.11. ábra nyomán), három szerkezeten a számítómagból (L konzol; keret vízszintes erővel a sarkon; ferde + vízszintes szakasz): a sarok két oldalán az ábra ugyanazon az oldalon marad, és az érték átmegy (18, 12, 6 kNm).">
           <AbraSarok />
         </AbraKeret>
         <AbraKeret szam={13} cim="A sarok két csonkjára ható nyomatékok: egyenlő nagyság, ellentétes forgatás; a nyilat mindkettőnél a húzott (konvex vagy konkáv) oldalról indítjuk.">
@@ -406,7 +410,7 @@ export default function IgenybevetelOldal() {
             az előjeleket szemléletből (a nyilak irányából) véve.
           </p>
         </div>
-        <AbraKeret szam={14} cim="Nyomatéki ábra egyensúlya az elágazásban (tankönyv 8.12. ábra nyomán): +|M₁| − |M₂| − |M₃| = 0.">
+        <AbraKeret szam={14} cim="Nyomatéki ábra egyensúlya az elágazásban (tankönyv 8.12. ábra nyomán): a nyilak irányából, ↷ pozitívnak véve +|M₁| − |M₂| − |M₃| = 0, azaz 16 − 10 − 6 = 0.">
           <AbraElagazas />
         </AbraKeret>
 
@@ -427,7 +431,7 @@ export default function IgenybevetelOldal() {
           sorok={[
             { itt: <>belső erők, igénybevételek</>, konyv: <>igénybevétel: N, V, M</>, megjegyzes: "A keresztmetszet síkjára merőleges (N), síkjába eső (V) erő és a hajlítónyomaték (M)." },
             { itt: <>nyíróerő <M>{"V"}</M></>, konyv: <>V (az irodalomban T, Q)</>, megjegyzes: "Vertikális; Querkraft = tengelyre merőleges erő." },
-            { itt: <>pozitív oldal, húzott oldal</>, konyv: <>a tengely pozitív oldala; az M ábra a húzott oldalra kerül</>, megjegyzes: "Vízszintes rúdnál alul; a + jelet az ábrán feltüntetjük." },
+            { itt: <>pozitív oldal, húzott oldal</>, konyv: <>a tengely pozitív oldala; az M ábra a húzott oldalra kerül</>, megjegyzes: "Vízszintes rúdnál alul; a + jelet az ábrán feltüntetjük. Az N és a V ábra pozitív értékei is erre az oldalra kerülnek." },
             { itt: <>a másik oldal erőinek redukálása</>, konyv: <M>{"(N_{Kb}, V_{Kb}, M_{Kb}) \\ekv (F_j, R_j)"}</M>, megjegyzes: "Az egyik oldal igénybevételei egyenértékűek a másik oldal összes erejével." },
             { itt: <>(←), (↑), (↷) írásmód</>, konyv: <>a pozitív irány zárójelben az egyenlet előtt</>, megjegyzes: "Nincs átrendezés: az egyenlet egyik oldalán csak az igénybevétel." },
             { itt: <>szakaszhatár, töréspont</>, konyv: <>szinguláris teher, szakaszok jellege (fokszáma)</>, megjegyzes: "Koncentrált erő/nyomaték, megoszló teher határa, támasz, csukló, sarok." },
@@ -438,6 +442,7 @@ export default function IgenybevetelOldal() {
         <Kiemelo tipus="figyelem" cim="A leggyakoribb hibák az igénybevételi ábrákban">
           <ul className="list-disc space-y-1 pl-5">
             <li><strong>Az M ábra a rossz oldalon.</strong> A nyomatéki ábra a húzott oldalra kerül: kéttámaszú tartó lefelé ható teherrel → alul; konzol lefelé ható teherrel → felül (a befogásnál).</li>
+            <li><strong>Az N és a V ábra a másik oldalon.</strong> Mindhárom ábra ugyanarra a pozitív oldalra kerül: vízszintes tartónál a pozitív N és V is alulra (mint a pozitív M), a negatív felülre — a „(↑) pozitív” csak a számítás előjelszabálya, nem a rajz oldala.</li>
             <li><strong>A maximum az erő alatt.</strong> Egyenletes teherrel a nyomaték maximuma ott van, ahol V = 0 — ezt ki kell számolni, nem az F alá vagy a tartó közepére tenni.</li>
             <li><strong>Ugrás az M-ben koncentrált erőnél.</strong> Koncentrált erő az M ábrában csak törést ad; ugrást csak koncentrált nyomaték.</li>
             <li><strong>Kihagyott támasz.</strong> A reakció koncentrált erő: V ugrik, M törik, a támasz szakaszhatár.</li>

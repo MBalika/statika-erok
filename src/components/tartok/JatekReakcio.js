@@ -61,9 +61,10 @@ function ujKor(halado) {
         terhek.push({ tipus: "ero", x, F, szog, Fx: F * Math.cos(szog * FOK), Fy: F * Math.sin(szog * FOK) });
       }
     }
-    // egymásra eső erők kerülése
+    // egymásra eső erők kerülése; koncentrált erő ne essen a megoszló teher szakaszába (a rajzon egymást fednék)
     const xek = terhek.filter((t) => t.tipus === "ero").map((t) => t.x);
     if (new Set(xek).size !== xek.length) continue;
+    if (terhek.some((t) => t.tipus === "p" && xek.some((x) => x >= t.x1 - 0.4 && x <= t.x2 + 0.4))) continue;
     const sumFy = terhek.reduce((s, t) => s + (t.tipus === "ero" ? t.Fy : -t.Q), 0);
     const sumFx = terhek.reduce((s, t) => s + (t.tipus === "ero" ? t.Fx : 0), 0);
     const MA_ = terhek.reduce((s, t) => s + (t.tipus === "ero" ? t.x * t.Fy : -t.xQ * t.Q), 0); // a terhek nyomatéka A-ra (↶ +)

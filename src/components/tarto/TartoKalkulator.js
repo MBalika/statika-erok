@@ -165,13 +165,24 @@ export default function TartoKalkulator() {
   }, [eredmeny, metszetU]);
 
   /* ---------- rajzelemek ---------- */
+  /**
+   * A rúd pozitív oldala képernyő-egységvektorként (y lefelé): a kezdőponttól a végpont felé haladva a jobb
+   * oldal, vízszintes rúdnál lefelé. Mindhárom ábra (N, V, M) pozitív értéke erre az oldalra kerül — arra,
+   * amelyiket a nyomaték pozitív definíciójához választottuk (tankönyv 8.3.2, 8.9. ábra).
+   */
+  function pozitivIrany(ig) {
+    const c = Math.cos((ig.szogFok * Math.PI) / 180);
+    const s = Math.sin((ig.szogFok * Math.PI) / 180);
+    const po = ig.pozitivOldal === 1 ? -1 : 1;
+    return [po * s, po * c];
+  }
+
   function diagramUt(ig, jel) {
     if (!rajz || rajz.dLeptek[jel] === 0) return null;
     const r = rajz;
     const c = Math.cos((ig.szogFok * Math.PI) / 180);
     const s = Math.sin((ig.szogFok * Math.PI) / 180);
-    // a pozitív értéket az M-nél a húzott oldalra (−y lokális), N/V-nél a +y oldalra rajzoljuk
-    const ir = jel === "M" ? [s, c] : [-s, -c];
+    const ir = pozitivIrany(ig);
     const pontok = mintak(ig, 28).map((p) => {
       const mx = ig.kezdo[0] + p.x * c;
       const my = ig.kezdo[1] + p.x * s;
@@ -269,6 +280,22 @@ export default function TartoKalkulator() {
                 </g>
               );
             })}
+            {/* a „+” és „−” oldal jele a rúd elejénél (tankönyv 8.9. ábra): az első rúdon és a szabad kezdetű rudakon (az előző rúd végéhez csatlakozó saroknál nem) */}
+            {abra !== "szerkezet" && ig0.map((ig, i) => {
+              const elozoIg = i > 0 ? ig0[i - 1] : null;
+              if (elozoIg && Math.hypot(elozoIg.veg[0] - ig.kezdo[0], elozoIg.veg[1] - ig.kezdo[1]) < 1e-6) return null;
+              const c = Math.cos((ig.szogFok * Math.PI) / 180);
+              const s = Math.sin((ig.szogFok * Math.PI) / 180);
+              const ir = pozitivIrany(ig);
+              // a támaszjel elé, a rúd kezdete előtt 24 px-szel, a rúdra merőlegesen ±15 px
+              const hx = r.kx(ig.kezdo[0]) - c * 24, hy = r.ky(ig.kezdo[1]) + s * 24;
+              return (
+                <g key={`oj${i}`} opacity="0.85">
+                  <text x={hx + ir[0] * 15} y={hy + ir[1] * 15 + 3.5} textAnchor="middle" fontSize="11" fontWeight="700" style={{ fill: SZINEK[abra], paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>+</text>
+                  <text x={hx - ir[0] * 15} y={hy - ir[1] * 15 + 3.5} textAnchor="middle" fontSize="11" fontWeight="700" style={{ fill: "#64748b", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>−</text>
+                </g>
+              );
+            })}
 
             {/* a szerkezet */}
             {r.modell.rudak.map((rud) => (
@@ -355,7 +382,7 @@ export default function TartoKalkulator() {
               const my = ig.kezdo[1] + metszet.x * s;
               const X = r.kx(mx), Y = r.ky(my);
               const e = abra !== "szerkezet" ? metszet.ertek[abra] * r.dLeptek[abra] : 0;
-              const ir = abra === "M" ? [s, c] : [-s, -c];
+              const ir = pozitivIrany(ig);
               return (
                 <g>
                   <line x1={X - s * 20} y1={Y - c * 20} x2={X + s * 20} y2={Y + c * 20}
@@ -386,11 +413,13 @@ export default function TartoKalkulator() {
               const c = Math.cos((ig.szogFok * Math.PI) / 180);
               const s = Math.sin((ig.szogFok * Math.PI) / 180);
               const mx = ig.kezdo[0] + xv * c, my = ig.kezdo[1] + xv * s;
-              const ir = jel === "M" ? [s, c] : [-s, -c];
+              const ir = pozitivIrany(ig);
               const X = r.kx(mx) + ir[0] * v * r.dLeptek[jel];
               const Y = r.ky(my) + ir[1] * v * r.dLeptek[jel];
+              // a felirat a görbe külső oldalán (a tengelytől elfelé): a kifelé mutató irány ir·sign(v)
+              const kifele = ir[1] * Math.sign(v);
               return (
-                <text key={`sz${i}`} x={X} y={Y + (ir[1] > 0 ? 15 : -8)} textAnchor="middle" fontSize="12" fontWeight="700"
+                <text key={`sz${i}`} x={X + ir[0] * Math.sign(v) * 10} y={Y + (kifele > 0.35 ? 15 : kifele < -0.35 ? -8 : 4)} textAnchor={Math.abs(ir[0]) < 0.35 ? "middle" : ir[0] * Math.sign(v) > 0 ? "start" : "end"} fontSize="12" fontWeight="700"
                   style={{ fill: SZINEK[jel], paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
                   {sz(v, 2)}
                 </text>
@@ -400,10 +429,10 @@ export default function TartoKalkulator() {
 
           <p className="mt-1 text-center text-[11.5px] text-petrol-500">
             {abra === "M"
-              ? "A nyomatéki ábrát a húzott oldalra rajzoljuk, ahogy a gyakorlaton is."
+              ? "A nyomatéki ábrát a húzott oldalra rajzoljuk (vízszintes tartónál a pozitív érték alul), ahogy a gyakorlaton is."
               : abra === "szerkezet"
                 ? "A lila nyilak a reakciók, a tényleges irányukkal."
-                : `A ${abra} ábra pozitív értéke a tengely fölé kerül.`}
+                : `A ${abra} ábra pozitív értéke a tartó pozitív oldalára kerül — ugyanoda, ahová a pozitív M (vízszintes tartónál alulra); a „+” jel mutatja.`}
           </p>
         </div>
 

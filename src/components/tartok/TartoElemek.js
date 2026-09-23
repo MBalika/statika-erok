@@ -19,15 +19,8 @@
  *   <TartoHegyek />                       – a nyílhegy-definíciók (egyszer, a <svg> elején)
  */
 
-export const SZIN = {
-  tarto: "#1d3c48",
-  tamasz: "#475569",
-  teher: "var(--color-jel-ero)",
-  reakcio: "var(--color-jel-eredo)",
-  nyomatek: "#9f1239",
-  meret: "#64748b",
-  rud: "#2563eb",
-};
+import { SZIN } from "./szinek";
+export { SZIN };
 
 export function TartoHegyek() {
   const lista = [

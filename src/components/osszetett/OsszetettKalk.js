@@ -88,7 +88,14 @@ function Terhek({ m, kx, ky }) {
     if (n < 1e-9) return;
     const szog = (Math.atan2(Fy, Fx) * 180) / Math.PI;
     const ex = Fx / n, ey = Fy / n;
-    elemek.push(<TeherNyil key={kulcs} x={X - ex * 4} y={Y + ey * 4} hossz={Math.min(80, 30 + 2 * n)} szog={szog} cimke={`${sz(n, n % 1 ? 1 : 0)} kN`} cimkeEltolas={[-ex * 4 + (Math.abs(ex) < 0.3 ? 8 : -ex * 26 - 14), ey * 4 + (Math.abs(ey) < 0.3 ? -8 : ey * 10 + 4)]} />);
+    const h = Math.min(80, 30 + 2 * n);
+    const cimke = `${sz(n, n % 1 ? 1 : 0)} kN`;
+    // a felirat a nyíl farkánál; ha a rajz szélén kilógna, a farok alá (felfelé mutató nyílnál) vagy fölé (lefelé mutatónál) kerül
+    const tx = X - ex * 4 - h * ex, szeles = 7.5 * cimke.length;
+    let dx = -ex * 4 + (Math.abs(ex) < 0.3 ? 8 : -ex * 26 - 14), dy = ey * 4 + (Math.abs(ey) < 0.3 ? -8 : ey * 10 + 4);
+    if (tx + dx < 4) { dx = 4 - tx; dy = ey >= 0 ? 18 : -10; }
+    else if (tx + dx + szeles > SZ - 4) { dx = SZ - 4 - szeles - tx; dy = ey >= 0 ? 18 : -10; }
+    elemek.push(<TeherNyil key={kulcs} x={X - ex * 4} y={Y + ey * 4} hossz={h} szog={szog} cimke={cimke} cimkeEltolas={[dx, dy]} />);
   };
   m.csomopontiTerhek.forEach((t, i) => {
     const cs = m.csomopontok[i];
@@ -198,6 +205,18 @@ export default function OsszetettKalk() {
   const hingeCsomopont = m.rudak.find((rud) => rud.csukloA || rud.csukloB);
   const hingeP = hingeCsomopont ? (hingeCsomopont.csukloA ? [hingeCsomopont.x1, hingeCsomopont.y1] : [hingeCsomopont.x2, hingeCsomopont.y2]) : null;
   const Cx = ertek.C_x ?? 0, Cy = ertek.C_y ?? 0;
+  const csX = m.csomopontok.map((c) => r.kx(c.x));
+  const kozepX = (Math.min(...csX) + Math.max(...csX)) / 2;
+  // igaz, ha a csomópontból indul rúd a (ex, ey) képernyő-irányban — ilyenkor a reakció nyila a rúd vonalára esne, ezért mellé toljuk
+  const rudIranyban = (cs, ex, ey) =>
+    m.rudak.some((rud) => {
+      const aVeg = Math.abs(rud.x1 - cs.x) < 1e-9 && Math.abs(rud.y1 - cs.y) < 1e-9;
+      const bVeg = Math.abs(rud.x2 - cs.x) < 1e-9 && Math.abs(rud.y2 - cs.y) < 1e-9;
+      if (!aVeg && !bVeg) return false;
+      const dx = aVeg ? rud.x2 - rud.x1 : rud.x1 - rud.x2, dy = aVeg ? rud.y2 - rud.y1 : rud.y1 - rud.y2;
+      const n = Math.hypot(dx, dy);
+      return n > 1e-9 && (dx / n) * ex - (dy / n) * ey > 0.95;
+    });
   const lepesek = lv?.lepesek ?? [];
   const osszes = lepesek.length;
   const lathato = lepesek.slice(0, Math.min(mutatott, osszes));
@@ -237,35 +256,95 @@ export default function OsszetettKalk() {
               if (t.tipus === "befogas") return <Befogas key={i} x={x} y={y} irany="jobb" hossz={44} />;
               return <Gorgo key={i} x={x} y={y} szog={t.szog - 90} />;
             })}
-            {m.csomopontok.map((cs) => (
-              <text key={cs.id} x={r.kx(cs.x) + (m.tamaszok.some((t) => t.ics === cs.index) ? (cs.x <= 0.01 ? -16 : 16) : 0)} y={r.ky(cs.y) + (m.tamaszok.some((t) => t.ics === cs.index) ? 28 : -12)} textAnchor="middle" fontSize="13" fontStyle="italic" fontWeight="650" style={{ fill: SZIN.tarto, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
-                {cs.id}
-              </text>
-            ))}
+            {m.csomopontok.map((cs) => {
+              const tamasz = m.tamaszok.find((t) => t.ics === cs.index);
+              const csuklos = hingeP && Math.abs(cs.x - hingeP[0]) < 1e-9 && Math.abs(cs.y - hingeP[1]) < 1e-9;
+              // a belső csukló betűje a tartó alá kerül (fölötte a csuklóerő nyila és felirata), a befogásé a fal alá
+              const dy = tamasz ? (tamasz.tipus === "befogas" ? 44 : 28) : csuklos ? 22 : -12;
+              return (
+                <text key={cs.id} x={r.kx(cs.x) + (tamasz ? (cs.x <= 0.01 ? -16 : 16) : 0)} y={r.ky(cs.y) + dy} textAnchor="middle" fontSize="13" fontStyle="italic" fontWeight="650" style={{ fill: SZIN.tarto, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+                  {cs.id}
+                </text>
+              );
+            })}
             {hingeP && <circle cx={r.kx(hingeP[0])} cy={r.ky(hingeP[1])} r="5" fill="white" stroke={SZIN.tarto} strokeWidth="2.2" />}
             <Terhek m={m} kx={r.kx} ky={r.ky} />
-            {/* reakciók: a támadáspontból kifelé, a tényleges irányba */}
+            {/* reakciók: a támadáspontból kifelé, a tényleges irányba; ha a nyíl egy rúd vonalára esne, mellé toljuk, hogy látsszon */}
             {eredmeny.reakciok.map((re, i) => {
               const cs = m.csomopontok.find((c) => c.id === re.csomopont);
               const X = r.kx(cs.x), Y = r.ky(cs.y);
               const nyilak = [];
               const fx = re.Fx ?? 0, fy = re.Fy ?? 0;
+              const nev = re.csomopont;
+              const hossz = (n) => Math.max(18, Math.min(90, n * 2));
+              const vizszintes = () => {
+                const ex = Math.sign(fx), h = hossz(Math.abs(fx));
+                const rudon = rudIranyban(cs, ex, 0);
+                // rúd vonalába eső nyíl: befogásnál a rúd alá, csuklós/görgős támasznál (a támaszjel miatt) a rúd fölé tolva, felirat a nyíl alatt/mellett középen;
+                // kifelé mutató nyíl: felirat a támaszjel alatt (ha a függőleges reakció lefelé mutat, és így a felirata a támasz alá kerül, akkor a nyíl fölé)
+                const fel = rudon && re.tipus !== "befogas";
+                const YY = rudon ? (fel ? Y - 9 : Y + 9) : Y;
+                let elt, horg;
+                if (rudon) { elt = fel ? [ex * 4, 4] : [-ex * h / 2, 22]; horg = fel ? (ex > 0 ? "start" : "end") : "middle"; }
+                else if (fy < -1e-6) { elt = [0, -8]; horg = ex > 0 ? "end" : "start"; }
+                else { elt = re.tipus === "befogas" ? [-ex * 8, 40] : [0, 40]; horg = ex > 0 ? "end" : "start"; }
+                nyilak.push(<EroNyil key="x" X={X} Y={YY} Fx={fx} Fy={0} leptek={2} cimke={`${nev}ₓ = ${sz(Math.abs(fx), 2)}`} cimkeEltolas={elt} horgony={horg} />);
+              };
+              const fuggoleges = (kulcs, cimke, Fx_, Fy_) => {
+                const n = Math.hypot(Fx_, Fy_);
+                const ex = Fx_ / n, ey = -Fy_ / n;
+                const rudon = Math.abs(ex) < 0.05 && rudIranyban(cs, 0, ey);
+                const oldal = X < kozepX - 1 ? -1 : 1;
+                const XX = rudon ? X + oldal * 9 : X;
+                let elt, horg;
+                if (rudon) { elt = [oldal * 6, 4]; horg = oldal < 0 ? "end" : "start"; }
+                else if (Fy_ > 0 && re.tipus === "befogas") { elt = [8, 6]; horg = "start"; }
+                else if (Fy_ > 0) { elt = [0, -8]; horg = "middle"; }
+                else if (cs.x <= 0.01) { elt = [8, 14]; horg = "start"; } // lefelé (a támaszjelen át): a csomópont betűjével ellentétes oldalra, a hegy alá
+                else { elt = [-8, 14]; horg = "end"; }
+                nyilak.push(<EroNyil key={kulcs} X={XX} Y={Y} Fx={Fx_} Fy={Fy_} leptek={2} cimke={cimke} cimkeEltolas={elt} horgony={horg} />);
+              };
               if (re.tipus === "csuklo" || re.tipus === "befogas") {
-                if (Math.abs(fx) > 1e-6) nyilak.push(<EroNyil key="x" X={X} Y={Y} Fx={fx} Fy={0} leptek={2} cimke={`${re.csomopont}ₓ = ${sz(Math.abs(fx), 2)}`} />);
-                if (Math.abs(fy) > 1e-6) nyilak.push(<EroNyil key="y" X={X} Y={Y} Fx={0} Fy={fy} leptek={2} cimke={`${re.csomopont}ᵧ = ${sz(Math.abs(fy), 2)}`} cimkeEltolas={[8, fy > 0 ? -4 : 14]} />);
-                if (re.tipus === "befogas" && Math.abs(re.M ?? 0) > 1e-6) nyilak.push(<KoncentraltNyomatek key="m" x={X} y={Y} r={22} irany={re.M > 0 ? 1 : -1} szin="#7c3aed" cimke={`M = ${sz(Math.abs(re.M), 2)}`} />);
+                if (Math.abs(fx) > 1e-6) vizszintes();
+                if (Math.abs(fy) > 1e-6) fuggoleges("y", `${nev}ᵧ = ${sz(Math.abs(fy), 2)}`, 0, fy);
+                if (re.tipus === "befogas" && Math.abs(re.M ?? 0) > 1e-6) {
+                  // a befogási nyomaték íve; a felirata az ív és a függőleges reakció nyila fölé, középre
+                  nyilak.push(<KoncentraltNyomatek key="m" x={X} y={Y} r={26} irany={re.M > 0 ? 1 : -1} szin="#7c3aed" />);
+                  nyilak.push(
+                    <text key="mc" x={X} y={Y - Math.max(38, (fy > 1e-6 ? hossz(fy) : 0) + 12)} textAnchor="middle" fontSize="12" fontWeight="650" fontStyle="italic" style={{ fill: "#7c3aed", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+                      M = {sz(Math.abs(re.M), 2)}
+                    </text>,
+                  );
+                }
               } else if (Math.hypot(fx, fy) > 1e-6) {
-                nyilak.push(<EroNyil key="n" X={X} Y={Y} Fx={fx} Fy={fy} leptek={2} cimke={`${re.csomopont} = ${sz(Math.hypot(fx, fy), 2)}`} cimkeEltolas={[8, fy > 0 ? -4 : 14]} />);
+                fuggoleges("n", `${nev} = ${sz(Math.hypot(fx, fy), 2)}`, fx, fy);
               }
               return <g key={i}>{nyilak}</g>;
             })}
-            {/* belső csuklóerő a csuklós rúdvégű testre (kék) */}
-            {hingeP && lv && (
-              <g>
-                {Math.abs(Cx) > 1e-6 && <EroNyil X={r.kx(hingeP[0]) + 6} Y={r.ky(hingeP[1])} Fx={Cx} Fy={0} leptek={1.6} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cₓ = ${sz(Math.abs(Cx), 2)}`} />}
-                {Math.abs(Cy) > 1e-6 && <EroNyil X={r.kx(hingeP[0]) + 6} Y={r.ky(hingeP[1])} Fx={0} Fy={Cy} leptek={1.6} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cᵧ = ${sz(Math.abs(Cy), 2)}`} cimkeEltolas={[8, Cy > 0 ? -4 : 14]} />}
-              </g>
-            )}
+            {/* belső csuklóerő a csuklós rúdvégű testre (kék); Cᵧ lefelé mutató nyílnál a Cₓ felirata a nyíl fölé kerül, hogy ne fedjék egymást */}
+            {hingeP && lv && (() => {
+              const HX = r.kx(hingeP[0]), HY = r.ky(hingeP[1]);
+              // felfelé mutató Cᵧ felirata balra; ha közvetlenül balra támasz van (a felirata ütközne), jobbra
+              const tamaszBalra = m.tamaszok.some((t) => { const c = m.csomopontok[t.ics]; return HX - r.kx(c.x) > 0 && HX - r.kx(c.x) < 90 && Math.abs(r.ky(c.y) - HY) < 30; });
+              const cyJobbra = Cy < 0 || tamaszBalra;
+              // a Cₓ felirata a nyíl alá kerül; ha ott rúd fut (a csuklóból lefelé induló rúd, pl. keret gerince), a nyíl fölé
+              const lefeleRud = (oldal) =>
+                m.rudak.some((rud) => {
+                  const aVeg = Math.abs(rud.x1 - hingeP[0]) < 1e-9 && Math.abs(rud.y1 - hingeP[1]) < 1e-9;
+                  const bVeg = Math.abs(rud.x2 - hingeP[0]) < 1e-9 && Math.abs(rud.y2 - hingeP[1]) < 1e-9;
+                  const my = aVeg ? rud.y2 : bVeg ? rud.y1 : null, mx = aVeg ? rud.x2 : bVeg ? rud.x1 : null;
+                  return my !== null && my < hingeP[1] - 1e-9 && (oldal === 0 || Math.sign(mx - hingeP[0]) === oldal);
+                });
+              const rudAlatta = lefeleRud(Math.sign(Cx || 1));
+              // lefelé mutató Cᵧ: felirat jobbra a hegy alá; ha a csuklóból lefelé fut rúd (keret gerince), a hegy alá középre
+              const cyLentElt = lefeleRud(0) ? [0, 22] : [8, 14];
+              return (
+                <g>
+                  {Math.abs(Cx) > 1e-6 && <EroNyil X={HX + 6} Y={HY} Fx={Cx} Fy={0} leptek={1.6} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cₓ = ${sz(Math.abs(Cx), 2)}`} cimkeEltolas={rudAlatta ? [Cx < 0 ? -2 : 2, -6] : [0, 18]} horgony={Cx < 0 ? "end" : "start"} />}
+                  {Math.abs(Cy) > 1e-6 && <EroNyil X={HX + 6} Y={HY} Fx={0} Fy={Cy} leptek={1.6} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cᵧ = ${sz(Math.abs(Cy), 2)}`} cimkeEltolas={Cy > 0 ? [cyJobbra ? 8 : -8, -4] : cyLentElt} horgony={Cy > 0 ? (cyJobbra ? "start" : "end") : cyLentElt[0] === 0 ? "middle" : "start"} />}
+                </g>
+              );
+            })()}
             {kiemeltFopont && (
               <g>
                 <circle cx={r.kx(kiemeltFopont.P[0])} cy={r.ky(kiemeltFopont.P[1])} r="9" fill="none" stroke="#6d28d9" strokeWidth="2" strokeDasharray="3 2.5" />
@@ -273,7 +352,10 @@ export default function OsszetettKalk() {
               </g>
             )}
           </svg>
-          <p className="mt-1 text-center text-[11.5px] text-petrol-500">Lila: külső reakciók a tényleges irányukkal; kék: a belső csuklóerő a csuklós rúdvégű (II.) testre — az I. testre az ellentettje hat.</p>
+          <p className="mt-1 text-center text-[11.5px] text-petrol-500">
+            Lila: külső reakciók a tényleges irányukkal; kék: a belső csuklóerő a csuklós rúdvégű (II.) testre — az I. testre az ellentettje hat
+            {(parak.FC ?? 0) > 0 ? ", a csuklón ható F_C-vel együtt (a levezetés a csuklón ható terhet az I. testhez sorolja)." : "."}
+          </p>
         </div>
 
         <div className="finom-gorgeto max-h-[640px] overflow-y-auto p-4 sm:p-5">

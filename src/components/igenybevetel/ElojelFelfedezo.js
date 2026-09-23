@@ -127,6 +127,7 @@ export default function ElojelFelfedezo() {
           </ul>
           <p className="mt-3 rounded-lg bg-petrol-50 px-3 py-2 text-[12px] leading-relaxed text-petrol-600 ring-1 ring-petrol-200">
             A gyakorlatban vízszintes vagy közel vízszintes rúdon az alsó oldalt választjuk pozitívnak, így az M ábra mindig a húzott oldalra kerül. Ferde vagy függőleges rúdon dönteni kell — és a döntést az ábrán a + jellel jelöljük.
+            Ugyanerre a pozitív oldalra mérjük fel az N és a V ábrát is (tankönyv 8.3.2): vízszintes tartón a pozitív N, V és M mind a tartó alatt, a negatív fölötte van.
           </p>
         </div>
       </div>

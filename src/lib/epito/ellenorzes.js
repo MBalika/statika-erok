@@ -11,7 +11,9 @@
  *
  * Tolerancia: egy érték jó, ha |eltérés| ≤ max(10 % · |helyes|, 4 % · a jel maximuma).
  * Előjelek a tankönyv szerint: V pozitív = a bal oldali rész felfelé mutató erőinek összege (vízszintes,
- * balról jobbra haladó rúdon), M a húzott oldalra rajzolva (alul pozitív).
+ * balról jobbra haladó rúdon), M a húzott oldalra rajzolva (alul pozitív). A rajz oldala (8.3.2): mindhárom
+ * ábra pozitív értéke a rúd ugyanazon pozitív oldalára kerül — arra, amelyiket az M-hez választottunk
+ * (vízszintes rúdnál alul). Az itteni logika csak értékekkel dolgozik, a képernyő-oldalt a RajzoloRajz adja.
  */
 
 import { ertek } from "../tarto/polinom.js";
@@ -183,10 +185,10 @@ export function reakcioKomponensek(e) {
 
 const SULYOS = new Set(["elojel", "ugras_hianyzik", "ugras_rossz", "csuklo_M", "szabad_veg", "tamasz_veg_M", "sarok"]);
 const SZABALY = {
-  ertek: "Az igénybevétel egy keresztmetszetben az egyik oldali rész erőinek eredője: V = a bal oldali erők összege (felfelé pozitív), M = a bal oldali erők nyomatéka a metszetre (alul húzott = pozitív).",
-  elojel: "Előjelszabály: N húzás = +; a pozitív V iránya az N pozitív irányának óramutató szerinti 90°-os elforgatása (vízszintes rúdon: a bal oldali rész felfelé mutató ereje +); az M-et a húzott oldalra rajzoljuk (alul húzott = +).",
+  ertek: "Az igénybevétel egy keresztmetszetben az egyik oldali rész erőinek eredője: V = a bal oldali erők összege (a felfelé mutató erő pozitív), M = a bal oldali erők nyomatéka a metszetre (alul húzott = pozitív).",
+  elojel: "Előjelszabály: N húzás = +; a pozitív V iránya az N pozitív irányának óramutató szerinti 90°-os elforgatása (vízszintes rúdon: a bal oldali rész felfelé mutató ereje +); az M-et a húzott oldalra rajzoljuk (alul húzott = +). Az ábrán mindhárom pozitív értéke ugyanarra a pozitív oldalra kerül — vízszintes rúdnál a tartó alá.",
   ugras_hianyzik: "Koncentrált erőnél a V-ábra pontosan az erővel ugrik (dV/dx = −q miatt máshol folytonos); koncentrált nyomatéknál az M ugrik a nyomaték nagyságával.",
-  ugras_rossz: "Az ugrás nagysága = a koncentrált teher nagysága, az iránya = a teher iránya (lefelé mutató erő: a V balról jobbra haladva lefelé ugrik).",
+  ugras_rossz: "Az ugrás nagysága = a koncentrált teher nagysága, az iránya = a teher iránya (lefelé mutató erő: a V balról jobbra haladva az erő nagyságával csökken, azaz a negatív irányba ugrik).",
   ugras_felesleges: "Ugrás csak ott lehet, ahol koncentrált teher hat, és csak abban az ábrában, amelyikre a teher iránya hat: a rúdra merőleges erő a V-t, a tengelyirányú az N-t, a nyomaték az M-et ugratja.",
   csuklo_M: "A belső csukló nem visz át nyomatékot: M = 0 a csuklóban (ezt a Gerber-tartónál egy külön egyenletként is használjuk).",
   szabad_veg: "Terheletlen szabad végen N = V = M = 0; ha a végen koncentrált erő vagy nyomaték hat, az igénybevétel pontosan azzal egyenlő.",
@@ -250,13 +252,13 @@ export function ellenoriz({ eredmeny, feladat, rajz, alakok = {}, szelsok = {}, 
           if (Math.abs(rajzoltUgras) <= t) {
             hiba({ kod: "ugras_hianyzik", rud: r.rud, x: p.x, i, jel, oldal: "jobb", helyes: valodi, rajzolt: rajzoltUgras,
               cim: `Hiányzik az ugrás a ${jel}-ábrában ${helyNev(r, p)}`,
-              magyarazat: `Itt ${teherLeiras()} hat, ezért a ${jel}-nek ${f1(Math.abs(valodi))} ${egys(jel)}-${valodi > 0 ? "t felfelé (a pozitív irányba)" : "t lefelé (a negatív irányba)"} kell ugrania: balról ${f1(hb)}, jobbról ${f1(hj)} ${egys(jel)}. Te folytonosan rajzoltad (bal: ${f1(rb)}, jobb: ${f1(rj)}).`,
+              magyarazat: `Itt ${teherLeiras()} hat, ezért a ${jel}-nek ${f1(Math.abs(valodi))} ${egys(jel)}-${valodi > 0 ? "t a pozitív irányba (a + oldal felé)" : "t a negatív irányba (a − oldal felé)"} kell ugrania: balról ${f1(hb)}, jobbról ${f1(hj)} ${egys(jel)}. Te folytonosan rajzoltad (bal: ${f1(rb)}, jobb: ${f1(rj)}).`,
               tipp: "Húzd szét a két fogópontot: a jobb oldali érték = a bal oldali ± a koncentrált teher." });
           } else if (Math.abs(rajzoltUgras - valodi) > t) {
             const forditott = Math.sign(rajzoltUgras) !== Math.sign(valodi);
             hiba({ kod: "ugras_rossz", rud: r.rud, x: p.x, i, jel, oldal: "jobb", helyes: valodi, rajzolt: rajzoltUgras,
               cim: `${forditott ? "Rossz irányú" : "Rossz nagyságú"} ugrás a ${jel}-ábrában ${helyNev(r, p)}`,
-              magyarazat: `Az ugrásnak pontosan ${teherLeiras()} nagyságával egyenlőnek kell lennie: ${f1(Math.abs(valodi))} ${egys(jel)}, ${valodi > 0 ? "a pozitív" : "a negatív"} irányba. Te ${f1(Math.abs(rajzoltUgras))} ${egys(jel)}-t ugrattál ${rajzoltUgras > 0 ? "a pozitív" : "a negatív"} irányba.${forditott ? " Az irány a teher irányát követi: balról jobbra haladva a lefelé mutató erő lefelé ugratja a V-t." : ""}`,
+              magyarazat: `Az ugrásnak pontosan ${teherLeiras()} nagyságával egyenlőnek kell lennie: ${f1(Math.abs(valodi))} ${egys(jel)}, ${valodi > 0 ? "a pozitív" : "a negatív"} irányba. Te ${f1(Math.abs(rajzoltUgras))} ${egys(jel)}-t ugrattál ${rajzoltUgras > 0 ? "a pozitív" : "a negatív"} irányba.${forditott ? " Az irány a teher irányát követi: balról jobbra haladva a lefelé mutató erő csökkenti a V-t (az ugrás a negatív irányba, a − oldal felé mutat)." : ""}`,
               tipp: `Helyes: bal ${f1(hb)}, jobb ${f1(hj)} ${egys(jel)}.` });
           }
           // a jobb oldali fogópontot az ugrás magyarázza; a bal oldalit (a szint) külön nézzük
@@ -377,7 +379,7 @@ export function ellenoriz({ eredmeny, feladat, rajz, alakok = {}, szelsok = {}, 
           // fordított előjel
           if (Math.abs(helyes) > t && Math.abs(raj + helyes) <= t) {
             hiba({ ...alap, kod: "elojel", apro: false, cim: `Fordított előjel: ${jel} ${helyNev(r, p, o)}`,
-              magyarazat: `A nagyság stimmel (${f1(Math.abs(helyes))} ${egys(jel)}), de az előjel fordított: helyesen ${f1(helyes)} ${egys(jel)}. ${jel === "V" ? "A V a bal oldali rész felfelé mutató erőinek összege (vízszintes, balról jobbra haladó rúdon); ha a bal oldali eredő lefelé mutat, a V negatív." : jel === "M" ? "Az M-et a húzott oldalra rajzoljuk: ha a rúd alul húzott (a tartó „lelóg”), az M pozitív; felül húzott szakaszon (konzol, támasz fölött) negatív." : "Az N akkor pozitív, ha húzza a keresztmetszetet (a rúdból kifelé mutat); nyomásnál negatív."}`,
+              magyarazat: `A nagyság stimmel (${f1(Math.abs(helyes))} ${egys(jel)}), de az előjel fordított: helyesen ${f1(helyes)} ${egys(jel)}. ${jel === "V" ? "A V a bal oldali rész felfelé mutató erőinek összege (vízszintes, balról jobbra haladó rúdon); ha a bal oldali eredő lefelé mutat, a V negatív. Az ábrán a pozitív V a rúd pozitív (vízszintes rúdnál alsó) oldalára kerül, ugyanoda, ahová a pozitív M — nem a tartó fölé!" : jel === "M" ? "Az M-et a húzott oldalra rajzoljuk: ha a rúd alul húzott (a tartó „lelóg”), az M pozitív; felül húzott szakaszon (konzol, támasz fölött) negatív." : "Az N akkor pozitív, ha húzza a keresztmetszetet (a rúdból kifelé mutat); nyomásnál negatív. Az ábrán a pozitív N is a rúd pozitív (vízszintes rúdnál alsó) oldalára kerül, mint az M."}`,
               tipp: jel === "M" ? "Nézd meg, melyik oldal nyúlik meg — a nyomatéki ábra mindig arra az oldalra kerül." : "Vágd el a rudat, tartsd meg a bal oldali részt, és nézd, merre mutat a rajta ható erők eredője." });
             continue;
           }

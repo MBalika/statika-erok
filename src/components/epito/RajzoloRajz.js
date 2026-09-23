@@ -11,8 +11,10 @@ import { sz } from "@/lib/szamok";
  *   A RÚDRA MERŐLEGESEN, a rúd mentén rajzoljuk (ferde és függőleges rúdon is), ugyanazzal a
  *   geometriával, mint a Diagram.js pontos ábrája — így a kettő egymásra illeszthető.
  *
- * Előjelek: M a húzott oldalra (a kezdőponttól a végpont felé haladva a jobb oldal; vízszintes
- * rúdnál alul), N és V a másik (+ȳ) oldalra.
+ * A rajz oldala (tankönyv 8.3.2, 8.9. ábra): mindhárom ábrát a rúd ugyanazon pozitív oldalára rajzoljuk —
+ * arra, amelyiket az M pozitív definíciójához választottuk (a kezdőponttól a végpont felé haladva a jobb
+ * oldal; vízszintes rúdnál alul). Így a pozitív N, V és M a tartó alatt, a negatív fölötte van; a húzás
+ * iránya is ebből származik (lefelé húzás = pozitív érték vízszintes rúdnál).
  */
 
 export const SZ = 760;
@@ -33,11 +35,16 @@ export function rajzGeometria(e, { reakciok = false } = {}) {
   return { g, kx: g.kx, ky1, ky2, szerkMag, abraMag, H, szerkFent, abraFent };
 }
 
-/** Egy rúd tengelye és merőlegese képernyő-egységvektorként (y lefelé). */
+/**
+ * Egy rúd tengelye és a pozitív oldala képernyő-egységvektorként (y lefelé). Az `ir` mindhárom jelre
+ * ugyanaz: a kezdőponttól a végpont felé haladva a jobb oldal (vízszintes rúdnál lefelé) — a `jel`
+ * paraméter csak az egységes hívásmód miatt marad. A `pozitivOldal: 1` rúdnál a bal oldal a pozitív.
+ */
 export function rudIranyok(r, jel) {
   const c = Math.cos(r.szogFok * FOK), s = Math.sin(r.szogFok * FOK);
   const tengely = [c, -s];
-  const ir = jel === "M" ? [s, c] : [-s, -c];
+  const po = r.pozitivOldal === 1 ? -1 : 1;
+  const ir = [po * s, po * c];
   return { c, s, tengely, ir };
 }
 
@@ -152,9 +159,9 @@ export default function RajzoloRajz({ f, e, jel, rajz, alakok, szelsok, lept, an
           {jel === "V" ? "V – nyíróerő [kN]" : jel === "M" ? "M – hajlítónyomaték [kNm]" : "N – normálerő [kN]"}
         </text>
         <text x={12} y={geo.szerkMag + 32} fontSize="10" style={{ fill: "#64748b" }}>
-          {jel === "M" ? "+ a húzott oldalon (vízszintes rúdnál alul)" : jel === "V" ? "+ felfelé (vízszintes, balról jobbra haladó rúdnál)" : "+ húzás"}
+          {jel === "M" ? "+ a húzott (pozitív) oldalon — vízszintes rúdnál alul" : jel === "V" ? "+ a pozitív oldalon, mint az M-nél — vízszintes rúdnál alul" : "+ húzás; a pozitív oldalon, mint az M-nél — vízszintes rúdnál alul"}
         </text>
-        {/* lépték-vonalzó a bal szélen */}
+        {/* lépték-vonalzó a bal szélen: a pozitív érték lefelé (vízszintes rúd pozitív oldala), mint az ábrán */}
         {(() => {
           const X = 34, Y0 = geo.szerkMag + geo.abraFent + (g.magPx > 0 ? g.magPx / 2 : 0);
           const ticks = [];
@@ -164,12 +171,12 @@ export default function RajzoloRajz({ f, e, jel, rajz, alakok, szelsok, lept, an
               <line x1={X} y1={Y0 - hatar * leptek} x2={X} y2={Y0 + hatar * leptek} stroke="#94a3b8" strokeWidth="1" />
               {ticks.map((v) => (
                 <g key={v}>
-                  <line x1={X - 3} y1={Y0 - v * leptek} x2={X + 3} y2={Y0 - v * leptek} stroke="#94a3b8" strokeWidth="1" />
-                  <text x={X - 6} y={Y0 - v * leptek + 3.5} textAnchor="end" fontSize="9.5" style={{ fill: "#64748b" }}>{ert(v)}</text>
+                  <line x1={X - 3} y1={Y0 + v * leptek} x2={X + 3} y2={Y0 + v * leptek} stroke="#94a3b8" strokeWidth="1" />
+                  <text x={X - 6} y={Y0 + v * leptek + 3.5} textAnchor="end" fontSize="9.5" style={{ fill: "#64748b" }}>{ert(v)}</text>
                 </g>
               ))}
-              <text x={X + 8} y={Y0 - hatar * leptek + 4} fontSize="9" style={{ fill: "#94a3b8" }}>+</text>
-              <text x={X + 8} y={Y0 + hatar * leptek + 4} fontSize="9" style={{ fill: "#94a3b8" }}>−</text>
+              <text x={X + 8} y={Y0 + hatar * leptek + 4} fontSize="9.5" fontWeight="700" style={{ fill: szin, opacity: 0.85 }}>+</text>
+              <text x={X + 8} y={Y0 - hatar * leptek + 4} fontSize="9.5" fontWeight="700" style={{ fill: "#94a3b8" }}>−</text>
             </g>
           );
         })()}
@@ -199,8 +206,9 @@ export default function RajzoloRajz({ f, e, jel, rajz, alakok, szelsok, lept, an
                   </text>
                 );
               })}
-              {/* + jel a pozitív oldalon, a rúd elejénél */}
+              {/* + jel a pozitív (az M-hez választott) oldalon, − a másikon, a rúd elejénél — mindhárom ábrán ugyanott */}
               <text x={A[0] + tengely[0] * 10 + ir[0] * (AMP + 4)} y={A[1] + tengely[1] * 10 + ir[1] * (AMP + 4) + 3.5} textAnchor="middle" fontSize="10" fontWeight="700" style={{ fill: szin, opacity: 0.7 }}>+</text>
+              <text x={A[0] + tengely[0] * 10 - ir[0] * (AMP + 4)} y={A[1] + tengely[1] * 10 - ir[1] * (AMP + 4) + 3.5} textAnchor="middle" fontSize="10" fontWeight="700" style={{ fill: "#94a3b8", opacity: 0.8 }}>−</text>
               {Lpx > 0 && f.rudak.length > 1 && (
                 <text x={(A[0] + B[0]) / 2 - ir[0] * 11} y={(A[1] + B[1]) / 2 - ir[1] * 11 + (Math.abs(tengely[0]) > 0.7 ? -2 : 4)} textAnchor="middle" fontSize="9.5" fontStyle="italic" style={{ fill: "#64748b", paintOrder: "stroke", stroke: "white", strokeWidth: 2.5 }}>{r.rud}.</text>
               )}
@@ -216,7 +224,7 @@ export default function RajzoloRajz({ f, e, jel, rajz, alakok, szelsok, lept, an
         {/* a pontos ábra (segítség 3 / megoldás) */}
         {pontosAbra > 0.01 && (
           <g opacity={pontosAbra}>
-            <AbraSav e={e} g={g} ky={ky2} jel={jel} leptek={leptek} cimkek kiemelSzelso={jel === "M" ? 1 : 0} />
+            <AbraSav e={e} g={g} ky={ky2} jel={jel} leptek={leptek} cimkek kiemelSzelso={jel === "M" ? 1 : 0} oldalJelek={false} />
           </g>
         )}
 

@@ -27,13 +27,13 @@ const SZERKEZETEK = [
     id: "gerber",
     cim: "Gerber-tartó",
     modell: gerberModell({ xB: 4, xC: 6, xD: 9, F1: 12, x1: 2, szog1: -60, F2: 8, x2: 8 }),
-    origo: [70, 200],
-    L: 52,
+    origo: [80, 200],
+    L: 46,
     csuklo: [6, 0],
     testek: [
       {
         nev: "I",
-        eltolas: [-28, 34],
+        eltolas: [-22, 34],
         rudak: [[0, 0, 6, 0]],
         tamaszok: [
           { x: 0, y: 0, tipus: "csuklo", cimke: "A" },
@@ -44,7 +44,7 @@ const SZERKEZETEK = [
       },
       {
         nev: "II",
-        eltolas: [28, -34],
+        eltolas: [22, -34],
         rudak: [[6, 0, 9, 0]],
         tamaszok: [{ x: 9, y: 0, tipus: "gorgo", cimke: "D" }],
         terhek: [{ x: 8, y: 0, Fx: 0, Fy: -8, cimke: "F₂ = 8 kN" }],
@@ -52,7 +52,7 @@ const SZERKEZETEK = [
       },
     ],
     reakciok: [
-      { pont: [0, 0], jel: "A_x", test: 0 },
+      { pont: [0, 0], jel: "A_x", test: 0, cimkeEltolas: [0, 18], horgony: "start" },
       { pont: [0, 0], jel: "A_y", test: 0 },
       { pont: [4, 0], jel: "B", test: 0 },
       { pont: [9, 0], jel: "D", test: 1 },
@@ -68,8 +68,8 @@ const SZERKEZETEK = [
       m.terhek.push({ fajta: "pontTeher", rud: "3", a: 2, F: -8, irany: "y" });
       return m;
     })(),
-    origo: [110, 300],
-    L: 52,
+    origo: [120, 300],
+    L: 48,
     csuklo: [4, 4],
     testek: [
       {
@@ -99,7 +99,7 @@ const SZERKEZETEK = [
       { pont: [0, 0], jel: "A_x", test: 0 },
       { pont: [0, 0], jel: "A_y", test: 0 },
       { pont: [8, 0], jel: "B_x", test: 1 },
-      { pont: [8, 0], jel: "B_y", test: 1 },
+      { pont: [8, 0], jel: "B_y", test: 1, cimkeEltolas: [-8, -8], horgony: "end" },
     ],
     leiras: "Mindkét test két csuklóval kapcsolódik: egy külsővel a földhöz, a belsővel egymáshoz. Testenként négy ismeretlen áll három egyenlettel szemben — ezért az egész szerkezetre írt nyomatéki egyenletek segítenek ki. Figyeld a vízszintes csuklóerőt: függőleges terhek mellett is van, ez tartja össze a keretet.",
     kijelentesek: ["\\text{I: } (\\underline F_1, \\underline A, \\underline C) \\ekv \\underline O", "\\text{II: } (\\underline F_2, \\underline B, \\underline C') \\ekv \\underline O", "\\Sigma: (\\underline F_1, \\underline F_2, \\underline A, \\underline B) \\ekv \\underline O"],
@@ -108,14 +108,14 @@ const SZERKEZETEK = [
     id: "terhelt",
     cim: "Terhelt csukló",
     modell: gerberModell({ xB: 4, xC: 6, xD: 9, F1: 12, x1: 2, szog1: -60, F2: 6, x2: 8, FC: 10 }),
-    origo: [70, 200],
-    L: 52,
+    origo: [80, 196],
+    L: 46,
     csuklo: [6, 0],
     FC: { Fx: 0, Fy: -10 },
     testek: [
       {
         nev: "I",
-        eltolas: [-60, 48],
+        eltolas: [-34, 64],
         rudak: [[0, 0, 6, 0]],
         tamaszok: [
           { x: 0, y: 0, tipus: "csuklo", cimke: "A" },
@@ -126,7 +126,7 @@ const SZERKEZETEK = [
       },
       {
         nev: "II",
-        eltolas: [60, -48],
+        eltolas: [40, -80],
         rudak: [[6, 0, 9, 0]],
         tamaszok: [{ x: 9, y: 0, tipus: "gorgo", cimke: "D" }],
         terhek: [{ x: 8, y: 0, Fx: 0, Fy: -6, cimke: "F₃ = 6 kN" }],
@@ -134,9 +134,9 @@ const SZERKEZETEK = [
       },
     ],
     reakciok: [
-      { pont: [0, 0], jel: "A_x", test: 0 },
+      { pont: [0, 0], jel: "A_x", test: 0, cimkeEltolas: [0, -10], horgony: "start" },
       { pont: [0, 0], jel: "A_y", test: 0 },
-      { pont: [4, 0], jel: "B", test: 0 },
+      { pont: [4, 0], jel: "B", test: 0, cimkeEltolas: [-8, 4], horgony: "end" },
       { pont: [9, 0], jel: "D", test: 1 },
     ],
     leiras: "A C csuklót közvetlenül terheli F₂ = 10 kN. Ilyenkor a csuklót külön kell elkülöníteni: rá három erő hat — a teher és a két testről érkező csuklóerők ellentettjei —, és ezek közös metszéspontú erőrendszere egyensúlyban van. A két testre ható csuklóerő ezért most nem egymás ellentettje!",
@@ -161,9 +161,9 @@ function szamol(szk) {
   return { CII, CI, reakcio, e };
 }
 
-export default function Szetszedo() {
-  const [idx, setIdx] = useState(0);
-  const [u, setU] = useState(0);
+export default function Szetszedo({ kezdoIdx = 0, kezdoU = 0 }) {
+  const [idx, setIdx] = useState(kezdoIdx);
+  const [u, setU] = useState(kezdoU);
   const rafRef = useRef(null);
   const szk = SZERKEZETEK[idx];
   const adat = useMemo(() => szamol(szk), [szk]);
@@ -245,14 +245,14 @@ export default function Szetszedo() {
                       const [Fx, Fy] = reakcioVektor(r.jel);
                       const v = reakcioErtek(r.jel);
                       return (
-                        <EroNyil key={r.jel} X={kx(r.pont[0])} Y={ky(r.pont[1])} Fx={Fx} Fy={Fy} leptek={LEPTEK} opacitas={reakU} cimke={`${r.jel.replace("_x", "ₓ").replace("_y", "ᵧ")} = ${sz(Math.abs(v), 2)}`} />
+                        <EroNyil key={r.jel} X={kx(r.pont[0])} Y={ky(r.pont[1])} Fx={Fx} Fy={Fy} leptek={LEPTEK} opacitas={reakU} cimke={`${r.jel.replace("_x", "ₓ").replace("_y", "ᵧ")} = ${sz(Math.abs(v), 2)}`} cimkeEltolas={r.cimkeEltolas} horgony={r.horgony} />
                       );
                     })}
                   {/* belső csuklóerő */}
                   {u > 0.05 && (
                     <g opacity={csuklU}>
-                      <EroNyil X={kx(cx)} Y={ky(cy)} Fx={Cero.x} Fy={0} leptek={LEPTEK} szin="#0369a1" hegy="oh-kek" cimke={`C${ti === 0 ? "′" : ""}ₓ = ${sz(Math.abs(Cero.x), 2)}`} />
-                      <EroNyil X={kx(cx)} Y={ky(cy)} Fx={0} Fy={Cero.y} leptek={LEPTEK} szin="#0369a1" hegy="oh-kek" cimke={`C${ti === 0 ? "′" : ""}ᵧ = ${sz(Math.abs(Cero.y), 2)}`} />
+                      <EroNyil X={kx(cx)} Y={ky(cy)} Fx={Cero.x} Fy={0} leptek={LEPTEK} szin="#0369a1" hegy="oh-kek" cimke={`C${ti === 0 ? "′" : ""}ₓ = ${sz(Math.abs(Cero.x), 2)}`} cimkeEltolas={[0, 18]} />
+                      <EroNyil X={kx(cx)} Y={ky(cy)} Fx={0} Fy={Cero.y} leptek={LEPTEK} szin="#0369a1" hegy="oh-kek" cimke={`C${ti === 0 ? "′" : ""}ᵧ = ${sz(Math.abs(Cero.y), 2)}`} cimkeEltolas={ti === 0 ? [-8, Cero.y >= 0 ? -6 : 4] : [8, Cero.y >= 0 ? -6 : 18]} horgony={ti === 0 ? "end" : "start"} />
                       <circle cx={kx(cx)} cy={ky(cy)} r="4" fill="#0369a1" stroke="white" strokeWidth="1.5" />
                     </g>
                   )}
@@ -260,29 +260,36 @@ export default function Szetszedo() {
               );
             })}
 
-            {/* a terhelt csukló külön */}
+            {/* a csuklón ható teher: mindig látszik (összerakva a csuklóra mutat, szétszedve a külön elkülönített csuklóra) */}
+            {szk.FC && (
+              <g>
+                <line x1={kx(cx)} y1={ky(cy) - 56} x2={kx(cx)} y2={ky(cy) - (u > 0.05 ? 12 : 7)} stroke={NAR} strokeWidth="3" strokeLinecap="round" markerEnd="url(#oh-nar)" />
+                <text x={kx(cx)} y={ky(cy) - 62} textAnchor="middle" fontSize="12" fontWeight="650" style={{ fill: NAR, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+                  F₂ = {sz(Math.abs(szk.FC.Fy), 0)} kN (a csuklón)
+                </text>
+              </g>
+            )}
+            {/* a terhelt csukló külön testként */}
             {szk.FC && u > 0.05 && (
               <g opacity={csuklU}>
                 <circle cx={kx(cx)} cy={ky(cy)} r="9" fill="white" stroke="#1d3c48" strokeWidth="2.2" />
                 <text x={kx(cx)} y={ky(cy) + 4} textAnchor="middle" fontSize="11" fontWeight="700" fontStyle="italic" style={{ fill: "#1d3c48" }}>C</text>
-                <line x1={kx(cx)} y1={ky(cy) - 58} x2={kx(cx)} y2={ky(cy) - 12} stroke={NAR} strokeWidth="3" strokeLinecap="round" markerEnd="url(#oh-nar)" />
-                <text x={kx(cx) + 8} y={ky(cy) - 44} fontSize="12" fontWeight="650" style={{ fill: NAR, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>F₂ = 10 kN</text>
-                <EroNyil X={kx(cx) - 6} Y={ky(cy) + 6} Fx={-CI.x} Fy={-CI.y} leptek={LEPTEK} szin="#0369a1" hegy="oh-kek" cimke={`−C′ᵢ: ${sz(Math.abs(CI.y), 2)}`} cimkeEltolas={[-4, 14]} />
-                <EroNyil X={kx(cx) + 6} Y={ky(cy) + 6} Fx={-CII.x} Fy={-CII.y} leptek={LEPTEK} szin="#0369a1" hegy="oh-kek" cimke={`−C′ᵢᵢ: ${sz(Math.abs(CII.y), 2)}`} cimkeEltolas={[4, 14]} />
+                <EroNyil X={kx(cx) - 14} Y={ky(cy) + 10} Fx={-CI.x} Fy={-CI.y} leptek={LEPTEK} szin="#0369a1" hegy="oh-kek" cimke={`−C′ᵢ: ${sz(Math.abs(CI.y), 2)}`} cimkeEltolas={[-6, 4]} horgony="end" />
+                <EroNyil X={kx(cx) + 14} Y={ky(cy) + 10} Fx={-CII.x} Fy={-CII.y} leptek={LEPTEK} szin="#0369a1" hegy="oh-kek" cimke={`−C′ᵢᵢ: ${sz(Math.abs(CII.y), 2)}`} cimkeEltolas={[6, 4]} horgony="start" />
               </g>
             )}
 
             {/* hatás–ellenhatás felirat */}
             {u > 0.6 && !szk.FC && (
               <g opacity={csuklU}>
-                <text x={SZ / 2} y={MA - 14} textAnchor="middle" fontSize="12" fontWeight="650" style={{ fill: "#0369a1", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+                <text x={SZ / 2} y={MA - 5} textAnchor="middle" fontSize="12" fontWeight="650" style={{ fill: "#0369a1", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
                   a két testre ható csuklóerő egymás ellentettje: C′ = −C (hatás–ellenhatás)
                 </text>
               </g>
             )}
             {u > 0.6 && szk.FC && (
               <g opacity={csuklU}>
-                <text x={SZ / 2} y={MA - 14} textAnchor="middle" fontSize="12" fontWeight="650" style={{ fill: "#0369a1", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+                <text x={SZ / 2} y={MA - 5} textAnchor="middle" fontSize="12" fontWeight="650" style={{ fill: "#0369a1", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
                   a csuklón: F₂ + (−C′ᵢ) + (−C′ᵢᵢ) = 0 → {sz(10, 0)} = {sz(Math.abs(CI.y), 0)} − {sz(Math.abs(CII.y), 0)} ✓
                 </text>
               </g>

@@ -54,7 +54,7 @@ export function Ind({ alap, index, vesszo = false, utana }) {
  * Erőnyíl, amelynek a FARKA az (X, Y) képpontban van és az (Fx, Fy) irányba mutat (y felfelé pozitív!).
  * hossz: px; ha nincs megadva, |F|·leptek (legalább minHossz).
  */
-export function EroNyil({ X, Y, Fx, Fy, leptek = 2.2, minHossz = 18, maxHossz = 90, szin = LILA, hegy = "oh-lila", vastag = 2.8, cimke, cimkeEltolas, opacitas = 1, szaggatott = false }) {
+export function EroNyil({ X, Y, Fx, Fy, leptek = 2.2, minHossz = 18, maxHossz = 90, szin = LILA, hegy = "oh-lila", vastag = 2.8, cimke, cimkeEltolas, horgony, opacitas = 1, szaggatott = false }) {
   const n = Math.hypot(Fx, Fy);
   if (n < 1e-9 || opacitas <= 0.01) return null;
   const h = Math.max(minHossz, Math.min(maxHossz, n * leptek));
@@ -65,7 +65,7 @@ export function EroNyil({ X, Y, Fx, Fy, leptek = 2.2, minHossz = 18, maxHossz = 
     <g opacity={opacitas}>
       <line x1={X} y1={Y} x2={x2} y2={y2} stroke={szin} strokeWidth={vastag} strokeLinecap="round" markerEnd={`url(#${hegy})`} strokeDasharray={szaggatott ? "5 4" : undefined} />
       {cimke && (
-        <text x={x2 + dx} y={y2 + dy} textAnchor={ex < -0.3 ? "end" : "start"} fontSize="12" fontWeight="650" fontStyle="italic" style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+        <text x={x2 + dx} y={y2 + dy} textAnchor={horgony ?? (ex < -0.3 ? "end" : "start")} fontSize="12" fontWeight="650" fontStyle="italic" style={{ fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
           {cimke}
         </text>
       )}

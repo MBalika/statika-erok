@@ -1,15 +1,17 @@
 "use client";
 
-import FilmIgenybevetel from "@/components/igenybevetel/FilmIgenybevetel";
+import FilmIgenybevetel, { epitIdo } from "@/components/igenybevetel/FilmIgenybevetel";
 import { eredmeny } from "@/components/igenybevetel/Modellek";
 
 /*
  * GYF‑4 · Konzolos kéttámaszú tartó megoszló teherrel és koncentrált nyomatékkal (H09/4) — film.
  * a = 2 m, p = 4 kN/m a 0…4 m-en, A az x = 2, B az x = 6 m-nél, M = 8 kNm ↷ a jobb végen (x = 8).
  * A_y = 14 kN, B = 2 kN. V: 0 → −8 | +6 → −2 → −2 | 0; M: 0 → −8 → −3,5 (V = 0 az x = 3,5-nél) → −4 → −8 → −8, ugrás 0-ra.
+ * A fejezetek a K helyét követik: x = 2 (14,25 s), x = 4 (18 s), x = 6 (21,75 s).
  */
 
 const T = { reak: 3.5, szak: 8, epit0: 10.5, epit1: 25.5, tores: 26, szelso: 30 };
+const e = eredmeny("gyf4");
 
 const FEJEZETEK = [
   {
@@ -26,24 +28,36 @@ const FEJEZETEK = [
   {
     t0: T.szak,
     cim: "Négy szakasz",
-    szoveg: "Szakaszhatár a teher vége (x = 4), a két támasz és a végek. 0–2 és 2–4: teher alatt (V lineáris, M parabola); 4–6 és 6–8: terheletlen (V konstans, M lineáris). A koncentrált nyomaték a jobb végen ugrást ad az M-ben.",
+    szoveg: "Szakaszhatár a teher vége (x = 4), a két támasz és a végek. 0–2 és 2–4: teher alatt (V lineáris, M parabola); 4–6 és 6–8: terheletlen (V konstans, M lineáris). A koncentrált nyomaték a jobb végen ugrást ad az M-ben. A negatív értékek a tartó fölé kerülnek (mindhárom ábrán a + oldal alul van).",
   },
   {
     t0: T.epit0,
-    cim: "V balról (↑)",
-    szoveg: "A bal konzolon kívülről: V = −4x, A-nál −8. A reakció +14-et ugrik: +6. Tovább csökken: x = 4-nél −2, és ez marad B-ig; B-nél +2-t ugrik: 0 a jobb konzolon (ott csak a nyomaték hat, erő nem).",
-    kepletek: ["V(2^-) = -8,\\quad V(2^+) = +6,\\quad V(4) = -2,\\quad V(6^-) = -2,\\quad V(6^+) = 0"],
+    cim: "C–A (0 < x < 2): a bal konzol kívülről",
+    szoveg: "A K-tól balra csak a teher 4x eredője (karja x/2), reakció nincs: V negatív, M negatív (felül húzott) — mindkettő a tartó fölött. A-nál V(2⁻) = −8, M(2) = −8.",
+    kepletek: ["(\\uparrow):\\ V(x) = -4x:\\quad V(2^-) = -8", "(\\curvearrowright):\\ M(x) = -2x^2:\\quad M(2) = -8\\ \\text{kNm}"],
   },
   {
-    t0: 18,
-    cim: "M balról (↷ pozitív)",
-    szoveg: "A bal konzol: M(2) = −8·1 = −8 (felül húzott). A parabola x = 4-ig: M(4) = 14·2 − 16·2 = −4. Terheletlen szakaszon lineáris: M(6) = 14·4 − 16·4 = −8. B-től a végig V = 0, tehát M konstans −8, a végen a 8 kNm ugrással zárul nullára.",
-    kepletek: ["M(2) = -8,\\quad M(4) = -4,\\quad M(6) = -8,\\quad M(8^-) = -8,\\quad M(8^+) = 0"],
+    t0: epitIdo(T, e, 2),
+    cim: "A után (2 < x < 4): a reakció +14-et ugraszt",
+    szoveg: "A-nál a V ábra +14-et ugrik: V(2⁺) = +6, majd a teher miatt tovább csökken: x = 3,5-nél nulla (itt az M-nek lokális szélsőértéke van: −3,5), x = 4-nél −2. Az M parabola folytatódik: M(4) = −4.",
+    kepletek: ["(\\uparrow):\\ V(x) = -4x + 14:\\quad V(2^+) = 6,\\ V(3{,}5) = 0,\\ V(4) = -2", "(\\curvearrowright):\\ M(x) = -2x^2 + 14(x-2):\\quad M(3{,}5) = -3{,}5,\\ M(4) = -4"],
+  },
+  {
+    t0: epitIdo(T, e, 4),
+    cim: "4 < x < 6: terheletlen szakasz",
+    szoveg: "A teher véget ért: V konstans −2, M lineáris (meredeksége a V, azaz −2 kNm/m): −4-ről −8-ra csökken B-ig. A teher végénél sem ugrás, sem törés: a parabola érintőlegesen megy át az egyenesbe.",
+    kepletek: ["V = -2\\ \\text{kN},\\qquad M(6) = -4 + (-2)\\cdot 2 = -8\\ \\text{kNm}"],
+  },
+  {
+    t0: epitIdo(T, e, 6),
+    cim: "B–D (6 < x < 8): a jobb konzol — csak a nyomaték hat",
+    szoveg: "B-nél a V +2-t ugrik: nulla a jobb konzolon (ott erő nem hat). V = 0, tehát M konstans −8, és a végen a 8 kNm koncentrált nyomaték ugrással zárja nullára — jobbról nézve ez az egyetlen hatás.",
+    kepletek: ["V = -2 + 2 = 0,\\qquad M = -8\\ (6 < x < 8^-),\\quad M(8^+) = -8 + 8 = 0"],
   },
   {
     t0: T.tores,
     cim: "Töréspontok és ugrások",
-    szoveg: "A támaszoknál a V ugrik a reakció értékével, az M törik. A teher végénél (x = 4) sem ugrás, sem törés: a parabola érintőlegesen megy át az egyenesbe. A jobb végen az M ábra ugrása pontosan a koncentrált nyomaték (8 kNm).",
+    szoveg: "A támaszoknál a V ugrik a reakció értékével, az M törik. A teher végénél (x = 4) sem ugrás, sem törés. A jobb végen az M ábra ugrása pontosan a koncentrált nyomaték (8 kNm).",
   },
   {
     t0: T.szelso,
@@ -57,12 +71,12 @@ export default function FilmGyf4() {
   return (
     <FilmIgenybevetel
       cim="GYF‑4 · Megoszló teher és koncentrált nyomaték — ugrás az M ábrában"
-      eredmeny={eredmeny("gyf4")}
+      eredmeny={e}
       fejezetek={FEJEZETEK}
       T={T}
       hossz={35}
       abrak={["V", "M"]}
-      megjegyzes="A koncentrált nyomaték helyén az M ábra ugrik, de a V ábra nem — a két oldali érintő azonos. A jobb konzolon V = 0, ezért M konstans."
+      megjegyzes="A koncentrált nyomaték helyén az M ábra ugrik, de a V ábra nem — a két oldali érintő azonos. A jobb konzolon V = 0, ezért M konstans. A pozitív V és M a tartó alatt, a negatív fölötte."
     />
   );
 }

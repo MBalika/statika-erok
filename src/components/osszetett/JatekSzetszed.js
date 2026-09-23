@@ -34,8 +34,9 @@ function ujKor(kor) {
   if (tipus === "gerber" || tipus === "terhelt") {
     const L1 = fel(3, 5), L2 = fel(1, 2.5), L3 = fel(2, 4);
     const xB = L1, xC = L1 + L2, xD = xC + L3;
-    const x1 = fel(0.5, xC - 0.5), F1 = egesz(6, 20);
-    const x2 = fel(xC + 0.5, xD - 0.5), F2 = egesz(4, 16);
+    // terhelt csuklónál a két erő ne essen a csukló mellé, hogy a csuklón ható teher nyila és felirata szabadon maradjon
+    const x1 = fel(0.5, xC - (tipus === "terhelt" ? 1.5 : 0.5)), F1 = egesz(6, 20);
+    const x2 = fel(xC + (tipus === "terhelt" ? 1 : 0.5), xD - 0.5), F2 = egesz(4, 16);
     const FC = tipus === "terhelt" ? egesz(4, 14) : 0;
     const r = gerberSzamit({ xB, xC, xD, terhekI: [{ x: x1, y: 0, Fx: 0, Fy: -F1 }], terhekII: [{ x: x2, y: 0, Fx: 0, Fy: -F2 }], FC: { Fx: 0, Fy: -FC } });
     return {
@@ -43,8 +44,8 @@ function ujKor(kor) {
       cim: tipus === "terhelt" ? "Csuklóján terhelt Gerber-tartó" : "Gerber-tartó",
       helyesTest: 1,
       testek: [
-        { nev: "I", rudak: [[0, 0, xC, 0]], tamaszok: [{ x: 0, y: 0, tipus: "csuklo", cimke: "A" }, { x: xB, y: 0, tipus: "gorgo", cimke: "B" }], terhek: [{ x: x1, y: 0, Fx: 0, Fy: -F1, cimke: `F₁ = ${F1}` }], eltolas: [-26, 30], cimkeHely: [xC / 2, -0.9] },
-        { nev: "II", rudak: [[xC, 0, xD, 0]], tamaszok: [{ x: xD, y: 0, tipus: "gorgo", cimke: "D" }], terhek: [{ x: x2, y: 0, Fx: 0, Fy: -F2, cimke: `F₂ = ${F2}` }], eltolas: [26, -30], cimkeHely: [xC + L3 / 2, -0.9] },
+        { nev: "I", rudak: [[0, 0, xC, 0]], tamaszok: [{ x: 0, y: 0, tipus: "csuklo", cimke: "A" }, { x: xB, y: 0, tipus: "gorgo", cimke: "B" }], terhek: [{ x: x1, y: 0, Fx: 0, Fy: -F1, cimke: `F₁ = ${F1}` }], eltolas: tipus === "terhelt" ? [-40, 40] : [-26, 30], cimkeHely: [xC / 2, -0.9] },
+        { nev: "II", rudak: [[xC, 0, xD, 0]], tamaszok: [{ x: xD, y: 0, tipus: "gorgo", cimke: "D" }], terhek: [{ x: x2, y: 0, Fx: 0, Fy: -F2, cimke: `F₂ = ${F2}` }], eltolas: tipus === "terhelt" ? [40, -44] : [26, -30], cimkeHely: [xC + L3 / 2, -0.9] },
       ],
       csuklo: [xC, 0],
       FC,
@@ -335,12 +336,15 @@ export default function JatekSzetszed() {
                 {/* terhelt csukló: a teher a csuklón középen */}
                 {adat.FC > 0 && (
                   <g>
-                    <line x1={kx(adat.csuklo[0])} y1={ky(0) - 56} x2={kx(adat.csuklo[0])} y2={ky(0) - 8} stroke="#e2590a" strokeWidth="3" strokeLinecap="round" markerEnd="url(#oh-nar)" />
-                    <text x={kx(adat.csuklo[0]) + 8} y={ky(0) - 40} fontSize="12" fontWeight="650" style={{ fill: "#e2590a", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>F_C = {adat.FC} kN</text>
+                    <line x1={kx(adat.csuklo[0])} y1={ky(0) - 92} x2={kx(adat.csuklo[0])} y2={ky(0) - 8} stroke="#e2590a" strokeWidth="3" strokeLinecap="round" markerEnd="url(#oh-nar)" />
+                    <text x={kx(adat.csuklo[0])} y={ky(0) - 98} textAnchor="middle" fontSize="12" fontWeight="650" style={{ fill: "#e2590a", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                      F<tspan dy="3" fontSize="9">C</tspan>
+                      <tspan dy="-3"> = {adat.FC} kN (a csuklón)</tspan>
+                    </text>
                     {fazis !== "test" && <circle cx={kx(adat.csuklo[0])} cy={ky(0)} r="7" fill="white" stroke="#1d3c48" strokeWidth="2" />}
                   </g>
                 )}
-                {fazis === "test" && <TamaszCimke x={kx(adat.csuklo[0])} y={ky(adat.csuklo[1]) - 12}>C</TamaszCimke>}
+                {fazis === "test" && <TamaszCimke x={kx(adat.csuklo[0]) + (adat.FC > 0 ? 14 : 0)} y={ky(adat.csuklo[1]) + (adat.FC > 0 ? 22 : -12)}>C</TamaszCimke>}
                 {adat.meretek.map(([a, b], i) => (
                   <Meret key={i} x1={kx(a)} x2={kx(b)} y={MA - 30} cimke={`${sz(b - a, 1)} m`} opacitas={0.85} />
                 ))}

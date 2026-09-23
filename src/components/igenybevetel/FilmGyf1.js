@@ -1,15 +1,17 @@
 "use client";
 
-import FilmIgenybevetel from "@/components/igenybevetel/FilmIgenybevetel";
+import FilmIgenybevetel, { epitIdo } from "@/components/igenybevetel/FilmIgenybevetel";
 import { eredmeny } from "@/components/igenybevetel/Modellek";
 
 /*
  * GYF‑1 · Befogott konzol (H09/1) — film.
  * a = 2 m, F₁ = 10 kN (30°, jobbra-lefelé) az x = a-nál, F₂ = 5 kN ↓ a szabad végen.
  * Reakciók: A_x = −8,66 kN, A_y = 10 kN, M_A = 40 kNm ↶. N: +8,66 / 0; V: +10 / +5; M: −40 → −20 → 0.
+ * A K keresztmetszet A-tól B felé vándorol; a fejezetek szakaszonként követik (a K az x = 2-t a 14,67 s-nál éri el).
  */
 
 const T = { reak: 3.5, szak: 7.5, epit0: 10, epit1: 24, tores: 24.5, szelso: 28.5 };
+const e = eredmeny("gyf1");
 
 const FEJEZETEK = [
   {
@@ -26,36 +28,33 @@ const FEJEZETEK = [
   },
   {
     t0: T.szak,
-    cim: "Szakaszok",
-    szoveg: "Szakaszhatár ott van, ahol koncentrált hatás működik: az x = 2 m-nél. Két terheletlen szakasz: N és V konstans, M lineáris mindkettőn.",
+    cim: "Szakaszok és a rajz oldala",
+    szoveg: "Szakaszhatár ott van, ahol koncentrált hatás működik: az x = 2 m-nél. Két terheletlen szakasz: N és V konstans, M lineáris mindkettőn. Mindhárom ábrát a tartó pozitív (alsó) oldalára mérjük fel: a pozitív érték alul, a negatív felül — a + és − jel mutatja.",
   },
   {
     t0: T.epit0,
-    cim: "A keresztmetszet vándorol — N",
-    szoveg: "Jobbról (a szabad vég felől) számolunk: a jobb oldali erők vízszintes vetülete (→ pozitív). A 8,66 kN kifelé húzza a keresztmetszetet, ezért N = +8,66 kN az első szakaszon; utána nincs vízszintes erő, N = 0.",
-    kepletek: ["(\\rightarrow):\\ N = +8{,}660\\ \\text{kN}\\ (0 < x < 2),\\qquad N = 0\\ (2 < x < 6)"],
+    cim: "1. szakasz (0 < x < 2): jobbról, F₁ és F₂ is a K-tól jobbra",
+    szoveg: "Jobbról (a szabad vég felől) számolunk, a pozitív irányok: N (→), V (↓), M (↶). A 8,66 kN kifelé húzza a keresztmetszetet: N = +8,66. A két lefelé mutató erő: V = +10. Mindkettő az óramutató szerint forgat a K-ra: M negatív, felül húzott.",
+    kepletek: [
+      "(\\rightarrow):\\ N = +8{,}660\\ \\text{kN},\\qquad (\\downarrow):\\ V = +5 + 5 = +10\\ \\text{kN}",
+      "(\\curvearrowleft):\\ M(x) = -5\\,(6-x) - 5\\,(2-x):\\quad M(0) = -40,\\ M(2) = -20\\ \\text{kNm}",
+    ],
   },
   {
-    t0: 14.5,
-    cim: "V — a jobb oldali erők függőleges vetülete",
-    szoveg: "Jobbról a lefelé mutató erők pozitívak (↓). A szabad vég felől: 5 kN, majd az F₁ alatt még 5 kN jön hozzá: V = +5, illetve +10 kN.",
-    kepletek: ["(\\downarrow):\\ V = +5\\ \\text{kN}\\ (2 < x < 6),\\qquad V = +5 + 5 = +10\\ \\text{kN}\\ (0 < x < 2)"],
-  },
-  {
-    t0: 19,
-    cim: "M — a jobb oldali erők nyomatéka (↶ pozitív)",
-    szoveg: "A lefelé mutató erők a K-tól jobbra az óramutató szerint forgatnak: M negatív, felül húzott. Lineáris szakaszok: elég a végpontok értéke.",
-    kepletek: ["(\\curvearrowleft):\\ M(6) = 0,\\quad M(2) = -5\\cdot 4 = -20\\ \\text{kNm},\\quad M(0) = -5\\cdot 6 - 5\\cdot 2 = -40\\ \\text{kNm}"],
+    t0: epitIdo(T, e, 2),
+    cim: "2. szakasz (2 < x < 6): a K-tól jobbra már csak F₂",
+    szoveg: "Az F₁ alatt az N ábra 8,66 kN-t, a V ábra 5 kN-t ugrik (a komponensek), az M ábra törik. Innen csak F₂ számít: N = 0, V = +5, M lineárisan tart a nullához.",
+    kepletek: ["(\\rightarrow):\\ N = 0,\\qquad (\\downarrow):\\ V = +5\\ \\text{kN},\\qquad (\\curvearrowleft):\\ M(x) = -5\\,(6-x):\\ M(2) = -20,\\ M(6) = 0"],
   },
   {
     t0: T.tores,
     cim: "Töréspontok",
-    szoveg: "Az F₁ alatt: az N ábrában 8,66 kN-os, a V ábrában 5 kN-os ugrás (a komponensek), az M ábrában törés — ugrás nincs. A befogásnál az ábrák végértékei a reakciók: N = 8,66 = |A_x|, V = 10 = A_y, M = −40 = −M_A.",
+    szoveg: "Az F₁ alatt: N és V ugrik, M törik — ugrás az M-ben nincs. A befogásnál az ábrák végértékei a reakciók: N = 8,66 = |A_x|, V = 10 = A_y, M = −40 = −M_A. A szabad végen N = M = 0, V = 5 = F₂.",
   },
   {
     t0: T.szelso,
     cim: "Szélsőérték és ellenőrzés",
-    szoveg: "V sehol sem nulla, ezért az M-nek nincs belső szélsőértéke: a legnagyobb nyomaték a befogásnál, 40 kNm (felül húzott). A szabad végen M = 0 és N = 0, V = 5 = F₂ — a végkeresztmetszet igénybevételei az ottani koncentrált hatásból.",
+    szoveg: "V sehol sem nulla, ezért az M-nek nincs belső szélsőértéke: a legnagyobb nyomaték a befogásnál, 40 kNm (felül húzott). A pozitív N és V a tartó alatt, a negatív M fölötte — mindhárom ugyanarra a pozitív oldalra rajzolva.",
     kepletek: ["M_{\\max} = |M(0)| = 40\\ \\text{kNm} = M_A\\ \\checkmark"],
   },
 ];
@@ -64,11 +63,11 @@ export default function FilmGyf1() {
   return (
     <FilmIgenybevetel
       cim="GYF‑1 · Befogott konzol — a keresztmetszet vándorol, az ábrák épülnek"
-      eredmeny={eredmeny("gyf1")}
+      eredmeny={e}
       fejezetek={FEJEZETEK}
       T={T}
       hossz={33}
-      megjegyzes="A K keresztmetszet balról jobbra vándorol, alatta épülnek az ábrák; a jobb felső sarokban az aktuális N, V, M. A szaggatott függőleges vonalak a szakaszhatárok, a gyűrűk a töréspontok."
+      megjegyzes="A K keresztmetszet balról jobbra vándorol, alatta épülnek az ábrák; az első ábra címsorában az aktuális x, N, V, M. A szaggatott függőleges vonalak a szakaszhatárok, a gyűrűk a töréspontok. A számítás jobbról (kívülről) megy, a rajz balról épül — a kettő ugyanoda vezet."
     />
   );
 }

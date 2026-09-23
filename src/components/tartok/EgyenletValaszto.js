@@ -228,6 +228,11 @@ export default function EgyenletValaszto({ kezdoSzerkezet = 1, kezdoMod, kezdoFi
     const y = ky(u.P[1]) - h * u.e[1];
     return { x, y, szog, cx: x + u.e[0] * 12 + (Math.abs(u.e[0]) < 0.01 ? 10 : 0), cy: y - u.e[1] * 12 + 5 };
   };
+  // a kiválasztott pont koordináta-felirata: ne fedje a pont nevét (a név jobbra-lent áll a tengely alatti pontoknál)
+  const kivalasztott = mod.tipus === "nyomatek" && mod.nev ? nevezettek.find((n) => n.id === mod.nev) : null;
+  const nevBalra = kivalasztott ? kivalasztott.x <= 0 || (kivalasztott.cimke && kivalasztott.y < 0) : false;
+  const nevLent = kivalasztott ? !(kivalasztott.y >= 0 && kivalasztott.id !== "A" && kivalasztott.id !== "L") : false;
+  const koordDy = mod.tipus === "nyomatek" ? (mod.P.y > 0.01 ? -10 : nevLent && !nevBalra ? 42 : 26) : 0;
   const talp = (u) => {
     const vx = mod.P.x - u.P[0];
     const vy = mod.P.y - u.P[1];
@@ -340,7 +345,7 @@ export default function EgyenletValaszto({ kezdoSzerkezet = 1, kezdoMod, kezdoFi
                 })}
                 <circle cx={kx(mod.P.x)} cy={ky(mod.P.y)} r="9" fill="none" stroke="#e2590a" strokeWidth="2.2" />
                 <circle cx={kx(mod.P.x)} cy={ky(mod.P.y)} r="2.5" fill="#e2590a" />
-                <text x={kx(mod.P.x) + 12} y={ky(mod.P.y) + (mod.P.y <= 0.01 ? 26 : -10)} fontSize="12.5" fontWeight="700" style={{ fill: "#e2590a", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+                <text x={kx(mod.P.x) + 12} y={ky(mod.P.y) + koordDy} fontSize="12.5" fontWeight="700" style={{ fill: "#e2590a", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
                   {mod.nev ? `(${sz(mod.P.x, 1)}; ${sz(mod.P.y, 1)})` : `P (${sz(mod.P.x, 1)}; ${sz(mod.P.y, 1)})`}
                 </text>
               </g>

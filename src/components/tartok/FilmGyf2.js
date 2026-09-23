@@ -111,7 +111,7 @@ function Rajz(t) {
       <EroA x={X0} y={Y} hossz={66} szog={-150} u={terhU} opacitas={f1Egesz} szin={SZ.nar} hegy="fg-nar" cimke="F₁ = 12 kN" dx={-6} dy={-14} horgony="middle" />
       <EroA x={X0} y={Y - 10} hossz={52} szog={180} u={kompLat} opacitas={op("F1x")} szin={SZ.nar} hegy="fg-nar" vastag={2.4} cimke="10,39" dx={4} dy={-6} />
       <EroA x={X0} y={Y} hossz={48} szog={-90} u={kompLat} opacitas={op("F1y")} szin={SZ.nar} hegy="fg-nar" vastag={2.4} cimke="6,000 kN" dx={-6} dy={6} horgony="end" />
-      <EroA x={X4} y={Y} hossz={64} szog={-90} u={terhU} opacitas={op("F2")} szin={SZ.nar} hegy="fg-nar" cimke="F₂ = 8 kN" dx={8} dy={-2} />
+      <EroA x={X4} y={Y} hossz={64} szog={-90} u={terhU} opacitas={op("F2")} szin={SZ.nar} hegy="fg-nar" cimke="F₂ = 8 kN" dx={-8} dy={-2} horgony="end" />
 
       {/* reakciók */}
       <EroA x={XA} y={Y} hossz={46} szog={0} u={reakU} opacitas={op("Ax")} cimke={szamU > 0.5 ? "Aₓ = 10,39 kN" : "Aₓ"} dx={-2} dy={18} horgony="end" />
@@ -121,18 +121,18 @@ function Rajz(t) {
       {fazis === "ma" && (
         <g opacity={maU}>
           <Fokusz x={XA} y={Y} t={t} cimke="A" dx={-30} dy={-12} />
-          <Kar x1={XA} y1={Y - 22} x2={X0} y2={Y - 22} u={arany(maKar, 0, 0.35)} cimke="1,5 m" dy={-5} />
+          <Kar x1={XA} y1={Y + 28} x2={X0} y2={Y + 28} u={arany(maKar, 0, 0.35)} cimke="1,5 m" dy={-5} />
           <Kar x1={XA} y1={Y + 28} x2={XB} y2={Y + 28} u={arany(maKar, 0.3, 0.65)} cimke="3 m" dy={-5} />
-          <Kar x1={XA} y1={Y + 44} x2={X4} y2={Y + 44} u={arany(maKar, 0.6, 1)} cimke="4,5 m" dy={-5} />
+          <Kar x1={XA} y1={Y + 44} x2={X4} y2={Y + 44} u={arany(maKar, 0.6, 1)} cimke="4,5 m" dy={16} />
           <Pipa x={300} y={Y - 100} opacitas={arany(t, T.ma + 2.8, T.ma + 3.4)}>9 + 3B − 36 = 0 → B = 9,000 kN</Pipa>
         </g>
       )}
       {fazis === "mb" && (
         <g opacity={mbU}>
           <Fokusz x={XB} y={Y} t={t} cimke="B" dx={14} dy={-12} />
-          <Kar x1={XB} y1={Y - 22} x2={X0} y2={Y - 22} u={arany(mbKar, 0, 0.4)} cimke="4,5 m" dy={-5} />
+          <Kar x1={XB} y1={Y + 44} x2={X0} y2={Y + 44} u={arany(mbKar, 0, 0.4)} cimke="4,5 m" dy={16} />
           <Kar x1={XB} y1={Y + 28} x2={XA} y2={Y + 28} u={arany(mbKar, 0.35, 0.7)} cimke="3 m" dy={-5} />
-          <Kar x1={XB} y1={Y + 44} x2={X4} y2={Y + 44} u={arany(mbKar, 0.65, 1)} cimke="1,5 m" dy={-5} />
+          <Kar x1={XB} y1={Y + 28} x2={X4} y2={Y + 28} u={arany(mbKar, 0.65, 1)} cimke="1,5 m" dy={-5} />
           <Pipa x={300} y={Y - 100} opacitas={arany(t, T.mb + 2.8, T.mb + 3.4)}>27 − 3Aᵧ − 12 = 0 → Aᵧ = 5,000 kN</Pipa>
         </g>
       )}

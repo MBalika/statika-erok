@@ -104,7 +104,7 @@ export default function EpitoPanel({ allapot: all, kijelolt, onValtoztat, onKije
           <p className="text-[13px] font-semibold text-petrol-900">
             {r.id}. rúd <span className="font-normal text-petrol-500">{r.a} → {r.b}, {ert(g.hossz)} m, {ert(g.szogFok)}°</span>
           </p>
-          <p className="text-[12px] text-petrol-600">A rúdmenti helyeket (a) a(z) {r.a} csomóponttól mérjük. A nyomatéki ábra pozitív oldala: {r.a}-tól {r.b} felé haladva a jobb oldal.</p>
+          <p className="text-[12px] text-petrol-600">A rúdmenti helyeket (a) a(z) {r.a} csomóponttól mérjük. Az ábrák (N, V, M) pozitív oldala: {r.a}-tól {r.b} felé haladva a jobb oldal.</p>
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="w-14 text-[12.5px] text-petrol-700">Teher ide</span>
             <Gomb onClick={() => { const q = teherHozzaad(all, { fajta: "pontTeher", rud: r.id, a: Math.round((g.hossz / 2) / RACS) * RACS }); v(q.allapot); onKijelol({ tipus: "teher", id: q.id }); }}>+ erő</Gomb>

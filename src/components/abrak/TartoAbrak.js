@@ -1,18 +1,7 @@
 /** Az 5. modul (egyszerű tartók reakciói) elméleti, statikus ábrái – a tankönyv 4.1–4.9. ábrája nyomán. */
 
-import {
-  TartoHegyek,
-  Tarto,
-  Gorgo,
-  Csuklo,
-  Befogas,
-  Rud,
-  TeherNyil,
-  ReakcioNyil,
-  KoncentraltNyomatek,
-  TamaszCimke,
-  SZIN,
-} from "@/components/tartok/TartoElemek";
+import { TartoHegyek, Tarto, Gorgo, Csuklo, Befogas, Rud, TeherNyil, ReakcioNyil, KoncentraltNyomatek, TamaszCimke } from "@/components/tartok/TartoElemek";
+import { SZIN } from "@/components/tartok/szinek";
 
 const SZURKE = "#64748b";
 const LILA = "var(--color-jel-eredo)";
@@ -84,6 +73,22 @@ function Pont({ x, y, cimke, dx = 8, dy = -6 }) {
       {cimke && <Jel x={x + dx} y={y + dy} alap={cimke} horgony="start" meret={12.5} />}
     </g>
   );
+}
+
+/**
+ * Befogási nyomaték íve (óramutatóval ellentétes = pozitív): a −45°…215° tartományban fut, hogy a hegye ne
+ * a tengelyen fekvő A_x nyílra és ne az A_y nyílra essen (a közös KoncentraltNyomatek a tengelyen végződik).
+ */
+function BefogasiNyomatek({ x, y, r = 22, szin = SZIN.nyomatek }) {
+  const FOK = Math.PI / 180;
+  const k = -45 * FOK; // kezdet: jobbra-lent
+  const v = 215 * FOK; // vég (a hegy): balra-lent
+  const x1 = x + r * Math.cos(k);
+  const y1 = y - r * Math.sin(k);
+  const x2 = x + r * Math.cos(v);
+  const y2 = y - r * Math.sin(v);
+  // a képernyőn az óramutatóval ellentétes irány: sweep = 0; 260°-os ív: large-arc = 1
+  return <path d={`M ${x1} ${y1} A ${r} ${r} 0 1 0 ${x2} ${y2}`} fill="none" stroke={szin} strokeWidth="2.6" markerEnd="url(#th-nyomatek)" />;
 }
 
 /** Kis ívnyíl az elfordulás jelzésére. */
@@ -192,7 +197,7 @@ export function AbraKenyszerek() {
               <>
                 <ReakcioNyil x={xb + 4} y={Y2} hossz={40} szog={0} />
                 <ReakcioNyil x={xb + 4} y={Y2} hossz={44} szog={90} />
-                <KoncentraltNyomatek x={xb + 4} y={Y2} r={17} irany={1} />
+                <BefogasiNyomatek x={xb + 4} y={Y2} r={19} />
                 <Jel x={xb - 34} y={Y2 - 8} alap="A" index="x" szin={LILA} horgony="start" />
                 <Jel x={xb + 12} y={Y2 + 44} alap="A" index="y" szin={LILA} horgony="start" />
                 <Jel x={xb + 26} y={Y2 - 22} alap="M" index="A" szin={SZIN.nyomatek} horgony="start" />
@@ -331,10 +336,10 @@ export function AbraKonzol() {
       <TeherNyil x={V} y={Y2} hossz={48} szog={-90} cimke="F₂" cimkeEltolas={[8, -4]} />
       <ReakcioNyil x={A} y={Y2} hossz={40} szog={0} />
       <ReakcioNyil x={A} y={Y2} hossz={44} szog={90} />
-      <KoncentraltNyomatek x={A} y={Y2} r={20} irany={1} />
+      <BefogasiNyomatek x={A} y={Y2} r={22} />
       <Jel x={A - 42} y={Y2 - 8} alap="A" index="x" szin={LILA} horgony="start" />
       <Jel x={A + 8} y={Y2 + 42} alap="A" index="y" szin={LILA} horgony="start" />
-      <Jel x={A + 24} y={Y2 - 24} alap="M" index="A" szin={SZIN.nyomatek} horgony="start" />
+      <Jel x={A + 24} y={Y2 - 26} alap="M" index="A" szin={SZIN.nyomatek} horgony="start" />
       <Pont x={A} y={Y2} />
       <EgyenletTipp x={150} y={Y2 + 40} fajta="Fx" cel="A" celIndex="x" />
       <EgyenletTipp x={150} y={Y2 + 58} fajta="Fy" cel="A" celIndex="y" />

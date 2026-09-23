@@ -12,9 +12,9 @@ import { EroA, Kar, Fokusz, Pipa, Kijelentes, FilmHegyek, SZ } from "@/component
  * Eredmény: D = 4; C_II = (0; 2) ↑; C_I = (0; −12) ↓; B = 23,20; A_y = −0,804; A_x = −6.
  */
 
-const OX = 56;
+const OX = 80;
 const Y = 190;
-const L = 52;
+const L = 44;
 const kx = (x) => OX + x * L;
 const KEK = "#0369a1";
 
@@ -84,16 +84,17 @@ function Rajz(t) {
   const szamC = t > T.cs + 2.2 ? 1 : 0;
   const szamI = t > T.i + 2.5 ? 1 : 0;
 
-  const dI = [-56 * szetU, 46 * szetU];
-  const dII = [56 * szetU, -46 * szetU];
+  // a két test eltolása a szétszedéskor; a C csukló középen marad
+  const dI = [-28 * szetU, 40 * szetU];
+  const dII = [28 * szetU, -40 * szetU];
   const CX = kx(6), CY = Y;
   const l = lukteto(t, 1.2);
 
   return (
-    <svg viewBox="0 0 600 340" className="abra w-full select-none">
+    <svg viewBox="0 0 600 360" className="abra w-full select-none">
       <TartoHegyek />
       <FilmHegyek />
-      <Kijelentes opacitas={kijU * (fazis === "kij" ? 1 : 0.35)} y={22}>
+      <Kijelentes opacitas={kijU * (fazis === "kij" ? 1 : 0.35)} y={22} szeles={470}>
         II: (F₃, D, Cᵢᵢ) ≐ O · C: (F₂, C′ᵢ, C′ᵢᵢ) ≐ O · I: (F₁, A, B, Cᵢ) ≐ O
       </Kijelentes>
 
@@ -104,15 +105,15 @@ function Rajz(t) {
         <Tarto x1={kx(0)} y1={Y} x2={kx(6)} y2={Y} />
         <TamaszCimke x={kx(0) - 16} y={Y + 26}>A</TamaszCimke>
         <TamaszCimke x={kx(4) + 16} y={Y + 26}>B</TamaszCimke>
-        <FeliratA x={kx(3)} y={Y + 44} szin="#334155" meret={11} opacitas={szetU}>I. test</FeliratA>
+        <FeliratA x={kx(2.6)} y={Y + 44} szin="#334155" meret={11} opacitas={szetU}>I. test</FeliratA>
         <EroA x={kx(2)} y={Y} hossz={62} szog={-60} u={terhU} szin={SZ.nar} hegy="fg-nar" cimke="F₁ = 12" dx={-4} dy={-8} horgony="end" />
-        <EroA x={kx(0)} y={Y} hossz={38} szog={0} u={reakU} opacitas={1 - fordulU} cimke="Aₓ" dx={-4} dy={-10} horgony="end" />
-        <EroA x={kx(0) - 2} y={Y - 9} hossz={38} szog={180} u={fordulU} cimke="Aₓ = 6" dx={4} dy={-8} />
+        <EroA x={kx(0)} y={Y} hossz={32} szog={0} u={reakU} opacitas={1 - fordulU} cimke="Aₓ" dx={4} dy={-10} />
+        <EroA x={kx(0) - 2} y={Y - 9} hossz={34} szog={180} u={fordulU} cimke="Aₓ = 6" dx={4} dy={-8} />
         <EroA x={kx(0)} y={Y + 2} hossz={34} szog={90} u={reakU} opacitas={1 - fordulU} cimke={szamI ? "Aᵧ = −0,80" : "Aᵧ"} dx={6} dy={6} />
-        <EroA x={kx(0) + 8} y={Y + 36} hossz={30} szog={-90} u={fordulU} cimke="Aᵧ = 0,80" dx={6} dy={-2} />
+        <EroA x={kx(0) + 8} y={Y + 36} hossz={30} szog={-90} u={fordulU} cimke="Aᵧ = 0,80" dx={6} dy={14} cimkeHegy />
         <EroA x={kx(4)} y={Y + 2} hossz={66} szog={90} u={reakU} cimke={szamI ? "B = 23,20" : "B"} dx={6} dy={6} />
         {/* C_I: az I. testre; a felvett irány felfelé, a valóságban 12 kN lefelé */}
-        <EroA x={kx(6)} y={Y + 2 + 44 * szetU} hossz={44 * szetU} szog={-90} u={szetU} opacitas={szamC ? 1 : 0.55} szin={KEK} hegy="fg-kek" vastag={2.6} cimke={szamC ? "Cᵢᵧ: 12 kN ↓" : "Cᵢᵧ"} dx={6} dy={4} cimkeHegy />
+        <EroA x={kx(6)} y={Y + 2 + 44 * szetU} hossz={44 * szetU} szog={-90} u={szetU} opacitas={szamC ? 1 : 0.55} szin={KEK} hegy="fg-kek" vastag={2.6} cimke={szamC ? "Cᵢᵧ: 12 kN ↓" : "Cᵢᵧ"} dx={-6} dy={4} horgony="end" cimkeHegy />
       </g>
 
       {/* II. test */}
@@ -120,23 +121,23 @@ function Rajz(t) {
         <Gorgo x={kx(9)} y={Y} opacitas={tamaszHalv} />
         <Tarto x1={kx(6)} y1={Y} x2={kx(9)} y2={Y} />
         <TamaszCimke x={kx(9) + 16} y={Y + 26}>D</TamaszCimke>
-        <FeliratA x={kx(7.5)} y={Y - 44} szin="#334155" meret={11} opacitas={szetU}>II. test</FeliratA>
+        <FeliratA x={kx(7)} y={Y + 24} szin="#334155" meret={11} opacitas={szetU}>II. test</FeliratA>
         <EroA x={kx(8)} y={Y} hossz={44} szog={-90} u={terhU} szin={SZ.nar} hegy="fg-nar" cimke="F₃ = 6" dx={6} dy={-2} />
         <EroA x={kx(9)} y={Y + 2} hossz={40} szog={90} u={reakU} cimke={szamII ? "D = 4,000" : "D"} dx={6} dy={6} />
-        <EroA x={kx(6)} y={Y - 2 - 30} hossz={30} szog={90} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.6} cimke={szamII ? "Cᵢᵢᵧ = 2" : "Cᵢᵢᵧ"} dx={-6} dy={-4} horgony="end" />
+        <EroA x={kx(6)} y={Y - 2 - 30} hossz={30} szog={90} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.6} cimke={szamII ? "Cᵢᵢᵧ = 2" : "Cᵢᵢᵧ"} dx={6} dy={-4} cimkeHegy />
         <EroA x={kx(6) + 26} y={Y} hossz={26} szog={0} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.2} cimke={szamII ? "Cᵢᵢₓ = 0" : "Cᵢᵢₓ"} dx={4} dy={-8} />
       </g>
 
-      {/* a C csukló középen */}
+      {/* a C csukló középen — külön test: rá hat F₂ és a két csuklóerő ellentettje */}
       <g opacity={testOp("C")}>
         {szetU > 0.05 && (
           <>
             <circle cx={CX} cy={CY} r={9 + (fazis === "cs" ? 3 * l : 0)} fill="white" stroke="#1d3c48" strokeWidth="2.2" opacity={szetU} />
             <FeliratA x={CX} y={CY + 4} szin="#1d3c48" meret={11} opacitas={szetU}>C</FeliratA>
-            <EroA x={CX} y={CY - 11} hossz={54} szog={-90} u={szetU} szin={SZ.nar} hegy="fg-nar" cimke="F₂ = 10" dx={6} dy={-2} />
+            <EroA x={CX} y={CY - 11} hossz={54} szog={-90} u={szetU} szin={SZ.nar} hegy="fg-nar" cimke="F₂ = 10" dx={-6} dy={-2} horgony="end" />
             {/* −C′_II: 2 kN lefelé a csuklón; −C′_I: 12 kN felfelé */}
             <EroA x={CX + 6} y={CY + 11 + 24 * szetU} hossz={24 * szetU} szog={-90} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.2} cimke={szamII ? "C′ᵢᵢ = 2 ↓" : "C′ᵢᵢ"} dx={4} dy={12} cimkeHegy />
-            <EroA x={CX - 6} y={CY + 11} hossz={60 * szetU} szog={90} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.2} cimke={szamC ? "C′ᵢ = 12 ↑" : "C′ᵢ"} dx={-4} dy={12} horgony="end" />
+            <EroA x={CX - 6} y={CY + 11} hossz={60 * szetU} szog={90} u={szetU} szin={KEK} hegy="fg-kek" vastag={2.2} cimke={szamC ? "C′ᵢ = 12 ↑" : "C′ᵢ"} dx={10} dy={12} />
           </>
         )}
         {fazis === "elk" && szetU < 0.05 && (
@@ -157,36 +158,36 @@ function Rajz(t) {
 
       {fazis === "ii" && (
         <g>
-          <Fokusz x={kx(6) + dII[0]} y={Y + dII[1]} t={t} cimke="C" dx={-26} dy={-14} />
-          <Kar x1={kx(6) + dII[0]} y1={Y + dII[1] + 26} x2={kx(8) + dII[0]} y2={Y + dII[1] + 26} u={arany(t, T.ii + 0.6, T.ii + 1.2)} cimke="2 m" dy={14} />
-          <Kar x1={kx(6) + dII[0]} y1={Y + dII[1] + 42} x2={kx(9) + dII[0]} y2={Y + dII[1] + 42} u={arany(t, T.ii + 1.0, T.ii + 1.6)} cimke="3 m" dy={14} />
-          <Pipa x={300} y={322} opacitas={arany(t, T.ii + 2.2, T.ii + 2.8)}>D = 4,000 kN · Cᵢᵢᵧ = 2,000 kN (a II. testre ↑) · Cᵢᵢₓ = 0</Pipa>
+          <Fokusz x={kx(6) + dII[0]} y={Y + dII[1]} t={t} />
+          <Kar x1={kx(6) + dII[0]} y1={Y + dII[1] + 40} x2={kx(8) + dII[0]} y2={Y + dII[1] + 40} u={arany(t, T.ii + 0.6, T.ii + 1.2)} cimke="2 m" dy={14} />
+          <Kar x1={kx(6) + dII[0]} y1={Y + dII[1] + 58} x2={kx(9) + dII[0]} y2={Y + dII[1] + 58} u={arany(t, T.ii + 1.0, T.ii + 1.6)} cimke="3 m" dy={14} />
+          <Pipa x={300} y={346} opacitas={arany(t, T.ii + 2.2, T.ii + 2.8)}>D = 4,000 kN · Cᵢᵢᵧ = 2,000 kN (a II. testre ↑) · Cᵢᵢₓ = 0</Pipa>
         </g>
       )}
       {fazis === "cs" && (
         <g>
-          <FeliratA x={300} y={Y + 110} szin={SZ.szurke} meret={11.5} vastag={false} opacitas={arany(t, T.cs + 0.2, T.cs + 0.8)}>a csuklón: 10 (F₂) + 2 (C′ᵢᵢ) lefelé = 12 felfelé (C′ᵢ)</FeliratA>
-          <Pipa x={300} y={322} opacitas={arany(t, T.cs + 1.8, T.cs + 2.4)}>Cᵢᵧ = −12,00 kN → az I. testre 12 kN lefelé hat</Pipa>
+          <FeliratA x={300} y={Y + 118} szin={SZ.szurke} meret={11.5} vastag={false} opacitas={arany(t, T.cs + 0.2, T.cs + 0.8)}>a csuklón: 10 (F₂) + 2 (C′ᵢᵢ) lefelé = 12 felfelé (C′ᵢ)</FeliratA>
+          <Pipa x={300} y={346} opacitas={arany(t, T.cs + 1.8, T.cs + 2.4)}>Cᵢᵧ = −12,00 kN → az I. testre 12 kN lefelé hat</Pipa>
         </g>
       )}
       {fazis === "i" && (
         <g>
-          <Fokusz x={kx(0) + dI[0]} y={Y + dI[1]} t={t} cimke="A" dx={-26} dy={-14} />
-          <Kar x1={kx(0) + dI[0]} y1={Y + dI[1] + 62} x2={kx(2) + dI[0]} y2={Y + dI[1] + 62} u={arany(t, T.i + 0.6, T.i + 1.2)} cimke="2 m" dy={14} />
-          <Kar x1={kx(0) + dI[0]} y1={Y + dI[1] + 78} x2={kx(4) + dI[0]} y2={Y + dI[1] + 78} u={arany(t, T.i + 1.0, T.i + 1.6)} cimke="4 m" dy={14} />
-          <Kar x1={kx(0) + dI[0]} y1={Y + dI[1] + 94} x2={kx(6) + dI[0]} y2={Y + dI[1] + 94} u={arany(t, T.i + 1.4, T.i + 2.0)} cimke="6 m" dy={14} />
-          <Pipa x={300} y={322} opacitas={arany(t, T.i + 2.2, T.i + 2.8)}>B = (20,78 + 72) / 4 = 23,20 · Aᵧ = (20,78 − 24) / 4 = −0,804 · Aₓ = −6</Pipa>
+          <Fokusz x={kx(0) + dI[0]} y={Y + dI[1]} t={t} />
+          <Kar x1={kx(0) + dI[0]} y1={Y + dI[1] + 58} x2={kx(2) + dI[0]} y2={Y + dI[1] + 58} u={arany(t, T.i + 0.6, T.i + 1.2)} cimke="2 m" dy={14} />
+          <Kar x1={kx(0) + dI[0]} y1={Y + dI[1] + 74} x2={kx(4) + dI[0]} y2={Y + dI[1] + 74} u={arany(t, T.i + 1.0, T.i + 1.6)} cimke="4 m" dy={14} />
+          <Kar x1={kx(0) + dI[0]} y1={Y + dI[1] + 90} x2={kx(6) + dI[0]} y2={Y + dI[1] + 90} u={arany(t, T.i + 1.4, T.i + 2.0)} cimke="6 m" dy={14} />
+          <Pipa x={300} y={346} opacitas={arany(t, T.i + 2.2, T.i + 2.8)}>B = (20,78 + 72) / 4 = 23,20 · Aᵧ = (20,78 − 24) / 4 = −0,804 · Aₓ = −6</Pipa>
         </g>
       )}
       {fazis === "ell" && (
         <g opacity={arany(t, T.ell + 0.2, T.ell + 0.8)}>
           <VonalA x1={30} y1={Y + 116} x2={570} y2={Y + 116} szin="#94a3b8" vastag={1} />
-          <Pipa x={300} y={322} opacitas={arany(t, T.ell + 1.4, T.ell + 2.0)}>−0,804 + 23,20 + 4 − 10,39 − 10 − 6 = 0,00 ✓ (F₂ benne van, a csuklóerők nem)</Pipa>
+          <Pipa x={300} y={346} opacitas={arany(t, T.ell + 1.4, T.ell + 2.0)}>−0,804 + 23,20 + 4 − 10,39 − 10 − 6 = 0,00 ✓ (F₂ benne van, a csuklóerők nem)</Pipa>
         </g>
       )}
       {fazis === "ered" && (
         <g opacity={eredU}>
-          <FeliratA x={300} y={322} szin={SZ.zold} meret={12.5}>Eredményvázlat: 8 új szám — a csuklóerők különbsége a csuklón ható 10 kN</FeliratA>
+          <FeliratA x={300} y={346} szin={SZ.zold} meret={12.5}>Eredményvázlat: 8 új szám — a csuklóerők különbsége a csuklón ható 10 kN</FeliratA>
         </g>
       )}
     </svg>

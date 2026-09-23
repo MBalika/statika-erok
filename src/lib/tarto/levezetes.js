@@ -455,7 +455,7 @@ export function igenybevetelSzoveg(igenybevetelek, modell) {
     return {
       rud: ig.rud,
       cim: igenybevetelek.length > 1 ? `${ig.rud}. rúd (${A} → ${B})` : `A tartó (${A} → ${B})`,
-      megjegyzes: `Az x koordinátát a(z) ${A} ponttól mérjük a rúd mentén; a pozitív oldal a ${rud.pozitivOldal === -1 ? "haladási irány szerinti jobb" : "bal"} oldal.`,
+      megjegyzes: `Az x koordinátát a(z) ${A} ponttól mérjük a rúd mentén; a pozitív oldal (az M előjeléhez, és ide kerül mindhárom ábra pozitív értéke) a ${rud.pozitivOldal === -1 ? "haladási irány szerinti jobb" : "bal"} oldal.`,
       szakaszok: ig.szakaszok.map((sz) => ({
         tartomany: `${f2(sz.x1)} \\le x \\le ${f2(sz.x2)}`,
         N: `N(x) = ${polinomTex(sz.N)}`,

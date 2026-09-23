@@ -1,18 +1,7 @@
 /** A 6. modul (összetett tartók) elméleti, statikus ábrái – a tankönyv 5.1–5.18. ábrája nyomán. */
 
-import {
-  TartoHegyek,
-  Tarto,
-  Gorgo,
-  Csuklo,
-  Befogas,
-  Rud,
-  BelsoCsuklo,
-  TeherNyil,
-  ReakcioNyil,
-  TamaszCimke,
-  SZIN,
-} from "@/components/tartok/TartoElemek";
+import { TartoHegyek, Tarto, Gorgo, Csuklo, Befogas, Rud, BelsoCsuklo, TeherNyil, ReakcioNyil, TamaszCimke } from "@/components/tartok/TartoElemek";
+import { SZIN } from "@/components/tartok/szinek";
 
 const SZURKE = "#64748b";
 const LILA = "var(--color-jel-eredo)";
@@ -528,10 +517,10 @@ export function AbraFuggesztomu() {
    9. ábra: rudakkal felfüggesztett terhelt csukló (H06/5–6) – a GYF-5 szerkezete
    ============================================================ */
 export function AbraRudasCsuklo() {
-  const OX = 60, Y = 150, L = 34; // px / m, a = 2 → 7a = 14 m … túl hosszú: itt a-ban rajzolunk (L px / a)
+  const OX = 60, Y = 180, L = 34; // px / m, a = 2 → 7a = 14 m … túl hosszú: itt a-ban rajzolunk (L px / a)
   const kx = (x) => OX + x * L;
   return (
-    <svg viewBox="0 0 600 205" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 235" className="abra w-full h-auto">
       <TartoHegyek />
       <Felirat x={14} y={16} szin={SZURKE} meret={10.5} vastag={700}>Két rúddal tartott, terhelt csukló (H06/5–6): a D csuklóra F, S_DC és S_DE hat</Felirat>
       <Tarto x1={kx(0)} y1={Y} x2={kx(7)} y2={Y} />
@@ -540,7 +529,8 @@ export function AbraRudasCsuklo() {
       <Csuklo x={kx(7)} y={Y} />
       <Rud x1={kx(0)} y1={Y - 3 * L} x2={kx(4)} y2={Y - 3 * L} />
       <Rud x1={kx(0)} y1={Y - 3 * L} x2={kx(4)} y2={Y} />
-      <TeherNyil x={kx(0)} y={Y - 3 * L + 6} hossz={40} szog={90} cimke="F" cimkeEltolas={[-14, -4]} />
+      {/* F: függőlegesen lefelé a D csuklóra (H06/5. rajz), a hegye a D fölött */}
+      <TeherNyil x={kx(0)} y={Y - 3 * L - 6} hossz={40} szog={-90} cimke="F" cimkeEltolas={[8, -2]} />
       <TamaszCimke x={kx(1)} y={Y + 40}>A</TamaszCimke>
       <TamaszCimke x={kx(7)} y={Y + 40}>B</TamaszCimke>
       <TamaszCimke x={kx(4) + 12} y={Y + 18}>E</TamaszCimke>

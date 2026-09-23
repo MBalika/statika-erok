@@ -196,8 +196,8 @@ function leptekek(f) {
   const hatarM = Math.max(f.maxM * 1.25, 2);
   const lV = (FEL_V - 8) / hatarV;
   const lM = (FEL_M - 8) / hatarM;
-  // V pozitív felfelé, M pozitív lefelé (húzott oldal)
-  const yV = (v) => YV - v * lV;
+  // V és M egyaránt a tartó pozitív (alsó) oldalára: a pozitív érték lefelé, mint a tankönyv 8.9. ábráján
+  const yV = (v) => YV + v * lV;
   const yM = (v) => YM + v * lM;
   return { PX, kx, yV, yM, lV, lM, hatarV, hatarM, lepesV: szepLepes(hatarV), lepesM: szepLepes(hatarM) };
 }
@@ -259,7 +259,10 @@ export function JatekRajz({ svgRef, f, g, rajz, gorbek, tipp, alakT, ellenorizve
                   ))}
                   <text x={14} y={y0 - felM + 14} fontSize="13" fontWeight="700" style={{ fill: szin }}>{jel}</text>
                   <text x={14} y={y0 - felM + 28} fontSize="10" style={{ fill: "#64748b" }}>[{jel === "V" ? "kN" : "kNm"}]</text>
-                  <text x={14} y={y0 + felM - 4} fontSize="9.5" style={{ fill: "#94a3b8" }}>{jel === "V" ? "+ felfelé" : "+ lefelé"}</text>
+                  <text x={14} y={y0 + felM - 4} fontSize="9.5" style={{ fill: "#94a3b8" }}>+ lefelé</text>
+                  {/* a „+” és „−” oldal jele a tengely két oldalán, a tengelyfeliratoktól balra */}
+                  <text x={50} y={y0 + 15} textAnchor="middle" fontSize="11" fontWeight="700" style={{ fill: szin, opacity: 0.85 }}>+</text>
+                  <text x={50} y={y0 - 8} textAnchor="middle" fontSize="11" fontWeight="700" style={{ fill: "#64748b", opacity: 0.85 }}>−</text>
                   {/* töréspont-függőlegesek; a V = 0 hely jele */}
                   {f.torespontok.map((p) => (
                     <line key={p.x} x1={g.kx(p.x)} y1={y0 - felM + 4} x2={g.kx(p.x)} y2={y0 + felM - 4} stroke={p.szelso ? "#f59e0b" : "#94a3b8"} strokeWidth="0.8" strokeDasharray="2 3" />
@@ -364,7 +367,8 @@ export default function JatekAbrarajzolo() {
     const mozgat = (esem) => {
       const r = svg.getBoundingClientRect();
       const py = ((esem.clientY - r.top) / r.height) * MA;
-      let v = jel === "V" ? (YV - py) / g.lV : (py - YM) / g.lM;
+      // a képernyő-y → érték: a yV/yM inverze (lefelé húzás = pozitív érték, mindkét ábránál)
+      let v = jel === "V" ? (py - YV) / g.lV : (py - YM) / g.lM;
       v = clamp(kerek(v), -(jel === "V" ? g.hatarV : g.hatarM), jel === "V" ? g.hatarV : g.hatarM);
       setTipp((t) => {
         const lista = t[jel].map((p) => ({ ...p }));
@@ -462,7 +466,7 @@ export default function JatekAbrarajzolo() {
   if (f && fazis === "rajzol") {
     uzenet = (
       <>
-        <strong>{kor}. kör – {f.nev}.</strong> Húzd a fogópontokat a töréspontoknál a helyes értékre (V: pozitív felfelé; M: pozitív, azaz húzott oldal lefelé), a szakaszok alakját az M-nél a gombokkal állítsd be.
+        <strong>{kor}. kör – {f.nev}.</strong> Húzd a fogópontokat a töréspontoknál a helyes értékre — a pozitív V és a pozitív M is a tartó pozitív (alsó) oldalára, azaz lefelé kerül, a negatív felfelé —, a szakaszok alakját az M-nél a gombokkal állítsd be.
         {f.torespontok.some((p) => p.szelso) ? " A narancs jelnél V = 0: ott az M szélsőértékét is be kell állítanod." : ""}
         {segitseg ? " A V-ábra készen van, csak az M-et rajzold — a kör pontja feleződik." : ""}
       </>

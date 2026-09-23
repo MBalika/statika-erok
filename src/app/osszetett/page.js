@@ -85,7 +85,7 @@ export default function OsszetettOldal() {
             <M>{"C'_x, C'_y"}</M>). Így két ismeretlen helyett kettő van összesen, nem négy — a vessző csak azt jelzi, hogy a másik testre hat.
           </p>
         </div>
-        <AbraKeret szam={1} cim="A belső csukló és az elkülönítése a tankönyv 5.1. ábrája nyomán: a II. testre C_x, C_y, az I. testre az ellentettjük, azonos nagysággal.">
+        <AbraKeret szam={1} cim="A belső csukló és az elkülönítése a tankönyv 5.1. ábrája nyomán: az I. testre C_x, C_y, a II. testre az ellentettjük (C′_x, C′_y), azonos nagysággal.">
           <AbraBelsoCsuklo />
         </AbraKeret>
         <TankonyvJel fejezet="5.1.1" cim="A vessző jelentése">

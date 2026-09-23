@@ -58,13 +58,40 @@ const FOK = Math.PI / 180;
 export function TartoRajz({ xMin = 0, xMax, tamaszok = [], erok = [], megoszlok = [], nyomatekok = [], cimkek = [], meretek = true, pontok = [] }) {
   const hossz = Math.max(0.5, xMax - xMin);
   const rudMagas = Math.max(0, ...tamaszok.filter((t) => t.tipus === "rud").map((t) => Math.abs(t.yVeg ?? 0)));
-  const PX = Math.min(90, 470 / hossz, rudMagas > 0 ? 190 / rudMagas : 90);
-  const OX = 300 - (PX * (xMax + xMin)) / 2;
+  let PX = Math.min(90, 470 / hossz, rudMagas > 0 ? 190 / rudMagas : 90);
   const Y = 0;
-  const kx = (x) => OX + (x - 0) * PX;
-  const ky = (y) => Y - y * PX;
   const leptek = 5; // px / (kN/m)
   const eroHossz = (F) => Math.min(80, 40 + 2.2 * Math.abs(F)); // ferde erők hossza
+
+  // erők: az alap nyílhosszak (nem függenek a léptéktől)
+  let fuggSzam = 0;
+  const eroAdatok = erok.map((e) => {
+    const r = e.szog * FOK;
+    let h = eroHossz(e.F);
+    const fuggoleges = Math.abs(Math.cos(r)) < 1e-6;
+    const alatta = megoszlok.find((m) => e.x >= m.x1 - 1e-9 && e.x <= m.x2 + 1e-9);
+    if (fuggoleges) {
+      // függőleges erő: ha megoszló teher fölé esik, a nyíl a teher tetejéről indul; a szomszédos feliratok ne fedjék egymást
+      h = (alatta ? alatta.p * leptek + 3 : 0) + 50 + (fuggSzam % 2) * 28;
+      fuggSzam++;
+    } else if (alatta && Math.abs(Math.sin(r)) > 0.3) {
+      h = Math.max(h, (alatta.p * leptek + 3 + 36) / Math.abs(Math.sin(r)));
+    }
+    return { e, r, h, fuggoleges, jobbra: Math.cos(r) > 0, szeles: 7.2 * (e.cimke?.length ?? 4) };
+  });
+  // a ferde nyilak farka (és a nyomatékok íve) maradjon a 600 px-es viewBoxon belül: ha kell, kisebb lépték
+  const kozep = (xMax + xMin) / 2;
+  for (const a of eroAdatok) {
+    if (a.fuggoleges) continue;
+    const farokDx = -a.h * Math.cos(a.r); // a farok vízszintes eltolása a támadásponthoz képest (px)
+    const tavol = a.e.x - kozep; // m, előjeles
+    if (farokDx > 0 && tavol > 0.05) PX = Math.min(PX, (290 - farokDx) / tavol);
+    if (farokDx < 0 && tavol < -0.05) PX = Math.min(PX, (290 + farokDx) / -tavol);
+  }
+  PX = Math.max(PX, 20);
+  const OX = 300 - PX * kozep;
+  const kx = (x) => OX + (x - 0) * PX;
+  const ky = (y) => Y - y * PX;
 
   let fent = Y - 70;
   let lent = Y + 60;
@@ -114,6 +141,12 @@ export function TartoRajz({ xMin = 0, xMax, tamaszok = [], erok = [], megoszlok 
     jellegzetes.add(m.x1);
     jellegzetes.add(m.x2);
     fent = Math.min(fent, Y - m.p * leptek - 30);
+    if (m.cimke) {
+      const cx = kx(cimkeHely(m));
+      const cy = Y - 3 - m.p * leptek - 8;
+      const w = 7.2 * m.cimke.length;
+      feliratDobozok.push({ x1: cx - w / 2, x2: cx + w / 2, y1: cy - 13, y2: cy + 3 });
+    }
     elemek.push(
       <g key={`m${i}`}>
         <MegoszloTeher x1={kx(m.x1)} x2={kx(m.x2)} y={Y - 3} p1={m.p} leptek={leptek} />
@@ -125,57 +158,67 @@ export function TartoRajz({ xMin = 0, xMax, tamaszok = [], erok = [], megoszlok 
       </g>,
     );
   });
-  let fuggSzam = 0;
+  // erők: a feliratok elhelyezése ütközés nélkül
   erok.forEach((e, i) => {
     jellegzetes.add(e.x);
-    const r = e.szog * FOK;
-    let h = eroHossz(e.F);
-    const fuggoleges = Math.abs(Math.cos(r)) < 1e-6;
-    if (fuggoleges) {
-      // függőleges erő: ha megoszló teher fölé esik, a nyíl a teher tetejéről indul; a szomszédos feliratok ne fedjék egymást
-      const alatta = megoszlok.find((m) => e.x >= m.x1 - 1e-9 && e.x <= m.x2 + 1e-9);
-      h = (alatta ? alatta.p * leptek + 3 : 0) + 50 + (fuggSzam % 2) * 28;
-      fuggSzam++;
-    } else {
-      const alatta = megoszlok.find((m) => e.x >= m.x1 - 1e-9 && e.x <= m.x2 + 1e-9);
-      if (alatta && Math.abs(Math.sin(r)) > 0.3) h = Math.max(h, (alatta.p * leptek + 3 + 36) / Math.abs(Math.sin(r)));
-    }
-    const jobbra = Math.cos(r) > 0;
-    const szeles = 6.4 * (e.cimke?.length ?? 4);
+    const a = eroAdatok[i];
+    const { r, fuggoleges, jobbra, szeles } = a;
+    let h = a.h;
+    const px = kx(e.x);
     let x1, y1, eltolas, doboz;
-    const szamol = () => {
-      x1 = kx(e.x) - h * Math.cos(r);
+    const farok = () => {
+      x1 = px - h * Math.cos(r);
       y1 = Y + h * Math.sin(r);
-      eltolas = fuggoleges ? [6, -4] : jobbra || x1 + 8 + szeles > 596 ? [-4 - szeles, -4] : [8, -4];
-      doboz = { x1: x1 + eltolas[0], x2: x1 + eltolas[0] + szeles, y1: y1 + eltolas[1] - 13, y2: y1 + eltolas[1] + 3 };
     };
-    szamol();
-    // ha a felirat egy korábbi feliratra esne: függőleges nyílnál hosszabb nyíl, ferdénél a felirat a másik oldalra
-    for (let k = 0; fuggoleges && k < 3 && feliratDobozok.some((d) => metszi(d, doboz)); k++) {
-      h += 28;
-      szamol();
-    }
-    if (!fuggoleges && feliratDobozok.some((d) => metszi(d, doboz))) {
-      const masik = eltolas[0] < 0 ? [8, -4] : [-4 - szeles, -4];
-      const x1m = x1 + masik[0];
-      if (x1m > 4 && x1m + szeles < 596) {
-        eltolas = masik;
-        doboz = { x1: x1 + eltolas[0], x2: x1 + eltolas[0] + szeles, y1: y1 + eltolas[1] - 13, y2: y1 + eltolas[1] + 3 };
+    const dobozHoz = (el) => ({ x1: x1 + el[0], x2: x1 + el[0] + szeles, y1: y1 + el[1] - 13, y2: y1 + el[1] + 3 });
+    const belul = (d) => d.x1 >= 4 && d.x2 <= 596;
+    // egy másik függőleges nyíl szára átmegy-e a feliraton?
+    const nyilKeresztezi = (d) => eroAdatok.some((m, j) => j !== i && m.fuggoleges && kx(m.e.x) > d.x1 - 2 && kx(m.e.x) < d.x2 + 2 && d.y2 > Y - m.h - 6 && d.y1 < Y);
+    const jo = (d) => belul(d) && !feliratDobozok.some((q) => metszi(q, d)) && !nyilKeresztezi(d);
+    const jeloltek = fuggoleges ? [[6, -4], [-4 - szeles, -4]] : jobbra ? [[-4 - szeles, -4], [8, -4]] : [[8, -4], [-4 - szeles, -4]];
+    let kesz = false;
+    for (let k = 0; k < 4 && !kesz; k++) {
+      farok();
+      for (const el of jeloltek) {
+        const d = dobozHoz(el);
+        if (jo(d)) {
+          eltolas = el;
+          doboz = d;
+          kesz = true;
+          break;
+        }
       }
+      if (!kesz) h += 26;
     }
+    if (!kesz) {
+      h = a.h;
+      farok();
+      eltolas = jeloltek.find((el) => belul(dobozHoz(el))) ?? jeloltek[0];
+      doboz = dobozHoz(eltolas);
+    }
+    a.h = h;
     feliratDobozok.push(doboz);
     fent = Math.min(fent, y1 - 24);
     lent = Math.max(lent, y1 + 24);
-    elemek.push(<TeherNyil key={`e${i}`} x={kx(e.x)} y={Y - (Math.sin(r) < 0 ? 3 : -3)} hossz={h} szog={e.szog} cimke={e.cimke} cimkeEltolas={eltolas} />);
+    elemek.push(<TeherNyil key={`e${i}`} x={px} y={Y - (Math.sin(r) < 0 ? 3 : -3)} hossz={h} szog={e.szog} cimke={e.cimke} cimkeEltolas={eltolas} />);
   });
   nyomatekok.forEach((n, i) => {
     jellegzetes.add(n.x);
     fent = Math.min(fent, Y - 52);
+    const nx = kx(n.x);
+    const szelesM = 24 + 7.2 * (n.cimke?.length ?? 0);
+    const balra = n.cimke && nx + szelesM > 596;
+    // ha a felirat megoszló teherre vagy erőnyílra esne, a tartó alá kerül, hogy ne fedje a terhet
+    const fx1 = balra ? n.x - szelesM / PX : n.x - 0.3;
+    const fx2 = balra ? n.x + 0.3 : n.x + szelesM / PX;
+    const zsufolt = megoszlok.some((m) => fx2 >= m.x1 && fx1 <= m.x2) || erok.some((e) => e.x >= fx1 - 0.3 && e.x <= fx2 + 0.3);
+    const ny = zsufolt ? Y + 38 : Y - 14;
+    if (zsufolt) lent = Math.max(lent, Y + 46);
     elemek.push(
       <g key={`n${i}`}>
-        <KoncentraltNyomatek x={kx(n.x)} y={Y} r={17} irany={n.M >= 0 ? 1 : -1} />
+        <KoncentraltNyomatek x={nx} y={Y} r={17} irany={n.M >= 0 ? 1 : -1} />
         {n.cimke && (
-          <text x={kx(n.x) + 24} y={Y - 14} fontSize="12.5" fontWeight="650" style={{ fill: SZIN.nyomatek, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+          <text x={nx + (balra ? -24 : 24)} y={ny} textAnchor={balra ? "end" : "start"} fontSize="12.5" fontWeight="650" style={{ fill: SZIN.nyomatek, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
             {n.cimke}
           </text>
         )}

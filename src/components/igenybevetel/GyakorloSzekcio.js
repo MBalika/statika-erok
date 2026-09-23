@@ -12,8 +12,9 @@ import GyakorloExtra from "./GyakorloExtra";
  * Gyakorló generátorok a 9. modulhoz. Minden szám a számítómagból (elemez) jön; a levezetés a
  * tankönyv 8.2 fejezetének receptjét követi: reakciók → a K-tól balra (vagy jobbra) lévő tartórész
  * → vetületi egyenletek N-re és V-re, nyomatéki egyenlet K-ra M-re.
- * Előjelek: N húzás +, V pozitív a tengely fölé (bal oldali részen: felfelé mutató erők +),
- * M pozitív = alsó szál húzott (vízszintes tartónál lefelé rajzolva).
+ * Előjelek: N húzás +, V pozitív = a bal oldali rész felfelé mutató erőinek összege,
+ * M pozitív = alsó szál húzott. Az ábrákon mindhárom pozitív értéke a tartó ugyanazon pozitív
+ * (vízszintes tartónál alsó) oldalára kerül — arra, amelyiket az M-hez választottunk (tankönyv 8.3.2).
  */
 
 const FOK = Math.PI / 180;
@@ -83,7 +84,7 @@ function keresztmetszetFeladat() {
           Egy <M>{`L = ${f1(L)}\\ \\text{m}`}</M> támaszközű kéttámaszú tartót (<M>{"A"}</M> csukló balra, <M>{"B"}</M> görgő jobbra) az <M>{`x_1 = ${f1(x1)}`}</M> m helyen <M>{`F_1 = ${F1}\\ \\text{kN}`}</M> függőleges erő, az{" "}
           <M>{`x_2 = ${f1(x2)}`}</M> m helyen <M>{`F_2 = ${F2}\\ \\text{kN}`}</M> {jobbra ? "jobbra" : "balra"}-lefelé mutató, a tengellyel <M>{`\\alpha = ${alfa}^\\circ`}</M>-ot bezáró erő terhel
           {vanP ? <>, továbbá az <M>{`x = ${f1(pa)}`}</M> és <M>{`${f1(pb)}`}</M> m közötti szakaszon <M>{`p = ${p}\\ \\text{kN/m}`}</M> egyenletesen megoszló teher</> : null}. Számítsd ki a{" "}
-          <M>{`K`}</M> keresztmetszet (<M>{`x_K = ${f1(xK)}`}</M> m) igénybevételeit! (Húzás +, V a tengely fölé +, M az alsó szál húzása esetén +.)
+          <M>{`K`}</M> keresztmetszet (<M>{`x_K = ${f1(xK)}`}</M> m) igénybevételeit! (Húzás +, V a bal oldali rész felfelé mutató erőinek összege +, M az alsó szál húzása esetén +.)
         </p>
       ),
       abra: <FeladatRajz modell={modell} eredmeny={e} cimkek={{ A: "A", B: "B" }} metszetek={[{ rud: "1", a: xK, cimke: "K" }]} />,
@@ -279,7 +280,7 @@ function torespontFeladat() {
         <MB>{`\\Mj{A} M_A ${tag(L, F, 1)} ${tag(c + (L - c) / 2, Q, 2, 2)}${vanF2 ? ` ${tag(c, F2)}` : ""} = 0 \\;\\Rightarrow\\; M_A = ${f2(Aj.M)}\\ \\text{kNm}`}</MB>
         <p className="mt-2 text-[13px] text-petrol-600">
           Az ábra alakja: a <M>{"CB"}</M> szakaszon <M>{"V"}</M> lineáris (<M>{`${F}`}</M>-ről <M>{`${f2(Cj.V)}`}</M>-ra), <M>{"M"}</M> parabola; az <M>{"AC"}</M> terheletlen szakaszon <M>{"V"}</M> állandó, <M>{"M"}</M> egyenes.
-          A befogás reakciói a végértékekből olvashatók ki: <M>{`A_y = ${f2(A.Fy)}`}</M> kN felfelé, <M>{`M_A = ${f2(A.M)}`}</M> kNm — a negatív nyomaték felül húzott szálat jelent, az ábra a tengely fölött fut.
+          A befogás reakciói a végértékekből olvashatók ki: <M>{`A_y = ${f2(A.Fy)}`}</M> kN felfelé, <M>{`M_A = ${f2(A.M)}`}</M> kNm — a negatív nyomaték felül húzott szálat jelent, az M ábra a tengely fölött fut; a végig pozitív <M>{"V"}</M> ábra viszont a tengely alatt, a pozitív oldalon.
         </p>
         <FeladatRajz modell={modell} eredmeny={e} cimkek={{ A: "A", B: "B" }} metszetek={[{ rud: "1", a: c, cimke: "C" }]} diagram="V" meretek={false} />
         <FeladatRajz modell={modell} eredmeny={e} cimkek={{ A: "A", B: "B" }} diagram="M" meretek={false} />

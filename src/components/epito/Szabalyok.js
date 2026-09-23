@@ -40,6 +40,9 @@ export default function Szabalyok({ nyitva: kezdoNyitva = false, tomor = false }
             <p>
               <M>{"N"}</M> pozitív, ha húz. A pozitív <M>{"V"}</M> iránya a pozitív <M>{"N"}</M> irányának óramutató szerinti 90°-os elforgatása — vízszintes, balról jobbra haladó rúdon: <em>a bal oldali rész felfelé mutató erőinek összege</em>. Az <M>{"M"}</M>-et a <em>húzott oldalra</em> rajzoljuk: vízszintes rúdnál alul pozitív; ferde és függőleges rúdnál a kezdőponttól a végpont felé haladva a jobb oldal a pozitív. Az ábrákat mindig <em>a rúdra merőlegesen</em> mérjük fel.
             </p>
+            <p className="mt-1.5">
+              <strong>A rajz oldala (tankönyv 8.3.2, 8.9. ábra):</strong> mindhárom ábrát a tartó ugyanazon pozitív oldalára rajzoljuk — arra, amelyiket a nyomaték pozitív definíciójához választottunk (vízszintes tartónál alulra). Így a pozitív <M>{"N"}</M>, <M>{"V"}</M> és <M>{"M"}</M> mindig a tartó alatt, a negatív fölötte van; a rajzon a „+” jel mutatja az oldalt.
+            </p>
           </div>
         </div>
       )}

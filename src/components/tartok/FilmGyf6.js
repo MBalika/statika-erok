@@ -132,20 +132,20 @@ function Rajz(t) {
       <Gorgo x={XB} y={YB} opacitas={1 - 0.88 * tamaszHalv} />
       <TamaszCimke x={XA - 22} y={YA + 20}>A</TamaszCimke>
       <TamaszCimke x={XB + 24} y={YB + 4}>B</TamaszCimke>
-      <MeretFugg x={XB + 70} y1={YB} y2={YV} cimke="2 m" opacitas={0.8} />
-      <MeretFugg x={XB + 70} y1={YV} y2={YA} cimke="2 m" opacitas={0.8} />
+      <MeretFugg x={XB + 108} y1={YB} y2={YV} cimke="2 m" opacitas={0.8} />
+      <MeretFugg x={XB + 108} y1={YV} y2={YA} cimke="2 m" opacitas={0.8} />
 
       {/* az eredő: merőleges a gerendára, jobbra-lefelé, a Q pontban */}
       <PontA x={Q.x} y={Q.y} r={4} szin="#e2590a" u={eredoU} />
       <EroA x={Q.x} y={Q.y} hossz={70} szog={-60} u={eredoU} opacitas={op("R")} szin={SZ.nar} hegy="fg-nar" vastag={3.8} cimke="R = 8 kN" dx={-10} dy={-6} horgony="end" />
-      <Kar x1={XA} y1={YA} x2={Q.x} y2={Q.y} u={dqU} opacitas={fazis === "elk" || fazis === "ma" ? 1 : 0.3} cimke="1,333 m" dx={26} dy={20} />
+      <Kar x1={XA} y1={YA} x2={Q.x} y2={Q.y} u={dqU} opacitas={fazis === "elk" || fazis === "ma" ? 1 : fazis === "ered" ? 0 : 0.3} cimke="1,333 m" dx={26} dy={20} />
       {/* komponensek */}
       <EroA x={Q.x + 44} y={Q.y} hossz={44} szog={0} u={kompLat} opacitas={op("Rx")} szin={SZ.nar} hegy="fg-nar" vastag={2.2} cimke="4,000" dx={6} dy={4} cimkeHegy />
       <EroA x={Q.x} y={Q.y + 60} hossz={60} szog={-90} u={kompLat} opacitas={op("Ry")} szin={SZ.nar} hegy="fg-nar" vastag={2.2} cimke="6,928 kN" dx={6} dy={2} cimkeHegy />
 
       {/* reakciók */}
       <EroA x={XA} y={YA} hossz={46} szog={0} u={reakU} opacitas={op("Ax") * (1 - fordulU)} cimke="Aₓ" dx={-4} dy={-10} horgony="end" />
-      <EroA x={XA - 2} y={YA - 9} hossz={46} szog={180} u={fordulU} cimke={szamU > 0.5 ? "Aₓ = 4,000 kN" : "Aₓ"} dx={6} dy={-6} />
+      <EroA x={XA - 2} y={YA - 9} hossz={46} szog={180} u={fordulU} cimke={szamU > 0.5 ? "Aₓ = 4,000 kN" : "Aₓ"} dx={6} dy={18} />
       <EroA x={XA} y={YA} hossz={50} szog={90} u={reakU} opacitas={op("Ay")} cimke={szamU > 0.5 ? "Aᵧ = 5,389 kN" : "Aᵧ"} dx={8} dy={2} />
       <EroA x={XB} y={YB} hossz={50} szog={90} u={reakU} opacitas={op("B")} cimke={szamU > 0.5 ? "B = 1,540 kN" : "B"} dx={8} dy={4} />
 

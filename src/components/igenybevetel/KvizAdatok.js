@@ -30,12 +30,25 @@ export const KVIZ = [
   },
   {
     k: <>Vízszintes tartón melyik oldalra rajzoljuk a nyomatéki ábrát, és mit jelent egy pozitív érték?</>,
-    v: [<>A húzott oldalra; pozitív = az alsó szál húzott, az ábra a tengely alatt.</>, <>A nyomott oldalra; pozitív = a felső szál nyomott.</>, <>Mindig a tengely fölé, mint a V-t.</>, <>Mindegy, csak az előjelet kell kiírni.</>],
+    v: [<>A húzott oldalra; pozitív = az alsó szál húzott, az ábra a tengely alatt.</>, <>A nyomott oldalra; pozitív = a felső szál nyomott.</>, <>A V-vel ellentétes oldalra: a pozitív M alul, a pozitív V fölül.</>, <>Mindegy, csak az előjelet kell kiírni.</>],
     helyes: 0,
     magyarazat: (
       <>
         A tankönyv (és a gyakorlat) a húzott oldalra rajzolja az <M>{"M"}</M> ábrát: vízszintes szakaszon az alsó oldalt választjuk pozitívnak, így a lefelé mutató teher alatt „lógó” ábra alul húzott szálat jelent.
-        A rajz iránya tehát információ: a szerkezet alsó vagy felső szála húzott-e.
+        A rajz iránya tehát információ: a szerkezet alsó vagy felső szála húzott-e. És nem csak az <M>{"M"}</M>-re igaz: a 8.3.2 szerint az <M>{"N"}</M> és a <M>{"V"}</M> ábrát is ugyanerre a pozitív oldalra mérjük fel — vízszintes tartón
+        a pozitív <M>{"N"}</M>, <M>{"V"}</M>, <M>{"M"}</M> mind a tartó alatt, a negatív fölötte van.
+      </>
+    ),
+  },
+  {
+    k: <>Vízszintes, balról jobbra haladó tartón hová kerül a nyíróerő-ábra pozitív része?</>,
+    v: [<>A tartó alá — ugyanarra a pozitív oldalra, ahová a pozitív nyomaték (tankönyv 8.3.2).</>, <>A tartó fölé, hogy ne keveredjen a nyomatéki ábrával.</>, <>Mindig arra az oldalra, amerre a teher mutat.</>, <>Bal oldali részen alá, jobb oldali részen fölé.</>],
+    helyes: 0,
+    magyarazat: (
+      <>
+        A tankönyv 8.3.2 szerint az ábrákon az értéket a tartó tengelyére merőlegesen mérjük, és a tengely pozitív oldalának azt tekintjük, amelyiket a hajlítónyomaték pozitív definíciójához is használtuk. A 8.9. ábrán (konzol, ferde erő a
+        szabad végen) az <M>{"N"}</M>, a <M>{"V"}</M> és az <M>{"M"}</M> pozitív értéke egyaránt a tartó alatt van, a „+” jel a tengely alatt. Az előjel a definícióból jön (a bal részen a felfelé mutató erők adnak pozitív <M>{"V"}</M>-t), a rajz
+        oldala pedig ugyanaz mindhárom ábrán.
       </>
     ),
   },
@@ -206,19 +219,20 @@ export const HIBAK = [
     lepesek: [
       { szoveg: <>Reakciók: <M>{"\\Mp{A} -2\\cdot 12 + 6\\,B = 0 \\;\\Rightarrow\\; B = 4"}</M> kN, <M>{"A_y = 12 - 4 = 8"}</M> kN, mindkettő felfelé.</> },
       {
-        szoveg: <>A bal támasz mellett a bal oldali részre csak <M>{"A_y"}</M> hat felfelé, ezért <M>{"V = -8"}</M> kN (az ábra a tengely alatt indul).</>,
+        szoveg: <>A bal támasz mellett a bal oldali részre csak <M>{"A_y"}</M> hat felfelé, ezért <M>{"V = -8"}</M> kN (az ábra a tengely fölött indul).</>,
         hibas: true,
         javitas: (
           <>
             A bal oldali részen a pozitív <M>{"V"}</M> <em>lefelé</em> hat a keresztmetszetre (a pozitív <M>{"N"}</M> óramutató szerinti elforgatottja), így <M>{"\\Fy 8 - V = 0 \\;\\Rightarrow\\; V = +8"}</M> kN: a felfelé mutató reakció
-            pozitív nyíróerőt ad, az ábra a tengely <em>fölött</em> indul. Az erő alatt 12-vel leugrik <M>{"-4"}</M>-re, és a <M>{"B"}</M> reakció zárja vissza nullára.
+            pozitív nyíróerőt ad. A pozitív értéket a tartó pozitív (alsó) oldalára mérjük fel — ugyanoda, ahová a pozitív <M>{"M"}</M>-et —, tehát az ábra a tengely <em>alatt</em> indul. Az erő alatt 12-vel <M>{"-4"}</M>-re ugrik
+            (átmegy a tengely fölé), és a <M>{"B"}</M> reakció zárja vissza nullára.
           </>
         ),
       },
       { szoveg: <>Az erő alatt a <M>{"V"}</M> 12 kN-nal ugrik, a jobb támaszig állandó.</> },
       { szoveg: <>Ellenőrzés a jobb végen: a <M>{"B"}</M> reakció az ugrással visszazárja az ábrát nullára.</> },
     ],
-    tanulsag: <>A nyíróerő előjele nem „felfelé pozitív”, hanem a keresztmetszet oldalától függ: a bal részen a felfelé mutató erők adnak pozitív <M>{"V"}</M>-t. Legegyszerűbb a bal végről indulni és végig ugyanarról az oldalról számolni.</>,
+    tanulsag: <>A nyíróerő előjele nem „felfelé pozitív”, hanem a keresztmetszet oldalától függ: a bal részen a felfelé mutató erők adnak pozitív <M>{"V"}</M>-t. Legegyszerűbb a bal végről indulni és végig ugyanarról az oldalról számolni. Az ábrán pedig a pozitív <M>{"V"}</M> is a tartó alá kerül, mint a pozitív <M>{"M"}</M> (8.3.2).</>,
   },
   {
     cim: "Elfelejtett reakció a bal oldali részen",
@@ -285,7 +299,7 @@ export const HIBAK = [
           <>
             Az ugrás iránya a forgásirányból következik. A bal oldali részre az óramutatóval ellentétes <M>{"M_0"}</M> az óramutató szerint pozitív egyenletben <em>negatív</em>:{" "}
             <M>{"\\Mj{K} +2\\cdot 2{,}5 - 10 - M^+ = 0 \\;\\Rightarrow\\; M^+ = -5"}</M> kNm. Ellenőrzés a jobb részből: csak <M>{"B = 2{,}5"}</M> kN lefelé, 2 m karral: <M>{"M^+ = -2{,}5\\cdot 2 = -5"}</M> kNm ✓. Az ugrás nagysága 10 kNm, de
-            lefelé (5-ről −5-re): az alul húzott szál felül húzottba vált.
+            a negatív irányba (5-ről −5-re): az alul húzott szál felül húzottba vált, az ábra a tengely alól a tengely fölé ugrik.
           </>
         ),
       },

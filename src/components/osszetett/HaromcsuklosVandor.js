@@ -17,7 +17,7 @@ import { OsszetettHegyek, EroNyil, TestCimke } from "./Rajz";
  */
 
 const SZ = 640;
-const MA = 380;
+const MA = 400;
 const L = 8;
 
 export default function HaromcsuklosVandor() {
@@ -42,8 +42,10 @@ export default function HaromcsuklosVandor() {
     return { Ax: A.Fx, Ay: A.Fy, Bx: B.Fx, By: B.Fy, Cx: t.C_x ?? 0, Cy: t.C_y ?? 0, MC, Mmax, e };
   }, [xF, F, h, xC, hC]);
 
-  const OX = 120, OY = 300;
-  const PX = 44;
+  const OY = 300;
+  // egységes lépték: magas keretnél (h vagy h_C nagy) kisebb, hogy a rajz és a tehernyíl a cím alatt maradjon
+  const PX = Math.min(44, (OY - 112) / Math.max(h, hC, 1));
+  const OX = (SZ - L * PX) / 2 - 20;
   const kx = (x) => OX + x * PX;
   const ky = (y) => OY - y * PX;
   const yF = xF <= xC ? h + ((hC - h) * xF) / xC : hC + ((h - hC) * (xF - xC)) / (L - xC);
@@ -93,15 +95,15 @@ export default function HaromcsuklosVandor() {
             <Meret x1={kx(xC)} x2={kx(L)} y={ky(0) + 44} cimke={`${sz(L - xC, 1)} m`} opacitas={0.8} />
             <MeretFugg x={kx(L) + 46} y1={ky(0)} y2={ky(h)} cimke={`h = ${sz(h, 1)} m`} opacitas={0.8} />
             {/* teher */}
-            <TeherNyil x={kx(xF)} y={ky(yF) - 3} hossz={26 + 2.4 * F} szog={-90} cimke={`F = ${sz(F, 0)} kN`} cimkeEltolas={[6, -2]} />
-            <Meret x1={kx(0)} x2={kx(xF)} y={ky(h) - 30 - 2.4 * F - 20} cimke={`x = ${sz(xF, 2)} m`} opacitas={0.7} />
+            <TeherNyil x={kx(xF)} y={ky(yF) - 3} hossz={26 + 1.6 * F} szog={-90} cimke={`F = ${sz(F, 0)} kN`} cimkeEltolas={[6, -2]} />
+            <Meret x1={kx(0)} x2={kx(xF)} y={ky(0) + 66} cimke={`x = ${sz(xF, 2)} m`} opacitas={0.7} />
             {/* reakciók */}
             {adat && (
               <>
                 <EroNyil X={kx(0)} Y={ky(0)} Fx={adat.Ax} Fy={0} leptek={LEPTEK} cimke={`Aₓ = ${sz(Math.abs(adat.Ax), 2)}`} />
                 <EroNyil X={kx(0)} Y={ky(0)} Fx={0} Fy={adat.Ay} leptek={LEPTEK} cimke={`Aᵧ = ${sz(Math.abs(adat.Ay), 2)}`} cimkeEltolas={[-70, 4]} />
                 <EroNyil X={kx(L)} Y={ky(0)} Fx={adat.Bx} Fy={0} leptek={LEPTEK} cimke={`Bₓ = ${sz(Math.abs(adat.Bx), 2)}`} />
-                <EroNyil X={kx(L)} Y={ky(0)} Fx={0} Fy={adat.By} leptek={LEPTEK} cimke={`Bᵧ = ${sz(Math.abs(adat.By), 2)}`} cimkeEltolas={[8, 4]} />
+                <EroNyil X={kx(L)} Y={ky(0)} Fx={0} Fy={adat.By} leptek={LEPTEK} cimke={`Bᵧ = ${sz(Math.abs(adat.By), 2)}`} cimkeEltolas={[-8, -6]} horgony="end" />
                 {/* a csuklóerő a II. testre (kék, kisebb) */}
                 <EroNyil X={kx(xC) + 8} Y={ky(hC)} Fx={adat.Cx} Fy={0} leptek={LEPTEK * 0.8} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cₓ = ${sz(Math.abs(adat.Cx), 2)}`} cimkeEltolas={[4, -8]} />
                 <EroNyil X={kx(xC) + 8} Y={ky(hC)} Fx={0} Fy={adat.Cy} leptek={LEPTEK * 0.8} szin="#0369a1" hegy="oh-kek" vastag={2.2} cimke={`Cᵧ = ${sz(Math.abs(adat.Cy), 2)}`} cimkeEltolas={[8, adat.Cy >= 0 ? -4 : 12]} />

@@ -272,7 +272,7 @@ export default function Rajzolo({ e, modell, nev, kihivas = false, onVissza, onE
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
         <p className="text-[13px] text-petrol-700">
-          <strong>{nev}.</strong> Húzd a fogópontokat a helyes értékre (a rúdra merőlegesen mérve, {sz(lept.lepes.V, 1)} kN / {sz(lept.lepes.M, 1)} kNm lépésekben). A töréspontokat megadjuk, az értékeket nem.
+          <strong>{nev}.</strong> Húzd a fogópontokat a helyes értékre (a rúdra merőlegesen mérve, {sz(lept.lepes.V, 1)} kN / {sz(lept.lepes.M, 1)} kNm lépésekben; a pozitív érték mindhárom ábrán a „+” jellel jelölt oldalon — vízszintes rúdnál lefelé). A töréspontokat megadjuk, az értékeket nem.
         </p>
         <label className="ml-auto flex items-center gap-1.5 text-[12px] text-petrol-600">
           <input type="checkbox" checked={mutatN} onChange={(ev) => { setMutatN(ev.target.checked); if (!ev.target.checked && jel === "N") setJel("V"); }} disabled={zart} />
@@ -289,7 +289,7 @@ export default function Rajzolo({ e, modell, nev, kihivas = false, onVissza, onE
             {j}-ábra
           </button>
         ))}
-        <span className="text-[11.5px] text-petrol-500">{jel === "M" ? "M: a húzott oldalra (vízszintes rúdnál alul pozitív)" : jel === "V" ? "V: a bal oldali rész felfelé mutató erőinek összege" : "N: húzás pozitív"}</span>
+        <span className="text-[11.5px] text-petrol-500">{jel === "M" ? "M: a húzott oldalra (vízszintes rúdnál alul pozitív)" : jel === "V" ? "V: a bal oldali rész felfelé mutató erőinek összege — a pozitív érték a tartó pozitív (alsó) oldalán, mint az M-nél" : "N: húzás pozitív — a pozitív érték a tartó pozitív (alsó) oldalán, mint az M-nél"}</span>
       </div>
 
       <div className="racs-vilagos min-w-0 overflow-hidden rounded-xl border border-[color:var(--keret)]">

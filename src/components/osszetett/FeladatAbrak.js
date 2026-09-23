@@ -1,6 +1,7 @@
 /** A 6. modul kidolgozott feladatainak (GYF‑1…GYF‑6) ábrái – a feladatlapok rajzai számokkal. */
 
-import { TartoHegyek, Tarto, Gorgo, Csuklo, Befogas, Rud, BelsoCsuklo, TeherNyil, Meret, MeretFugg, TamaszCimke, SZIN } from "@/components/tartok/TartoElemek";
+import { TartoHegyek, Tarto, Gorgo, Csuklo, Befogas, Rud, BelsoCsuklo, TeherNyil, Meret, MeretFugg, TamaszCimke } from "@/components/tartok/TartoElemek";
+import { SZIN } from "@/components/tartok/szinek";
 
 const KEK = "#2563eb";
 
@@ -64,13 +65,13 @@ export function AbraGyf1() {
 
 /* GYF‑2: háromcsuklós keret (H05/2): A(0,0), E(0,6), C(6,6), G(12,4), B(12,0); p = 4 kN/m vízszintes az AE oszlopon, F = 12 kN a CG szakasz közepén */
 export function AbraGyf2() {
-  const OX = 90, OY = 200, L = 28;
+  const OX = 130, OY = 236, L = 28;
   const kx = (x) => OX + x * L;
   const ky = (y) => OY - y * L;
   const nyilak = [];
   for (let i = 0; i <= 6; i += 1) nyilak.push(<line key={i} x1={kx(0) - 30} y1={ky(i)} x2={kx(0) - 4} y2={ky(i)} stroke={SZIN.teher} strokeWidth="1.6" markerEnd="url(#th-teher)" />);
   return (
-    <Keret magas={250}>
+    <Keret magas={290}>
       <Tarto x1={kx(0)} y1={ky(0)} x2={kx(0)} y2={ky(6)} />
       <Tarto x1={kx(0)} y1={ky(6)} x2={kx(6)} y2={ky(6)} />
       <Tarto x1={kx(6)} y1={ky(6)} x2={kx(12)} y2={ky(4)} />
@@ -81,7 +82,7 @@ export function AbraGyf2() {
       <line x1={kx(0) - 30} y1={ky(0)} x2={kx(0) - 30} y2={ky(6)} stroke={SZIN.teher} strokeWidth="1.4" />
       {nyilak}
       <text x={kx(0) - 40} y={ky(3) + 4} textAnchor="end" fontSize="12.5" fontWeight="650" style={{ fill: SZIN.teher }}>p = 4 kN/m</text>
-      <TeherNyil x={kx(9)} y={ky(5) - 3} hossz={50} szog={-90} cimke="F = 12 kN" cimkeEltolas={[6, -2]} />
+      <TeherNyil x={kx(9)} y={ky(5) - 3} hossz={50} szog={-90} cimke="F = 12 kN" cimkeEltolas={[8, 4]} />
       <TamaszCimke x={kx(0) - 18} y={ky(0) + 28}>A</TamaszCimke>
       <TamaszCimke x={kx(12) + 18} y={ky(0) + 28}>B</TamaszCimke>
       <TamaszCimke x={kx(6)} y={ky(6) - 12}>C</TamaszCimke>
@@ -100,7 +101,7 @@ export function AbraGyf2() {
 
 /* GYF‑3: Gerber befogással (H05/3): F = 12 kN a bal végen (balra-felfelé 30°), A görgő x = 2, C csukló x = 10, B befogás x = 14 */
 export function AbraGyf3() {
-  const OX = 60, Y = 110, L = 34;
+  const OX = 110, Y = 110, L = 32;
   const kx = (x) => OX + x * L;
   return (
     <Keret magas={190}>
@@ -110,8 +111,8 @@ export function AbraGyf3() {
       <Befogas x={kx(14)} y={Y} irany="jobb" hossz={46} />
       {/* F a bal végen, balra-felfelé 30° — a nyíl a végpontból indul */}
       <line x1={kx(0)} y1={Y - 2} x2={kx(0) - 52 * Math.cos(Math.PI / 6)} y2={Y - 2 - 52 * Math.sin(Math.PI / 6)} stroke={SZIN.teher} strokeWidth="3" strokeLinecap="round" markerEnd="url(#th-teher)" />
-      <text x={kx(0) - 40} y={Y - 36} textAnchor="end" fontSize="12.5" fontWeight="650" style={{ fill: SZIN.teher }}>F = 12 kN</text>
-      <text x={kx(0) - 30} y={Y - 6} textAnchor="end" fontSize="11" style={{ fill: SZIN.teher }}>α = 30°</text>
+      <text x={kx(0) - 34} y={Y - 40} textAnchor="middle" fontSize="12.5" fontWeight="650" style={{ fill: SZIN.teher }}>F = 12 kN</text>
+      <text x={kx(0) - 24} y={Y - 8} textAnchor="end" fontSize="11" style={{ fill: SZIN.teher }}>α = 30°</text>
       <TamaszCimke x={kx(2)} y={Y + 44}>A</TamaszCimke>
       <TamaszCimke x={kx(10)} y={Y - 12}>C</TamaszCimke>
       <TamaszCimke x={kx(14) + 16} y={Y + 26}>B</TamaszCimke>
@@ -157,30 +158,31 @@ export function AbraGyf4() {
 
 /* GYF‑5: rudakkal tartott terhelt csukló (H06/5–6): gerenda 0…14, A görgő 2, E 8, B csukló 14; oszlop E–C (8,6); D (0,6); rudak DC, DE; F = 12 kN D-n */
 export function AbraGyf5() {
-  const OX = 60, OY = 180, L = 32;
+  const OX = 70, OY = 262, L = 30;
   const kx = (x) => OX + x * L;
   const ky = (y) => OY - y * L;
   return (
-    <Keret magas={260}>
+    <Keret magas={346}>
       <Tarto x1={kx(0)} y1={ky(0)} x2={kx(14)} y2={ky(0)} />
       <Tarto x1={kx(8)} y1={ky(0)} x2={kx(8)} y2={ky(6)} />
       <Gorgo x={kx(2)} y={ky(0)} />
       <Csuklo x={kx(14)} y={ky(0)} />
       <Rud x1={kx(0)} y1={ky(6)} x2={kx(8)} y2={ky(6)} />
       <Rud x1={kx(0)} y1={ky(6)} x2={kx(8)} y2={ky(0)} />
-      <TeherNyil x={kx(0)} y={ky(6) + 6} hossz={48} szog={90} cimke="F = 12 kN" cimkeEltolas={[-70, 4]} />
+      {/* F: függőlegesen lefelé a D csuklóra (a hegye a D fölött) */}
+      <TeherNyil x={kx(0)} y={ky(6) - 6} hossz={46} szog={-90} cimke="F = 12 kN" cimkeEltolas={[8, -4]} />
       <TamaszCimke x={kx(2)} y={ky(0) + 44}>A</TamaszCimke>
       <TamaszCimke x={kx(14)} y={ky(0) + 44}>B</TamaszCimke>
       <TamaszCimke x={kx(8) + 12} y={ky(0) + 20}>E</TamaszCimke>
       <TamaszCimke x={kx(8) + 12} y={ky(6) - 4}>C</TamaszCimke>
-      <TamaszCimke x={kx(0) - 12} y={ky(6) - 6}>D</TamaszCimke>
+      <TamaszCimke x={kx(0) - 14} y={ky(6) + 4}>D</TamaszCimke>
       <RudJel x={kx(4) - 10} y={ky(6) - 8} alap="S" index="DC" />
-      <RudJel x={kx(3.2)} y={ky(3) + 26} alap="S" index="DE" />
+      <RudJel x={kx(3.4)} y={ky(3) + 28} alap="S" index="DE" />
       <Rom x={kx(11)} y={ky(0) + 22}>I</Rom>
       <Meret x1={kx(0)} x2={kx(2)} y={ky(0) + 66} cimke="a = 2 m" />
       <Meret x1={kx(2)} x2={kx(8)} y={ky(0) + 66} cimke="3a = 6 m" />
       <Meret x1={kx(8)} x2={kx(14)} y={ky(0) + 66} cimke="3a = 6 m" />
-      <MeretFugg x={kx(14) + 40} y1={ky(0)} y2={ky(6)} cimke="3a = 6 m" />
+      <MeretFugg x={kx(14) + 36} y1={ky(0)} y2={ky(6)} cimke="3a = 6 m" />
     </Keret>
   );
 }

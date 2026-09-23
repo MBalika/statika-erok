@@ -1,7 +1,8 @@
-import { elemez } from "@/lib/tarto";
-import { TartoHegyek, Tarto, Gorgo, Csuklo, Befogas, TeherNyil, ReakcioNyil, KoncentraltNyomatek, Meret, TamaszCimke, SZIN } from "@/components/tartok/TartoElemek";
+import { elemez, ertekek } from "@/lib/tarto";
+import { TartoHegyek, Tarto, Gorgo, Csuklo, Befogas, TeherNyil, ReakcioNyil, Meret, MeretFugg, TamaszCimke } from "@/components/tartok/TartoElemek";
+import { SZIN } from "@/components/tartok/szinek";
 import Diagram, { SZINEK, ert } from "@/components/igenybevetel/Diagram";
-import { MODELLEK, eredmeny } from "@/components/igenybevetel/Modellek";
+import { eredmeny } from "@/components/igenybevetel/Modellek";
 
 /**
  * A 9. modul elméleti ábrái (tankönyv 8.1–8.12. ábra nyomán). Statikus SVG-k;
@@ -132,10 +133,23 @@ export function AbraBelsoErok() {
             {/* a bal rész végén: erő a rúdra kb. merőlegesen fel-balra, nyomaték ↶; a jobb rész elején az ellentettek */}
             <Nyil x1={K[0] - ux * res} y1={K[1] - uy * res} x2={K[0] - ux * res - nx * 34} y2={K[1] - uy * res - ny * 34} szin="#7c3aed" hegy="th-reakcio" />
             <Nyil x1={K[0] + ux * res} y1={K[1] + uy * res} x2={K[0] + ux * res + nx * 34} y2={K[1] + uy * res + ny * 34} szin="#7c3aed" hegy="th-reakcio" />
-            <KoncentraltNyomatek x={K[0] - ux * (res + 16)} y={K[1] - uy * (res + 16)} r={11} irany={1} szin="#7c3aed" />
-            <KoncentraltNyomatek x={K[0] + ux * (res + 16)} y={K[1] + uy * (res + 16)} r={11} irany={-1} szin="#7c3aed" />
+            {/* a nyomaték-párt saját ívvel rajzoljuk (a KoncentraltNyomatek hegye bordó lenne): a bal részen ↶, a jobbon ↷ */}
+            {(() => {
+              const r = 12;
+              const cb = [K[0] - ux * (res + 16), K[1] - uy * (res + 16)];
+              const cj = [K[0] + ux * (res + 16), K[1] + uy * (res + 16)];
+              return (
+                <>
+                  {/* ↶: 3 órától a tetőn át 6 óráig (270°); ↷: 9 órától a tetőn át 6 óráig */}
+                  <path d={`M ${cb[0] + r} ${cb[1]} A ${r} ${r} 0 1 0 ${cb[0]} ${cb[1] + r}`} fill="none" stroke="#7c3aed" strokeWidth="2.2" markerEnd="url(#th-reakcio)" />
+                  <path d={`M ${cj[0] - r} ${cj[1]} A ${r} ${r} 0 1 1 ${cj[0]} ${cj[1] + r}`} fill="none" stroke="#7c3aed" strokeWidth="2.2" markerEnd="url(#th-reakcio)" />
+                </>
+              );
+            })()}
             <T x={K[0] - nx * 46 - 10} y={K[1] - ny * 46 + 4} szin="#7c3aed" meret={11} vastag horgony="end">Kb</T>
             <T x={K[0] + nx * 46 + 10} y={K[1] + ny * 46 + 4} szin="#7c3aed" meret={11} vastag horgony="start">Kj</T>
+            <T x={K[0] - nx * 46 - 10} y={K[1] - ny * 46 + 18} szin="#7c3aed" meret={10.5} horgony="end">erő + nyomaték</T>
+            <T x={K[0] + nx * 46 + 10} y={K[1] + ny * 46 + 18} szin="#7c3aed" meret={10.5} horgony="start">az ellentettjei</T>
           </>
         )}
       </g>
@@ -186,7 +200,7 @@ export function AbraElojel() {
     </g>
   );
   return (
-    <svg viewBox="0 0 600 370" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 384" className="abra w-full h-auto">
       <TartoHegyek />
       <Hegyek />
       <Par ox={20} cim="b) pozitív N és V a két tartórészen" pozitivOldal="alul" N={1} V={1} M={0}
@@ -206,7 +220,7 @@ export function AbraElojel() {
       </g>
       <g transform="translate(0 226)">
         <Cim x={20} y={26}>A szabály röviden</Cim>
-        {["N: kifelé = húzás = pozitív.", "V: N-t 90°-kal az óramutató szerint forgatva.", "M: a nyilat a pozitív oldalról indítjuk;", "vízszintes rúdnál az alsó oldal a pozitív,", "így az M ábra a húzott oldalra kerül.", "A b és j indexet ezért elhagyhatjuk."].map((s, i) => (
+        {["N: kifelé = húzás = pozitív.", "V: N-t 90°-kal az óramutató szerint forgatva.", "M: a nyilat a pozitív oldalról indítjuk;", "vízszintes rúdnál az alsó oldal a pozitív,", "így az M ábra a húzott oldalra kerül.", "A b és j indexet ezért elhagyhatjuk.", "Az N és a V ábra pozitív értékeit is a pozitív", "(alsó) oldalra mérjük fel, mint az M-et."].map((s, i) => (
           <T key={i} x={20} y={48 + i * 15} meret={11.5} szin="#334155" horgony="start">{s}</T>
         ))}
       </g>
@@ -273,14 +287,16 @@ export function AbraSzamitas() {
       const Y = szerkFent, k1 = g.kx(1.5), k2 = g.kx(3);
       return (
         <g>
-          {[[k1, "K₁"], [k2, "K₂"]].map(([x, n]) => (
+          {[[k1, "K₁", "x = 1,5 m"], [k2, "K₂", "x = 3,0 m"]].map(([x, n, h]) => (
             <g key={n}>
               <line x1={x} y1={Y - 16} x2={x} y2={Y + 16} stroke="#334155" strokeWidth="2" strokeDasharray="4 3" />
               <T x={x} y={Y - 22} dolt vastag>{n}</T>
+              <T x={x} y={Y + 30} meret={10.5} szin="#475569">{h}</T>
             </g>
           ))}
           <T x={g.kx(3.7)} y={Y + 18} szin={BORDO} meret={14} vastag>+</T>
           <T x={g.kx(3.7)} y={Y - 12} szin="#64748b" meret={14} vastag>−</T>
+          <T x={g.kx(3.7) + 14} y={Y + 18} meret={10.5} szin="#475569" horgony="start">pozitív oldal (alul)</T>
         </g>
       );
     }} />
@@ -303,7 +319,7 @@ export function AbraVirag() {
   };
   const alfa = (a * 180) / Math.PI;
   return (
-    <svg viewBox="0 0 600 330" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 350" className="abra w-full h-auto">
       <TartoHegyek />
       <Hegyek />
       {/* koordinátatengelyek */}
@@ -333,9 +349,10 @@ export function AbraVirag() {
       <Nyil x1={cx - 70 * c} y1={cy + 70 * s} x2={cx - 70 * c - 36 * c} y2={cy + 70 * s + 36 * s} szin={ZOLD} hegy="ih-zold" vastag={2} />
       <T x={cx - 70 * c + 48 * s + 14} y={cy + 70 * s + 48 * c + 12} szin={KEK} meret={11} vastag>F·cos α</T>
       <T x={cx - 70 * c - 36 * c - 12} y={cy + 70 * s + 36 * s + 14} szin={ZOLD} meret={11} vastag>F·sin α</T>
-      <Magyarazat y={290} sorok={[
+      <Magyarazat y={296} sorok={[
         "tg α = 3/4 → sin α = 0,6, cos α = 0,8. Függőleges erő: merőleges komponense F·cos α,",
-        "tengelyirányú F·sin α; vízszintes erőnél fordítva. A „virág” a merőleges szárú szögek miatt működik.",
+        "tengelyirányú komponense F·sin α; vízszintes erőnél fordítva (F·sin α merőleges, F·cos α tengelyirányú).",
+        "A „virág” a merőleges szárú szögek miatt működik: minden szög α vagy 90° − α.",
       ]} />
     </svg>
   );
@@ -347,7 +364,21 @@ export function AbraVirag() {
 
 export function AbraFuggvenyek() {
   const e = eredmeny("tk88");
-  return <Diagram eredmeny={e} meretek reakciok={false} amp={36} />;
+  // a képletcímkék a tankönyv 8.9. ábrája szerint a tartó végénél; a rajz oldala: a pozitív érték a tartó alatt
+  return (
+    <Diagram eredmeny={e} meretek reakciok={false} amp={36} gyerekek={({ g, szerkMag, abraFent, abraMag, leptek }) => {
+      const xK = g.kx(2), xB = g.kx(0) + 44;
+      const tengely = (i) => szerkMag + i * abraMag + abraFent;
+      return (
+        <g>
+          <T x={xK} y={tengely(0) + (8.66 * leptek.N) / 2 + 4} szin={ZOLD} meret={11.5} vastag>N(x) = +F·cos α = 8,66 kN (konstans, húzás)</T>
+          <T x={xK} y={tengely(1) + (5 * leptek.V) / 2 + 4} szin={KEK} meret={11.5} vastag>V(x) = +F·sin α = 5 kN (konstans)</T>
+          <T x={xB} y={tengely(2) - 20 * leptek.M - 6} szin={BORDO} meret={11.5} vastag horgony="start">= −F·l·sin α (felül húzott)</T>
+          <T x={xK} y={tengely(2) - 4} szin={BORDO} meret={10.5} horgony="middle">M(x) = −F·sin α·(l − x): lineáris</T>
+        </g>
+      );
+    }} />
+  );
 }
 
 /* ================================================================== */
@@ -440,7 +471,13 @@ export function AbraJellegek() {
         return (
           <div key={cim} className="rounded-xl bg-white/70 p-2 ring-1 ring-petrol-100">
             <p className="mb-1 text-center text-[11.5px] font-semibold text-petrol-700">{cim}</p>
-            <Diagram eredmeny={e} abrak={["V", "M"]} szel={300} amp={30} nevek={false} reakciok={false} csomopontCimkek={false} />
+            <Diagram eredmeny={e} abrak={["V", "M"]} szel={300} amp={30} nevek={false} reakciok={false} csomopontCimkek={false}
+              gyerekek={({ szerkMag, abraMag }) => (
+                <g>
+                  <T x={12} y={szerkMag + 15} szin={KEK} meret={11} vastag horgony="start">V [kN]</T>
+                  <T x={12} y={szerkMag + abraMag + 15} szin={BORDO} meret={11} vastag horgony="start">M [kNm]</T>
+                </g>
+              )} />
           </div>
         );
       })}
@@ -453,50 +490,68 @@ export function AbraJellegek() {
 /* ================================================================== */
 
 export function AbraParabola() {
-  // szakasz: l = 4 m, q = 4 kN/m, végponti nyomatékok M1 = −8, M2 = −4 (felül húzott végek), alul pozitív
+  // szakasz: l = 4 m, q = 4 kN/m lefelé, végponti nyomatékok M1 = −8, M2 = −4 (felül húzott végek), alul pozitív
   const l = 4, q = 4, M1 = -8, M2 = -4;
-  const X1 = 90, X2 = 470, Y = 100, L = (X2 - X1) / l, lep = 7; // px / kNm
+  const X1 = 90, X2 = 470, YT = 78, Y = 186, L = (X2 - X1) / l, lep = 6.5; // px / kNm
   const kx = (x) => X1 + x * L;
-  const ky = (Mv) => Y + Mv * lep; // pozitív lefelé
+  const ky = (Mv) => Y + Mv * lep; // pozitív (alul) lefelé
   const Mf = (x) => M1 + ((M2 - M1) * x) / l + (q * x * (l - x)) / 2;
   const pts = [];
   for (let i = 0; i <= 40; i++) { const x = (l * i) / 40; pts.push(`${kx(x)},${ky(Mf(x))}`); }
   const hurKozep = (M1 + M2) / 2;
   const belog = (q * l * l) / 8;
   const xm = kx(l / 2);
+  const nyilak = [];
+  for (let i = 0; i <= 12; i++) { const x = X1 + ((X2 - X1) * i) / 12; nyilak.push(<line key={i} x1={x} y1={YT - 30} x2={x} y2={YT - 2} stroke={SZIN.teher} strokeWidth="1.5" markerEnd="url(#th-teher)" />); }
   return (
-    <svg viewBox="0 0 600 340" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 352" className="abra w-full h-auto">
       <TartoHegyek />
       <Hegyek />
-      <Cim x={12} y={22}>Egyenletes teher alatt: M parabola, belógása ql²/8 = {ert(belog)} kNm (q = 4 kN/m, l = 4 m)</Cim>
-      {/* tengely és teher */}
-      <line x1={X1} y1={Y} x2={X2} y2={Y} stroke={SZIN.tarto} strokeWidth="3" />
-
-      {/* parabola és sraffozás */}
+      <Cim x={12} y={20}>Egyenletes teher alatt: M parabola, belógása ql²/8 = {ert(belog)} kNm (q = 4 kN/m, l = 4 m)</Cim>
+      {/* a tartószakasz a teherrel */}
+      <line x1={X1 - 30} y1={YT} x2={X2 + 30} y2={YT} stroke={SZIN.tarto} strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
+      <Tarto x1={X1} y1={YT} x2={X2} y2={YT} vastag={5} />
+      <line x1={X1} y1={YT - 30} x2={X2} y2={YT - 30} stroke={SZIN.teher} strokeWidth="1.4" />
+      {nyilak}
+      <T x={300} y={YT - 36} szin={SZIN.teher} vastag>q = 4 kN/m</T>
+      <line x1={X1} y1={YT - 8} x2={X1} y2={YT + 8} stroke="#334155" strokeWidth="1.6" />
+      <line x1={X2} y1={YT - 8} x2={X2} y2={YT + 8} stroke="#334155" strokeWidth="1.6" />
+      <T x={X1 - 8} y={YT + 20} meret={11} szin="#475569">1</T>
+      <T x={X2 + 8} y={YT + 20} meret={11} szin="#475569">2</T>
+      <Meret x1={X1} x2={X2} y={YT + 30} cimke="l = 4 m" />
+      <T x={X2 + 46} y={YT + 4} meret={10.5} szin="#475569" horgony="start">a tartó</T>
+      <T x={X2 + 46} y={YT + 17} meret={10.5} szin="#475569" horgony="start">folytatódik</T>
+      {/* a nyomatéki ábra a szakasz tengelyén */}
+      <line x1={X1} y1={Y} x2={X2} y2={Y} stroke={SZIN.tarto} strokeWidth="1.6" opacity="0.7" />
+      <T x={X1 - 14} y={Y - 6} szin="#64748b" meret={13} vastag>−</T>
+      <T x={X1 - 14} y={Y + 16} szin={BORDO} meret={13} vastag>+</T>
       <polygon points={`${X1},${Y} ${pts.join(" ")} ${X2},${Y}`} fill={BORDO} fillOpacity="0.1" />
       <polyline points={pts.join(" ")} fill="none" stroke={BORDO} strokeWidth="2.4" />
-      <T x={X1 - 8} y={ky(M1) + 4} szin={BORDO} vastag horgony="end">M₁ = −8</T>
-      <T x={X2 + 8} y={ky(M2) + 4} szin={BORDO} vastag horgony="start">M₂ = −4</T>
+      <T x={X1 + 4} y={ky(M1) - 8} szin={BORDO} vastag horgony="start">M₁ = −8</T>
+      <T x={X2 - 4} y={ky(M2) - 8} szin={BORDO} vastag horgony="end">M₂ = −4</T>
       {/* húr */}
       <line x1={X1} y1={ky(M1)} x2={X2} y2={ky(M2)} stroke="#64748b" strokeWidth="1.3" strokeDasharray="5 4" />
-      <T x={xm + 60} y={ky(hurKozep) - 8} szin="#64748b" meret={11}>szerkesztővonal (húr)</T>
+      <T x={xm + 90} y={ky(hurKozep) - 16} szin="#64748b" meret={11}>szerkesztővonal (húr)</T>
       {/* belógás */}
       <Nyil x1={xm} y1={ky(hurKozep)} x2={xm} y2={ky(hurKozep + belog)} szin="#1d3c48" hegy="ih-sotet" vastag={2} />
-      <T x={xm + 8} y={ky(hurKozep + belog / 2) + 4} vastag horgony="start">ql²/8</T>
+      <T x={xm + 8} y={ky(hurKozep + belog / 2) + 4} vastag horgony="start">ql²/8 = 8</T>
       <circle cx={xm} cy={ky(hurKozep + belog)} r="4" fill={BORDO} stroke="white" strokeWidth="1.5" />
-      <T x={xm - 8} y={ky(hurKozep + belog) + 14} szin={BORDO} vastag horgony="end">M(l/2) = {ert(hurKozep + belog)}</T>
+      <T x={xm - 8} y={ky(hurKozep + belog) + 14} szin={BORDO} vastag horgony="end">M(l/2) = −6 + 8 = {ert(hurKozep + belog)}</T>
       {/* érintők metszéspontja: még egyszer ql²/8 lejjebb */}
       <line x1={xm} y1={ky(hurKozep + belog)} x2={xm} y2={ky(hurKozep + 2 * belog)} stroke="#1d3c48" strokeWidth="1.2" strokeDasharray="3 3" />
       <line x1={X1} y1={ky(M1)} x2={xm} y2={ky(hurKozep + 2 * belog)} stroke="#0e7490" strokeWidth="1.2" strokeDasharray="6 3" />
       <line x1={X2} y1={ky(M2)} x2={xm} y2={ky(hurKozep + 2 * belog)} stroke="#0e7490" strokeWidth="1.2" strokeDasharray="6 3" />
       <circle cx={xm} cy={ky(hurKozep + 2 * belog)} r="3.5" fill="#0e7490" />
-      <T x={xm + 8} y={ky(hurKozep + 2 * belog) + 4} szin="#0e7490" meret={11.5} vastag horgony="start">végponti érintők metszéspontja: még egy ql²/8</T>
+      <T x={xm + 8} y={ky(hurKozep + 2 * belog) + 1} szin="#0e7490" meret={11.5} vastag horgony="start">a végponti érintők metszéspontja:</T>
+      <T x={xm + 8} y={ky(hurKozep + 2 * belog) + 15} szin="#0e7490" meret={11.5} vastag horgony="start">még egy ql²/8-dal lejjebb</T>
       {/* középső érintő */}
       <line x1={xm - 70} y1={ky(hurKozep + belog) - 70 * ((M2 - M1) / l) * (lep / L)} x2={xm + 70} y2={ky(hurKozep + belog) + 70 * ((M2 - M1) / l) * (lep / L)} stroke="#0e7490" strokeWidth="1.2" strokeDasharray="6 3" />
-      <Magyarazat y={286} sorok={[
-        "Recept: a két végponti nyomatékot összekötjük; a húr felezőpontjából a teher irányába felmérjük",
-        "a ql²/8 belógást — ez a parabola középső pontja, érintője párhuzamos a húrral. Még egyszer ql²/8-at",
-        "felmérve a végponti érintők metszéspontját kapjuk. Ferde rúdnál l a ferde hossz, q a merőleges komponens.",
+      <T x={xm - 78} y={ky(hurKozep + belog) - 70 * ((M2 - M1) / l) * (lep / L) + 4} szin="#0e7490" meret={10.5} horgony="end">érintő ∥ húr</T>
+      <Magyarazat y={290} sorok={[
+        "Recept: a két végponti nyomatékot (M₁, M₂) egyenessel összekötjük (ez a húr); a húr",
+        "felezőpontjából a teher irányába felmérjük a ql²/8 belógást — ez a parabola középső pontja,",
+        "érintője a húrral párhuzamos. Még egyszer ql²/8-at felmérve a végponti érintők metszéspontját",
+        "kapjuk (a teher eredőjének vonalán). Ferde rúdnál l a ferde hossz, q a merőleges komponens.",
       ]} />
     </svg>
   );
@@ -506,45 +561,81 @@ export function AbraParabola() {
 /*  10. Nyomatéki ábra a sarokban (8.11. ábra)                         */
 /* ================================================================== */
 
+/**
+ * A három sarok-példa. A csomópont-betűket és a teherfeliratokat magunk tesszük ki (a Diagram automatikus
+ * elhelyezése a 300 px-es panelen a sarkoknál a rúdra, a bal szélen a képen kívülre tenné őket):
+ * feliratok: [x, y] modell-koordináta, [dx, dy] px eltolás, szöveg, szín.
+ */
 const SAROK_MODELLEK = [
   {
-    cim: "L konzol, vízszintes erő",
+    cim: "L konzol: vízszintes + függőleges erő",
     modell: {
       csomopontok: [{ id: "A", x: 0, y: 0 }, { id: "C", x: 0, y: 3 }, { id: "D", x: 3, y: 3 }],
       rudak: [{ id: "1", a: "A", b: "C" }, { id: "2", a: "C", b: "D" }],
       tamaszok: [{ csomopont: "A", tipus: "befogas" }],
       terhek: [{ fajta: "csomopontiEro", csomopont: "D", Fy: -6 }, { fajta: "csomopontiEro", csomopont: "C", Fx: 4 }],
     },
+    feliratok: [
+      [[0, 0], [-16, 22], "A"], [[0, 3], [-12, -10], "C"], [[3, 3], [14, 20], "D"],
+      [[0, 3], [-30, -30], "4 kN", "teher"], [[3, 3], [16, -40], "6 kN", "teher"],
+    ],
   },
   {
-    cim: "Keret (H10/3), teher a gerendán",
+    // H10/3-nál (függőleges teher a gerendán) a sarkokban M = 0 lenne — itt vízszintes erő a sarkon, hogy a sarok „befordulása” látsszon
+    cim: "Keret: vízszintes erő a sarkon",
     modell: {
-      csomopontok: [{ id: "A", x: 0, y: 0 }, { id: "C", x: 0, y: 3 }, { id: "D", x: 3, y: 3 }, { id: "E", x: 6, y: 3 }, { id: "B", x: 6, y: 0 }],
-      rudak: [{ id: "1", a: "A", b: "C" }, { id: "2", a: "C", b: "D" }, { id: "3", a: "D", b: "E" }, { id: "4", a: "E", b: "B" }],
+      csomopontok: [{ id: "A", x: 0, y: 0 }, { id: "C", x: 0, y: 3 }, { id: "D", x: 6, y: 3 }, { id: "B", x: 6, y: 0 }],
+      rudak: [{ id: "1", a: "A", b: "C" }, { id: "2", a: "C", b: "D" }, { id: "3", a: "D", b: "B" }],
       tamaszok: [{ csomopont: "A", tipus: "csuklo" }, { csomopont: "B", tipus: "gorgo", szog: 90 }],
-      terhek: [{ fajta: "megoszlo", rud: "3", p1: -4, irany: "y" }],
+      terhek: [{ fajta: "csomopontiEro", csomopont: "C", Fx: 4 }],
     },
+    feliratok: [
+      [[0, 0], [-18, 22], "A"], [[6, 0], [18, 22], "B"], [[0, 3], [-12, -10], "C"], [[6, 3], [14, -8], "D"],
+      [[0, 3], [-30, -30], "4 kN", "teher"],
+    ],
   },
   {
-    cim: "Ferde + vízszintes szakasz (H10/1)",
+    // H10/1 jellegű (ferde + vízszintes szakasz), koncentrált erővel, hogy a sarok értéke (6) és a csúcs (9) külön olvasható legyen
+    cim: "Ferde + vízszintes szakasz, erő a gerendán",
     modell: {
       csomopontok: [{ id: "A", x: 0, y: 0 }, { id: "C", x: 3, y: 2 }, { id: "B", x: 6, y: 2 }],
       rudak: [{ id: "1", a: "A", b: "C" }, { id: "2", a: "C", b: "B" }],
       tamaszok: [{ csomopont: "A", tipus: "csuklo" }, { csomopont: "B", tipus: "gorgo", szog: 90 }],
-      terhek: [{ fajta: "megoszlo", rud: "2", p1: -4, irany: "y" }],
+      terhek: [{ fajta: "pontTeher", rud: "2", a: 1.5, F: -8, irany: "y" }],
     },
+    // a sarokban a két rúd ugyanazt a 6-ot adná két helyre írva → az értékeket magunk írjuk ki
+    cimkek: false,
+    feliratok: [
+      [[0, 0], [-18, 22], "A"], [[6, 2], [18, 22], "B"], [[3, 2], [-2, 22], "C"],
+      [[4.5, 2], [26, -44], "8 kN", "teher"],
+      [[3, 2], [4, 44], "6", "ertek"], [[4.5, 2], [0, 60], "9", "ertek"],
+    ],
   },
 ];
 
 export function AbraSarok() {
   return (
     <div className="grid gap-3 sm:grid-cols-3 [&>*]:min-w-0">
-      {SAROK_MODELLEK.map(({ cim, modell }) => {
+      {SAROK_MODELLEK.map(({ cim, modell, feliratok, cimkek = true }) => {
         const e = elemez(modell);
         return (
           <div key={cim} className="rounded-xl bg-white/70 p-2 ring-1 ring-petrol-100">
             <p className="mb-1 text-center text-[11.5px] font-semibold text-petrol-700">{cim}</p>
-            <Diagram eredmeny={e} abrak={["M"]} szel={300} amp={26} nevek={false} reakciok={false} csomopontCimkek={false} teherCimkek={false} cimkek={false} />
+            <Diagram eredmeny={e} abrak={["M"]} szel={300} amp={26} nevek={false} reakciok={false} teherCimkek={false} csomopontCimkek={false} cimkek={cimkek}
+              gyerekek={({ g, szerkFent, szerkMag, abraFent }) => {
+                const ky = (y) => szerkFent + (g.maxY - y) * g.L;
+                const kyM = (y) => szerkMag + abraFent + (g.maxY - y) * g.L; // az M-panelben
+                return (
+                  <g>
+                    {feliratok.map(([[x, y], [dx, dy], szoveg, fajta], i) => fajta === "teher"
+                      ? <T key={i} x={g.kx(x) + dx} y={ky(y) + dy} szin={SZIN.teher} meret={11.5} vastag>{szoveg}</T>
+                      : fajta === "ertek"
+                        ? <T key={i} x={g.kx(x) + dx} y={kyM(y) + dy} szin={BORDO} meret={11.5} vastag>{szoveg}</T>
+                        : <TamaszCimke key={i} x={g.kx(x) + dx} y={ky(y) + dy}>{szoveg}</TamaszCimke>)}
+                    <T x={12} y={szerkMag + 15} szin={BORDO} meret={11} vastag horgony="start">M [kNm]</T>
+                  </g>
+                );
+              }} />
           </div>
         );
       })}
@@ -616,18 +707,18 @@ export function AbraElagazas() {
       <Tarto x1={cx + 22} y1={cy} x2={cx + 120} y2={cy} vastag={7} />
       <Tarto x1={cx} y1={cy + 22} x2={cx} y2={cy + 90} vastag={7} />
       <circle cx={cx} cy={cy} r="5" fill={SZIN.tarto} />
-      {/* nyomatéki ábrák: bal ág alul (pozitív), jobb ág alul, függőleges ág jobb oldalán */}
+      {/* nyomatéki ábrák: bal ág alul, jobb ág alul, függőleges ág BAL oldalán (a nyilak iránya ebből adódik) */}
       <rect x={cx - 120} y={cy + 4} width={98} height={16} fill={BORDO} fillOpacity="0.18" stroke={BORDO} strokeWidth="1" />
       <rect x={cx + 22} y={cy + 4} width={98} height={10} fill={BORDO} fillOpacity="0.18" stroke={BORDO} strokeWidth="1" />
-      <rect x={cx + 4} y={cy + 22} width={8} height={68} fill={BORDO} fillOpacity="0.18" stroke={BORDO} strokeWidth="1" />
-      {/* nyilak a csonkokon: alulról indítva, kívülről */}
-      <path d={`M ${cx - 26} ${cy + r} A ${r} ${r} 0 0 1 ${cx - 26} ${cy - r}`} fill="none" stroke={BORDO} strokeWidth="2.4" markerEnd="url(#ih-bordo)" />
-      <T x={cx - 80} y={cy - 24} szin={BORDO} vastag>M₁ = 16</T>
-      <path d={`M ${cx + 26} ${cy + r} A ${r} ${r} 0 0 0 ${cx + 26} ${cy - r}`} fill="none" stroke={BORDO} strokeWidth="2.4" markerEnd="url(#ih-bordo)" />
-      <T x={cx + 80} y={cy - 24} szin={BORDO} vastag>M₂ = 10</T>
-      <path d={`M ${cx + r} ${cy + 26} A ${r} ${r} 0 0 1 ${cx - r} ${cy + 26}`} fill="none" stroke={BORDO} strokeWidth="2.4" markerEnd="url(#ih-bordo)" />
-      <T x={cx - 24} y={cy + 60} szin={BORDO} vastag horgony="end">M₃ = 6</T>
-      <T x={cx + 130} y={cy + 50} meret={12.5} vastag horgony="start">|M₁| − |M₂| − |M₃| = 0</T>
+      <rect x={cx - 12} y={cy + 22} width={8} height={68} fill={BORDO} fillOpacity="0.18" stroke={BORDO} strokeWidth="1" />
+      {/* nyilak a csonkokon: arról az oldalról indítva, ahol az ábra van, a csomóponthoz képest kívülről */}
+      <path d={`M ${cx - 26} ${cy + r} A ${r} ${r} 0 0 1 ${cx - 26} ${cy - r}`} fill="none" stroke={BORDO} strokeWidth="2" markerEnd="url(#ih-bordo)" />
+      <T x={cx - 80} y={cy - 24} szin={BORDO} vastag>M₁ = 16 ↷</T>
+      <path d={`M ${cx + 26} ${cy + r} A ${r} ${r} 0 0 0 ${cx + 26} ${cy - r}`} fill="none" stroke={BORDO} strokeWidth="2" markerEnd="url(#ih-bordo)" />
+      <T x={cx + 80} y={cy - 24} szin={BORDO} vastag>M₂ = 10 ↶</T>
+      <path d={`M ${cx - r} ${cy + 26} A ${r} ${r} 0 0 0 ${cx + r} ${cy + 26}`} fill="none" stroke={BORDO} strokeWidth="2" markerEnd="url(#ih-bordo)" />
+      <T x={cx - 24} y={cy + 66} szin={BORDO} vastag horgony="end">M₃ = 6 ↶</T>
+      <T x={cx + 130} y={cy + 50} meret={12.5} vastag horgony="start">↷: |M₁| − |M₂| − |M₃| = 0</T>
       <T x={cx + 130} y={cy + 70} meret={11.5} szin="#475569" horgony="start">16 − 10 − 6 = 0 ✓</T>
       <Magyarazat y={236} sorok={[
         "A csomópontot kinagyítva minden ágra felrajzoljuk a leolvasott nyomatékot: a nyíl arról az",
@@ -643,22 +734,106 @@ export function AbraElagazas() {
 
 export function AbraGerberElv() {
   const e = eredmeny("gyf7");
+  // méretvonalak nélkül: a reakciófeliratok és a méretek egy sorba esnének (a GYF‑7 feladatábráján ott vannak a méretek)
   return <Diagram eredmeny={e} abrak={["V", "M"]} amp={40} />;
 }
 
+/**
+ * A tankönyv 8.5.a ábrája kézzel, tömören: balra a ferde konzol eredményvázlata (a befogás reakciói: 2 kN ←,
+ * 5 kN ↓, 21 kNm ↷; a szabad végen 2 kN → és 5 kN ↑) a K₇ keresztmetszettel, jobbra a három ábra a ferde
+ * tengelyre merőlegesen felmérve (a számítómag értékeivel: N = +4,6, V = −2,8 konstans, M = 21 → 0, K₇-ben 7).
+ * A pozitív oldal a rúd A→T irányában a jobb oldal (lent-jobbra): N, V, M pozitív értékei mind oda kerülnek.
+ */
 export function AbraFerdeK7() {
   const e = eredmeny("tk85a");
+  const ig = e.igenybevetelek[0];
+  const c = 0.8, s = 0.6; // cos α, sin α (tg α = 3/4)
+  const u = [c, -s]; // a rúd iránya a képernyőn (jobbra-fel)
+  const n = [s, c]; // a pozitív oldal (a haladási irány jobb oldala: lent-jobbra)
+  // --- bal: szerkezet ---
+  const L = 40, A = [70, 300];
+  const P = (xm, ym) => [A[0] + xm * L, A[1] - ym * L];
+  const Tp = P(6, 4.5), K = P(4, 3);
+  const kat = (v) => Math.round(v * 10) / 10;
+  // --- jobb: három mini ábra ---
+  const X0 = 412, HOSSZ = 144, MAG = 108; // a mini tengely (A→T) képernyőn
+  const panelek = [
+    { jel: "N", cim: "N – normálerő [kN]", top: 24, lep: 4, ertek: (x) => ertekek(ig, x).N },
+    { jel: "V", cim: "V – nyíróerő [kN]", top: 160, lep: 5, ertek: (x) => ertekek(ig, x).V },
+    { jel: "M", cim: "M – hajlítónyomaték [kNm]", top: 296, lep: 1.3, ertek: (x) => ertekek(ig, x).M },
+  ];
   return (
-    <Diagram eredmeny={e} abrak={["N", "V", "M"]} amp={30} meretek gyerekek={({ g, szerkFent }) => {
-      const X = g.kx(4), Y = szerkFent + (4.5 - 3) * g.L;
-      const c = 0.8, s = 0.6;
-      return (
-        <g>
-          <line x1={X - s * 16} y1={Y - c * 16} x2={X + s * 16} y2={Y + c * 16} stroke="#334155" strokeWidth="2" strokeDasharray="4 3" />
-          <T x={X + 16} y={Y + 26} dolt vastag>K₇</T>
-        </g>
-      );
-    }} />
+    <svg viewBox="0 0 600 462" className="abra w-full h-auto">
+      <TartoHegyek />
+      <Hegyek />
+      <Cim x={12} y={22}>a) eredményvázlat és a K₇ keresztmetszet</Cim>
+      {/* befogás jele a rúdra merőlegesen, A mögött */}
+      <g transform={`rotate(${(Math.atan2(u[1], u[0]) * 180) / Math.PI} ${A[0]} ${A[1]})`}>
+        <Befogas x={A[0]} y={A[1]} irany="bal" hossz={30} />
+      </g>
+      <Tarto x1={A[0]} y1={A[1]} x2={Tp[0]} y2={Tp[1]} vastag={5} />
+      <TamaszCimke x={A[0] + 17} y={A[1] + 11}>A</TamaszCimke>
+      <TamaszCimke x={Tp[0] + 12} y={Tp[1] - 8}>T</TamaszCimke>
+      {/* terhek a szabad végen (a hegy a T pontban) */}
+      <Nyil x1={Tp[0] - 42} y1={Tp[1]} x2={Tp[0]} y2={Tp[1]} />
+      <T x={Tp[0] - 24} y={Tp[1] - 8} szin={SZIN.teher} meret={11.5} vastag>2 kN</T>
+      <Nyil x1={Tp[0]} y1={Tp[1] + 44} x2={Tp[0]} y2={Tp[1]} />
+      <T x={Tp[0] + 22} y={Tp[1] + 34} szin={SZIN.teher} meret={11.5} vastag>5 kN</T>
+      {/* reakciók A-ban, a tankönyv eredményvázlata szerint (a nyíl A-ból indul) */}
+      <Nyil x1={A[0]} y1={A[1]} x2={A[0] - 44} y2={A[1]} szin={SZIN.reakcio} hegy="th-reakcio" />
+      <T x={A[0] - 40} y={A[1] + 17} szin={SZIN.reakcio} meret={11.5} vastag>2 kN</T>
+      <Nyil x1={A[0]} y1={A[1]} x2={A[0]} y2={A[1] + 44} szin={SZIN.reakcio} hegy="th-reakcio" />
+      <T x={A[0] + 22} y={A[1] + 42} szin={SZIN.reakcio} meret={11.5} vastag>5 kN</T>
+      <path d={`M ${A[0] - 18} ${A[1] - 4} A 18 18 0 1 1 ${A[0] + 18} ${A[1] - 4}`} fill="none" stroke={SZIN.reakcio} strokeWidth="2.2" markerEnd="url(#th-reakcio)" />
+      <T x={A[0] - 4} y={A[1] - 30} szin={SZIN.reakcio} meret={11.5} vastag>21 kNm ↷</T>
+      {/* K₇ és a pozitív oldal */}
+      <line x1={K[0] - n[0] * 14} y1={K[1] - n[1] * 14} x2={K[0] + n[0] * 14} y2={K[1] + n[1] * 14} stroke="#334155" strokeWidth="2" strokeDasharray="4 3" />
+      <T x={K[0] - n[0] * 24 - 4} y={K[1] - n[1] * 24 + 2} dolt vastag horgony="end">K₇</T>
+      <T x={K[0] + u[0] * 14 + n[0] * 20} y={K[1] + u[1] * 14 + n[1] * 20 + 5} szin={BORDO} meret={14} vastag>+</T>
+      <T x={K[0] + u[0] * 14 - n[0] * 20} y={K[1] + u[1] * 14 - n[1] * 20 + 5} szin="#64748b" meret={14} vastag>−</T>
+      {/* méretek */}
+      <Meret x1={A[0]} x2={K[0]} y={A[1] + 62} cimke="4,0 m" />
+      <Meret x1={K[0]} x2={Tp[0]} y={A[1] + 62} cimke="2,0 m" />
+      <MeretFugg x={Tp[0] + 42} y1={Tp[1]} y2={K[1]} cimke="1,5 m" />
+      <MeretFugg x={Tp[0] + 42} y1={K[1]} y2={A[1]} cimke="3,0 m" />
+      <T x={200} y={392} meret={11} szin="#475569">tg α = 3/4: sin α = 0,6, cos α = 0,8</T>
+      <T x={200} y={407} meret={11} szin="#475569">K₇ balról: N₇ = +2·0,8 + 5·0,6 = +4,6 kN</T>
+      <T x={200} y={422} meret={11} szin="#475569">V₇ = +2·0,6 − 5·0,8 = −2,8 kN</T>
+      <T x={200} y={437} meret={11} szin="#475569">M₇ = +2·3,0 − 5·4,0 + 21 = +7,0 kNm</T>
+
+      {/* b) a három ábra a ferde tengelyen */}
+      <Cim x={X0 - 32} y={22}>b) N, V, M a ferde tengelyen</Cim>
+      {panelek.map(({ jel, cim, top, lep, ertek }) => {
+        const szin = SZINEK[jel];
+        const a0 = [X0, top + 120], a1 = [X0 + HOSSZ, top + 12];
+        const tengely = (x) => [a0[0] + (x / ig.hossz) * HOSSZ, a0[1] - (x / ig.hossz) * MAG];
+        const pont = (x) => { const v = ertek(x); const t = tengely(x); return [t[0] + n[0] * v * lep, t[1] + n[1] * v * lep]; };
+        const xs = [];
+        for (let i = 0; i <= 12; i++) xs.push((ig.hossz * i) / 12);
+        const gorbe = xs.map(pont);
+        const vonalak = xs.slice(1, -1).map((x) => [tengely(x), pont(x)]);
+        const vA = ertek(0), vT = ertek(ig.hossz), vK = ertek(5); // K₇: ferde ívhossz 5 m
+        const pT = pont(ig.hossz), pK = pont(5), tK = tengely(5);
+        return (
+          <g key={jel}>
+            <T x={X0 - 8} y={top + 14} szin={szin} meret={11} vastag horgony="start">{cim}</T>
+            <polygon points={`${a0.join(",")} ${gorbe.map((p) => p.join(",")).join(" ")} ${a1.join(",")}`} fill={szin} fillOpacity="0.1" />
+            {vonalak.map(([a, b], i) => <line key={i} x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]} stroke={szin} strokeWidth="0.8" opacity="0.55" />)}
+            <line x1={a0[0]} y1={a0[1]} x2={a1[0]} y2={a1[1]} stroke={SZIN.tarto} strokeWidth="1.6" opacity="0.7" />
+            <polyline points={gorbe.map((p) => p.join(",")).join(" ")} fill="none" stroke={szin} strokeWidth="2.2" />
+            {/* + és − oldal az A végnél */}
+            <T x={a0[0] - 8 + n[0] * 12} y={a0[1] + n[1] * 12 + 4} szin={szin} meret={11} vastag>+</T>
+            <T x={a0[0] - 8 - n[0] * 12} y={a0[1] - n[1] * 12 + 4} szin="#64748b" meret={11} vastag>−</T>
+            {/* értékek: az A végnél és a T végnél (ha nem nulla), és K₇-nél */}
+            {Math.abs(vA) > 1e-6 && Math.abs(vA - vT) > 1e-6 && <T x={pont(0)[0] + (vA > 0 ? 10 : -6)} y={pont(0)[1] + (vA > 0 ? 12 : -4)} szin={szin} meret={11} vastag horgony={vA > 0 ? "start" : "end"}>{ert(vA)}</T>}
+            {Math.abs(vT) > 1e-6 && <T x={pT[0] + 6} y={pT[1] + (vT > 0 ? 12 : -2)} szin={szin} meret={11} vastag horgony="start">{ert(vT)}</T>}
+            <line x1={tK[0]} y1={tK[1]} x2={pK[0]} y2={pK[1]} stroke="#334155" strokeWidth="1.2" strokeDasharray="3 2" />
+            <circle cx={pK[0]} cy={pK[1]} r="3.5" fill={szin} stroke="white" strokeWidth="1.2" />
+            <T x={pK[0] + (vK >= 0 ? 8 : -8)} y={pK[1] + (vK >= 0 ? 14 : -6)} szin={szin} meret={11} vastag horgony={vK >= 0 ? "start" : "end"}>K₇: {ert(kat(vK))}</T>
+          </g>
+        );
+      })}
+    </svg>
   );
 }
 
@@ -667,23 +842,36 @@ export function AbraFerdeK7() {
 /* ================================================================== */
 
 export function AbraKonzolIrany() {
-  const Y = 96;
+  const Y = 96, XA = 80, XB = 520, XF = 300;
   return (
-    <svg viewBox="0 0 600 216" className="abra w-full h-auto">
+    <svg viewBox="0 0 600 262" className="abra w-full h-auto">
       <TartoHegyek />
       <Hegyek />
       <Cim x={12} y={22}>Konzolon a szabad vég felől haladunk — a reakciók nélkül is megy</Cim>
-      <Befogas x={80} y={Y} irany="bal" hossz={50} />
-      <Tarto x1={80} y1={Y} x2={520} y2={Y} />
-      <TeherNyil x={300} y={Y} hossz={46} cimke="F" cimkeEltolas={[8, -2]} />
-      <TeherNyil x={520} y={Y} hossz={46} cimke="F" cimkeEltolas={[8, -2]} />
-      <Nyil x1={540} y1={Y + 40} x2={200} y2={Y + 40} szin="#0e7490" hegy="ih-kek" vastag={2.2} />
-      <T x={370} y={Y + 58} szin="#0e7490" vastag>innen indulunk: a szabad végen N = V = M = 0,</T>
-      <T x={370} y={Y + 73} szin="#0e7490" vastag>ha ott nincs koncentrált hatás</T>
-      <T x={40} y={Y + 44} szin="#475569" meret={11} horgony="start">a befogásnál</T>
-      <T x={40} y={Y + 58} szin="#475569" meret={11} horgony="start">az ábrák végértékei</T>
-      <T x={40} y={Y + 72} szin="#475569" meret={11} horgony="start">= a reakciók</T>
-      <Magyarazat y={196} sorok={["Balról befogott konzolon jobbról, jobbról befogotton balról, alul befogott oszlopon felülről számolunk."]} />
+      <Befogas x={XA} y={Y} irany="bal" hossz={50} />
+      <Tarto x1={XA} y1={Y} x2={XB} y2={Y} />
+      <TamaszCimke x={XA - 14} y={Y + 24}>A</TamaszCimke>
+      <TamaszCimke x={XB + 14} y={Y + 24}>B</TamaszCimke>
+      <TeherNyil x={XF} y={Y} hossz={46} cimke="F₁" cimkeEltolas={[8, -2]} />
+      <TeherNyil x={XB} y={Y} hossz={46} cimke="F₂" cimkeEltolas={[8, -2]} />
+      {/* a reakciók halványan: az ábrák végértékei */}
+      <g opacity="0.75">
+        <ReakcioNyil x={XA} y={Y} hossz={40} szog={90} cimke="A = F₁ + F₂" cimkeEltolas={[-62, 14]} />
+        {/* M_A ↶ (lefelé ható terheknél): az ív a tetőn át, 3 órától 9 óráig */}
+        <path d={`M ${XA + 18} ${Y - 2} A 18 18 0 0 0 ${XA - 18} ${Y - 2}`} fill="none" stroke={SZIN.reakcio} strokeWidth="2.2" markerEnd="url(#th-reakcio)" />
+        <T x={XA} y={Y - 28} szin={SZIN.reakcio} meret={11.5} vastag>M<tspan fontSize="9" dy="3">A</tspan></T>
+      </g>
+      <Nyil x1={XB - 6} y1={Y + 40} x2={XA + 96} y2={Y + 40} szin="#0e7490" hegy="ih-kek" vastag={2.2} />
+      <T x={XB - 8} y={Y + 66} szin="#0e7490" vastag horgony="end">innen indulunk: a szabad végen csak az ottani</T>
+      <T x={XB - 8} y={Y + 81} szin="#0e7490" vastag horgony="end">koncentrált hatás számít: N = 0, V = F₂, M = 0</T>
+      <T x={XB - 8} y={Y + 96} szin="#0e7490" meret={11} horgony="end">(ha a végen nincs koncentrált hatás: N = V = M = 0)</T>
+      <T x={20} y={Y + 74} szin="#475569" meret={11} horgony="start">a befogásnál az ábrák</T>
+      <T x={20} y={Y + 88} szin="#475569" meret={11} horgony="start">végértékei = a reakciók:</T>
+      <T x={20} y={Y + 102} szin="#475569" meret={11} horgony="start">V = A, |M| = M<tspan fontSize="8.5" dy="3">A</tspan></T>
+      <Magyarazat y={228} sorok={[
+        "Az F₁ alatt V ugrik (F₁-gyel), M törik; a befogás felé haladva egyre több erőt kell figyelembe venni.",
+        "Balról befogott konzolon jobbról, jobbról befogotton balról, alul befogott oszlopon felülről számolunk.",
+      ]} />
     </svg>
   );
 }

@@ -148,7 +148,7 @@ function Rajz(t) {
       )}
       {fazis === "ell" && (
         <g opacity={ellU}>
-          <Fokusz x={OX} y={Y0} t={t} szin={SZ.zold} cimke="O" dx={-26} dy={-12} />
+          <Fokusz x={OX} y={Y0} t={t} szin={SZ.zold} />
           <Kar x1={OX - 20} y1={Y0} x2={OX - 20} y2={YF} u={arany(ellKar, 0, 0.35)} cimke="2 m" dx={-22} dy={4} szin={SZ.zold} />
           <Kar x1={OX} y1={Y0 - 20} x2={XR} y2={Y0 - 20} u={arany(ellKar, 0.3, 0.65)} cimke="1,333 m" dy={-5} szin={SZ.zold} />
           <Kar x1={OX} y1={Y0 - 34} x2={XB} y2={Y0 - 34} u={arany(ellKar, 0.6, 1)} cimke="4 m" dy={-5} dx={40} szin={SZ.zold} />

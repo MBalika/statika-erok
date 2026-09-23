@@ -40,7 +40,7 @@ const TORZITAS = {
   tukroz: {
     cim: "rossz oldal / előjel",
     fn: (szak) => masol(szak).map((s) => ({ ...s, pontok: s.pontok.map((p) => [p[0], -p[1]]) })),
-    miert: (jel) => (jel === "M" ? "Az ábra a nyomott oldalra került: a nyomatéki ábrát mindig a húzott oldalra rajzoljuk (vízszintes tartónál a pozitív, azaz alsó oldal a húzott), lefelé mutató teher alatt az M lefelé „lóg”." : "A nyíróerő előjele fordított: a bal oldali tartórészen a felfelé mutató erő (pl. a reakció) pozitív V-t ad, a tengely fölé."),
+    miert: (jel) => (jel === "M" ? "Az ábra a nyomott oldalra került: a nyomatéki ábrát mindig a húzott oldalra rajzoljuk (vízszintes tartónál a pozitív, azaz alsó oldal a húzott), lefelé mutató teher alatt az M lefelé „lóg”." : "A nyíróerő előjele fordított: a bal oldali tartórészen a felfelé mutató erő (pl. a reakció) pozitív V-t ad — és a pozitív V-t is a tartó pozitív (alsó) oldalára rajzoljuk, ugyanoda, ahová a pozitív M-et (tankönyv 8.3.2)."),
   },
   gorbuletForditva: {
     cim: "rossz görbület",
@@ -198,7 +198,7 @@ const FELADATOK = [
     modell: kettamaszu(6, [{ fajta: "p", x1: 0, x2: 6, p: 4 }]),
     jel: "V",
     hibak: ["tukroz", "lepcsos", "parabolava"],
-    magyarazat: "A bal támasznál V = +A = 12 kN (a felfelé mutató reakció pozitív), majd dV/dx = −q miatt lineárisan csökken, a közepén nulla (itt az M szélsőértéke), a jobb támasznál −12 kN.",
+    magyarazat: "A bal támasznál V = +A = 12 kN (a felfelé mutató reakció pozitív), majd dV/dx = −q miatt lineárisan csökken, a közepén nulla (itt az M szélsőértéke), a jobb támasznál −12 kN. A pozitív értékek a tartó alatt vannak, a negatívak fölötte — ugyanúgy, mint az M-nél.",
   },
   {
     cim: "Befogott konzol, erő a szabad végen — M ábra",
@@ -219,7 +219,7 @@ const FELADATOK = [
     modell: konzol(3, [{ fajta: "p", x1: 0, x2: 3, p: 5 }]),
     jel: "V",
     hibak: ["tukroz", "forditva", "konstansra"],
-    magyarazat: "A szabad végen V = 0, a befogás felé haladva minden méter teher 5 kN-nal növeli: a befogásnál V = +pL = 15 kN (a bal oldali rész szempontjából a reakció felfelé mutat). Lineáris, nem állandó.",
+    magyarazat: "A szabad végen V = 0, a befogás felé haladva minden méter teher 5 kN-nal növeli: a befogásnál V = +pL = 15 kN (a bal oldali rész szempontjából a reakció felfelé mutat). Lineáris, nem állandó — és végig pozitív, ezért az ábra a tartó alatt fut (a pozitív oldalon, mint az M-nél).",
   },
   {
     cim: "Kéttámaszú tartó koncentrált nyomatékkal — M ábra",
@@ -273,7 +273,8 @@ function KisAbra({ szak, jel, hossz, tamaszX, csuklok, torespontok, betu, allapo
   const W = 280, H = 118, X0 = 22, X1 = 258, Y0 = 72, FEL = 38;
   const kx = (x) => X0 + (x / hossz) * (X1 - X0);
   const m = maxAbs(szak);
-  const y = (v) => Y0 + (jel === "M" ? 1 : -1) * (v / m) * FEL;
+  // V és M egyaránt a tartó pozitív (alsó) oldalára: a pozitív érték lefelé (tankönyv 8.3.2, 8.9. ábra)
+  const y = (v) => Y0 + (v / m) * FEL;
   const szin = DSZIN[jel];
   const ut = szak.map((s, i) => {
     const elozo = i > 0 ? szak[i - 1].pontok[N] : null;
@@ -297,7 +298,10 @@ function KisAbra({ szak, jel, hossz, tamaszX, csuklok, torespontok, betu, allapo
         {/* töréspont-függőlegesek, tengely */}
         {torespontok.map((x) => <line key={x} x1={kx(x)} y1={Y0 - FEL - 2} x2={kx(x)} y2={Y0 + FEL + 2} stroke="#cbd5e1" strokeWidth="0.7" strokeDasharray="2 2" />)}
         <line x1={X0 - 4} y1={Y0} x2={X1 + 4} y2={Y0} stroke="#64748b" strokeWidth="1" />
-        <text x={W - 6} y={H - 6} textAnchor="end" fontSize="9.5" style={{ fill: "#94a3b8" }}>{jel === "M" ? "+ lefelé (húzott oldal)" : "+ felfelé"}</text>
+        <text x={W - 6} y={H - 6} textAnchor="end" fontSize="9.5" style={{ fill: "#94a3b8" }}>{jel === "M" ? "+ lefelé (húzott oldal)" : "+ lefelé (mint az M)"}</text>
+        {/* a „+” és „−” oldal jele a tengely bal végénél */}
+        <text x={X0 - 12} y={Y0 + 13} textAnchor="middle" fontSize="10" fontWeight="700" style={{ fill: szin, opacity: 0.85 }}>+</text>
+        <text x={X0 - 12} y={Y0 - 6} textAnchor="middle" fontSize="10" fontWeight="700" style={{ fill: "#64748b", opacity: 0.85 }}>−</text>
         <path d={terulet} fill={szin} fillOpacity="0.14" />
         <path d={`M ${kx(eleje[0])} ${Y0} L ${ut.slice(2)} L ${kx(vege[0])} ${Y0}`} fill="none" stroke={szin} strokeWidth="1.9" strokeLinejoin="round" />
       </svg>

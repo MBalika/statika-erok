@@ -133,8 +133,8 @@ function Rajz(t) {
       <TamaszCimke x={XJ - 16} y={YB + 12}>B</TamaszCimke>
       <Meret x1={OX} x2={XM} y={YA + 56} cimke="1,5 m" opacitas={0.8} />
       <Meret x1={XM} x2={XJ} y={YA + 56} cimke="3 m" opacitas={0.8} />
-      <MeretFugg x={XJ + 70} y1={YT} y2={YB} cimke="1,5 m" opacitas={0.8} />
-      <MeretFugg x={XJ + 70} y1={YB} y2={YA} cimke="1,5 m" opacitas={0.8} />
+      <MeretFugg x={XJ + 112} y1={YT} y2={YB} cimke="1,5 m" opacitas={0.8} />
+      <MeretFugg x={XJ + 112} y1={YB} y2={YA} cimke="1,5 m" opacitas={0.8} />
 
       {/* teher */}
       <KoncentraltNyomatek x={XM} y={YT} r={18} irany={-1} cimke="M = 12 kNm" opacitas={terhU * op("M")} />

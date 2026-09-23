@@ -59,6 +59,9 @@ export default function ReakcioFelfedezo({ kezdo = {} }) {
   const maxR = Math.max(Math.abs(Ax), Math.abs(Ay), Math.abs(B), 1);
   const hossz = (v) => 16 + (54 * Math.abs(v)) / maxR;
   const felbillen = B < -1e-6;
+  // az F felirata: a nyíl farka mellé; a jobb szélen (konzolon) balra tesszük, hogy a viewBoxon belül maradjon
+  const fFarokX = kx(xF) - 56 * Math.cos((beta * Math.PI) / 180);
+  const fCimkeDx = beta > -90 ? -70 : fFarokX + 8 + 84 > SZ ? -84 : 8;
 
   const kNm = (v) => `${szK(v, 2)}`;
   const tagF = (kar) => (Math.abs(Fy) > 1e-9 && Math.abs(kar) > 1e-9 ? ` ${zarojel(kar, 2).replace(",", "{,}")}\\cdot(${kNm(Fy)})` : "");
@@ -84,7 +87,7 @@ export default function ReakcioFelfedezo({ kezdo = {} }) {
             {/* megoszló teher */}
             {p > 0 && x2 - x1 > 0.01 && <MegoszloTeher x1={kx(x1)} x2={kx(x2)} y={Y - 3} p1={p} p2={p} leptek={4.2} cimke1={`p = ${sz(p, 1)} kN/m`} />}
             {/* koncentrált erő */}
-            {F > 0 && <TeherNyil x={kx(xF)} y={Y - 3} hossz={56} szog={beta} cimke={`F = ${sz(F, 1)} kN`} cimkeEltolas={beta > -90 ? [-70, -6] : [8, -6]} />}
+            {F > 0 && <TeherNyil x={kx(xF)} y={Y - 3} hossz={56} szog={beta} cimke={`F = ${sz(F, 1)} kN`} cimkeEltolas={[fCimkeDx, -6]} />}
 
             {/* tartó és támaszok */}
             <Tarto x1={kx(0) - 8} y1={Y} x2={kx(teljes) + (k > 0 ? 0 : 8)} y2={Y} />

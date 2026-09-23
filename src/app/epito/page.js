@@ -41,7 +41,7 @@ export default function EpitoOldalLap() {
           <ol className="list-decimal space-y-1 pl-5">
             <li><strong>Építs:</strong> a <em>Csomópont / rúd</em> eszközzel kattints a rácsra, húzz rudat egyik csomópontból a másikba (ferde is lehet). A <em>Támasz</em> eszköz csomópontra kattintva ciklikusan görgőt → csuklót → befogást tesz; a <em>Csukló</em> belső csuklót; a <em>Teher</em> csomópontra vagy rúdra erőt, rúd mentén húzva megoszló terhet. Vagy tölts be egy sablont, esetleg kérj véletlen tartót.</li>
             <li><strong>Figyeld az állapotjelzőt:</strong> csak határozott és terhelt tartót lehet rajzolni — a jelző megmondja, hány kényszer hiányzik vagy fölös.</li>
-            <li><strong>Rajzolj:</strong> a program megadja a töréspontokat, te a fogópontokat húzod a helyes értékre (a rúdra merőlegesen). Ahol ugrás lehet, két fogópont van. Megoszló teher alatt válassz alakot, és jelöld be a szélsőértéket, ha a V ott előjelet vált.</li>
+            <li><strong>Rajzolj:</strong> a program megadja a töréspontokat, te a fogópontokat húzod a helyes értékre (a rúdra merőlegesen; a pozitív érték mindhárom ábrán a tartó „+” jellel jelölt pozitív oldalán — vízszintes rúdnál alul, mint a nyomatéknál). Ahol ugrás lehet, két fogópont van. Megoszló teher alatt válassz alakot, és jelöld be a szélsőértéket, ha a V ott előjelet vált.</li>
             <li><strong>Ellenőrizz:</strong> a pont 100-ból indul, a hibák súlyuk szerint vonnak le. Ha elakadsz, a segítség három fokozatban jön — a harmadik ráúsztatja a pontos ábrát. Javíts és próbáld újra, ahányszor csak akarod.</li>
           </ol>
         </Kiemelo>
