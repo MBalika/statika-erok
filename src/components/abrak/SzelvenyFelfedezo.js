@@ -73,7 +73,7 @@ export default function SzelvenyFelfedezo() {
   const [tw, setTw] = useState(20);
 
   const tfK = Math.min(tf, tipus === "I" ? H / 2 - 5 : H - 5);
-  const twK = Math.min(tw, B - 5);
+  const twK = Math.min(tw, tipus === "U" ? B / 2 - 5 : B - 5); // U-nál a két szár nem érhet össze
   const r = reszek(tipus, B, H, tfK, twK).map((p) => ({
     ...p,
     A: p.b * p.h,
@@ -161,11 +161,11 @@ export default function SzelvenyFelfedezo() {
             <line x1={X(0) + 6} y1={Y(zs)} x2={X(B) - 6} y2={Y(zs)} stroke="#e2590a" strokeWidth="1" strokeDasharray="4 3" opacity="0.7" />
             <line x1={X(0)} y1={Y(H) + 24} x2={X(ys)} y2={Y(H) + 24} stroke="#e2590a" strokeWidth="1.1" markerStart="url(#hegy-szf)" markerEnd="url(#hegy-szf)" />
             <text x={X(ys / 2)} y={Y(H) + 38} textAnchor="middle" fontSize="11.5" fontWeight="650" style={{ fill: "#e2590a", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-              y<tspan fontSize="8.5" dy="3">S</tspan><tspan dy="-3"> = {sz(ys, 1)}</tspan>
+              yₛ = {sz(ys, 1)}
             </text>
             <line x1={X(0) + 26} y1={Y(0)} x2={X(0) + 26} y2={Y(zs)} stroke="#e2590a" strokeWidth="1.1" markerStart="url(#hegy-szf)" markerEnd="url(#hegy-szf)" />
             <text x={X(0) + 32} y={Y(zs / 2) + 4} fontSize="11.5" fontWeight="650" style={{ fill: "#e2590a", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-              z<tspan fontSize="8.5" dy="3">S</tspan><tspan dy="-3"> = {sz(zs, 1)}</tspan>
+              zₛ = {sz(zs, 1)}
             </text>
             <SJel x={X(ys)} y={Y(zs)} dx={10} dy={-9} />
           </svg>

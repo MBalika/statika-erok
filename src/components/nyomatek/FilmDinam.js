@@ -206,7 +206,9 @@ function Rajz(t) {
       {dU > 0.5 && (
         <g>
           {dCsusz > 0.02 && <Ero x={3} F={5} nev="" u={1} opacitas={0.2} szin={LILA} hegy="dn-r" vastag={4} felirat={false} />}
-          <Ero x={dX} F={5} nev="R = 5 kN ↑" u={dR} szin={LILA} hegy="dn-r" vastag={4} balra />
+          <Ero x={dX} F={5} nev="R = 5 kN ↑" u={dR} szin={LILA} hegy="dn-r" vastag={4} felirat={false} />
+          {/* a felirat a tengely alá, hogy ne az M₁ ívére és az F₂ feliratára kerüljön */}
+          <FeliratA x={px(dX) + 8} y={OY + 24} szin={LILA} meret={11.5} opacitas={dR} horgony="start">R = 5 kN ↑</FeliratA>
           <g opacity={arany(t, 29.0, 29.4)}>
             <VonalA x1={px(3)} y1={OY + 110} x2={px(2.4)} y2={OY + 110} szin={LILA} vastag={1.3} szaggatott={false} />
             <PontA x={px(2.4)} y={OY} r={4.5} szin={LILA} />

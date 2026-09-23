@@ -492,8 +492,8 @@ export default function SulypontOldal() {
           </Lepes>
           <Lepes cim="y_S: itt nem esik ki">
             <MB>{"S_z = A_1\\cdot 25 - A_2\\left(50 - \\tfrac{4\\cdot 50}{3\\pi}\\right) + A_3\\left(-\\tfrac{4\\cdot 50}{3\\pi}\\right)"}</MB>
-            <MB>{"S_z = 62\\,500 - 1\\,963{,}5\\cdot 28{,}78 - 1\\,963{,}5\\cdot 21{,}22 = -35\\,674{,}8\\ \\text{cm}^3"}</MB>
-            <MB>{"y_S = \\frac{-35\\,674{,}8}{2\\,500} = -14{,}27\\ \\text{cm}"}</MB>
+            <MB>{"S_z = 62\\,500 - 1\\,963{,}5\\cdot 28{,}78 - 1\\,963{,}5\\cdot 21{,}22 = 62\\,500 - 56\\,509{,}5 - 41\\,665{,}5 = -35\\,675\\ \\text{cm}^3"}</MB>
+            <MB>{"y_S = \\frac{-35\\,675}{2\\,500} = -14{,}27\\ \\text{cm}"}</MB>
           </Lepes>
         </KidolgozottFeladat>
         <div className="my-8">

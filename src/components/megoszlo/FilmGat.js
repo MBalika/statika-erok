@@ -109,7 +109,7 @@ function Rajz(t) {
         const u = arany(nyomU, i / 9, (i + 1) / 9);
         return <NyilA key={i} x1={x + CB * len} y1={y - SB * len} x2={x + CB * 6} y2={y - SB * 6} u={u} szin={NAR} hegy="gt-n" vastag={1.4} opacitas={nyomOp} />;
       })}
-      <FeliratA x={OX + 70} y={OY - 40} szin={NAR} meret={12} opacitas={nyomOp}>γ·z, merőlegesen</FeliratA>
+      <FeliratA x={OX + 112} y={OY - 160} szin={NAR} meret={12} opacitas={nyomOp}>γ·z, merőlegesen</FeliratA>
 
       {/* vízszintes: háromszög a függőleges vetületen */}
       <g opacity={haromU * (1 - 0.6 * oss)}>
@@ -124,7 +124,7 @@ function Rajz(t) {
       {rxU > 0.02 && (
         <g>
           <NyilA x1={rxTail.x} y1={rxTail.y} x2={rxHead.x} y2={rxHead.y} u={rxU} szin={KEK} hegy="gt-k" vastag={3.8} opacitas={1 - 0.5 * rU} />
-          <FeliratA x={rxTail.x + 6} y={rxTail.y - 8} szin={KEK} meret={12} horgony="start" opacitas={rxU * (1 - oss)}>Rₓ = 180 kN/m</FeliratA>
+          <FeliratA x={(rxTail.x + rxHead.x) / 2} y={rxTail.y - 10} szin={KEK} meret={12} opacitas={rxU * (1 - oss)}>Rₓ = 180 kN/m</FeliratA>
           <g opacity={rxFel * (1 - oss)}>
             <VonalA x1={OX + 100} y1={OY} x2={OX + 100} y2={OY - HP / 3} szin={KEK} vastag={1.2} szaggatott={false} />
             <FeliratA x={OX + 106} y={OY - HP / 6 + 4} szin={KEK} meret={11.5} vastag={false} horgony="start">h/3 = 2 m</FeliratA>
@@ -141,9 +141,10 @@ function Rajz(t) {
           const yFal = OY - HP * u;
           return <NyilA key={i} x1={x} y1={TY + 2} x2={x} y2={yFal - 5} u={oszlopU} szin={TEAL} hegy="gt-t" vastag={1.2} opacitas={0.8} />;
         })}
-        <FeliratA x={(TX + OX) / 2} y={TY - 40} szin={TEAL} meret={11.5} opacitas={oszlopU}>A = ½ · 3,464 · 6 = 10,39 m²</FeliratA>
+        {/* a feliratok az Rᵧ nyíl (x = OX − a/3) vonalától balra, hogy ne fedje őket a nyíl */}
+        <FeliratA x={OX - (ALAP * SC) / 3 - 10} y={TY - 44} szin={TEAL} meret={11.5} horgony="end" opacitas={oszlopU}>A = ½ · 3,464 · 6 = 10,39 m²</FeliratA>
         <VonalA x1={TX} y1={TY - 24} x2={OX} y2={TY - 24} szin="#94a3b8" vastag={1} szaggatott={false} u={oszlopU} />
-        <FeliratA x={(TX + OX) / 2} y={TY - 28} szin="#64748b" meret={10.5} vastag={false} opacitas={oszlopU}>h·tg 30° = 3,464 m</FeliratA>
+        <FeliratA x={OX - (ALAP * SC) / 3 - 8} y={TY - 28} szin="#64748b" meret={10.5} vastag={false} horgony="end" opacitas={oszlopU}>h·tg 30° = 3,464 m</FeliratA>
       </g>
       {ryU > 0.02 && (
         <g>

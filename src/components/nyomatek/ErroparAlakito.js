@@ -52,22 +52,35 @@ export default function ErroparAlakito() {
   const ky = (y) => CY - y * L;
   const eroNyil = (p, f, id) => {
     // az erő a hatásvonalán, a talppontra centrálva
-    const h = Math.min(Fert * E, 150);
+    const h = Math.max(26, Math.min(Fert * E, 150)); // kis erőnél is látszó nyíl
     const ex = f.x / Fert;
     const ey = f.y / Fert;
     const x1 = kx(p.x) - (ex * h) / 2;
     const y1 = ky(p.y) + (ey * h) / 2;
     const x2 = kx(p.x) + (ex * h) / 2;
     const y2 = ky(p.y) - (ey * h) / 2;
-    return { x1, y1, x2, y2, id };
+    return { x1, y1, x2, y2, id, kx: kx(p.x), ky: ky(p.y) };
   };
   const n1 = eroNyil(p1, f1, "F₁");
   const n2 = eroNyil(p2, f2, "F₂");
+  // az erők feliratai a nyíl közepénél, a hatásvonalra merőlegesen kifelé (a másik erőtől elfelé)
+  const feliratPoz = (ny, oldal) => {
+    const sx = n.x * oldal; // képernyőn: x ugyanaz
+    const sy = -n.y * oldal; // képernyőn az y lefelé nő
+    return {
+      x: ny.kx + sx * 18,
+      y: ny.ky + sy * 18 + (sy > 0.3 ? 10 : 4),
+      horgony: sx < -0.3 ? "end" : sx > 0.3 ? "start" : "middle",
+    };
+  };
+  const fp1 = feliratPoz(n1, 1);
+  const fp2 = feliratPoz(n2, -1);
   const hv = 260; // a hatásvonal fele hossza képpontban
 
   const dKep = d * L;
   const tulNagy = dKep > 400;
-  const mTav = Math.min(Fert * E, 150) / 2 + 34; // az M felirat a nyílhegyeken túl, az erőkkel ellentétes (−u) oldalon
+  // az M felirat a nyílhegyeken túl, az erőkkel ellentétes (−u) oldalon – és mindenképp a középső ív (r = 30) mellett
+  const mTav = Math.max(Math.min(Fert * E, 150) / 2 + 34, 40 + Math.abs(u.x) * 50 + Math.abs(u.y) * 8);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
@@ -98,18 +111,18 @@ export default function ErroparAlakito() {
             {dKep > 6 && (
               <>
                 <line
-                  x1={kx(p1.x) + u.x * 70}
-                  y1={ky(p1.y) - u.y * 70}
-                  x2={kx(p2.x) + u.x * 70}
-                  y2={ky(p2.y) - u.y * 70}
+                  x1={kx(p1.x) + u.x * 96}
+                  y1={ky(p1.y) - u.y * 96}
+                  x2={kx(p2.x) + u.x * 96}
+                  y2={ky(p2.y) - u.y * 96}
                   stroke="#94a3b8"
                   strokeWidth="1"
                   markerStart="url(#ea-mer)"
                   markerEnd="url(#ea-mer)"
                 />
                 <text
-                  x={CX + u.x * 84}
-                  y={CY - u.y * 84 + 4}
+                  x={CX + u.x * 112}
+                  y={CY - u.y * 112 + 4}
                   textAnchor="middle"
                   fontSize="12.5"
                   fontWeight="650"
@@ -145,13 +158,16 @@ export default function ErroparAlakito() {
 
             {/* a két erő */}
             {!nulla &&
-              [n1, n2].map((ny) => (
+              [
+                [n1, fp1],
+                [n2, fp2],
+              ].map(([ny, fp]) => (
                 <g key={ny.id}>
                   <line x1={ny.x1} y1={ny.y1} x2={ny.x2} y2={ny.y2} stroke="#e2590a" strokeWidth="3.4" strokeLinecap="round" markerEnd="url(#ea-ero)" />
                   <text
-                    x={ny.x2 + (ny.x2 >= ny.x1 ? 8 : -8)}
-                    y={ny.y2 + (ny.y2 >= ny.y1 ? 14 : -8)}
-                    textAnchor={ny.x2 >= ny.x1 ? "start" : "end"}
+                    x={fp.x}
+                    y={fp.y}
+                    textAnchor={fp.horgony}
                     fontSize="12"
                     fontWeight="650"
                     style={{ fill: "#e2590a", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}

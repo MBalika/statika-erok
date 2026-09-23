@@ -17,11 +17,11 @@ import { sz, szK } from "@/lib/szamok";
  * jobb sarka; a mozgó O'' origó helye O'-ben (y_0; z_0).
  */
 
-const SZ = 600;
-const MA = 420;
+const SZ = 620;
+const MA = 520; // elég magas, hogy z₀ = −40 … 160 mm-nél is a rajzon belül maradjon az O″ és a tengelye
 const LEPTEK = 2; // képpont / mm
-const OX = 400; // O' a képen
-const OY = 70;
+const OX = 420; // O' a képen
+const OY = 100;
 const X = (y) => OX - y * LEPTEK; // y balra
 const Y = (z) => OY + z * LEPTEK; // z lefelé
 
@@ -226,11 +226,12 @@ export default function EltolasFelfedezo() {
 
             {/* a mozgó O'' rendszer */}
             <g style={{ pointerEvents: "none" }}>
-              <line x1={ox2} y1={oy2} x2={ox2 - 90} y2={oy2} stroke={LILA} strokeWidth="1.6" markerEnd="url(#hegy-ef-l)" />
-              <line x1={ox2} y1={oy2} x2={ox2} y2={oy2 + 90} stroke={LILA} strokeWidth="1.6" markerEnd="url(#hegy-ef-l)" />
-              <text x={ox2 - 96} y={oy2 + 4} textAnchor="end" fontSize="12" fontStyle="italic" fontWeight="600" style={{ fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>y″</text>
-              <text x={ox2 + 6} y={oy2 + 100} fontSize="12" fontStyle="italic" fontWeight="600" style={{ fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>z″</text>
-              <text x={ox2 + 10} y={oy2 - 10} fontSize="11.5" fontWeight="650" style={{ fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+              <line x1={ox2} y1={oy2} x2={ox2 - 70} y2={oy2} stroke={LILA} strokeWidth="1.6" markerEnd="url(#hegy-ef-l)" />
+              <line x1={ox2} y1={oy2} x2={ox2} y2={oy2 + 70} stroke={LILA} strokeWidth="1.6" markerEnd="url(#hegy-ef-l)" />
+              <text x={ox2 - 76} y={oy2 + 4} textAnchor="end" fontSize="12" fontStyle="italic" fontWeight="600" style={{ fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>y″</text>
+              <text x={ox2 + 6} y={oy2 + 80} fontSize="12" fontStyle="italic" fontWeight="600" style={{ fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>z″</text>
+              {/* ha S az O″-től jobbra van (yₛ″ < 0), a felirat az origó alá kerül, hogy ne fedje az yₛ″ méretet */}
+              <text x={ox2 + 10} y={ys2 < 0 ? oy2 + 20 : oy2 - 10} fontSize="11.5" fontWeight="650" style={{ fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
                 O″ ({kiir(y0)}; {kiir(z0)})
               </text>
             </g>

@@ -46,13 +46,16 @@ function Vektor({ x1, y1, x2, y2, szin, hegy, vastag = 3, szaggatott = false, op
 
 export default function VektorMuveletFelfedezo() {
   const [a, setA] = useState({ x: 4, y: 2 });
-  const [b, setB] = useState({ x: 1.5, y: 3.5 });
+  const [b, setB] = useState({ x: 1.5, y: 3 });
   const [muvelet, setMuvelet] = useState("osszeg");
   const [lambda, setLambda] = useState(1.5);
   const svgRef = useRef(null);
 
   const kepX = (x) => OX + x * LEPTEK;
   const kepY = (y) => OY - y * LEPTEK;
+  // a feliratok a rajz szélén se lógjanak ki
+  const cx = (x) => Math.max(30, Math.min(SZ - 30, x));
+  const cy = (y) => Math.max(14, Math.min(MA - 4, y));
 
   const huzas = (melyik) => (e) => {
     e.preventDefault();
@@ -62,9 +65,10 @@ export default function VektorMuveletFelfedezo() {
       const r = svg.getBoundingClientRect();
       const px = ((esem.clientX - r.left) / r.width) * SZ;
       const py = ((esem.clientY - r.top) / r.height) * MA;
+      // A tartomány úgy van megszabva, hogy az összeg / különbség / 2·a is a rajzon maradjon
       const uj = {
-        x: Math.max(-7, Math.min(7, Math.round(((px - OX) / LEPTEK) * 2) / 2)),
-        y: Math.max(-6, Math.min(5.5, Math.round(((OY - py) / LEPTEK) * 2) / 2)),
+        x: Math.max(-3.5, Math.min(4, Math.round(((px - OX) / LEPTEK) * 2) / 2)),
+        y: Math.max(-2, Math.min(3, Math.round(((OY - py) / LEPTEK) * 2) / 2)),
       };
       if (melyik === "a") setA(uj);
       else setB(uj);
@@ -150,20 +154,20 @@ export default function VektorMuveletFelfedezo() {
             {/* eredmény */}
             <Vektor x1={OX} y1={OY} x2={kepX(er.x)} y2={kepY(er.y)} szin={SZIN_E} hegy="vm-e" vastag={4} />
             {hossz(er) > 0.2 && (
-              <Cimke x={kepX(er.x) + (er.x >= 0 ? 18 : -18)} y={kepY(er.y) + (er.y >= 0 ? -10 : 18)} szin={SZIN_E} meret={13.5}>
+              <Cimke x={cx(kepX(er.x) + (er.x >= 0 ? 18 : -18))} y={cy(kepY(er.y) + (er.y >= 0 ? -10 : 18))} szin={SZIN_E} meret={13.5}>
                 {cimke}
               </Cimke>
             )}
 
             {/* a és b */}
             <Vektor x1={OX} y1={OY} x2={kepX(a.x)} y2={kepY(a.y)} szin={SZIN_A} hegy="vm-a" />
-            <Cimke x={kepX(a.x) + (a.x >= 0 ? 14 : -14)} y={kepY(a.y) + (a.y >= 0 ? 16 : -8)} szin={SZIN_A}>
+            <Cimke x={cx(kepX(a.x) + (a.x >= 0 ? 14 : -14))} y={cy(kepY(a.y) + (a.y >= 0 ? 16 : -8))} szin={SZIN_A}>
               a
             </Cimke>
             {bLathato && (
               <>
                 <Vektor x1={OX} y1={OY} x2={kepX(b.x)} y2={kepY(b.y)} szin={SZIN_B} hegy="vm-b" />
-                <Cimke x={kepX(b.x) + (b.x >= 0 ? 14 : -14)} y={kepY(b.y) + (b.y >= 0 ? -8 : 16)} szin={SZIN_B}>
+                <Cimke x={cx(kepX(b.x) + (b.x >= 0 ? 14 : -14))} y={cy(kepY(b.y) + (b.y >= 0 ? -8 : 16))} szin={SZIN_B}>
                   b
                 </Cimke>
               </>
@@ -196,7 +200,7 @@ export default function VektorMuveletFelfedezo() {
 
           {muvelet === "skalar" && (
             <div className="mt-4">
-              <Csuszka cimke="λ (skalár szorzó)" ertek={lambda} min={-2} max={3} lepes={0.1} tizedes={1} onChange={setLambda} />
+              <Csuszka cimke="λ (skalár szorzó)" ertek={lambda} min={-2} max={2} lepes={0.1} tizedes={1} onChange={setLambda} />
             </div>
           )}
 

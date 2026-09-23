@@ -11,6 +11,7 @@ import {
 } from "./SvgElemek";
 import {
   derekszogu,
+  fokRad,
   normalizalSzog,
   polaris,
   siknegyed,
@@ -22,8 +23,8 @@ import { M } from "@/components/ui/Keplet";
 const SZ = 540;
 const MA = 360;
 const OX = 250;
-const OY = 190;
-const LEPTEK = 21; // képpont / N
+const OY = 185;
+const LEPTEK = 17; // képpont / N (10 N = 170 px, még a rajzon belül)
 
 export default function ErovektorBonto() {
   const [F, setF] = useState(5);
@@ -67,7 +68,7 @@ export default function ErovektorBonto() {
             className="abra w-full touch-none select-none"
           >
             <NyilHegyek />
-            <Tengelyek ox={OX} oy={OY} balra={235} jobbra={265} fel={175} le={155} />
+            <Tengelyek ox={OX} oy={OY} balra={235} jobbra={265} fel={162} le={160} />
 
             {/* Segédvonalak a komponensekhez */}
             <line x1={vx} y1={vy} x2={vx} y2={OY} className="segedvonal" />
@@ -80,20 +81,24 @@ export default function ErovektorBonto() {
             {/* Eredeti vektor */}
             <Nyil x1={OX} y1={OY} x2={vx} y2={vy} szin="ero" vastagsag={3.4} />
 
-            <SzogIv
-              ox={OX}
-              oy={OY}
-              sugar={40}
-              kezdoFok={0}
-              vegFok={alfa}
-              cimke={`α = ${alfa}°`}
-            />
+            <SzogIv ox={OX} oy={OY} sugar={40} kezdoFok={0} vegFok={alfa} />
+            {(() => {
+              // az α felirat: az ív közepénél, kifelé; kis szögnél az F nyíl fölé, hogy ne az Fx komponensre kerüljön
+              const kicsi = alfa < 26;
+              const kozep = kicsi ? alfa + 24 : alfa / 2;
+              const r = kicsi ? 72 : 64;
+              return (
+                <Cimke x={OX + r * Math.cos(fokRad(kozep))} y={OY - r * Math.sin(fokRad(kozep)) + 4} szin="#64748b" meret={12} vastag={false}>
+                  α = {alfa}°
+                </Cimke>
+              );
+            })()}
 
             <Cimke x={vx + (Fx >= 0 ? 16 : -16)} y={vy - 10} szin="var(--color-jel-ero)">
               F = {sz(F, 1)} N
             </Cimke>
             <Cimke
-              x={(OX + vx) / 2}
+              x={(OX + vx) / 2 + (Math.abs(Fx) < 1.2 ? 48 : 0)}
               y={OY + (Fy >= 0 ? 20 : -10)}
               szin="var(--color-jel-komp)"
               meret={12.5}
@@ -102,7 +107,7 @@ export default function ErovektorBonto() {
             </Cimke>
             <Cimke
               x={OX + (Fx >= 0 ? -12 : 12)}
-              y={(OY + vy) / 2 + 4}
+              y={(OY + vy) / 2 + 4 - (Math.abs(Fy) < 1.2 ? 10 : 0)}
               szin="var(--color-jel-komp)"
               meret={12.5}
               horgony={Fx >= 0 ? "end" : "start"}

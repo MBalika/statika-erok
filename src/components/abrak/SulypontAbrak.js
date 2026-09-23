@@ -323,13 +323,14 @@ export function AbraKivonas() {
   const Teglalap = ({ ox, oy, b, h, fill, stroke = IDOM_KERET, dash }) => (
     <rect x={ox - b * m} y={oy} width={b * m} height={h * m} fill={fill} stroke={stroke} strokeWidth="1.5" strokeDasharray={dash} />
   );
-  // teljes idom 200×140, lyuk 80×60 a jobb felső sarok közelében: y0 = 30, z0 = 25
+  // teljes idom 200×140, lyuk 70×50 a jobb felső sarok közelében: y0 = 20, z0 = 15
+  // (így a súlypont láthatóan a lyukon kívül, tőle elfelé kerül: y_S ≈ 106, z_S ≈ 74)
   const B = 200;
   const H = 140;
-  const lb = 80;
-  const lh = 60;
-  const ly = 30;
-  const lz = 25;
+  const lb = 70;
+  const lh = 50;
+  const ly = 20;
+  const lz = 15;
   const A1 = B * H;
   const A2 = lb * lh;
   const ys = (A1 * (B / 2) - A2 * (ly + lb / 2)) / (A1 - A2);

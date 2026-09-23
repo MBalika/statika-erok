@@ -1091,7 +1091,7 @@ export default function NyomatekOldal() {
 
           <Lepes cim="c) Az eredő és a hatásvonala">
             <MB>{"R = \\sqrt{0{,}062^2 + 1{,}754^2} = 1{,}755\\ \\text{kN},\\qquad \\alpha_R = 87{,}98^\\circ"}</MB>
-            <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv \\underline{R},\\qquad \\Mp{O} -32,99 = x_0\\cdot 1,754 \\;\\Rightarrow\\; x_0 = -18,80\\ \\text{m}"}</MB>
+            <MB>{"(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv \\underline{R},\\qquad \\Mp{O} -32,99 = x_0\\cdot 1,754 \\;\\Rightarrow\\; x_0 = -18,81\\ \\text{m}"}</MB>
             <p>
               Az eredő tehát egyetlen, majdnem függőleges erő, amelynek
               hatásvonala az origótól 18,8 méterrel balra metszi az{" "}

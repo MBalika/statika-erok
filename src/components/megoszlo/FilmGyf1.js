@@ -123,7 +123,7 @@ function Rajz(t) {
       </defs>
 
       {/* teherábra kitöltése (halványul, ha már eredő van) */}
-      <path d={utTrapez} fill={NAR} opacity={0.1 * (1 - 0.6 * Math.max(c1, c2))} />
+      <path d={utTrapez} fill={NAR} opacity={0.1 * (1 - 0.4 * Math.max(c1, c2))} />
 
       {/* felbontás színes részei */}
       {!masodik && (
@@ -186,7 +186,7 @@ function Rajz(t) {
       {/* tartó */}
       <line x1={BAL - 14} y1={TY} x2={JOBB + 14} y2={TY} stroke="#1d3c48" strokeWidth="4" strokeLinecap="round" />
       <line x1={X(0)} y1={TY + 22} x2={X(L)} y2={TY + 22} stroke="#94a3b8" strokeWidth="1" markerStart="url(#m1-sz)" markerEnd="url(#m1-sz)" />
-      <FeliratA x={X(L / 2)} y={TY + 38} szin="#64748b" meret={12} vastag={false}>L = 4,5 m</FeliratA>
+      <FeliratA x={X(1.4)} y={TY + 38} szin="#64748b" meret={12} vastag={false}>L = 4,5 m</FeliratA>
 
       {/* intenzitás feliratok */}
       <FeliratA x={X(0) - 8} y={teto(P1) - 8} szin={NAR} horgony="end" opacitas={felirat1}>p₁ = 1,8 kN/m</FeliratA>

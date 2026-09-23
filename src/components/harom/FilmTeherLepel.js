@@ -101,7 +101,8 @@ function Rajz(t) {
       <Cimke3D pozicio={[L, 0, H + P2 * PS + 0.4]} szin="#e2590a" meret={12} opacitas={arany(t, 2.6, 3.0) * (1 - c)}>p₂ = 3,6 kN/m</Cimke3D>
 
       {/* lepel */}
-      <Lepel opacitas={lepelU * (1 - c)} />
+      {/* a lepel az összehúzódás után is halványan látszik, hogy a teher ne tűnjön el a rajzról */}
+      <Lepel opacitas={lepelU * (1 - 0.6 * c)} />
 
       {/* eredő */}
       <Nyil3D tol={[K, 0, H + 0.4 + R * 0.16]} ig={[K, 0, H + 0.03]} szin="#7c3aed" vastag={0.07} u={c} />

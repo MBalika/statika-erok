@@ -94,14 +94,14 @@ function Rajz(t) {
       <g opacity={kompU * (1 - 0.7 * csusz)}>
         <VonalA x1={px(F1.x)} y1={py(F1.y)} x2={px(F1.x)} y2={OY} szin={NAR} />
         <VonalA x1={px(F1.x)} y1={py(F1.y)} x2={OX} y2={py(F1.y)} szin={NAR} />
-        <FeliratA x={px(F1.x / 2)} y={OY + 15} szin={NAR} meret={11}>−86,04</FeliratA>
+        <FeliratA x={px(F1.x / 2)} y={py(F1.y) - 6} szin={NAR} meret={11}>−86,04</FeliratA>
         <FeliratA x={OX + 6} y={py(F1.y / 2)} szin={NAR} meret={11} horgony="start">122,87</FeliratA>
       </g>
 
       {/* F2 – az origóból, majd F1 hegyére csúszik */}
       <NyilA x1={px(s2.x)} y1={py(s2.y)} x2={px(s2.x + F2.x)} y2={py(s2.y + F2.y)} u={f2U} szin={TEAL} hegy="g3-b" />
       <FeliratA x={px(s2.x + F2.x) + 10} y={py(s2.y + F2.y) + 14} szin={TEAL} opacitas={arany(t, 2.7, 3.1) * (1 - csusz)} horgony="start">F₂ = 150 N</FeliratA>
-      <FeliratA x={px(s2.x + F2.x / 2) + 12} y={py(s2.y + F2.y / 2) + 4} szin={TEAL} meret={11.5} opacitas={csusz} horgony="start">F₂</FeliratA>
+      <FeliratA x={px(s2.x + F2.x / 2) + 16} y={py(s2.y + F2.y / 2) + 4} szin={TEAL} meret={11.5} opacitas={csusz} horgony="start">F₂</FeliratA>
       <g opacity={1 - csusz}>
         <IvA cx={OX} cy={OY} r={50} kezdoFok={-90} vegFok={-65} u={szogU} szin={TEAL} />
         <FeliratA x={OX + 20} y={OY + 66} szin={TEAL} meret={11.5} vastag={false} opacitas={szogU}>25°</FeliratA>
@@ -122,7 +122,7 @@ function Rajz(t) {
 
       {/* F3: a lánc végétől az origóba, majd másolat az origóból */}
       <NyilA x1={px(P.x)} y1={py(P.y)} x2={OX} y2={OY} u={f3U} szin={LILA} hegy="g3-c" vastag={3.4} opacitas={1 - 0.6 * masol} />
-      <FeliratA x={OX + 40} y={OY + 44} szin={LILA} opacitas={zarFel * (1 - masol)} horgony="start">F₃ bezárja a sokszöget</FeliratA>
+      <FeliratA x={px(P.x) - 16} y={py(P.y) + 54} szin={LILA} opacitas={zarFel * (1 - masol)} horgony="end">F₃ bezárja a sokszöget</FeliratA>
       {/* nagyító az origó környékéről */}
       {(() => {
         const N = 2.2;
@@ -158,8 +158,8 @@ function Rajz(t) {
       {masol > 0.02 && (
         <>
           <NyilA x1={px(s3.x)} y1={py(s3.y)} x2={px(s3.x + F3.x)} y2={py(s3.y + F3.y)} szin={LILA} hegy="g3-c" vastag={3.4} />
-          <IvA cx={OX} cy={OY} r={30} kezdoFok={0} vegFok={30} u={vegFel} szin={LILA} />
-          <FeliratA x={OX + 38} y={OY - 8} szin={LILA} meret={11.5} vastag={false} opacitas={vegFel}>30,0°</FeliratA>
+          <IvA cx={OX} cy={OY} r={20} kezdoFok={0} vegFok={30} u={vegFel} szin={LILA} />
+          <FeliratA x={OX + 36} y={OY + 14} szin={LILA} meret={11.5} vastag={false} opacitas={vegFel}>α = 30,0°</FeliratA>
           <FeliratA x={px(F3.x) + 10} y={py(F3.y) - 8} szin={LILA} meret={13} opacitas={vegFel} horgony="start">F₃ = 26,16 N</FeliratA>
         </>
       )}

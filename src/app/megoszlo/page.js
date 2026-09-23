@@ -378,14 +378,14 @@ export default function MegoszloOldal() {
               kN/m-ig növekvő háromszögre bontjuk, és a két részeredő eredőjét keressük:
             </p>
             <MB>{"(q) \\ekv \\underline{R},\\qquad (\\underline{R}_1, \\underline{R}_2) \\ekv \\underline{R}"}</MB>
-            <MB>{"R_1 = \\frac{1{,}8\\cdot 4{,}5}{2} = 4{,}05\\ \\text{kN}\\quad(\\text{háromszög, a magas oldaltól } L/3\\text{-ra: } x_1 = 3{,}0\\ \\text{m})"}</MB>
-            <MB>{"R_2 = 1{,}8\\cdot 4{,}5 = 8{,}1\\ \\text{kN}\\quad(\\text{téglalap, } x_2 = 2{,}25\\ \\text{m})"}</MB>
+            <MB>{"R_1 = 1{,}8\\cdot 4{,}5 = 8{,}1\\ \\text{kN}\\quad(\\text{téglalap, a felezőpontban: } x_1 = 2{,}25\\ \\text{m})"}</MB>
+            <MB>{"R_2 = \\frac{1{,}8\\cdot 4{,}5}{2} = 4{,}05\\ \\text{kN}\\quad(\\text{háromszög, a magas oldaltól } L/3\\text{-ra: } x_2 = 3{,}0\\ \\text{m})"}</MB>
           </Lepes>
 
           <Lepes cim="I. megoldás: vetületi és nyomatéki egyenlet">
             <p>Minden erő függőleges: egy vetületi egyenlet (lefelé pozitív) és egy nyomatéki egyenlet a bal végpontra (az óramutató szerint pozitív).</p>
-            <MB>{"\\Fle 4{,}05 + 8{,}1 = R = 12{,}15\\ \\text{kN}"}</MB>
-            <MB>{"\\Mj{O} 4{,}05\\cdot 3{,}0 + 8{,}1\\cdot 2{,}25 = R\\,k = 30{,}375\\ \\text{kNm}"}</MB>
+            <MB>{"\\Fle 8{,}1 + 4{,}05 = R = 12{,}15\\ \\text{kN}"}</MB>
+            <MB>{"\\Mj{O} 8{,}1\\cdot 2{,}25 + 4{,}05\\cdot 3{,}0 = R\\,k = 30{,}375\\ \\text{kNm}"}</MB>
             <MB>{"k = \\frac{30{,}375}{12{,}15} = 2{,}5\\ \\text{m}"}</MB>
           </Lepes>
 

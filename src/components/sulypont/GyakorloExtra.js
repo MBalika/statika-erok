@@ -127,10 +127,14 @@ function korLyukFeladat() {
 /* ---------- 9. Háromszög három csúccsal + téglalap ---------- */
 
 function haromszogFeladat() {
-  const y1 = lepes(0, 60, 10), z1 = lepes(0, 40, 10);
-  const y2 = lepes(120, 260, 10), z2 = lepes(0, 60, 10);
-  const y3 = lepes(20, 200, 10), z3 = lepes(120, 240, 10);
-  const A = Math.abs((y2 - y1) * (z3 - z1) - (y3 - y1) * (z2 - z1)) / 2;
+  // elfajult (közel egy egyenesbe eső) csúcshármast nem adunk fel
+  let y1, z1, y2, z2, y3, z3, A;
+  do {
+    y1 = lepes(0, 60, 10); z1 = lepes(0, 40, 10);
+    y2 = lepes(120, 260, 10); z2 = lepes(0, 60, 10);
+    y3 = lepes(20, 200, 10); z3 = lepes(120, 240, 10);
+    A = Math.abs((y2 - y1) * (z3 - z1) - (y3 - y1) * (z2 - z1)) / 2;
+  } while (A < 2000);
   const ys = (y1 + y2 + y3) / 3;
   const zs = (z1 + z2 + z3) / 3;
   return {

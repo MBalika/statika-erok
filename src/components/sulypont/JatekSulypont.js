@@ -332,15 +332,6 @@ export default function JatekSulypont() {
             </pattern>
           </defs>
 
-          {/* tengelyek az origónál (jobb felső sarok) */}
-          <g opacity={ellenorizve ? 0.35 : 0.8}>
-            <line x1={ox} y1={oy} x2={ox - 40} y2={oy} stroke="#475569" strokeWidth="1.1" markerEnd="url(#js-t)" />
-            <line x1={ox} y1={oy} x2={ox} y2={oy + 40} stroke="#475569" strokeWidth="1.1" markerEnd="url(#js-t)" />
-            <text x={ox - 46} y={oy + 4} textAnchor="end" fontSize="11.5" fontStyle="italic" style={{ fill: "#1d3c48" }}>y</text>
-            <text x={ox + 5} y={oy + 46} fontSize="11.5" fontStyle="italic" style={{ fill: "#1d3c48" }}>z</text>
-            <circle cx={ox} cy={oy} r="2.2" fill="#475569" />
-          </g>
-
           {/* méretek – ellenőrzéskor elhalványulnak */}
           <g opacity={1 - 0.75 * anim.u} style={{ pointerEvents: "none" }}>
             {yPontok.slice(0, -1).map((y, i) => {
@@ -410,6 +401,15 @@ export default function JatekSulypont() {
                 </text>
               </g>
             )}
+          </g>
+
+          {/* tengelyek az origónál (jobb felső sarok) — az idom fölé rajzolva, hogy ne takarja el */}
+          <g opacity={ellenorizve ? 0.35 : 0.85} style={{ pointerEvents: "none" }}>
+            <line x1={ox} y1={oy} x2={ox - 40} y2={oy} stroke="#475569" strokeWidth="1.1" markerEnd="url(#js-t)" />
+            <line x1={ox} y1={oy} x2={ox} y2={oy + 40} stroke="#475569" strokeWidth="1.1" markerEnd="url(#js-t)" />
+            <text x={ox - 46} y={oy - 4} textAnchor="end" fontSize="11.5" fontStyle="italic" style={{ fill: "#1d3c48", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>y</text>
+            <text x={ox + 5} y={oy + 46} fontSize="11.5" fontStyle="italic" style={{ fill: "#1d3c48", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>z</text>
+            <circle cx={ox} cy={oy} r="2.2" fill="#475569" />
           </g>
 
           {/* a tű */}

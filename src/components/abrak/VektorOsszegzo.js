@@ -154,6 +154,14 @@ export default function VektorOsszegzo() {
               const y1 = kepY(k0.y);
               const x2 = kepX(k0.x + k.x);
               const y2 = kepY(k0.y + k.y);
+              // a felirat a nyílra merőlegesen, a „felső” oldalon
+              const h = Math.hypot(x2 - x1, y2 - y1) || 1;
+              let nx = -(y2 - y1) / h;
+              let ny = (x2 - x1) / h;
+              if (ny > 0) {
+                nx = -nx;
+                ny = -ny;
+              }
               return (
                 <g key={i}>
                   <line
@@ -167,8 +175,8 @@ export default function VektorOsszegzo() {
                     markerEnd={`url(#hegy-${["ero", "komp", "kek", "ero"][i]})`}
                   />
                   <Cimke
-                    x={(x1 + x2) / 2 + 12}
-                    y={(y1 + y2) / 2 - 9}
+                    x={(x1 + x2) / 2 + nx * 14}
+                    y={(y1 + y2) / 2 + ny * 14 + 4}
                     szin={SZINEK[i]}
                     meret={12.5}
                   >
@@ -180,8 +188,8 @@ export default function VektorOsszegzo() {
             })}
 
             <Cimke
-              x={kepX(Rx) + (Rx >= 0 ? 22 : -22)}
-              y={kepY(Ry) + (Ry >= 0 ? -14 : 22)}
+              x={Math.max(34, Math.min(SZ - 34, kepX(Rx) + (Rx >= 0 ? 22 : -22)))}
+              y={Math.max(14, Math.min(MA - 4, kepY(Ry) + (Ry >= 0 ? -14 : 22)))}
               szin="var(--color-jel-eredo)"
             >
               R = {sz(R.nagysag, 2)}

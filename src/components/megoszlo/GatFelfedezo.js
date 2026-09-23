@@ -47,12 +47,13 @@ export default function GatFelfedezo() {
   const yRx = h / 3;
 
   // rajzlépték
-  const sc = Math.min(24, 240 / h, 250 / (alap + 0.5));
+  const sc = Math.min(60, 240 / h, 250 / (alap + 0.5)); // px / m — kis h-nál is kitölti a rajzot
   const hp = h * sc;
   const TX = OX - alap * sc;
   const TY = OY - hp;
-  const PS = 0.6; // px / (kN/m²) a nyomásábrához
-  const RS = Math.min(0.5, 90 / Math.max(R, 1)); // px / (kN/m) az eredőkhöz
+  const PS = Math.min(1.2, 80 / Math.max(gamma * h, 1)); // px / (kN/m²) a nyomásábrához (legfeljebb 80 px széles)
+  const RS = 90 / Math.max(R, 1); // px / (kN/m): az eredő mindig 90 px, a komponensek arányosak
+  const fuggoleges = beta < 2; // függőleges fal: R = Rₓ, egy nyíl
   const Q = { x: OX - (alap * sc) / 3, y: OY - hp / 3 }; // ahol az eredő a falat metszi
   const dir = { x: -cb, y: Math.sin(beta * RAD) }; // az eredő iránya (a víz felől a falra, merőlegesen)
 
@@ -117,12 +118,21 @@ export default function GatFelfedezo() {
             {/* a fal */}
             <line x1={OX} y1={OY} x2={TX} y2={TY} stroke="#1d3c48" strokeWidth="5" strokeLinecap="round" />
 
-            {/* az eredő: a falra merőleges, a metszéspontban */}
-            <line x1={Q.x - dir.x * (R * RS + 10)} y1={Q.y - dir.y * (R * RS + 10)} x2={Q.x - dir.x * 6} y2={Q.y - dir.y * 6} stroke={LILA} strokeWidth="4" strokeLinecap="round" markerEnd="url(#gf-l)" />
+            {/* az eredő: a falra merőleges, a metszéspontban (függőleges falnál egybeesik Rₓ-szel) */}
+            {!fuggoleges && (
+              <>
+                <line x1={Q.x - dir.x * (R * RS + 10)} y1={Q.y - dir.y * (R * RS + 10)} x2={Q.x - dir.x * 6} y2={Q.y - dir.y * 6} stroke={LILA} strokeWidth="4" strokeLinecap="round" markerEnd="url(#gf-l)" />
+                <text x={Q.x - dir.x * (R * RS + 26)} y={Q.y - dir.y * (R * RS + 26) + 4} textAnchor="middle" style={{ fontSize: 12.5, fontWeight: 700, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                  R = {sz(R, 1)} kN/m
+                </text>
+              </>
+            )}
+            {fuggoleges && (
+              <text x={OX + 30 + Rx * RS} y={OY - hp / 3 + 18} style={{ fontSize: 12.5, fontWeight: 700, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                R = Rₓ = {sz(R, 1)} kN/m
+              </text>
+            )}
             <circle cx={Q.x} cy={Q.y} r="4" fill={LILA} stroke="white" strokeWidth="1.5" />
-            <text x={Q.x - dir.x * (R * RS + 22)} y={Q.y - dir.y * (R * RS + 22) + 4} textAnchor="middle" style={{ fontSize: 12.5, fontWeight: 700, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-              R = {sz(R, 1)} kN/m
-            </text>
 
             {/* méretek */}
             <line x1={SZ - 40} y1={OY} x2={SZ - 40} y2={TY} stroke="#94a3b8" strokeWidth="1" markerStart="url(#gf-m)" markerEnd="url(#gf-m)" />

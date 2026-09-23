@@ -164,7 +164,7 @@ export default function TengelyNyomatekFelfedezo() {
                   : metszi
                     ? "Az erő hatásvonala metszi a t tengelyt — a karja nulla, nem forgat."
                     : nulla
-                      ? "M₀ merőleges a tengelyre."
+                      ? "A nyomatékvektor merőleges a tengelyre."
                       : `Az erő hatásvonala kitérő a tengelyhez képest. Mₜ = ${sz(Mt, 2)} kNm: a t felől nézve ${Mt > 0 ? "az óramutatóval ellentétesen" : "az óramutató járásával egyezően"} forgat.`}
             </p>
             <p className="mt-1 text-[12px] text-petrol-500">

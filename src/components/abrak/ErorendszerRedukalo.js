@@ -126,6 +126,11 @@ export default function ErorendszerRedukalo() {
             className="abra w-full touch-none select-none"
           >
             <NyilHegyek />
+            <defs>
+              <marker id="hegy-bordo" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#be123c" />
+              </marker>
+            </defs>
             <Tengelyek ox={OX} oy={OY} balra={230} jobbra={390} fel={230} le={170} />
 
             {/* --- eredeti erők --- */}
@@ -206,7 +211,7 @@ export default function ErorendszerRedukalo() {
                       fill="none"
                       stroke="#be123c"
                       strokeWidth="2.8"
-                      markerEnd="url(#hegy-ero)"
+                      markerEnd="url(#hegy-bordo)"
                     />
                     <Cimke x={OX - 62} y={OY - 58} szin="#be123c" meret={12.5}>
                       M = {sz(Mo, 1)} kNm
@@ -267,10 +272,10 @@ export default function ErorendszerRedukalo() {
                       fill="none"
                       stroke="#be123c"
                       strokeWidth="2.8"
-                      markerEnd="url(#hegy-ero)"
+                      markerEnd="url(#hegy-bordo)"
                     />
                     <Cimke x={OX - 62} y={OY - 58} szin="#be123c" meret={12.5}>
-                      tiszta erőpár
+                      erőpár: M = {sz(Mo, 1)} kNm
                     </Cimke>
                   </>
                 ) : (

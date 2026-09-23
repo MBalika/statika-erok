@@ -5,6 +5,8 @@ import { M, MB } from "@/components/ui/Keplet";
 import { derekszogu, sz, zarojel } from "@/lib/szamok";
 
 const egesz = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+/** A lebegőpontos „−0” helyett pontosan 0. */
+const tiszta = (v) => (Math.abs(v) < 5e-7 ? 0 : v);
 const nemNulla = (min, max) => {
   let v = 0;
   while (v === 0) v = egesz(min, max);
@@ -18,8 +20,9 @@ function ferdeFeladat() {
   const a = egesz(1, 35) * 10;
   const x = nemNulla(-6, 8);
   const y = nemNulla(-5, 6);
-  const k = derekszogu(F, a);
-  const Mo = x * k.y - y * k.x;
+  const k0 = derekszogu(F, a);
+  const k = { x: tiszta(k0.x), y: tiszta(k0.y) };
+  const Mo = tiszta(x * k.y - y * k.x);
   const d = Math.abs(Mo) / F;
   return {
     szoveg: (
@@ -45,7 +48,7 @@ function ferdeFeladat() {
         <MB>{`M^{(O)} = x F_y - y F_x = ${zarojel(x, 0)}\\cdot ${zarojel(k.y, 3)} - ${zarojel(y, 0)}\\cdot ${zarojel(k.x, 3)} = ${sz(Mo, 2)}\\ \\text{kNm}`}</MB>
         <MB>{`d = \\frac{|M|}{F} = \\frac{${sz(Math.abs(Mo), 2)}}{${F}} = ${sz(d, 3)}\\ \\text{m}`}</MB>
         <p className="mt-2 text-[13px] text-petrol-600">
-          {Mo > 0 ? "Pozitív: az óramutatóval ellentétesen forgat az origó körül." : "Negatív: az óramutató irányába forgat az origó körül."}
+          {Mo > 0 ? "Pozitív: az óramutatóval ellentétesen forgat az origó körül." : Mo < 0 ? "Negatív: az óramutató irányába forgat az origó körül." : "Nulla: a hatásvonal átmegy az origón, az erőkar nulla."}
         </p>
       </>
     ),
@@ -134,7 +137,7 @@ function eroEsParFeladat() {
   const a = nemNulla(-5, 6);
   const Mp = nemNulla(-40, 40);
   const Mo = a * Fy + Mp;
-  const x0 = Mo / Fy;
+  const x0 = tiszta(Mo / Fy);
   return {
     szoveg: (
       <p>
@@ -236,7 +239,7 @@ function dinamFeladat() {
   const R = erok.reduce((s, e) => s + e.F, 0);
   const Mo = erok.reduce((s, e) => s + e.hely * e.F, 0) + nyomatekok.reduce((s, v) => s + v, 0);
   const eroE = Math.abs(R) > 1e-9;
-  const xR = eroE ? Mo / R : 0;
+  const xR = eroE ? tiszta(Mo / R) : 0;
   const Mered = eroE ? 0 : Mo;
 
   return {
@@ -336,7 +339,7 @@ function erocsavarFeladat() {
     R = veletlen3();
     Mv = veletlen3();
   }
-  const RM = R[0] * Mv[0] + R[1] * Mv[1] + R[2] * Mv[2];
+  const RM = tiszta(R[0] * Mv[0] + R[1] * Mv[1] + R[2] * Mv[2]);
   const Rh = Math.hypot(...R);
   const Mh = Math.hypot(...Mv);
   const kod = Rh < 1e-9 ? (Mh < 1e-9 ? 1 : 2) : RM === 0 ? 3 : 4;

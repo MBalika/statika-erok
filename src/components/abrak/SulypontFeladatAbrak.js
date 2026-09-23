@@ -125,8 +125,10 @@ export function AbraNegyedkorIdom({ mutatS = false, reszek = false }) {
       {reszek && (
         <>
           <rect x={X(50)} y={Y(0)} width={50 * m} height={50 * m} fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="4 3" />
-          <text x={X(45)} y={Y(45)} fontSize="12" fontWeight="650" fill="#1d3c48">A₁ − A₂</text>
-          <text x={X(-30)} y={Y(16)} fontSize="12" fontWeight="650" fill="#1d3c48">A₃</text>
+          {/* a megmaradó rész felirata az anyagban (a sarok közelében), a kivont negyedköré az üres részben */}
+          <text x={X(30)} y={Y(6.5)} fontSize="11.5" fontWeight="650" style={{ fill: "#1d3c48", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>A₁ − A₂</text>
+          <text x={X(46)} y={Y(45)} fontSize="11.5" fontWeight="650" fill="#be123c">A₂ (kivonva)</text>
+          <text x={X(-6)} y={Y(13)} fontSize="12" fontWeight="650" fill="#1d3c48">A₃</text>
           <circle cx={X(50 - 21.22)} cy={Y(50 - 21.22)} r="3" fill="#be123c" />
           <text x={X(50 - 21.22) + 6} y={Y(50 - 21.22) - 6} fontSize="11" fill="#be123c">S₂</text>
           <circle cx={X(-21.22)} cy={Y(50 - 21.22)} r="3" fill="#1d3c48" />

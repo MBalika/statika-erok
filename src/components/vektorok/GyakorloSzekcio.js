@@ -18,6 +18,12 @@ import {
 const egesz = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 const valaszt = (tomb) => tomb[Math.floor(Math.random() * tomb.length)];
 const tizedes = (min, max) => Math.round((min + Math.random() * (max - min)) * 10) / 10;
+/** A 90°, 180°, 270° körüli lebegőpontos „−0,000” helyett pontosan 0. */
+const tiszta = (v) => (Math.abs(v) < 5e-7 ? 0 : v);
+const komponensek = (F, a) => {
+  const k = derekszogu(F, a);
+  return { x: tiszta(k.x), y: tiszta(k.y) };
+};
 
 /* ---------- 1. Komponensekre bontás ---------- */
 
@@ -29,7 +35,7 @@ function komponensFeladat() {
     egesz(190, 260),
     egesz(280, 350),
   ]);
-  const { x: Fx, y: Fy } = derekszogu(F, alfa);
+  const { x: Fx, y: Fy } = komponensek(F, alfa);
 
   return {
     szoveg: (
@@ -69,9 +75,9 @@ function eredoFeladat() {
     F: egesz(2, 12),
     a: egesz(0, 35) * 10,
   }));
-  const k = erok.map((e) => derekszogu(e.F, e.a));
-  const Rx = k.reduce((s, v) => s + v.x, 0);
-  const Ry = k.reduce((s, v) => s + v.y, 0);
+  const k = erok.map((e) => komponensek(e.F, e.a));
+  const Rx = tiszta(k.reduce((s, v) => s + v.x, 0));
+  const Ry = tiszta(k.reduce((s, v) => s + v.y, 0));
   const R = polaris(Rx, Ry);
   const alfaR = R.szog > 180 ? R.szog - 360 : R.szog;
 
@@ -152,8 +158,10 @@ function vetuletFeladat() {
   const F = egesz(3, 15);
   const alfa = egesz(0, 35) * 10;
   const t = valaszt([20, 35, 50, 65, 110, 125, 140, 155]);
-  const bezart = alfa - t;
-  const Ft = F * Math.cos(fokRad(bezart));
+  // a bezárt szög mindig 0° és 180° között: |α − t|, és ha ez 180°-nál nagyobb, 360° − |α − t|
+  const kulonbseg = Math.abs(alfa - t);
+  const bezart = kulonbseg > 180 ? 360 - kulonbseg : kulonbseg;
+  const Ft = tiszta(F * Math.cos(fokRad(bezart)));
 
   return {
     szoveg: (
@@ -166,8 +174,8 @@ function vetuletFeladat() {
     sugo: (
       <p>
         A vetület <M>{"F_t = F\\cos\\vartheta"}</M>, ahol{" "}
-        <M>{"\\vartheta"}</M> az erő és a tengely által bezárt szög. Itt{" "}
-        <M>{`\\vartheta = ${alfa}^\\circ - ${t}^\\circ`}</M>. Ha a bezárt szög
+        <M>{"\\vartheta"}</M> az erő és a tengely által bezárt szög (0° és 180° között). Itt{" "}
+        <M>{`\\vartheta = |${alfa}^\\circ - ${t}^\\circ|${kulonbseg > 180 ? ` = ${kulonbseg}^\\circ \\to 360^\\circ - ${kulonbseg}^\\circ` : ""}`}</M>. Ha a bezárt szög
         tompaszög, a vetület negatív lesz.
       </p>
     ),
@@ -177,8 +185,8 @@ function vetuletFeladat() {
     oszlopok: 1,
     megoldas: (
       <>
-        <MB>{`\\vartheta = ${alfa}^\\circ - ${t}^\\circ = ${bezart}^\\circ`}</MB>
-        <MB>{`F_t = F\\cos\\vartheta = ${F}\\cdot\\cos(${bezart}^\\circ) = ${sz(Ft, 3)}\\ \\text{kN}`}</MB>
+        <MB>{`\\vartheta = |\\alpha - \\alpha_t| = |${alfa}^\\circ - ${t}^\\circ| = ${kulonbseg}^\\circ${kulonbseg > 180 ? ` \\;\\to\\; 360^\\circ - ${kulonbseg}^\\circ = ${bezart}^\\circ` : ""}`}</MB>
+        <MB>{`F_t = F\\cos\\vartheta = ${F}\\cdot\\cos ${bezart}^\\circ = ${sz(Ft, 3)}\\ \\text{kN}`}</MB>
         <p className="mt-2 text-[13px] text-petrol-600">
           {Ft < 0
             ? "A negatív előjel azt jelenti, hogy a vetület a t tengely irányával ellentétes."
@@ -194,12 +202,17 @@ function vetuletFeladat() {
 function egyensulyFeladat() {
   const F1 = egesz(4, 14);
   const a1 = egesz(2, 16) * 10;
-  const F2 = egesz(4, 14);
-  const a2 = a1 + egesz(8, 20) * 10;
-  const k1 = derekszogu(F1, a1);
-  const k2 = derekszogu(F2, a2);
-  const F3x = -(k1.x + k2.x);
-  const F3y = -(k1.y + k2.y);
+  let F2 = egesz(4, 14);
+  let a2 = a1 + egesz(8, 20) * 10;
+  // ha a két erő pontosan kiejtené egymást, a keresett erő zérus lenne – ilyet nem adunk fel
+  while (F2 === F1 && a2 - a1 === 180) {
+    F2 = egesz(4, 14);
+    a2 = a1 + egesz(8, 20) * 10;
+  }
+  const k1 = komponensek(F1, a1);
+  const k2 = komponensek(F2, a2);
+  const F3x = tiszta(-(k1.x + k2.x));
+  const F3y = tiszta(-(k1.y + k2.y));
   const F3 = polaris(F3x, F3y);
   const alfa3 = F3.szog > 180 ? F3.szog - 360 : F3.szog;
 

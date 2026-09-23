@@ -51,7 +51,7 @@ const FEJEZETEK = [
     t0: 11.6,
     cim: "Az eredmény: negatív y_S",
     szoveg: "A két negyedkör területe kiejti egymást (A = 2 500 cm²), a z tengelyre vett statikai nyomatékuk viszont nem. z_S = 25 cm a szimmetria miatt; y_S negatív, mert a súlypont a z tengelytől jobbra van.",
-    kepletek: ["y_S = \\frac{62\\,500 - 56\\,508 - 41\\,667}{2\\,500} = -14{,}27\\ \\text{cm},\\qquad z_S = 25\\ \\text{cm}"],
+    kepletek: ["y_S = \\frac{62\\,500 - 56\\,509{,}5 - 41\\,665{,}5}{2\\,500} = \\frac{-35\\,675}{2\\,500} = -14{,}27\\ \\text{cm},\\qquad z_S = 25\\ \\text{cm}"],
   },
 ];
 
@@ -127,8 +127,9 @@ function Rajz(t) {
         <VonalA x1={OX} y1={Y(50) + 60} x2={X(S123.y)} y2={Y(50) + 60} szin={NAR} vastag={1.3} szaggatott={false} />
         <FeliratA x={X(S123.y / 2)} y={Y(50) + 75} szin={NAR} meret={12}>yₛ = −14,27 cm (a z tengelytől jobbra)</FeliratA>
         <VonalA x1={X(S123.y)} y1={Y(S123.z)} x2={X(S123.y)} y2={Y(50) + 64} szin={NAR} opacitas={0.6} />
-        <VonalA x1={X(-50) + 30} y1={Y(0)} x2={X(-50) + 30} y2={Y(S123.z)} szin={NAR} vastag={1.3} szaggatott={false} />
-        <FeliratA x={X(-50) + 36} y={Y(S123.z / 2) + 4} szin={NAR} meret={12} horgony="start">zₛ = 25 cm</FeliratA>
+        <VonalA x1={X(-50) + 64} y1={Y(0)} x2={X(-50) + 64} y2={Y(S123.z)} szin={NAR} vastag={1.3} szaggatott={false} />
+        <VonalA x1={X(S123.y)} y1={Y(S123.z)} x2={X(-50) + 68} y2={Y(S123.z)} szin={NAR} opacitas={0.6} />
+        <FeliratA x={X(-50) + 58} y={Y(S123.z / 2) + 4} szin={NAR} meret={12} horgony="end">zₛ = 25 cm</FeliratA>
       </g>
     </svg>
   );

@@ -180,6 +180,29 @@ export function AbraHaromEset() {
 /* ---------------- Térbeli nyomaték ---------------- */
 
 export function AbraTerbeliNyomatekElv() {
+  // Ferde (kavalier) vetítés: x jobbra, y felfelé, z a néző felé (balra-lefelé), z-t rövidítve.
+  const OX = 150;
+  const OY = 150;
+  const pr = (x, y, z) => [OX + x - 0.553 * z, OY - y + 0.427 * z];
+  // r az xz-síkban (a „padlón”), F függőlegesen lefelé → M = r × F is a padlóban, r-re és F-re merőlegesen
+  const r = [170, 0, 60];
+  const F = [0, -110, 0];
+  const M = [r[1] * F[2] - r[2] * F[1], r[2] * F[0] - r[0] * F[2], r[0] * F[1] - r[1] * F[0]]; // (6600; 0; −18700)
+  const mh = Math.hypot(M[0], M[1], M[2]);
+  const mL = 130; // az M nyíl rajzolt hossza (a nyomaték léptéke más, mint a távolságé)
+  const Mv = M.map((c) => (c / mh) * mL);
+  const O = pr(0, 0, 0);
+  const P = pr(...r);
+  const PF = pr(r[0] + F[0], r[1] + F[1], r[2] + F[2]);
+  const OF = pr(...F);
+  const Mt = pr(...Mv);
+  const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+  const rk = mid(O, P);
+  const fk = mid(P, PF);
+  const mk = mid(O, Mt);
+  const xT = pr(280, 0, 0);
+  const yT = pr(0, 92, 0);
+  const zT = pr(0, 0, 190);
   return (
     <svg viewBox="0 0 500 320" className="abra w-full">
       <defs>
@@ -189,32 +212,40 @@ export function AbraTerbeliNyomatekElv() {
         <Hegy id="tn-m" szin="#7c3aed" />
       </defs>
 
-      <line x1="140" y1="220" x2="420" y2="220" stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
-      <line x1="140" y1="220" x2="140" y2="66" stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
-      <line x1="140" y1="220" x2="55" y2="285" stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
-      <text x="426" y="225" fontSize="13" fontStyle="italic" fill="#1d3c48">x</text>
-      <text x="128" y="70" fontSize="13" fontStyle="italic" fill="#1d3c48">y</text>
-      <text x="46" y="298" fontSize="13" fontStyle="italic" fill="#1d3c48">z</text>
+      {/* tengelyek */}
+      <line x1={O[0]} y1={O[1]} x2={xT[0]} y2={xT[1]} stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
+      <line x1={O[0]} y1={O[1]} x2={yT[0]} y2={yT[1]} stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
+      <line x1={O[0]} y1={O[1]} x2={zT[0]} y2={zT[1]} stroke="#475569" strokeWidth="1.4" markerEnd="url(#tn-t)" />
+      <text x={xT[0] + 6} y={xT[1] + 5} fontSize="13" fontStyle="italic" fill="#1d3c48">x</text>
+      <text x={yT[0] - 12} y={yT[1] + 4} fontSize="13" fontStyle="italic" fill="#1d3c48">y</text>
+      <text x={zT[0] - 6} y={zT[1] + 14} fontSize="13" fontStyle="italic" fill="#1d3c48">z</text>
+      <text x={O[0] - 14} y={O[1] - 6} fontSize="12" fontWeight="600" fill="#475569">O</text>
+
+      {/* az r és az F síkja (halvány négyszög): O, P, P+F, F */}
+      <path d={`M ${O[0]} ${O[1]} L ${P[0]} ${P[1]} L ${PF[0]} ${PF[1]} L ${OF[0]} ${OF[1]} Z`} fill="#8ec3cd" fillOpacity="0.18" stroke="#8ec3cd" strokeWidth="1" strokeDasharray="4 3" />
 
       {/* helyvektor */}
-      <line x1="140" y1="220" x2="290" y2="140" stroke="#0f766e" strokeWidth="2.8" strokeLinecap="round" markerEnd="url(#tn-r)" />
-      <text x="200" y="170" fontSize="14" fontWeight="650" fill="#0f766e" fontStyle="italic">r</text>
-      <circle cx="290" cy="140" r="4.5" fill="#1d3c48" />
-      <text x="296" y="134" fontSize="12" fill="#64748b">P</text>
+      <line x1={O[0]} y1={O[1]} x2={P[0]} y2={P[1]} stroke="#0f766e" strokeWidth="2.8" strokeLinecap="round" markerEnd="url(#tn-r)" />
+      <text x={rk[0] - 6} y={rk[1] + 20} fontSize="14" fontWeight="650" fill="#0f766e" fontStyle="italic">r</text>
+      <circle cx={P[0]} cy={P[1]} r="4.5" fill="#1d3c48" />
+      <text x={P[0] + 8} y={P[1] - 6} fontSize="12" fill="#64748b">P</text>
 
       {/* erő */}
-      <line x1="290" y1="140" x2="370" y2="82" stroke="#e2590a" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#tn-ero)" />
-      <text x="345" y="118" fontSize="14" fontWeight="650" fill="#e2590a" fontStyle="italic">F</text>
+      <line x1={P[0]} y1={P[1]} x2={PF[0]} y2={PF[1]} stroke="#e2590a" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#tn-ero)" />
+      <text x={fk[0] + 10} y={fk[1] + 5} fontSize="14" fontWeight="650" fill="#e2590a" fontStyle="italic">F</text>
 
-      {/* nyomatékvektor */}
-      <line x1="140" y1="220" x2="205" y2="288" stroke="#7c3aed" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#tn-m)" />
-      <text x="200" y="268" fontSize="14" fontWeight="700" fill="#7c3aed" fontStyle="italic">M</text>
+      {/* nyomatékvektor: merőleges r-re és F-re (a padlóban, hátrafelé) */}
+      <line x1={O[0]} y1={O[1]} x2={Mt[0]} y2={Mt[1]} stroke="#7c3aed" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#tn-m)" />
+      <text x={mk[0] + 8} y={mk[1] - 8} fontSize="14" fontWeight="700" fill="#7c3aed" fontStyle="italic">M</text>
+      {/* derékszög-jelek az origónál: M ⊥ r és M ⊥ F */}
+      <path d={`M ${O[0] + (P[0] - O[0]) * 0.09} ${O[1] + (P[1] - O[1]) * 0.09} l ${(Mt[0] - O[0]) * 0.1} ${(Mt[1] - O[1]) * 0.1} l ${-(P[0] - O[0]) * 0.09} ${-(P[1] - O[1]) * 0.09}`} fill="none" stroke="#94a3b8" strokeWidth="1.1" />
+      <path d={`M ${O[0] + (OF[0] - O[0]) * 0.12} ${O[1] + (OF[1] - O[1]) * 0.12} l ${(Mt[0] - O[0]) * 0.1} ${(Mt[1] - O[1]) * 0.1} l ${-(OF[0] - O[0]) * 0.12} ${-(OF[1] - O[1]) * 0.12}`} fill="none" stroke="#94a3b8" strokeWidth="1.1" />
 
-      <text x="20" y="26" fontSize="12.5" fill="#1d3c48">
-        M = r × F — a nyomatékvektor merőleges az r és az F síkjára
+      <text x="20" y="24" fontSize="12.5" fill="#1d3c48">
+        M = r × F: merőleges az r és az F síkjára (halvány négyszög)
       </text>
-      <text x="20" y="46" fontSize="11.5" fill="#94a3b8">
-        irányát a jobbkéz-szabály adja meg
+      <text x="20" y="42" fontSize="11.5" fill="#94a3b8">
+        irány: jobbkéz-szabály — az ujjak r-től F felé, a hüvelykujj M
       </text>
     </svg>
   );

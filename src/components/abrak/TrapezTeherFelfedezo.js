@@ -283,7 +283,7 @@ export default function TrapezTeherFelfedezo() {
           <div className="mt-3 rounded-xl border border-naracs-200 bg-naracs-50 px-4 py-3">
             <p className="text-[10.5px] font-bold tracking-[0.16em] text-naracs-700 uppercase">Az eredő</p>
             <p className="szamok mt-1 text-[16px] font-semibold text-petrol-900">
-              R = {sz(R, 3)} kN, a bal végtől k = {sz(k, 3)} m-re
+              {R > 1e-9 ? `R = ${sz(R, 3)} kN, a bal végtől k = ${sz(k, 3)} m-re` : "R = 0 kN — nincs teher, nincs eredő"}
             </p>
             <p className="mt-0.5 text-[12.5px] text-petrol-600">
               Kapcsolgasd a három nézetet: a felbontás módja változik, az eredő nem.

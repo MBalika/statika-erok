@@ -283,6 +283,14 @@ export function AbraOsszeadas() {
 /* ---------------- Zárt vektorsokszög = egyensúly ---------------- */
 
 export function AbraEgyensuly() {
+  // Ugyanaz a három vektor mindkét rajzon: F1 + F2 + F3 = 0.
+  const F1 = { x: -70, y: -65 };
+  const F2 = { x: 95, y: -30 };
+  const F3 = { x: -(F1.x + F2.x), y: -(F1.y + F2.y) }; // (−25; 95)
+  const P = { x: 130, y: 118 }; // közös metszéspont (bal)
+  const K = { x: 320, y: 200 }; // a lánc kiindulópontja (jobb)
+  const L1 = { x: K.x + F1.x, y: K.y + F1.y };
+  const L2 = { x: L1.x + F2.x, y: L1.y + F2.y };
   return (
     <svg viewBox="0 0 520 240" className="abra w-full">
       <defs>
@@ -295,30 +303,30 @@ export function AbraEgyensuly() {
       <text x="20" y="26" fontSize="12.5" fontWeight="650" fill="#275767">
         Három erő egy ponton
       </text>
-      <circle cx="130" cy="135" r="4" fill="#1d3c48" />
-      <line x1="130" y1="135" x2="60" y2="70" stroke="#e2590a" strokeWidth="3" strokeLinecap="round" markerEnd="url(#eg-1)" />
-      <line x1="130" y1="135" x2="225" y2="105" stroke="#0f766e" strokeWidth="3" strokeLinecap="round" markerEnd="url(#eg-2)" />
-      <line x1="130" y1="135" x2="150" y2="215" stroke="#2563eb" strokeWidth="3" strokeLinecap="round" markerEnd="url(#eg-3)" />
-      <text x="68" y="62" fontSize="13" fontWeight="650" fill="#e2590a">F₁</text>
-      <text x="228" y="98" fontSize="13" fontWeight="650" fill="#0f766e">F₂</text>
-      <text x="156" y="212" fontSize="13" fontWeight="650" fill="#2563eb">F₃</text>
+      <circle cx={P.x} cy={P.y} r="4" fill="#1d3c48" />
+      <line x1={P.x} y1={P.y} x2={P.x + F1.x} y2={P.y + F1.y} stroke="#e2590a" strokeWidth="3" strokeLinecap="round" markerEnd="url(#eg-1)" />
+      <line x1={P.x} y1={P.y} x2={P.x + F2.x} y2={P.y + F2.y} stroke="#0f766e" strokeWidth="3" strokeLinecap="round" markerEnd="url(#eg-2)" />
+      <line x1={P.x} y1={P.y} x2={P.x + F3.x} y2={P.y + F3.y} stroke="#2563eb" strokeWidth="3" strokeLinecap="round" markerEnd="url(#eg-3)" />
+      <text x={P.x + F1.x + 8} y={P.y + F1.y - 6} fontSize="13" fontWeight="650" fill="#e2590a">F₁</text>
+      <text x={P.x + F2.x + 4} y={P.y + F2.y - 7} fontSize="13" fontWeight="650" fill="#0f766e">F₂</text>
+      <text x={P.x + F3.x + 10} y={P.y + F3.y + 4} fontSize="13" fontWeight="650" fill="#2563eb">F₃</text>
 
-      {/* jobb: zárt háromszög – a lánc pontosan visszaér a kiindulópontba */}
-      <text x="300" y="26" fontSize="12.5" fontWeight="650" fill="#275767">
+      {/* jobb: zárt háromszög – ugyanazok a vektorok egymás után fűzve, a lánc visszaér a kiindulópontba */}
+      <text x="270" y="26" fontSize="12.5" fontWeight="650" fill="#275767">
         A vektorháromszög bezárul
       </text>
-      <line x1="325" y1="205" x2="258" y2="140" stroke="#e2590a" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#eg-1)" />
-      <line x1="258" y1="140" x2="360" y2="112" stroke="#0f766e" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#eg-2)" />
-      <line x1="360" y1="112" x2="325" y2="205" stroke="#2563eb" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#eg-3)" />
-      <circle cx="325" cy="205" r="6" fill="none" stroke="#15803d" strokeWidth="2.2" />
-      <text x="266" y="186" fontSize="13" fontWeight="650" fill="#e2590a">F₁</text>
-      <text x="292" y="118" fontSize="13" fontWeight="650" fill="#0f766e">F₂</text>
-      <text x="368" y="165" fontSize="13" fontWeight="650" fill="#2563eb">F₃</text>
-      <line x1="325" y1="205" x2="392" y2="216" stroke="#15803d" strokeWidth="0.9" />
-      <text x="396" y="213" fontSize="11.5" fill="#15803d" fontWeight="600">
+      <line x1={K.x} y1={K.y} x2={L1.x} y2={L1.y} stroke="#e2590a" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#eg-1)" />
+      <line x1={L1.x} y1={L1.y} x2={L2.x} y2={L2.y} stroke="#0f766e" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#eg-2)" />
+      <line x1={L2.x} y1={L2.y} x2={K.x} y2={K.y} stroke="#2563eb" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#eg-3)" />
+      <circle cx={K.x} cy={K.y} r="6" fill="none" stroke="#15803d" strokeWidth="2.2" />
+      <text x={(K.x + L1.x) / 2 - 22} y={(K.y + L1.y) / 2 + 4} fontSize="13" fontWeight="650" fill="#e2590a">F₁</text>
+      <text x={(L1.x + L2.x) / 2 - 4} y={(L1.y + L2.y) / 2 - 10} fontSize="13" fontWeight="650" fill="#0f766e">F₂</text>
+      <text x={(L2.x + K.x) / 2 + 10} y={(L2.y + K.y) / 2 + 4} fontSize="13" fontWeight="650" fill="#2563eb">F₃</text>
+      <line x1={K.x + 6} y1={K.y + 3} x2={K.x + 40} y2={K.y + 20} stroke="#15803d" strokeWidth="0.9" />
+      <text x={K.x + 44} y={K.y + 18} fontSize="11.5" fill="#15803d" fontWeight="600">
         az utolsó vektor vége
       </text>
-      <text x="396" y="228" fontSize="11.5" fill="#15803d" fontWeight="600">
+      <text x={K.x + 44} y={K.y + 33} fontSize="11.5" fill="#15803d" fontWeight="600">
         a kiindulópontba ér
       </text>
     </svg>
@@ -493,7 +501,7 @@ export function AbraErorendszerFajtai() {
       <Hv x1={300} y1={330} x2={420} y2={240} />
       <Hv x1={395} y1={250} x2={470} y2={380} />
       <Hv x1={330} y1={360} x2={540} y2={340} />
-      <Ero x1={330} y1={307} x2={385} y2={266} szin={NAR} hegy="ef-1" nev="F₁" dx={10} dy={-4} />
+      <Ero x1={330} y1={307} x2={385} y2={266} szin={NAR} hegy="ef-1" nev="F₁" dx={-4} dy={-10} />
       <Ero x1={404} y1={265.6} x2={430} y2={310.7} szin={TEAL} hegy="ef-2" nev="F₂" dx={14} dy={4} />
       <Ero x1={345} y1={358.6} x2={405} y2={352.9} szin={KEK} hegy="ef-3" nev="F₃" dx={-6} dy={18} />
     </svg>

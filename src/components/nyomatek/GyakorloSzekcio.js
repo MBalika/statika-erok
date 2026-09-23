@@ -7,6 +7,8 @@ import { derekszogu, polaris, sz, szEl, zarojel } from "@/lib/szamok";
 
 const egesz = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 const valaszt = (tomb) => tomb[Math.floor(Math.random() * tomb.length)];
+/** A lebegőpontos „−0” és a 90°-os szögek 1e-16-os komponensei helyett pontosan 0. */
+const tiszta = (v) => (Math.abs(v) < 5e-7 ? 0 : v);
 const nemNulla = (min, max) => {
   let v = 0;
   while (v === 0) v = egesz(min, max);
@@ -20,8 +22,9 @@ function nyomatekFeladat() {
   const y = nemNulla(-4, 6);
   const F = egesz(3, 14);
   const alfa = valaszt([0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 240, 270, 300, 330]);
-  const k = derekszogu(F, alfa);
-  const Mo = x * k.y - y * k.x;
+  const k0 = derekszogu(F, alfa);
+  const k = { x: tiszta(k0.x), y: tiszta(k0.y) };
+  const Mo = tiszta(x * k.y - y * k.x);
   const kar = Math.abs(Mo) / F;
 
   return {
@@ -53,7 +56,9 @@ function nyomatekFeladat() {
         <p className="mt-2 text-[13px] text-petrol-600">
           {Mo > 0
             ? "A pozitív érték azt jelenti, hogy az erő az óramutatóval ellentétesen forgat az origó körül."
-            : "A negatív érték azt jelenti, hogy az erő az óramutató járásával egyezően forgat."}
+            : Mo < 0
+              ? "A negatív érték azt jelenti, hogy az erő az óramutató járásával egyezően forgat."
+              : "A nyomaték nulla: a hatásvonal átmegy az origón, az erő karja nulla — az erő nem forgat az origó körül."}
         </p>
       </>
     ),
@@ -110,7 +115,7 @@ function parhuzamosFeladat() {
   // a lefelé mutató erőt negatív Fy-nal írjuk le
   const R = erok.reduce((s, e) => s - e.ero, 0); // Fy = -ero
   const Mo = erok.reduce((s, e) => s + e.hely * -e.ero, 0);
-  const xR = Math.abs(R) > 1e-9 ? Mo / R : null;
+  const xR = Math.abs(R) > 1e-9 ? tiszta(Mo / R) : null;
 
   return {
     szoveg: (
@@ -154,7 +159,7 @@ function parhuzamosFeladat() {
     mezok: [
       { id: "r", cimke: "Ry (felfelé a pozitív)", egyseg: "kN", helyes: R, tizedes: 1 },
       { id: "m", cimke: "M⁽ᴼ⁾", egyseg: "kNm", helyes: Mo, tizedes: 1 },
-      { id: "x", cimke: "az eredő helye, xR", egyseg: "m", helyes: xR ?? 0, tizedes: 3 },
+      ...(xR !== null ? [{ id: "x", cimke: "az eredő helye, xR", egyseg: "m", helyes: xR, tizedes: 3 }] : []),
     ],
     megoldas: (
       <>
@@ -190,14 +195,17 @@ function redukalasFeladat() {
   const Ry = erok.reduce((s, e) => s + e.Fy, 0);
   const Mo = erok.reduce((s, e) => s + e.x * e.Fy - e.y * e.Fx, 0);
   const R = polaris(Rx, Ry);
-  const x0 = Math.abs(Ry) > 1e-9 ? Mo / Ry : null;
+  const x0 = Math.abs(Ry) > 1e-9 ? tiszta(Mo / Ry) : null;
+  // ha az eredő vízszintes (Ry = 0), a hatásvonal az x tengellyel párhuzamos: az y tengellyel való metszést kérdezzük
+  const y0 = x0 === null && Math.abs(Rx) > 1e-9 ? tiszta(-Mo / Rx) : null;
 
   return {
     szoveg: (
       <>
         <p>
           Redukáld az alábbi erőrendszert az origóra, majd add meg az eredő
-          nagyságát és azt, hol metszi a hatásvonala az <M>{"x"}</M> tengelyt!
+          nagyságát és azt, hol metszi a hatásvonala az <M>{y0 !== null ? "y" : "x"}</M> tengelyt!
+          {y0 !== null && " (Az eredő vízszintes, ezért az x tengelyt nem metszi.)"}
         </p>
         <div className="finom-gorgeto mt-2 overflow-x-auto">
           <table className="szamok w-full max-w-md text-[13px]">
@@ -249,7 +257,9 @@ function redukalasFeladat() {
       { id: "r", cimke: "R (nagyság)", egyseg: "kN", helyes: R.nagysag, tizedes: 3 },
       ...(x0 !== null
         ? [{ id: "x0", cimke: "x₀", egyseg: "m", helyes: x0, tizedes: 3 }]
-        : []),
+        : y0 !== null
+          ? [{ id: "y0", cimke: "y₀", egyseg: "m", helyes: y0, tizedes: 3 }]
+          : []),
     ],
     megoldas: (
       <>
@@ -259,13 +269,21 @@ function redukalasFeladat() {
         <MB>{`\\Mp{O} ${erok
           .map((e) =>
             e.Fx !== 0
-              ? `\\left(-${sz(e.y, 0)}\\cdot ${zarojel(e.Fx, 0)}\\right)`
+              ? `\\left(-${zarojel(e.y, 0)}\\cdot ${zarojel(e.Fx, 0)}\\right)`
               : `\\left(${zarojel(e.x, 0)}\\cdot ${zarojel(e.Fy, 0)}\\right)`,
           )
           .join(" + ")} = M^{(O)} \\;\\Rightarrow\\; M^{(O)} = ${sz(Mo, 1)}\\ \\text{kNm}`}</MB>
         <MB>{`R = \\sqrt{${zarojel(Rx, 1)}^2 + ${zarojel(Ry, 1)}^2} = ${sz(R.nagysag, 3)}\\ \\text{kN}`}</MB>
         {x0 !== null && (
           <MB>{`x_0 = \\frac{M^{(O)}}{R_y} = \\frac{${sz(Mo, 1)}}{${sz(Ry, 1)}} = ${sz(x0, 3)}\\ \\text{m}`}</MB>
+        )}
+        {y0 !== null && (
+          <MB>{`R_y = 0:\\ y_0 = -\\frac{M^{(O)}}{R_x} = -\\frac{${sz(Mo, 1)}}{${sz(Rx, 1)}} = ${sz(y0, 3)}\\ \\text{m}`}</MB>
+        )}
+        {x0 === null && y0 === null && (
+          <p className="mt-2 text-[13px] text-petrol-600">
+            Az eredő erő zérus: az eredő {Math.abs(Mo) > 1e-9 ? `a ${sz(Mo, 1)} kNm nyomaték (erőpár), minden pontra ugyanennyi` : "zérus — az erőrendszer egyensúlyi"}.
+          </p>
         )}
       </>
     ),

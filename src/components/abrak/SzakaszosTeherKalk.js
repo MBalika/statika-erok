@@ -42,7 +42,6 @@ export default function SzakaszosTeherKalk() {
   const [szakaszok, setSzakaszok] = useState(ELORE.gyf2);
 
   const teljesL = szakaszok.reduce((s, e) => s + e.L, 0) || 1;
-  const xLeptek = (JOBB - BAL) / teljesL;
   const pMax = Math.max(1, ...szakaszok.map((s) => Math.abs(s.p)));
   const pLeptek = 85 / pMax;
 
@@ -58,7 +57,12 @@ export default function SzakaszosTeherKalk() {
   const Mo = reszek.reduce((a, r) => a + r.R * r.x, 0);
   const k = Math.abs(R) > 1e-9 ? Mo / R : null;
 
-  const kepX = (x) => BAL + x * xLeptek;
+  // a rajz vízszintes tartománya: a terhelt hossz, és ha az eredő azon kívül esik, az is beleférjen
+  const xMin = Math.min(0, k ?? 0);
+  const xMax = Math.max(teljesL, k ?? teljesL);
+  const xLeptek = (JOBB - BAL) / (xMax - xMin);
+  const kivul = k !== null && (k < 0 || k > teljesL);
+  const kepX = (x) => BAL + (x - xMin) * xLeptek;
   const magassag = (p) => -p * pLeptek; // pozitív p felfelé rajzolva (a tartó fölé), a nyilak lefelé mutatnak
 
   const modosit = (i, mezo, ertek) =>
@@ -138,8 +142,9 @@ export default function SzakaszosTeherKalk() {
               );
             })}
 
-            {/* tartó */}
-            <line x1={BAL - 12} y1={TARTO_Y} x2={JOBB + 12} y2={TARTO_Y} stroke="#1d3c48" strokeWidth="4" strokeLinecap="round" />
+            {/* tartó (a terhelt hossz); ha az eredő kívül esik, a tengelyvonalat szaggatottan meghosszabbítjuk */}
+            {kivul && <line x1={kepX(xMin)} y1={TARTO_Y} x2={kepX(xMax)} y2={TARTO_Y} stroke="#94a3b8" strokeWidth="1.2" strokeDasharray="5 4" />}
+            <line x1={kepX(0) - 12} y1={TARTO_Y} x2={kepX(teljesL) + 12} y2={TARTO_Y} stroke="#1d3c48" strokeWidth="4" strokeLinecap="round" />
 
             {/* eredő */}
             {k !== null && (
@@ -160,7 +165,7 @@ export default function SzakaszosTeherKalk() {
                 <line x1={kepX(k)} y1={TARTO_Y + 6} x2={kepX(k)} y2={TARTO_Y + 150} stroke="#7c3aed" strokeWidth="1" strokeDasharray="3 3" opacity="0.6" />
                 <line x1={kepX(0)} y1={TARTO_Y + 146} x2={kepX(k)} y2={TARTO_Y + 146} stroke="#7c3aed" strokeWidth="1.1" markerStart="url(#hegy-szurke)" markerEnd="url(#hegy-szurke)" />
                 <Cimke x={kepX(k / 2)} y={TARTO_Y + 162} szin="#7c3aed" meret={11.5} vastag={false}>
-                  k = {sz(k, 3)} m
+                  k = {sz(k, 3)} m{kivul ? " (a terhelt szakaszon kívül!)" : ""}
                 </Cimke>
               </g>
             )}

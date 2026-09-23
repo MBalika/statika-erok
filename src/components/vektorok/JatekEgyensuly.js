@@ -262,9 +262,9 @@ export default function JatekEgyensuly() {
               <g key={i} style={{ pointerEvents: "none" }}>
                 <line x1={CS.x} y1={CS.y} x2={gx(e.x)} y2={gy(e.y)} stroke={e.szin} strokeWidth="3" strokeLinecap="round" markerEnd={`url(#je-${i})`} />
                 <text
-                  x={gx(e.x) + (e.x >= 0 ? 10 : -10)}
-                  y={gy(e.y) + (e.y >= 0 ? -6 : 14)}
-                  textAnchor={e.x >= 0 ? "start" : "end"}
+                  x={Math.max(48, Math.min(272, gx(e.x) + (e.x >= 0 ? 6 : -6)))}
+                  y={gy(e.y) + (e.y >= 0 ? -8 : 16)}
+                  textAnchor="middle"
                   fontWeight="650"
                   style={{ fontSize: 11.5, fill: e.szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}
                 >
@@ -278,7 +278,7 @@ export default function JatekEgyensuly() {
           {sajat && (
             <g style={{ pointerEvents: "none" }}>
               <Nyil x1={CS.x} y1={CS.y} x2={gx(sajat.x)} y2={gy(sajat.y)} szin={ellenorizve ? ellSzin : LILA} hegy={ellenorizve ? (zar ? "je-zold" : "je-piros") : "je-lila"} vastag={3.4} opacitas={ellenorizve ? 0.55 : 1} />
-              <text x={gx(sajat.x) + 10} y={gy(sajat.y) - 8} fontWeight="700" style={{ fontSize: 12, fill: ellenorizve ? ellSzin : LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+              <text x={Math.max(48, Math.min(272, gx(sajat.x)))} y={gy(sajat.y) + (sajat.y >= 0 ? -12 : 20)} textAnchor="middle" fontWeight="700" style={{ fontSize: 12, fill: ellenorizve ? ellSzin : LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
                 Fe = {sz(Math.hypot(sajat.x, sajat.y), 1)} kN
               </text>
             </g>
@@ -309,7 +309,7 @@ export default function JatekEgyensuly() {
           {adat && (
             <g style={{ pointerEvents: "none" }}>
               <circle cx={vx(0)} cy={vy(0)} r="4.5" fill="none" stroke="#1d3c48" strokeWidth="1.6" />
-              <text x={vx(0) - 8} y={vy(0) + 14} textAnchor="end" style={{ fontSize: 10, fill: "#475569" }}>
+              <text x={vx(0) < 400 ? vx(0) + 8 : vx(0) - 8} y={vy(0) + 14} textAnchor={vx(0) < 400 ? "start" : "end"} style={{ fontSize: 10, fill: "#475569" }}>
                 kezdőpont
               </text>
               {adat.erok.map((e, i) => {
@@ -351,7 +351,7 @@ export default function JatekEgyensuly() {
                       {ellU >= 1 && (
                         <>
                           <circle cx={vx(0)} cy={vy(0)} r={zar ? 9 : 7} fill="none" stroke={ellSzin} strokeWidth="2.5" />
-                          <text x={vx(0) + 14} y={vy(0) + 24} fontWeight="700" style={{ fontSize: 12, fill: ellSzin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                          <text x={vx(0) < 520 ? vx(0) + 14 : vx(0) - 14} y={vy(0) + 24} textAnchor={vx(0) < 520 ? "start" : "end"} fontWeight="700" style={{ fontSize: 12, fill: ellSzin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
                             {zar ? "bezárult ✓" : "nyitva maradt ✗"}
                           </text>
                         </>

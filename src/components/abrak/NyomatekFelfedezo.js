@@ -9,8 +9,9 @@ import { M } from "@/components/ui/Keplet";
 const SZ = 600;
 const MA = 400;
 const OX = 210;
-const OY = 250;
+const OY = 230;
 const LEPTEK = 26; // képpont / méter
+const NYIL = 3; // az erőnyíl hossza: F / NYIL méter (10 kN → 87 px, a rajzon belül marad)
 
 export default function NyomatekFelfedezo() {
   const [P, setP] = useState({ x: 4, y: 2 }); // támadáspont, méterben
@@ -42,9 +43,10 @@ export default function NyomatekFelfedezo() {
       const r = svg.getBoundingClientRect();
       const px = ((esem.clientX - r.left) / r.width) * SZ;
       const py = ((esem.clientY - r.top) / r.height) * MA;
+      // a tartomány úgy, hogy a leghosszabb erőnyíl is a rajzon belül maradjon
       setP({
-        x: Math.max(-6, Math.min(13, Math.round(((px - OX) / LEPTEK) * 2) / 2)),
-        y: Math.max(-5, Math.min(5, Math.round(((OY - py) / LEPTEK) * 2) / 2)),
+        x: Math.max(-4, Math.min(10, Math.round(((px - OX) / LEPTEK) * 2) / 2)),
+        y: Math.max(-3, Math.min(4, Math.round(((OY - py) / LEPTEK) * 2) / 2)),
       });
     };
     mozgat(e);
@@ -63,6 +65,20 @@ export default function NyomatekFelfedezo() {
 
   const forgasIrany = Mo > 0.001 ? "balra (pozitív)" : Mo < -0.001 ? "jobbra (negatív)" : "nem forgat";
 
+  // a „k = …” felirat helye: a kar közepénél, rá merőlegesen eltolva; ha a kar rövid, a talppont túloldalán
+  const Ts = { x: kepX(talp.x), y: kepY(talp.y) };
+  const dl = Math.hypot(Ts.x - OX, Ts.y - OY) || 1;
+  const u = { x: (Ts.x - OX) / dl, y: (Ts.y - OY) / dl };
+  let n = { x: -u.y, y: u.x };
+  if (n.y > 0) n = { x: -n.x, y: -n.y };
+  const kCimke =
+    dl < 44
+      ? { x: Ts.x + u.x * 40, y: Ts.y + u.y * 40 + 4 }
+      : { x: (OX + Ts.x) / 2 + n.x * 15, y: (OY + Ts.y) / 2 + n.y * 15 + 4 };
+  // az erőnyíl vége és a felirata (a rajzon belül tartva)
+  const veg = { x: kepX(P.x + Fx / NYIL), y: kepY(P.y + Fy / NYIL) };
+  const fCimke = { x: Math.max(40, Math.min(SZ - 44, veg.x + 18)), y: Math.max(14, Math.min(MA - 6, veg.y - 10)) };
+
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
       <div className="grid lg:grid-cols-[1.3fr_1fr] [&>*]:min-w-0">
@@ -73,7 +89,7 @@ export default function NyomatekFelfedezo() {
             className="abra w-full touch-none select-none"
           >
             <NyilHegyek />
-            <Tengelyek ox={OX} oy={OY} balra={190} jobbra={370} fel={215} le={135} />
+            <Tengelyek ox={OX} oy={OY} balra={190} jobbra={370} fel={200} le={150} />
 
             {/* hatásvonal */}
             <line
@@ -98,31 +114,15 @@ export default function NyomatekFelfedezo() {
                   strokeWidth="2"
                   strokeDasharray="5 3"
                 />
-                <Cimke
-                  x={(OX + kepX(talp.x)) / 2 - (talp.y / (kar || 1)) * 20}
-                  y={(OY + kepY(talp.y)) / 2 - (talp.x / (kar || 1)) * 20 + 4}
-                  szin="#7c3aed"
-                  meret={12.5}
-                >
+                <Cimke x={kCimke.x} y={kCimke.y} szin="#7c3aed" meret={12.5}>
                   k = {sz(kar, 2)} m
                 </Cimke>
               </>
             )}
 
             {/* az erő */}
-            <Nyil
-              x1={kepX(P.x)}
-              y1={kepY(P.y)}
-              x2={kepX(P.x + Fx / 2.2)}
-              y2={kepY(P.y + Fy / 2.2)}
-              szin="ero"
-              vastagsag={3.4}
-            />
-            <Cimke
-              x={kepX(P.x + Fx / 2.2) + 18}
-              y={kepY(P.y + Fy / 2.2) - 10}
-              szin="var(--color-jel-ero)"
-            >
+            <Nyil x1={kepX(P.x)} y1={kepY(P.y)} x2={veg.x} y2={veg.y} szin="ero" vastagsag={3.4} />
+            <Cimke x={fCimke.x} y={fCimke.y} szin="var(--color-jel-ero)">
               F = {sz(F, 1)} kN
             </Cimke>
 

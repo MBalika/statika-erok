@@ -76,6 +76,18 @@ function Rajz(t) {
         const magas = P * PL * (1 - cU[i]);
         return (
           <g key={i}>
+            {/* a teher körvonala halványan végig megmarad, akkor is, ha a nyilak már az eredőbe húzódtak */}
+            <rect
+              x={X(x0)}
+              y={s > 0 ? TY - P * PL : TY}
+              width={w * szakU[i]}
+              height={P * PL}
+              fill={SZ[i]}
+              stroke={SZ[i]}
+              strokeWidth="1"
+              strokeDasharray="4 3"
+              opacity={0.07 + 0.07 * cU[i]}
+            />
             <rect
               x={X(x0)}
               y={s > 0 ? TY - magas : TY}
@@ -121,7 +133,7 @@ function Rajz(t) {
         const opHelyben = 1 - 0.85 * halmoz[i] + 0.85 * oss;
         return (
           <g key={`r${i}`}>
-            <g opacity={opHelyben * (1 - 0.5 * oss)}>
+            <g opacity={opHelyben * (1 - oss)}>
               {s > 0 ? (
                 <NyilA x1={X(xh)} y1={TY - 8 - h} x2={X(xh)} y2={TY - 8} szin={SZ[i]} hegy={`mv-${i}`} vastag={3.4} />
               ) : (
@@ -130,7 +142,7 @@ function Rajz(t) {
               <FeliratA x={X(xh)} y={s > 0 ? TY - 8 - h - 8 : TY + 8 + h + 16} szin={SZ[i]} meret={12} opacitas={cU[i] * (1 - oss)}>
                 R{["₁", "₂", "₃"][i]} = {s > 0 ? "" : "−"}8,4 kN
               </FeliratA>
-              <FeliratA x={X(kozep[i])} y={TY + 24} szin={SZ[i]} meret={11} vastag={false} opacitas={cU[i] * (1 - oss)}>
+              <FeliratA x={s > 0 ? X(kozep[i]) : X(kozep[i]) + 14} y={s > 0 ? TY + 24 : TY + 30} szin={SZ[i]} meret={11} vastag={false} opacitas={cU[i] * (1 - oss)} horgony={s > 0 ? "middle" : "start"}>
                 {kozep[i].toFixed(1).replace(".", ",")} m
               </FeliratA>
             </g>
@@ -161,8 +173,10 @@ function Rajz(t) {
           <NyilA x1={X(1.8)} y1={TY - 8 - H} x2={X(1.8)} y2={TY - 8} szin={LILA} hegy="mv-l" vastag={4.4} />
           <FeliratA x={X(1.8)} y={TY - 8 - H - 8} szin={LILA} meret={13}>R = 8,4 kN</FeliratA>
           <g opacity={kFel}>
-            <VonalA x1={X(0)} y1={TY + 60} x2={X(1.8)} y2={TY + 60} szin={LILA} vastag={1.3} szaggatott={false} />
-            <FeliratA x={X(0.9)} y={TY + 75} szin={LILA} meret={12.5}>k = 1,8 m</FeliratA>
+            <VonalA x1={X(0)} y1={TY - 80} x2={X(1.8)} y2={TY - 80} szin={LILA} vastag={1.3} szaggatott={false} />
+            <VonalA x1={X(0)} y1={TY - 86} x2={X(0)} y2={TY - 66} szin={LILA} vastag={1} szaggatott={false} />
+            <VonalA x1={X(1.8)} y1={TY - 86} x2={X(1.8)} y2={TY - 66} szin={LILA} vastag={1} szaggatott={false} />
+            <FeliratA x={X(0.9)} y={TY - 86} szin={LILA} meret={12.5}>k = 1,8 m</FeliratA>
           </g>
         </g>
       )}

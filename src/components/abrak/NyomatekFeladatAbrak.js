@@ -182,7 +182,7 @@ export function AbraHaromszog() {
       </defs>
 
       <line x1={OX - 110} y1={OY} x2={OX + 190} y2={OY} stroke="#475569" strokeWidth="1.3" markerEnd="url(#ht-t)" />
-      <line x1={OX} y1={OY + 110} x2={OX} y2={OY - 190} stroke="#475569" strokeWidth="1.3" markerEnd="url(#ht-t)" />
+      <line x1={OX} y1={OY + 98} x2={OX} y2={OY - 190} stroke="#475569" strokeWidth="1.3" markerEnd="url(#ht-t)" />
       <text x={OX + 196} y={OY + 5} fontSize="13" fontStyle="italic" fill="#1d3c48">x</text>
       <text x={OX + 8} y={OY - 194} fontSize="13" fontStyle="italic" fill="#1d3c48">y</text>
 
@@ -368,7 +368,7 @@ export function AbraNegyfele() {
 
       {/* helyvektor */}
       <line x1={OX} y1={OY} x2={px(P.x)} y2={py(P.y)} stroke="#0f766e" strokeWidth="2.8" strokeLinecap="round" markerEnd="url(#nf-r)" />
-      <text x={px(P.x) - 18} y={py(P.y) + 30} fontSize="13" fontWeight="650" fill="#0f766e" fontStyle="italic">r</text>
+      <text x={px(P.x / 2) + 12} y={py(P.y / 2) + 12} fontSize="13" fontWeight="650" fill="#0f766e" fontStyle="italic">r</text>
 
       {/* az erő karja */}
       <line x1={OX} y1={OY} x2={px(talp.x)} y2={py(talp.y)} stroke="#7c3aed" strokeWidth="2" strokeDasharray="5 3" />

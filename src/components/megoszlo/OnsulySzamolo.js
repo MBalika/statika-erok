@@ -19,7 +19,7 @@ const ANYAGOK = [
 ];
 
 const SZ = 620;
-const MA = 320;
+const MA = 340;
 const NAR = "#e2590a";
 const LILA = "#7c3aed";
 
@@ -74,8 +74,8 @@ export default function OnsulySzamolo() {
   const qRajz = useSimitott(q);
 
   // keresztmetszet rajza (bal oldalon), 1 cm = 1,6 px, legfeljebb ~190 px
-  const lept = Math.min(1.6, 180 / Math.max(b, h));
-  const kx = 120;
+  const lept = Math.min(1.6, 120 / b, 180 / h);
+  const kx = 110;
   const ky = 160;
   const bw = b * lept;
   const bh = h * lept;
@@ -84,7 +84,7 @@ export default function OnsulySzamolo() {
   const gx0 = 270;
   const gx1 = 590;
   const gy = 200;
-  const gerendaMag = Math.max(8, Math.min(44, bh * 0.35));
+  const gerendaMag = Math.max(8, Math.min(30, bh * 0.35));
   const nyilHossz = 10 + 70 * Math.pow(Math.max(qRajz, 0) / 100, 0.4);
   const db = Math.round(5 + 20 * Math.sqrt(Math.max(qRajz, 0) / 100));
   const anyagSzin = ANYAGOK[anyag].szin;
@@ -135,13 +135,14 @@ export default function OnsulySzamolo() {
             </text>
             <rect x={gx0 - 6} y={gy} width={gx1 - gx0 + 12} height={gerendaMag} rx="2" fill={anyagSzin} opacity="0.35" stroke={anyagSzin} strokeWidth="1.6" style={{ transition: "all 0.25s" }} />
             <line x1={gx0} y1={gy + gerendaMag + 18} x2={gx1} y2={gy + gerendaMag + 18} stroke="#94a3b8" strokeWidth="1" markerStart="url(#os-m)" markerEnd="url(#os-m)" />
-            <text x={(gx0 + gx1) / 2} y={gy + gerendaMag + 33} textAnchor="middle" style={{ fontSize: 11.5, fill: "#64748b" }}>
+            <text x={gx0 + (gx1 - gx0) / 4} y={gy + gerendaMag + 33} textAnchor="middle" style={{ fontSize: 11.5, fill: "#64748b" }}>
               L = {sz(L, 1)} m
             </text>
-            {/* eredő: a gerenda súlya a közepén */}
-            <line x1={(gx0 + gx1) / 2} y1={gy + gerendaMag + 44} x2={(gx0 + gx1) / 2} y2={gy + gerendaMag + 44 + 18 + Math.min(50, G * 0.5)} stroke={LILA} strokeWidth="3.4" strokeLinecap="round" markerEnd="url(#os-r)" />
+            {/* eredő: a gerenda súlya, a gerenda közepéből (súlypontjából) lefelé */}
+            <circle cx={(gx0 + gx1) / 2} cy={gy + gerendaMag / 2} r="3.5" fill={LILA} />
+            <line x1={(gx0 + gx1) / 2} y1={gy + gerendaMag / 2} x2={(gx0 + gx1) / 2} y2={gy + gerendaMag + 44 + 14 + Math.min(36, G * 0.4)} stroke={LILA} strokeWidth="3.4" strokeLinecap="round" markerEnd="url(#os-r)" />
             <text x={(gx0 + gx1) / 2 + 10} y={gy + gerendaMag + 62} style={{ fontSize: 12.5, fontWeight: 700, fill: LILA }}>
-              G = qL = {sz(G, 1)} kN
+              G = qL = {sz(G, G < 10 ? 2 : 1)} kN
             </text>
           </svg>
           <p className="mt-1 text-center text-[11.5px] text-petrol-400">A nyilak sűrűsége és hossza a q intenzitással nő.</p>

@@ -250,6 +250,15 @@ oldalhoz elég ezeket átírni.
 - Bekötések: útvonal (5–7. hét, vizsgatípusok), zh-szimulátor 7 feladattal (30/45/60 perc), puska 7–8. lap, a 8–10. modul
   „hamarosan” oldalai, fejléc: a modulok számozott gombokkal (csak az aktív felirata látszik), `fokszamMerleg` testszámlálás javítva.
 
+## 15. kör: ellenőrző kör, 2. ütem — 1–4. modul tételes átnézése
+
+- Két ügynök (1–2. és 3–4. modul): minden statikus ábra, film-képkocka, felfedező (szélső beállításokkal is), generátor (300–500 futás)
+  és kvíz újraszámolva és képen ellenőrizve. Tartalmi javítások: az „egyensúly három erővel” ábra erői nem voltak egyensúlyban;
+  a térbeli nyomaték-ábrán az M nem volt merőleges r és F síkjára; a megoszló GYF‑1 szövege és filmje fordítva nevezte a részeredőket;
+  a kivonásos súlypont-ábrán S a lyuk belsejébe esett; a súlypont GYF‑6 statikai nyomatéka kerekítési eltéréssel; egy hibakereső
+  fordított forgásiránya; a szakaszos teher-kalkulátor és több felfedező a viewBoxon kívülre rajzolt szélső értékeknél; tucatnyi
+  levágott/egymásra írt felirat a filmekben; generátorok elfajult esetei (0 erő, −0, egy egyenesbe eső csúcsok, Ry = 0).
+
 ## 14. kör: ellenőrző kör — N/V ábrák a nyomaték oldalára, eltűnt vonalak, 5–6–9. modul tételes átnézése
 
 - **Rajzszabály (tankönyv 8.3.2., 8.9. ábra):** mindhárom igénybevételi ábra a rúd ugyanazon pozitív oldalára kerül — arra,

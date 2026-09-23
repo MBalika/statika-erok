@@ -18,7 +18,7 @@ const AX = 210; // a rúd alsó vége
 const AY = 350;
 const RUD = 260; // a rúd rajzolt hossza (px)
 const PS = 6; // px / (kN/m)
-const RS = 1.5; // px / kN
+const R_PX = 120; // az eredő nyíl rajzolt hossza (px) — a komponensek ehhez arányosak
 const NAR = "#e2590a";
 const TEAL = "#0f766e";
 const KEK = "#2563eb";
@@ -85,6 +85,7 @@ export default function FerdeTeherFelfedezo() {
   const R = p * L;
   const Rx = p * b; // = pL sinα
   const Ry = p * a; // = pL cosα
+  const RS = R_PX / R; // px / kN, hogy az eredő mindig jól látható hosszú legyen
 
   // rajz
   const BX = AX + RUD * c;
@@ -133,19 +134,22 @@ export default function FerdeTeherFelfedezo() {
             {/* b) a vetületi tömbök */}
             <g opacity={wB * teherOp + wC * 0.3}>
               <rect x={AX} y={felsoBlokkAlja - H} width={BX - AX} height={H} fill={TEAL} opacity="0.14" stroke={TEAL} strokeWidth="1.4" />
-              <text x={KOZ.x} y={felsoBlokkAlja - H - 8} textAnchor="middle" style={{ fontSize: 12, fontWeight: 650, fill: TEAL }}>
-                p a vízszintes vetületen (a = {sz(a, 2)} m)
-              </text>
               <rect x={balBlokkJobbja - H} y={BY} width={H} height={AY - BY} fill={KEK} opacity="0.14" stroke={KEK} strokeWidth="1.4" />
-              <text x={balBlokkJobbja - H / 2} y={AY + 18} textAnchor="middle" style={{ fontSize: 12, fontWeight: 650, fill: KEK }}>
-                p
-              </text>
-              <text x={balBlokkJobbja - H / 2 - 4} y={AY + 34} textAnchor="middle" style={{ fontSize: 11, fill: KEK }}>
-                a függőleges vetületen
-              </text>
-              <text x={balBlokkJobbja - H / 2 - 4} y={AY + 48} textAnchor="middle" style={{ fontSize: 11, fill: KEK }}>
-                (b = {sz(b, 2)} m)
-              </text>
+              {/* a tömbök feliratai a c) nézetben eltűnnek (ott a bal felső sarokban vannak az értékek) */}
+              <g opacity={1 - bc}>
+                <text x={KOZ.x} y={felsoBlokkAlja - H - 8} textAnchor="middle" style={{ fontSize: 12, fontWeight: 650, fill: TEAL }}>
+                  p a vízszintes vetületen (a = {sz(a, 2)} m)
+                </text>
+                <text x={balBlokkJobbja - H / 2} y={AY + 18} textAnchor="middle" style={{ fontSize: 12, fontWeight: 650, fill: KEK }}>
+                  p
+                </text>
+                <text x={balBlokkJobbja - H / 2 - 4} y={AY + 34} textAnchor="middle" style={{ fontSize: 11, fill: KEK }}>
+                  a függőleges vetületen
+                </text>
+                <text x={balBlokkJobbja - H / 2 - 4} y={AY + 48} textAnchor="middle" style={{ fontSize: 11, fill: KEK }}>
+                  (b = {sz(b, 2)} m)
+                </text>
+              </g>
             </g>
 
             {/* a nyilak: a merőleges nyíl farka a felső tömbhöz csúszik, közben egy vízszintes nyíl nő ki a bal tömbből */}
@@ -180,36 +184,50 @@ export default function FerdeTeherFelfedezo() {
               a = L cos α = {sz(a, 2)} m
             </text>
             <line x1={BX + 40} y1={BY} x2={BX + 40} y2={AY} stroke="#94a3b8" strokeWidth="1" markerStart="url(#ft-m)" markerEnd="url(#ft-m)" />
-            <text x={BX + 46} y={KOZ.y + 4} style={{ fontSize: 11.5, fill: "#64748b" }}>
+            <text x={BX + 56} y={KOZ.y} textAnchor="middle" transform={`rotate(-90 ${BX + 56} ${KOZ.y})`} style={{ fontSize: 11.5, fill: "#64748b" }}>
               b = L sin α = {sz(b, 2)} m
             </text>
             <text x={KOZ.x + 14 * s} y={KOZ.y + 14 * c + 4} style={{ fontSize: 11.5, fill: "#1d3c48" }} transform={`rotate(${-alfa} ${KOZ.x + 14 * s} ${KOZ.y + 14 * c})`} textAnchor="middle">
               L = {sz(L, 1)} m
             </text>
 
-            {/* c) az eredők */}
+            {/* c) az eredők — a nyilak mellett csak a jel, az értékek a bal felső sarokban, hogy ne írják egymást felül */}
             <g opacity={wC}>
               {/* R merőlegesen */}
               <line x1={KOZ.x + nTail.x * R * RS} y1={KOZ.y + nTail.y * R * RS} x2={KOZ.x + nTail.x * 4} y2={KOZ.y + nTail.y * 4} stroke={LILA} strokeWidth="4" strokeLinecap="round" markerEnd="url(#ft-l)" />
-              <text x={KOZ.x + nTail.x * (R * RS + 12)} y={KOZ.y + nTail.y * (R * RS + 12) + 4} textAnchor="middle" style={{ fontSize: 12.5, fontWeight: 700, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-                R = pL = {sz(R, 1)} kN
+              <text x={KOZ.x + nTail.x * (R * RS + 12)} y={KOZ.y + nTail.y * (R * RS + 12) + 4} textAnchor="middle" style={{ fontSize: 13, fontWeight: 700, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                R
               </text>
-              {/* R_y függőleges, R_x vízszintes */}
-              <line x1={KOZ.x} y1={KOZ.y - Ry * RS} x2={KOZ.x} y2={KOZ.y - 4} stroke={TEAL} strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#ft-t)" />
-              <text x={KOZ.x + 8} y={KOZ.y - Ry * RS + 4} style={{ fontSize: 12, fontWeight: 650, fill: TEAL, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-                Rᵧ = p·a = {sz(Ry, 1)} kN
-              </text>
-              <line x1={KOZ.x - Rx * RS} y1={KOZ.y} x2={KOZ.x - 4} y2={KOZ.y} stroke={KEK} strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#ft-k)" />
-              <text x={KOZ.x - Rx * RS - 6} y={KOZ.y + 20} textAnchor="end" style={{ fontSize: 12, fontWeight: 650, fill: KEK, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-                Rₓ = p·b = {sz(Rx, 1)} kN
-              </text>
+              {/* R_y függőleges (lefelé), R_x vízszintes (jobbra) */}
+              {Ry * RS > 6 && (
+                <>
+                  <line x1={KOZ.x} y1={KOZ.y - Ry * RS} x2={KOZ.x} y2={KOZ.y - 4} stroke={TEAL} strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#ft-t)" />
+                  {/* meredek rúdnál balra, különben jobbra, hogy se a rúd, se az R felirat ne fedje */}
+                  <text x={alfa > 60 ? KOZ.x - 7 : KOZ.x + 7} y={KOZ.y - Ry * RS - 5} textAnchor={alfa > 60 ? "end" : "start"} style={{ fontSize: 12.5, fontWeight: 650, fill: TEAL, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                    Rᵧ
+                  </text>
+                </>
+              )}
+              {Rx * RS > 6 && (
+                <>
+                  <line x1={KOZ.x - Rx * RS} y1={KOZ.y} x2={KOZ.x - 4} y2={KOZ.y} stroke={KEK} strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#ft-k)" />
+                  <text x={KOZ.x - Rx * RS - 4} y={KOZ.y - 6} textAnchor="end" style={{ fontSize: 12.5, fontWeight: 650, fill: KEK, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                    Rₓ
+                  </text>
+                </>
+              )}
               {/* összegzés: a két komponens téglalapja */}
               <line x1={KOZ.x - Rx * RS} y1={KOZ.y} x2={KOZ.x - Rx * RS} y2={KOZ.y - Ry * RS} stroke="#94a3b8" strokeWidth="1" strokeDasharray="4 3" />
               <line x1={KOZ.x} y1={KOZ.y - Ry * RS} x2={KOZ.x - Rx * RS} y2={KOZ.y - Ry * RS} stroke="#94a3b8" strokeWidth="1" strokeDasharray="4 3" />
               <circle cx={KOZ.x} cy={KOZ.y} r="4" fill={LILA} stroke="white" strokeWidth="1.5" />
+              {/* értékek */}
+              <text x={16} y={22} style={{ fontSize: 12.5, fontWeight: 700, fill: LILA }}>R = pL = {sz(R, 1)} kN (⊥ a rúdra)</text>
+              <text x={16} y={40} style={{ fontSize: 12, fontWeight: 650, fill: TEAL }}>Rᵧ = p·a = {sz(Ry, 1)} kN ↓</text>
+              <text x={16} y={58} style={{ fontSize: 12, fontWeight: 650, fill: KEK }}>Rₓ = p·b = {sz(Rx, 1)} kN →</text>
             </g>
 
-            <text x={SZ / 2} y={22} textAnchor="middle" style={{ fontSize: 12.5, fontWeight: 650, fill: "#275767" }}>
+            {/* a nézet címe jobbra lent, hogy nagy α-nál és p-nél a felső vetületi tömb felirata ne érjen bele */}
+            <text x={SZ - 14} y={MA - 12} textAnchor="end" style={{ fontSize: 12.5, fontWeight: 650, fill: "#275767" }}>
               {NEZETEK[nezet].nev}
             </text>
           </svg>

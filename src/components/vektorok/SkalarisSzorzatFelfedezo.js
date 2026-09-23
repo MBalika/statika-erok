@@ -36,7 +36,7 @@ export default function SkalarisSzorzatFelfedezo() {
       const py = ((esem.clientY - r.top) / r.height) * MA;
       let uj = {
         x: Math.max(-7, Math.min(9, (px - OX) / LEPTEK)),
-        y: Math.max(-6, Math.min(5.5, (OY - py) / LEPTEK)),
+        y: Math.max(-5, Math.min(5.5, (OY - py) / LEPTEK)),
       };
       // „Kattanás” 90°-nál: ha a másik vektorral közel merőleges, pontosan merőlegesre igazítjuk
       const masik = melyik === "a" ? b : a;
@@ -157,7 +157,7 @@ export default function SkalarisSzorzatFelfedezo() {
                     strokeWidth="1.5"
                   />
                 )}
-                <Cimke x={OX + (rIv + 16) * Math.cos(ivKozep)} y={OY - (rIv + 16) * Math.sin(ivKozep) + 4} szin={szin} meret={12}>
+                <Cimke x={OX + (rIv + 26) * Math.cos(ivKozep)} y={OY - (rIv + 26) * Math.sin(ivKozep) + 4} szin={szin} meret={12}>
                   φ = {sz(fi, 1)}°
                 </Cimke>
               </>

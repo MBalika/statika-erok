@@ -298,8 +298,9 @@ export default function JatekEredo() {
           </g>
 
           {/* teherábra */}
+          {/* a teherábra körvonala az összeolvadás után is halványan megmarad */}
           {sokszogek.map((s) => (
-            <path key={s.kulcs} d={s.d} fill={NAR} opacity={0.14 * (1 - anim)} stroke={NAR} strokeWidth="1.6" strokeOpacity={1 - anim} />
+            <path key={s.kulcs} d={s.d} fill={NAR} opacity={0.14 * (1 - 0.6 * anim)} stroke={NAR} strokeWidth="1.6" strokeOpacity={1 - 0.65 * anim} />
           ))}
           {nyilak.map((n) =>
             Math.abs(n.h) > 3 ? (
@@ -316,13 +317,14 @@ export default function JatekEredo() {
             ) : null,
           )}
           {/* intenzitás-feliratok */}
+          {/* negatív (felfelé mutató) intenzitás felirata a tartó alatti méretskála alá kerül */}
           {adat.szakaszok.map((s, i) => (
-            <g key={i} opacity={1 - anim}>
-              <text x={X(s.x0) + (i === 0 ? -6 : 6)} y={TY - s.p0 * PS - 8 + (s.p0 < 0 ? 22 : 0)} textAnchor={i === 0 ? "end" : "start"} style={{ fontSize: 11.5, fontWeight: 650, fill: NAR, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+            <g key={i} opacity={1 - 0.65 * anim}>
+              <text x={X(s.x0) + (i === 0 ? -6 : 6)} y={s.p0 < 0 ? TY - s.p0 * PS + 30 : TY - s.p0 * PS - 8} textAnchor={i === 0 ? "end" : "start"} style={{ fontSize: 11.5, fontWeight: 650, fill: NAR, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
                 {s.p0 < 0 ? `−${-s.p0}` : s.p0} kN/m
               </text>
               {s.p1 !== s.p0 && (
-                <text x={X(s.x1) + 6} y={TY - s.p1 * PS - 8 + (s.p1 < 0 ? 22 : 0)} textAnchor="start" style={{ fontSize: 11.5, fontWeight: 650, fill: NAR, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                <text x={X(s.x1) + 6} y={s.p1 < 0 ? TY - s.p1 * PS + 30 : TY - s.p1 * PS - 8} textAnchor="start" style={{ fontSize: 11.5, fontWeight: 650, fill: NAR, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
                   {s.p1 < 0 ? `−${-s.p1}` : s.p1} kN/m
                 </text>
               )}
@@ -354,11 +356,14 @@ export default function JatekEredo() {
           <g style={{ pointerEvents: "none" }}>
             <line x1={X(k)} y1={TY + 4} x2={X(k)} y2={TY + 72} stroke={LILA} strokeWidth="1.2" strokeDasharray="4 3" opacity="0.8" />
             <line x1={X(k)} y1={sajatCsucs - sajatH} x2={X(k)} y2={sajatCsucs} stroke={LILA} strokeWidth="3.8" strokeLinecap="round" markerEnd="url(#je-l)" opacity={ellenorizve ? 0.55 : 1} />
-            <text x={X(k)} y={sajatCsucs - sajatH - 8} textAnchor="middle" style={{ fontSize: 12, fontWeight: 650, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-              {ellenorizve ? "tiéd: " : ""}R = {sz(R, 1)} kN
-            </text>
-            <text x={X(k)} y={TY + 86} textAnchor="middle" style={{ fontSize: 11, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
-              k = {sz(k, 2)} m
+            {!ellenorizve && (
+              <text x={X(k)} y={sajatCsucs - sajatH - 8} textAnchor="middle" style={{ fontSize: 12, fontWeight: 650, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                R = {sz(R, 1)} kN
+              </text>
+            )}
+            {/* ellenőrzéskor a tipp és a helyes érték két külön sorban, a tartó alatt — nem írják egymást felül */}
+            <text x={Math.max(110, Math.min(SZ - 110, X(k)))} y={TY + 86} textAnchor="middle" style={{ fontSize: 11, fontWeight: ellenorizve ? 650 : 400, fill: LILA, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+              {ellenorizve ? `tiéd: R = ${sz(R, 1)} kN, k = ${sz(k, 2)} m` : `k = ${sz(k, 2)} m`}
             </text>
           </g>
           {/* fogópont a tartó alatt */}
@@ -375,10 +380,10 @@ export default function JatekEredo() {
               <line x1={X(adat.k)} y1={TY - pMax * PS - 20} x2={X(adat.k)} y2={TY + 100} stroke={BORDO} strokeWidth="1.4" opacity={anim} />
               <line x1={X(adat.k)} y1={TY - 12 - adat.R * RS * anim} x2={X(adat.k)} y2={TY - 8} stroke={BORDO} strokeWidth="4.2" strokeLinecap="round" markerEnd="url(#je-p)" />
               <text x={X(adat.k) + 10} y={TY - 12 - adat.R * RS * anim} style={{ fontSize: 12.5, fontWeight: 700, fill: BORDO, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }} opacity={anim}>
-                helyes: R = {sz(adat.R, 1)} kN
+                R = {sz(adat.R, 1)} kN
               </text>
-              <text x={X(adat.k)} y={TY + 112} textAnchor="middle" style={{ fontSize: 11.5, fontWeight: 650, fill: BORDO, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }} opacity={anim}>
-                k = {sz(adat.k, 2)} m
+              <text x={Math.max(110, Math.min(SZ - 110, X(adat.k)))} y={TY + 112} textAnchor="middle" style={{ fontSize: 11.5, fontWeight: 650, fill: BORDO, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }} opacity={anim}>
+                helyes: R = {sz(adat.R, 1)} kN, k = {sz(adat.k, 2)} m
               </text>
               {anim > 0.9 && (
                 <text x={SZ / 2} y={MA - 10} textAnchor="middle" style={{ fontSize: 12.5, fontWeight: 700, fill: utolsoPont >= 80 ? ZOLD : BORDO, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>

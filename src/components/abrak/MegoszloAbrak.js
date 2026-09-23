@@ -102,6 +102,8 @@ export function AbraAlapesetek() {
         <text x={ox + w * xR + 8} y="52" fontSize="12.5" fontWeight="700" fill="#7c3aed">R</text>
         {/* helyméret */}
         <line x1={ox} y1={T + 20} x2={ox + w * xR} y2={T + 20} stroke="#7c3aed" strokeWidth="1" markerEnd="url(#ae-m)" />
+        <text x={ox + (w * xR) / 2} y={T + 16} textAnchor="middle" fontSize="11" fontStyle="italic" fill="#7c3aed">k</text>
+        <line x1={ox} y1={T + 8} x2={ox} y2={T + 24} stroke="#94a3b8" strokeWidth="0.8" />
         {kepletek.map((k, i) => (
           <text key={i} x={ox + w / 2} y={T + 48 + i * 17} textAnchor="middle" fontSize="12" fill={i === 0 ? "#1d3c48" : "#7c3aed"} fontWeight={i === 0 ? 650 : 500}>
             {k}
@@ -153,6 +155,8 @@ export function AbraFelbontas() {
       ))}
       <path d={`M ${ox} ${T} L ${ox} ${T - pA} L ${ox + w} ${T - pB} L ${ox + w} ${T} Z`} fill="none" stroke="#e2590a" strokeWidth="2" />
       <line x1={ox - 8} y1={T} x2={ox + w + 8} y2={T} stroke="#1d3c48" strokeWidth="3.5" strokeLinecap="round" />
+      <text x={ox - 5} y={T - pA - 5} textAnchor="end" fontSize="11.5" fontWeight="650" fill="#e2590a">p₁</text>
+      <text x={ox + w + 5} y={T - pB - 5} fontSize="11.5" fontWeight="650" fill="#e2590a">p₂</text>
       {reszek.map((r, i) => (
         <g key={`r${i}`}>
           <line x1={ox + w * r.x} y1={46} x2={ox + w * r.x} y2={76} stroke={r.szin} strokeWidth="3" strokeLinecap="round" markerEnd={`url(#${r.hegy})`} />
@@ -211,6 +215,7 @@ export function AbraFerdeVetulet() {
               <line key={i} x1={n.x} y1={42} x2={n.x} y2={n.y - 5} stroke="#e2590a" strokeWidth="1.3" markerEnd="url(#fv-ero)" />
             ))}
             <line x1={x0} y1={204} x2={x1} y2={204} stroke="#94a3b8" strokeWidth="1" markerStart="url(#fv-m)" markerEnd="url(#fv-m)" />
+            <text x={(x0 + x1) / 2} y={199} textAnchor="middle" fontSize="11" fill="#64748b">L_vízszintes = L·cos α</text>
           </>
         ) : (
           <>
@@ -219,6 +224,16 @@ export function AbraFerdeVetulet() {
               <line key={i} x1={n.x - nx * 42} y1={n.y - ny * 42} x2={n.x - nx * 6} y2={n.y - ny * 6} stroke="#e2590a" strokeWidth="1.3" markerEnd="url(#fv-ero)" />
             ))}
             <line x1={x0 + nx * 14} y1={y0 + ny * 14} x2={x1 + nx * 14} y2={y1 + ny * 14} stroke="#94a3b8" strokeWidth="1" markerStart="url(#fv-m)" markerEnd="url(#fv-m)" />
+            <text
+              x={(x0 + x1) / 2 + nx * 26}
+              y={(y0 + y1) / 2 + ny * 26 + 4}
+              textAnchor="middle"
+              fontSize="11"
+              fill="#64748b"
+              transform={`rotate(${(-Math.atan2(y0 - y1, x1 - x0) * 180) / Math.PI} ${(x0 + x1) / 2 + nx * 26} ${(y0 + y1) / 2 + ny * 26 + 4})`}
+            >
+              L_ferde
+            </text>
           </>
         )}
         <line x1={x0} y1={y0} x2={x1} y2={y1} stroke="#1d3c48" strokeWidth="4" strokeLinecap="round" />
@@ -442,9 +457,10 @@ export function AbraKetVetulet() {
     return { x: A.x0 + (A.x1 - A.x0) * t, y: A.y0 + (A.y1 - A.y0) * t };
   });
   const H = 36;
-  const B = { x0: 380, y0: 200, x1: 580, y1: 100 };
+  const B = { x0: 370, y0: 200, x1: 570, y1: 100 };
   const a = B.x1 - B.x0;
   const b = B.y0 - B.y1;
+  const kozepA = { x: (A.x0 + A.x1) / 2, y: (A.y0 + A.y1) / 2 };
   return (
     <svg viewBox="0 0 620 280" className="abra w-full">
       <defs>
@@ -452,9 +468,10 @@ export function AbraKetVetulet() {
         <Hegy id="kv-t" szin="#0f766e" />
         <Hegy id="kv-k" szin="#2563eb" />
         <Hegy id="kv-m" szin="#94a3b8" />
+        <Hegy id="kv-r" szin="#7c3aed" />
       </defs>
       <text x="150" y="18" textAnchor="middle" fontSize="12.5" fontWeight="650" fill="#275767">a) A felületre merőleges teher</text>
-      <text x="470" y="18" textAnchor="middle" fontSize="12.5" fontWeight="650" fill="#275767">b) Ugyanez a két vetületre bontva</text>
+      <text x="460" y="18" textAnchor="middle" fontSize="12.5" fontWeight="650" fill="#275767">b) Ugyanez a két vetületre bontva</text>
 
       {/* a) */}
       <path d={`M ${A.x0 + nx * H} ${A.y0 + ny * H} L ${A.x1 + nx * H} ${A.y1 + ny * H} L ${A.x1} ${A.y1} L ${A.x0} ${A.y0} Z`} fill="#e2590a" opacity="0.1" />
@@ -463,7 +480,10 @@ export function AbraKetVetulet() {
         <line key={i} x1={n.x + nx * (H - 2)} y1={n.y + ny * (H - 2)} x2={n.x + nx * 5} y2={n.y + ny * 5} stroke="#e2590a" strokeWidth="1.3" markerEnd="url(#kv-ero)" />
       ))}
       {rud(A)}
-      <text x={(A.x0 + A.x1) / 2 + nx * (H + 14)} y={(A.y0 + A.y1) / 2 + ny * (H + 14)} fontSize="12.5" fontWeight="650" fill="#e2590a" textAnchor="middle">p</text>
+      {/* az eredő: a rúdra merőleges, a szakasz közepén */}
+      <line x1={kozepA.x + nx * (H + 40)} y1={kozepA.y + ny * (H + 40)} x2={kozepA.x + nx * 7} y2={kozepA.y + ny * 7} stroke="#7c3aed" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#kv-r)" />
+      <text x={kozepA.x + nx * (H + 26) + 10} y={kozepA.y + ny * (H + 26)} fontSize="12.5" fontWeight="700" fill="#7c3aed">R = pL</text>
+      <text x={(A.x0 + A.x1) / 2 + nx * (H + 14) - 30} y={(A.y0 + A.y1) / 2 + ny * (H + 14) - 14} fontSize="12.5" fontWeight="650" fill="#e2590a" textAnchor="middle">p</text>
       <line x1={A.x0} y1={A.y0 + 26} x2={A.x1} y2={A.y0 + 26} stroke="#94a3b8" strokeWidth="1" markerStart="url(#kv-m)" markerEnd="url(#kv-m)" />
       <text x={(A.x0 + A.x1) / 2} y={A.y0 + 40} textAnchor="middle" fontSize="11.5" fill="#64748b">a = L cos α</text>
       <line x1={A.x1 + 26} y1={A.y1} x2={A.x1 + 26} y2={A.y0} stroke="#94a3b8" strokeWidth="1" markerStart="url(#kv-m)" markerEnd="url(#kv-m)" />
@@ -481,6 +501,12 @@ export function AbraKetVetulet() {
         return <line key={i} x1={x} y1={B.y1 - 32} x2={x} y2={yr - 5} stroke="#0f766e" strokeWidth="1.2" markerEnd="url(#kv-t)" opacity="0.8" />;
       })}
       <text x={B.x0 + a / 2} y={B.y1 - 67} textAnchor="middle" fontSize="11.5" fontWeight="650" fill="#0f766e">p a vízszintes vetületen → Rᵧ = p·a</text>
+      {/* Rᵧ részeredő: a vízszintes vetület közepén, függőleges */}
+      <line x1={B.x0 + a / 2} y1={B.y1 - 30} x2={B.x0 + a / 2} y2={B.y0 + (B.y1 - B.y0) * 0.5 - 6} stroke="#0f766e" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#kv-t)" />
+      <text x={B.x0 + a / 2 + 7} y={B.y1 + 8} fontSize="12" fontWeight="700" fill="#0f766e">Rᵧ</text>
+      {/* Rₓ részeredő: a függőleges vetület közepén, vízszintes */}
+      <line x1={B.x0 - 30} y1={B.y0 - b / 2} x2={B.x0 + a * 0.5 - 6} y2={B.y0 - b / 2} stroke="#2563eb" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#kv-k)" />
+      <text x={B.x0 + 12} y={B.y0 - b / 2 - 7} fontSize="12" fontWeight="700" fill="#2563eb">Rₓ</text>
       {/* vízszintes teher a függőleges vetületen (bal oldalon, jobbra mutat) */}
       <rect x={B.x0 - 62} y={B.y1} width={30} height={b} fill="#2563eb" opacity="0.14" stroke="#2563eb" strokeWidth="1.5" />
       {Array.from({ length: 5 }, (_, i) => {
@@ -674,9 +700,12 @@ export function AbraViznyomas() {
               const yG = oy - H * s;
               return <line key={i} x1={x} y1={oy - H + 2} x2={x} y2={yG - 5} stroke="#0f766e" strokeWidth="1.1" markerEnd="url(#vn-ero)" opacity="0.8" />;
             })}
-            <line x1={ox - 28} y1={oy - H - 44} x2={ox - 28} y2={oy - H + 44} stroke="#0f766e" strokeWidth="3.4" strokeLinecap="round" markerEnd="url(#vn-t)" />
-            <text x={ox - 20} y={oy - H - 30} fontSize="12" fontWeight="700" fill="#0f766e">Rᵧ = γ·A</text>
-            <text x={ox + 10} y={oy - H - 8} fontSize="11" fill="#0f766e" textAnchor="middle">a fal fölötti síkidom × γ</text>
+            {/* az eredő a síkidom súlypontján (x = ox − 21, a parabola-szelet súlypontja) megy át */}
+            <line x1={ox - 21} y1={oy - H - 44} x2={ox - 21} y2={oy - H + 44} stroke="#0f766e" strokeWidth="3.4" strokeLinecap="round" markerEnd="url(#vn-t)" />
+            <text x={ox - 13} y={oy - H - 30} fontSize="12" fontWeight="700" fill="#0f766e">Rᵧ = γ·A</text>
+            <text x={ox + 48} y={oy - H + 18} fontSize="11" fill="#0f766e" textAnchor="middle">a fal fölötti</text>
+            <text x={ox + 48} y={oy - H + 32} fontSize="11" fill="#0f766e" textAnchor="middle">síkidom × γ</text>
+            <text x={ox + 48} y={oy - H + 46} fontSize="11" fill="#0f766e" textAnchor="middle">a súlypontján át</text>
           </g>
         )}
       </g>

@@ -6,6 +6,9 @@ import { derekszogu, polaris, sz, zarojel, siknegyed, osszegLanc } from "@/lib/s
 
 const egesz = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 const valaszt = (tomb) => tomb[Math.floor(Math.random() * tomb.length)];
+/** A 90°, 180°, 270° körüli lebegőpontos „−0,00” helyett pontosan 0. */
+const tiszta = (v) => (Math.abs(v) < 5e-7 ? 0 : v);
+const tisztaK = (k) => ({ x: tiszta(k.x), y: tiszta(k.y) });
 const nemNulla = (min, max) => {
   let v = 0;
   while (v === 0) v = egesz(min, max);
@@ -49,7 +52,7 @@ function hatasvonalFeladat() {
         <MB>{`\\underline{e} = \\frac{\\overrightarrow{AB}}{|\\overrightarrow{AB}|} = (${sz(dx / h, 4)};\\ ${sz(dy / h, 4)})`}</MB>
         <MB>{`\\underline{F} = F\\,\\underline{e} = ${F}\\cdot(${sz(dx / h, 4)};\\ ${sz(dy / h, 4)}) = (${sz(Fx, 2)};\\ ${sz(Fy, 2)})\\ \\text{kN}`}</MB>
         <p className="mt-2 text-[13px] text-petrol-600">
-          Ellenőrzés: <M>{`\\sqrt{${sz(Fx, 2)}^2 + ${zarojel(Fy, 2)}^2} = ${sz(Math.hypot(Fx, Fy), 2)}`}</M> — vissza kell kapni az erő nagyságát.
+          Ellenőrzés: <M>{`\\sqrt{${zarojel(Fx, 2)}^2 + ${zarojel(Fy, 2)}^2} = ${sz(Math.hypot(Fx, Fy), 2)}`}</M> — vissza kell kapni az erő nagyságát.
         </p>
       </>
     ),
@@ -99,9 +102,9 @@ function szogFeladat() {
 
 function polarisFeladat() {
   const erok = [0, 1, 2].map(() => ({ F: egesz(4, 30), a: egesz(0, 35) * 10 }));
-  const k = erok.map((e) => derekszogu(e.F, e.a));
-  const Rx = k.reduce((s, v) => s + v.x, 0);
-  const Ry = k.reduce((s, v) => s + v.y, 0);
+  const k = erok.map((e) => tisztaK(derekszogu(e.F, e.a)));
+  const Rx = tiszta(k.reduce((s, v) => s + v.x, 0));
+  const Ry = tiszta(k.reduce((s, v) => s + v.y, 0));
   const p = polaris(Rx, Ry);
   const neg = siknegyed(p.szog);
   return {
@@ -236,11 +239,11 @@ function vektorialisFeladat() {
 
 function egyensulyozasFeladat() {
   const erok = [0, 1, 2].map(() => ({ F: egesz(3, 20), a: egesz(0, 35) * 10 }));
-  const k = erok.map((e) => derekszogu(e.F, e.a));
-  const Rx = k.reduce((s, v) => s + v.x, 0);
-  const Ry = k.reduce((s, v) => s + v.y, 0);
-  const Ex = -Rx;
-  const Ey = -Ry;
+  const k = erok.map((e) => tisztaK(derekszogu(e.F, e.a)));
+  const Rx = tiszta(k.reduce((s, v) => s + v.x, 0));
+  const Ry = tiszta(k.reduce((s, v) => s + v.y, 0));
+  const Ex = tiszta(-Rx);
+  const Ey = tiszta(-Ry);
   const E = polaris(Ex, Ey);
   return {
     szoveg: (

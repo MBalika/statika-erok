@@ -94,6 +94,7 @@ export const HIBAK = [
       { szoveg: <>Az erő B-ben: <M>{"R_B = R\\cdot\\frac{|OB|}{1} = (8;\\ 6)\\ \\text{kN}"}</M>, mert 2 m-rel távolabb van.</>, hibas: true, javitas: <>Az eredő erő <em>nem függ</em> attól, melyik pontra redukálunk: B-ben is R = (4; 3) kN. Csak a nyomaték változik. A „távolsággal arányos” gondolat a nyomatékra igaz, az erőre nem.</> },
       { szoveg: <>Az eredő egyetlen erő, mert R ≠ 0.</> },
     ],
+    tanulsag: <>A redukálás pontja csak a társnyomatékot változtatja; a társerő (az erők összege) minden pontra ugyanaz.</>,
   },
   {
     cim: "Erőpár vagy zérusrendszer?",

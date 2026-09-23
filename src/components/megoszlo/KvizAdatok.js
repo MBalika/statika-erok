@@ -116,7 +116,7 @@ export const HIBAK = [
     feladat: <>Két 2 m-es szakasz: az elsőn 5 kN/m lefelé, a másodikon 5 kN/m felfelé. Mi az eredő?</>,
     lepesek: [
       { szoveg: <><M>{"R_1 = 10\\ \\text{kN}"}</M> lefelé, 1 m-nél; <M>{"R_2 = 10\\ \\text{kN}"}</M> felfelé, 3 m-nél.</> },
-      { szoveg: <><M>{"R = 10 - 10 = 0"}</M>, tehát a terhelésnek nincs hatása a tartóra.</>, hibas: true, javitas: <>R = 0, de a két erő nem egy hatásvonalon van: az eredő <em>erőpár</em>, <M>{"M = 10\\cdot 2 = 20\\ \\text{kNm}"}</M> (az óramutató irányába, ha a bal lefelé, a jobb felfelé hat). Ez nagyon is hat a tartóra — forgat.</> },
+      { szoveg: <><M>{"R = 10 - 10 = 0"}</M>, tehát a terhelésnek nincs hatása a tartóra.</>, hibas: true, javitas: <>R = 0, de a két erő nem egy hatásvonalon van: az eredő <em>erőpár</em>, <M>{"M = 10\\cdot 2 = 20\\ \\text{kNm}"}</M> (az óramutató járásával ellentétesen forgat, ha a bal oldali lefelé, a jobb oldali felfelé hat). Ez nagyon is hat a tartóra — forgat.</> },
       { szoveg: <>A két rész eredője egyforma nagyságú, mert a szakaszok és az intenzitások egyformák.</> },
     ],
     tanulsag: <>„Nulla eredő erő” nem jelenti, hogy „nincs teher”. Mindig nézd meg a nyomatékot is — ahogy a 2. modulban.</>,

@@ -124,7 +124,7 @@ function Rajz(t) {
       {rO > 0.02 && (
         <>
           <NyilA x1={px(rX)} y1={OY - 4 - 4 * F * E * rO} x2={px(rX)} y2={OY - 4} szin="#7c3aed" hegy="p2-r" vastag={4.2} />
-          <FeliratA x={px(rX)} y={OY - 4 - 4 * F * E - 10} szin="#7c3aed" meret={13} opacitas={rO}>R = 44 kN ↓</FeliratA>
+          <FeliratA x={px(rX) + 10} y={OY - 2 * F * E - 20} szin="#7c3aed" meret={13} opacitas={rO} horgony="start">R = 44 kN ↓</FeliratA>
           <PontA x={px(XR)} y={OY} r={4.5} szin="#7c3aed" u={xFel} />
           <g opacity={xFel}>
             <VonalA x1={OX} y1={OY + 34} x2={px(XR)} y2={OY + 34} szin="#7c3aed" vastag={1.3} szaggatott={false} />

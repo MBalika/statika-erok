@@ -64,7 +64,7 @@ const FEJEZETEK = [
     t0: 15.5,
     cim: "c) Itt már marad erő: egyetlen erő az eredő",
     szoveg: "A lánc nem zárul be: a hézag maga az eredő, egy majdnem függőleges 1,755 kN. A nyomaték −32,99 kNm, ezért az eredő hatásvonala az origótól balra, 18,8 m-re metszi az x tengelyt.",
-    kepletek: ["\\Fx 0,062,\\quad \\Fy 1,754\\ \\text{kN};\\quad \\Mp{O} -32,99\\ \\text{kNm}", "(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv \\underline{R},\\quad -32,99 = x_0\\cdot 1,754 \\;\\Rightarrow\\; x_0 = -18,80\\ \\text{m}"],
+    kepletek: ["\\Fx 0,062,\\quad \\Fy 1,754\\ \\text{kN};\\quad \\Mp{O} -32,99\\ \\text{kNm}", "(\\underline{F}_1, \\underline{F}_2, \\underline{F}_3, M) \\ekv \\underline{R},\\quad -32,99 = x_0\\cdot 1,754 \\;\\Rightarrow\\; x_0 = -18,81\\ \\text{m}"],
   },
 ];
 
@@ -168,7 +168,7 @@ function Rajz(t) {
           ))}
           <PontA x={S0.x} y={S0.y} r={4} szin="#475569" u={lancU[0]} />
           {halmaz !== "c" && (
-            <FeliratA x={S0.x - 60} y={lanc[2].y + 8} szin="#15803d" meret={11.5} opacitas={zarFel * (1 - bcU)} horgony="end">
+            <FeliratA x={648} y={Math.max(lanc[2].y, lanc[1].y) + 34} szin="#15803d" meret={11.5} opacitas={zarFel * (1 - bcU)} horgony="end">
               bezárul: ΣF = 0
             </FeliratA>
           )}
@@ -176,7 +176,7 @@ function Rajz(t) {
           {bcU > 0.5 && (
             <>
               <NyilA x1={lanc[3].x} y1={lanc[3].y} x2={S0.x} y2={S0.y} u={rU} szin="#7c3aed" hegy="h4-r" vastag={3.4} />
-              <FeliratA x={S0.x - 60} y={lanc[2].y + 8} szin="#7c3aed" meret={11.5} opacitas={rU} horgony="end">nem zárul: R = 1,755 kN</FeliratA>
+              <FeliratA x={648} y={Math.max(lanc[2].y, lanc[1].y) + 34} szin="#7c3aed" meret={11.5} opacitas={rU} horgony="end">nem zárul: R = 1,755 kN</FeliratA>
             </>
           )}
         </g>
@@ -186,31 +186,32 @@ function Rajz(t) {
       {t >= 8.2 && (
         <g>
           {Mreszek.map((m, i) => (
-            <FeliratA key={i} x={70} y={70 + i * 17} szin={i < 3 ? SZ[i] : "#9f1239"} meret={11.5} opacitas={nyomU[i]} horgony="start">
+            <FeliratA key={i} x={70} y={40 + i * 17} szin={i < 3 ? SZ[i] : "#9f1239"} meret={11.5} opacitas={nyomU[i]} horgony="start">
               {i < 3 ? `M${["₁", "₂", "₃"][i]} = ${f1(m, halmaz === "c" ? 2 : 0)}` : `M = ${f1(m, 0)}`}
             </FeliratA>
           ))}
-          <VonalA x1={68} y1={74 + 4 * 17 - 12} x2={180} y2={74 + 4 * 17 - 12} u={nagyIvU} szin="#9f1239" vastag={1} szaggatott={false} />
-          <FeliratA x={70} y={74 + 4 * 17 + 4} szin="#9f1239" meret={12.5} opacitas={nagyIvU} horgony="start">
+          <VonalA x1={68} y1={44 + 4 * 17 - 12} x2={180} y2={44 + 4 * 17 - 12} u={nagyIvU} szin="#9f1239" vastag={1} szaggatott={false} />
+          <FeliratA x={70} y={44 + 4 * 17 + 4} szin="#9f1239" meret={12.5} opacitas={nagyIvU} horgony="start">
             ΣM = {f1(Msum, halmaz === "c" ? 2 : 0)} kNm
           </FeliratA>
-          <FeliratA x={70} y={74 + 5 * 17 + 6} szin="#475569" meret={11} vastag={false} opacitas={halmaz === "c" ? rO : Math.max(nagyIvU, bFel)} horgony="start">
+          <FeliratA x={70} y={44 + 5 * 17 + 6} szin="#475569" meret={11} vastag={false} opacitas={halmaz === "c" ? rO : Math.max(nagyIvU, bFel)} horgony="start">
             {halmaz === "c" ? "R ≠ 0 → az eredő egyetlen erő" : "R = 0, M ≠ 0 → az eredő erőpár"}
           </FeliratA>
-          {/* nagy ív az origóban a kapott nyomatékkal */}
-          <IvA cx={OX} cy={OY} r={58} kezdoFok={130} vegFok={50} u={nagyIvU} szin="#9f1239" vastag={2 + Math.min(4, Math.abs(Msum) / 30)} hegy="h4-m" opacitas={(1 - csusz) * 0.95} />
+          {/* az eredő nyomaték íve a lista alatt (szabad vektor: bárhová rajzolható); az órajárással egyező, mert ΣM < 0 */}
+          <IvA cx={150} cy={172} r={26} kezdoFok={150} vegFok={30} u={nagyIvU} szin="#9f1239" vastag={2 + Math.min(4, Math.abs(Msum) / 30)} hegy="h4-m" opacitas={(1 - csusz) * 0.95} />
+          <FeliratA x={150} y={176} szin="#9f1239" meret={11.5} opacitas={nagyIvU * (1 - csusz)}>ΣM</FeliratA>
         </g>
       )}
 
       {/* c): R az origóban, majd x0-ba csúszik */}
       {rO > 0.02 && (
         <g>
-          <NyilA x1={px(rTolas)} y1={OY} x2={px(rTolas) + R.x * E * 8} y2={OY - R.y * E * 8} u={rO} szin="#7c3aed" hegy="h4-r" vastag={4} />
-          <FeliratA x={px(rTolas) + 10} y={OY - R.y * E * 8 - 6} szin="#7c3aed" meret={12.5} opacitas={rO} horgony="start">R (8× nagyítva)</FeliratA>
+          <NyilA x1={px(rTolas)} y1={OY} x2={px(rTolas) + R.x * E * 6} y2={OY - R.y * E * 6} u={rO} szin="#7c3aed" hegy="h4-r" vastag={4} />
+          <FeliratA x={px(rTolas) + 10} y={OY + 18} szin="#7c3aed" meret={12.5} opacitas={rO} horgony="start">R = 1,755 kN (6× nagyítva)</FeliratA>
           <PontA x={px(X0)} y={OY} r={4.5} szin="#7c3aed" u={x0Fel} />
           <g opacity={x0Fel}>
-            <VonalA x1={OX} y1={OY + 76} x2={px(X0)} y2={OY + 76} szin="#7c3aed" vastag={1.3} szaggatott={false} />
-            <FeliratA x={px(X0 / 2)} y={OY + 92} szin="#7c3aed" meret={12.5}>x₀ = −18,8 m</FeliratA>
+            <VonalA x1={OX} y1={OY + 96} x2={px(X0)} y2={OY + 96} szin="#7c3aed" vastag={1.3} szaggatott={false} />
+            <FeliratA x={px(X0 / 2)} y={OY + 112} szin="#7c3aed" meret={12.5}>x₀ = −18,8 m</FeliratA>
           </g>
         </g>
       )}

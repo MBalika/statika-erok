@@ -68,8 +68,9 @@ export function AbraGyf2() {
       <path d="M 295 155 A 45 45 0 0 0 284 127" fill="none" stroke="#64748b" strokeWidth="1.1" />
       <text x="298" y="143" fontSize="11.5" fill="#64748b">40°</text>
 
-      <path d={`M ${OX - 40} ${OY} A 40 40 0 0 0 ${OX - 33} ${OY - 23}`} fill="none" stroke="#7c3aed" strokeWidth="1.1" />
-      <text x={OX - 76} y={OY - 12} fontSize="11.5" fill="#7c3aed">55°</text>
+      {/* 55°: a negatív x tengelytől a t tengelyig (125°) – óramutató járásával ellentétesen a t felé */}
+      <path d={`M ${OX - 40} ${OY} A 40 40 0 0 1 ${OX + 40 * Math.cos(fok(125))} ${OY - 40 * Math.sin(fok(125))}`} fill="none" stroke="#7c3aed" strokeWidth="1.1" />
+      <text x={OX - 78} y={OY - 14} fontSize="11.5" fill="#7c3aed">55°</text>
 
       <path d={`M ${OX} ${OY + 52} A 52 52 0 0 0 ${OX + 22} ${OY + 47}`} fill="none" stroke="#64748b" strokeWidth="1.1" />
       <text x={OX + 13} y={OY + 72} fontSize="11.5" fill="#64748b" textAnchor="middle">
@@ -146,8 +147,9 @@ export function AbraGyf3() {
       <text x={x2 + 10} y={y2 + 16} fontSize="13" fontWeight="650" fill="#0f766e">F₂</text>
       <text x={x3 + 12} y={y3 - 6} fontSize="13" fontWeight="650" fill="#7c3aed">F₃ = ?</text>
 
-      <path d={`M ${OX - 45} ${OY} A 45 45 0 0 0 ${OX - 37} ${OY - 26}`} fill="none" stroke="#64748b" strokeWidth="1.1" />
-      <text x={OX - 82} y={OY - 14} fontSize="11.5" fill="#64748b">55°</text>
+      {/* 55°: a negatív x tengelytől az F₁-ig (125°) */}
+      <path d={`M ${OX - 45} ${OY} A 45 45 0 0 1 ${OX + 45 * Math.cos(fok(125))} ${OY - 45 * Math.sin(fok(125))}`} fill="none" stroke="#64748b" strokeWidth="1.1" />
+      <text x={OX - 84} y={OY - 16} fontSize="11.5" fill="#64748b">55°</text>
 
       <path d={`M ${OX} ${OY + 52} A 52 52 0 0 0 ${OX + 22} ${OY + 47}`} fill="none" stroke="#64748b" strokeWidth="1.1" />
       <text x={OX + 13} y={OY + 72} fontSize="11.5" fill="#64748b" textAnchor="middle">

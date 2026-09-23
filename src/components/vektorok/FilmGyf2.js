@@ -4,7 +4,7 @@ import FeladatFilm from "@/components/anim/FeladatFilm";
 import { arany, lerp, rugo } from "@/components/anim/Idovonal";
 import { Hegy, NyilA, VonalA, FeliratA, IvA, PontA } from "@/components/anim/FilmElemek";
 
-const OX = 120;
+const OX = 150; // a bal oldalon hely kell az „Ry = …” feliratnak
 const OY = 140;
 const E = 19; // képpont / N
 const RAD = Math.PI / 180;
@@ -103,9 +103,9 @@ function Rajz(t) {
       </defs>
 
       {/* tengelyek */}
-      <line x1={OX - 40} y1={OY} x2={OX + 420} y2={OY} stroke="#475569" strokeWidth="1.2" markerEnd="url(#f2-t)" />
+      <line x1={OX - 40} y1={OY} x2={OX + 400} y2={OY} stroke="#475569" strokeWidth="1.2" markerEnd="url(#f2-t)" />
       <line x1={OX} y1={OY + 200} x2={OX} y2={OY - 120} stroke="#475569" strokeWidth="1.2" markerEnd="url(#f2-t)" />
-      <text x={OX + 426} y={OY + 5} fontSize="13" fontStyle="italic" fill="#1d3c48">x</text>
+      <text x={OX + 406} y={OY + 5} fontSize="13" fontStyle="italic" fill="#1d3c48">x</text>
       <text x={OX + 7} y={OY - 124} fontSize="13" fontStyle="italic" fill="#1d3c48">y</text>
 
       {/* --- eredeti erők --- */}
@@ -115,7 +115,7 @@ function Rajz(t) {
           [14, -8],
           [12, -10],
           [12, 16],
-          [-24, 14],
+          [-32, 14],
         ][i];
         return (
           <g key={e.nev} opacity={halvany}>
@@ -149,8 +149,8 @@ function Rajz(t) {
         <VonalA x1={px(K[2].x)} y1={py(K[2].y)} x2={OX} y2={py(K[2].y)} u={f3seged} szin="#2563eb" />
         <NyilA x1={OX} y1={OY} x2={px(K[2].x)} y2={OY} u={f3komp} szin="#2563eb" hegy="f2-c" vastag={2.2} />
         <NyilA x1={OX} y1={OY} x2={OX} y2={py(K[2].y)} u={f3komp} szin="#2563eb" hegy="f2-c" vastag={2.2} />
-        <FeliratA x={px(K[2].x / 2)} y={OY - 8} szin="#2563eb" meret={11} opacitas={f3komp}>3,381</FeliratA>
-        <FeliratA x={OX - 24} y={py(K[2].y / 2) + 4} szin="#2563eb" meret={11} opacitas={f3komp}>−7,250</FeliratA>
+        <FeliratA x={px(K[2].x / 2) - 6} y={py(K[2].y) - 5} szin="#2563eb" meret={11} opacitas={f3komp}>3,381</FeliratA>
+        <FeliratA x={px(K[2].x) + 5} y={py(K[2].y / 2) + 4} szin="#2563eb" meret={11} opacitas={f3komp} horgony="start">−7,250</FeliratA>
       </g>
 
       {/* --- 4. fejezet: x komponensek egymás után --- */}
@@ -222,7 +222,7 @@ function Rajz(t) {
           <FeliratA x={px(lanc[2].x) + 10} y={py(lanc[2].y) - 12} szin="#475569" meret={11.5} vastag={false} opacitas={vegFel} horgony="start">
             láncszabály: F₁ → F₂ → F₃ → F₄
           </FeliratA>
-          <FeliratA x={px(RX) + 14} y={py(RY) + 24} szin="#475569" meret={11.5} vastag={false} opacitas={vegFel} horgony="start">
+          <FeliratA x={px(RX) - 30} y={py(RY) + 42} szin="#475569" meret={11.5} vastag={false} opacitas={vegFel}>
             a lánc vége = az eredő hegye ✓
           </FeliratA>
         </g>

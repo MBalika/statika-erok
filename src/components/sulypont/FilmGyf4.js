@@ -115,13 +115,13 @@ function Rajz(t) {
       {/* tengelyek */}
       <line x1={OX} y1={OY} x2={OX - 150} y2={OY} stroke="#475569" strokeWidth="1.2" markerEnd="url(#s4-t)" />
       <line x1={OX} y1={OY} x2={OX} y2={Y(300) + 24} stroke="#475569" strokeWidth="1.2" markerEnd="url(#s4-t)" opacity={0.7} />
-      <text x={OX - 156} y={OY + 4} textAnchor="end" fontSize="12" fontStyle="italic" fill="#1d3c48">y</text>
+      <text x={OX - 150} y={OY - 6} textAnchor="middle" fontSize="12" fontStyle="italic" fill="#1d3c48">y</text>
       <text x={OX + 6} y={Y(300) + 30} fontSize="12" fontStyle="italic" fill="#1d3c48">z</text>
 
       {/* fejlemez */}
       <g transform={`translate(0 ${ovDy})`}>
         <rect x={X(150)} y={Y(0)} width={300 * M} height={30 * M} fill={ovSzin} stroke={OV_S} strokeWidth="1.5" opacity={korvU} />
-        <FeliratA x={X(-90)} y={Y(15) + 4} szin={OV_S} meret={12} opacitas={teruletFel * (1 - repul * 0.5)}>A₁ = 9 000 mm²</FeliratA>
+        <FeliratA x={X(82)} y={Y(30) + 15} szin={OV_S} meret={12} opacitas={teruletFel * (1 - repul * 0.5)}>A₁ = 9 000 mm²</FeliratA>
       </g>
       {/* gerinc */}
       <g transform={`translate(0 ${gerDy})`}>

@@ -8,6 +8,9 @@ import { M } from "@/components/ui/Keplet";
 const KEZDO_R = { x: -5, y: 3.3, z: 4.7 };
 const KEZDO_F = { x: 800, y: 600, z: -300 };
 
+/** Negatív számot zárójelbe tesz, hogy a kivonás egyértelmű legyen: − (−5,0)·(−300). */
+const z = (v, tizedes) => (v < 0 ? `(${szK(v, tizedes)})` : szK(v, tizedes));
+
 export default function TerbeliNyomatekKalk() {
   const [r, setR] = useState(KEZDO_R);
   const [F, setF] = useState(KEZDO_F);
@@ -95,13 +98,13 @@ export default function TerbeliNyomatekKalk() {
           </p>
           <div className="szamok mt-2 space-y-1.5 text-[13.5px] text-violet-950">
             <div>
-              <M>{`M_x = y F_z - z F_y = ${szK(r.y, 1)}\\cdot(${szK(F.z, 0)}) - ${szK(r.z, 1)}\\cdot(${szK(F.y, 0)}) = ${szK(Mx, 1)}`}</M>
+              <M>{`M_x = y F_z - z F_y = ${szK(r.y, 1)}\\cdot${z(F.z, 0)} - ${z(r.z, 1)}\\cdot${z(F.y, 0)} = ${szK(Mx, 1)}`}</M>
             </div>
             <div>
-              <M>{`M_y = z F_x - x F_z = ${szK(r.z, 1)}\\cdot(${szK(F.x, 0)}) - ${szK(r.x, 1)}\\cdot(${szK(F.z, 0)}) = ${szK(My, 1)}`}</M>
+              <M>{`M_y = z F_x - x F_z = ${szK(r.z, 1)}\\cdot${z(F.x, 0)} - ${z(r.x, 1)}\\cdot${z(F.z, 0)} = ${szK(My, 1)}`}</M>
             </div>
             <div>
-              <M>{`M_z = x F_y - y F_x = ${szK(r.x, 1)}\\cdot(${szK(F.y, 0)}) - ${szK(r.y, 1)}\\cdot(${szK(F.x, 0)}) = ${szK(Mz, 1)}`}</M>
+              <M>{`M_z = x F_y - y F_x = ${szK(r.x, 1)}\\cdot${z(F.y, 0)} - ${z(r.y, 1)}\\cdot${z(F.x, 0)} = ${szK(Mz, 1)}`}</M>
             </div>
             <div className="border-t border-violet-200 pt-1.5">
               <M>{`|\\underline{M}| = ${szK(hossz, 1)}\\ \\text{Nm}`}</M>

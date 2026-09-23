@@ -72,7 +72,7 @@ function Hegy({ id, szin }) {
 }
 
 /** Függőleges erő a rúdon: a nyíl hegye a rúdon (teher), felfelé mutató erőnél a rúdból indul. */
-function EroNyil({ x, F, szin, hegy, nev, opacitas = 1, vastag = 3.2 }) {
+function EroNyil({ x, F, szin, hegy, nev, opacitas = 1, vastag = 3.2, feliratEltolas = 0 }) {
   const px = CX + x * PXM;
   const h = Math.abs(F) * E + 10;
   const y1 = F < 0 ? CY - 8 - h : CY + 8 + h;
@@ -82,7 +82,7 @@ function EroNyil({ x, F, szin, hegy, nev, opacitas = 1, vastag = 3.2 }) {
       <line x1={px} y1={y1} x2={px} y2={y2} stroke={szin} strokeWidth={vastag} strokeLinecap="round" markerEnd={`url(#${hegy})`} />
       <text
         x={px}
-        y={F < 0 ? y1 - 8 : y1 + 16}
+        y={(F < 0 ? y1 - 8 : y1 + 16) + feliratEltolas}
         textAnchor="middle"
         fontWeight="650"
         style={{ fontSize: 11.5, fill: szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}
@@ -269,12 +269,13 @@ export default function JatekMerleg() {
             {[-4, -3, -2, -1, 0, 1, 2, 3, 4].map((m) => (
               <g key={m}>
                 <line x1={CX + m * PXM} y1={CY - 8} x2={CX + m * PXM} y2={CY + 8} stroke="#94a3b8" strokeWidth={m === 0 ? 1.6 : 0.8} />
-                <text x={CX + m * PXM} y={CY + 30} textAnchor="middle" style={{ fontSize: 10.5, fill: "#64748b" }}>
+                {/* a méretszámok a rúd belsejében, hogy a felfelé mutató erők nyila ne takarja őket */}
+                <text x={CX + m * PXM + (m > 0 ? -10 : m < 0 ? 10 : 0)} y={CY + 4} textAnchor="middle" style={{ fontSize: 10, fill: "#475569" }}>
                   {m === 0 ? "O" : `${m > 0 ? "+" : "−"}${Math.abs(m)}`}
                 </text>
               </g>
             ))}
-            <text x={CX + 4 * PXM + 14} y={CY + 30} style={{ fontSize: 10, fill: "#94a3b8" }}>m</text>
+            <text x={CX + 4 * PXM + 16} y={CY + 4} style={{ fontSize: 10, fill: "#94a3b8" }}>m</text>
 
             {adat && adat.erok.map((e, i) => <EroNyil key={i} x={e.x} F={e.F} szin={e.szin} hegy={`jm-${i}`} nev={e.nev} />)}
 
@@ -304,7 +305,7 @@ export default function JatekMerleg() {
             )}
             {/* a helyes hely ellenőrzéskor */}
             {adat && ellenorizve && !jo && (
-              <EroNyil x={adat.xb} F={adat.Fb} szin={ZOLD} hegy="jm-zold" nev="helyes" opacitas={0.6} />
+              <EroNyil x={adat.xb} F={adat.Fb} szin={ZOLD} hegy="jm-zold" nev="helyes" opacitas={0.6} feliratEltolas={adat.Fb < 0 ? -15 : 15} />
             )}
             {/* fogópont */}
             {adat && sajatX !== null && fazis === "huz" && (

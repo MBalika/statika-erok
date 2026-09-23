@@ -7,7 +7,7 @@ import { Hegy, NyilA, VonalA, FeliratA, PontA } from "@/components/anim/FilmElem
 /* GYF‑A: félkörív mentén megoszló, az ívre merőleges teher eredője (Tankönyv 3.22. ábra). */
 
 const CX = 300;
-const CY = 262;
+const CY = 300; // lejjebb, hogy a függőleges részeredők és feliratuk a viewBoxon belül maradjanak
 const RP = 130; // képpont, R = 3 m
 const H = 30; // a p teherábra vastagsága (px)
 const R_M = 3;
@@ -81,7 +81,7 @@ function Rajz(t) {
   const nyilak = Array.from({ length: DB + 1 }, (_, i) => (Math.PI * i) / DB);
 
   return (
-    <svg viewBox="0 0 600 400" className="abra w-full select-none">
+    <svg viewBox="0 0 600 440" className="abra w-full select-none">
       <defs>
         <Hegy id="iv-n" szin={NAR} />
         <Hegy id="iv-t" szin={TEAL} />
@@ -104,8 +104,8 @@ function Rajz(t) {
       <g opacity={blokk * (1 - 0.6 * ryOssz)}>
         <rect x={CX - RP} y={BLOKK_FEL - H} width={RP} height={H} fill={TEAL} opacity="0.16" stroke={TEAL} strokeWidth="1.3" />
         <rect x={CX} y={BLOKK_FEL - H} width={RP} height={H} fill={KEK} opacity="0.16" stroke={KEK} strokeWidth="1.3" />
-        <FeliratA x={CX - RP / 2} y={BLOKK_FEL - H - 8} szin={TEAL} meret={11.5}>p a bal vetületen (R)</FeliratA>
-        <FeliratA x={CX + RP / 2} y={BLOKK_FEL - H - 8} szin={KEK} meret={11.5}>p a jobb vetületen (R)</FeliratA>
+        <FeliratA x={CX - RP / 2 - 6} y={BLOKK_FEL - H - 8} szin={TEAL} meret={11.5}>p a bal vetületen</FeliratA>
+        <FeliratA x={CX + RP / 2 + 6} y={BLOKK_FEL - H - 8} szin={KEK} meret={11.5}>p a jobb vetületen</FeliratA>
       </g>
       <g opacity={blokk * (1 - 0.6 * rxOssz)}>
         <rect x={BLOKK_BAL - H} y={CY - RP} width={H} height={RP} fill={TEAL} opacity="0.16" stroke={TEAL} strokeWidth="1.3" />

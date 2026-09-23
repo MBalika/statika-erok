@@ -156,7 +156,7 @@ function Rajz(t) {
           <NyilA x1={px(P.x)} y1={py(P.y)} x2={px(P.x + Fx)} y2={py(P.y)} u={kompPU} szin={KEK} hegy="nf4-k" vastag={2.6} />
           <NyilA x1={px(P.x)} y1={py(P.y)} x2={px(P.x)} y2={py(P.y + Fy)} u={kompPU} szin={KEK} hegy="nf4-k" vastag={2.6} />
           <FeliratA x={px(P.x + Fx) + 4} y={py(P.y) + 16} szin={KEK} meret={11.5} opacitas={kompPU} horgony="start">6 kN</FeliratA>
-          <FeliratA x={px(P.x) - 8} y={py(P.y + Fy) + 12} szin={KEK} meret={11.5} opacitas={kompPU} horgony="end">3 kN</FeliratA>
+          <FeliratA x={px(P.x) + 8} y={py(P.y + Fy) + 14} szin={KEK} meret={11.5} opacitas={kompPU} horgony="start">3 kN</FeliratA>
           <VonalA x1={OX + 2} y1={py(P.y)} x2={px(P.x) - 2} y2={py(P.y)} u={karPU} szin={KEK} vastag={2} szaggatott={false} />
           <VonalA x1={px(P.x)} y1={OY - 2} x2={px(P.x)} y2={py(P.y) + 2} u={karPU} szin={KEK} vastag={2} szaggatott={false} />
           <FeliratA x={px(P.x / 2)} y={py(P.y) - 6} szin={KEK} meret={11} vastag={false} opacitas={karPU}>kar: 2 m</FeliratA>
@@ -190,7 +190,7 @@ function Rajz(t) {
           <NyilA x1={OX} y1={py(4)} x2={px(Fx)} y2={py(4)} u={kompYU} szin={KEK} hegy="nf4-k" vastag={2.6} />
           <NyilA x1={OX} y1={py(4)} x2={OX} y2={py(4 + Fy)} u={kompYU} szin={KEK} hegy="nf4-k" vastag={2.6} />
           <FeliratA x={px(Fx) + 4} y={py(4) - 8} szin={KEK} meret={11.5} opacitas={kompYU} horgony="start">6 kN — karja 4 m</FeliratA>
-          <FeliratA x={OX + 8} y={py(4 + Fy) - 6} szin={KEK} meret={10.5} opacitas={kompYU} horgony="start">3 kN — karja 0</FeliratA>
+          <FeliratA x={OX + 8} y={py(4 + Fy) + 18} szin={KEK} meret={10.5} opacitas={kompYU} horgony="start">3 kN, karja 0</FeliratA>
           <VonalA x1={OX - 8} y1={OY - 2} x2={OX - 8} y2={py(4) + 2} u={kompYU} szin={KEK} vastag={2} szaggatott={false} />
           <FeliratA x={px(6.6)} y={py(3.9)} szin={KEK} meret={12.5} opacitas={kompYU}>−6·4 + 0 = −24</FeliratA>
         </g>
@@ -199,7 +199,7 @@ function Rajz(t) {
       {/* a forgásirány az origó körül (mindegyik módszernél ugyanaz) */}
       <IvA cx={OX} cy={OY} r={30} kezdoFok={150} vegFok={30} u={forgIv} szin={BORDO} vastag={2.6} hegy="nf4-m" />
       <FeliratA x={OX + 44} y={OY - 34} szin={BORDO} meret={12.5} opacitas={kepletFel} horgony="start">
-        M_O = −24 kNm ↷
+        M<tspan baselineShift="sub" fontSize="9">O</tspan> = −24 kNm ↷
       </FeliratA>
     </svg>
   );
