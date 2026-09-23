@@ -216,6 +216,12 @@ export const extraOldalak = [
     leiras: "Igénybevételi ábrák tetszőleges tartóra: N, V, M, reakciók, metszetértékek.",
   },
   {
+    slug: "/epito",
+    rovid: "Tartóépítő és ábrarajzoló",
+    menu: "Építő",
+    leiras: "Itt te rajzolsz: építs gerendát, Gerber-tartót, ferde rudat vagy keretet, tedd fel a terheket, és rajzold meg a V és M ábrát. Minden hibádról megtudod, melyik szabály sérült — korlátlan újrapróbálkozás, fokozatos segítség, kihívás mód.",
+  },
+  {
     slug: "/hibanaplo",
     rovid: "Hibanapló",
     menu: "Hibák",

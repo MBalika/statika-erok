@@ -250,6 +250,19 @@ oldalhoz elég ezeket átírni.
 - Bekötések: útvonal (5–7. hét, vizsgatípusok), zh-szimulátor 7 feladattal (30/45/60 perc), puska 7–8. lap, a 8–10. modul
   „hamarosan” oldalai, fejléc: a modulok számozott gombokkal (csak az aktív felirata látszik), `fokszamMerleg` testszámlálás javítva.
 
+## 13. kör: Tartóépítő és ábrarajzoló (`/epito`)
+
+- Önálló gyakorló eszköz: a hallgató **maga épít** tetszőleges síkbeli tartót (rácsos vászon: csomópontok, rudak – ferde is –,
+  belső csuklók, görgő/csukló/befogás, erők, nyomatékok, megoszló terhek; visszavonás, sablonok, véletlen tartó három nehézségen,
+  mentés a „Saját tartóim” közé, megosztás `#m=<base64url>` linkkel), majd **ő rajzolja meg** rá a V, M (és N) ábrát fogópontokkal,
+  a rúdra merőlegesen (keretnél is), alakválasztóval és szélsőérték-fogóponttal; opcionálisan a reakciókat is tippeli.
+- Ellenőrzés a motorral (`src/lib/epito/ellenorzes.js`): 13 hibakód konkrét, tanító üzenettel (érték, előjel, hiányzó/rossz/
+  fölösleges ugrás, M ≠ 0 csuklóban, szabad vég, szélső támasz, alak, meredekség dM/dx = V, szélsőérték V = 0-nál, keret-sarok,
+  reakció), pontozás súlyokkal és felső korláttal (a jó fogópontok aránya), három fokozatú segítség (hol → szabály → a pontos
+  ábra ráúszik), korlátlan „Javítom”, „Megoldás és levezetés”. Kihívás mód `JatekKeret`-ben (5 kör, hibanapló).
+- Tiszta logika `src/lib/epito/` (`modell.js` szerkesztő-állapot ⇄ motor-modell, `sablonok.js`, `veletlen.js`, `rajz.js`),
+  teszt `node src/lib/epito/teszt-epito.mjs` (100 ellenőrzés). Komponensek `src/components/epito/`.
+
 ## 12. kör: 10. modul – Térbeli tartók
 
 - `/terbeli`, `src/components/terbeli/` (axonometrikus SVG rajzok `Axono.js`/`TerbeliRajzok.js`, GYF, kalkulátorok, gyakorlás),
