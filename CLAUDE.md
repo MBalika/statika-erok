@@ -10,7 +10,9 @@ projektet tartalmazó) csomagot, **azonnal, külön utasítás nélkül** végig
 csinálni az alábbi folyamatot. Nem kell rákérdezni, és nem kell megvárni, hogy
 a felhasználó leírja a lépéseket.
 
-1. **Kicsomagolás** a scratchpad mappába (ne a repóba).
+1. **Kicsomagolás** a scratchpad mappába (ne a repóba). A csomag gyökere
+   néha egy tartalmazó mappa (pl. `statika/`) — ilyenkor annak a tartalma
+   számít projektgyökérnek, a további lépések arra vonatkoznak.
 2. **Fájllista-ellenőrzés**: a csomag fájllistájának összevetése a repóéval
    (a `Claude outputs/` mappát és a `CLAUDE.md`-t figyelmen kívül hagyva).
    A hozzáadott és törölt fájlokat külön jelezni kell az összefoglalóban.
