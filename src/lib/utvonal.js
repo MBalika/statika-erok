@@ -198,12 +198,12 @@ export const HETEK = [
       "Háromlábú bakállvány, térbeli konzol reakciói",
       "Térbeli igénybevételek",
     ],
-    modulok: [],
+    modulok: ["/terbeli"],
     hFeladat: "H13",
     hTemak: "térbeli feladatok",
     tankonyv: "9.1–9.3 (161–171. o.)",
     cel: "Térbeli szerkezet reakcióit hat egyensúlyi egyenlettel kiszámolod, és a térbeli igénybevételeket is felírod.",
-    allapot: "hamarosan",
+    allapot: "kesz",
   },
   {
     het: 13,
@@ -265,8 +265,8 @@ export const VIZSGA_TIPUSOK = [
     tipus: "Térbeli feladat",
     leiras: "Térbeli erőrendszer eredője vagy térbeli tartó reakciói hat egyenlettel.",
     hetek: [12],
-    modulok: [],
-    allapot: "hamarosan",
+    modulok: ["/terbeli"],
+    allapot: "kesz",
   },
 ];
 

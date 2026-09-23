@@ -19,6 +19,8 @@ import { GENERATOROK as H1 } from "@/components/hatarozottsag/GyakorloSzekcio";
 import { EXTRA_GENERATOROK as H2 } from "@/components/hatarozottsag/GyakorloExtra";
 import { GENERATOROK as I1 } from "@/components/igenybevetel/GyakorloSzekcio";
 import { EXTRA_GENERATOROK as I2 } from "@/components/igenybevetel/GyakorloExtra";
+import { GENERATOROK as X1 } from "@/components/terbeli/GyakorloSzekcio";
+import { EXTRA_GENERATOROK as X2 } from "@/components/terbeli/GyakorloExtra";
 
 const MODULOK = [
   { nev: "Vektorok", szin: "bg-petrol-600", gen: [...V1, ...V2] },
@@ -30,6 +32,7 @@ const MODULOK = [
   { nev: "Rácsos tartók", szin: "bg-amber-600", gen: [...R1, ...R2] },
   { nev: "Határozottság", szin: "bg-violet-700", gen: [...H1, ...H2] },
   { nev: "Igénybevételi ábrák", szin: "bg-emerald-700", gen: [...I1, ...I2] },
+  { nev: "Térbeli tartók", szin: "bg-petrol-800", gen: [...X1, ...X2] },
 ];
 const KULCS = "statika-zh-elozmenyek";
 const valaszt = (t) => t[Math.floor(Math.random() * t.length)];
@@ -164,7 +167,7 @@ export default function ZhSzimulator() {
         <div className="rounded-2xl border border-[color:var(--keret)] bg-white p-5 sm:p-6">
           <p className="text-[11px] font-bold tracking-[0.16em] text-naracs-600 uppercase">Hogyan működik</p>
           <ul className="mt-3 space-y-2 text-[14.5px] leading-relaxed text-petrol-700">
-            <li>Kilenc véletlen feladat, modulonként egy — ugyanazokból a típusokból, mint a gyakorló dobozok, de <strong>segítség és ellenőrzés nélkül</strong>.</li>
+            <li>Tíz véletlen feladat, modulonként egy — ugyanazokból a típusokból, mint a gyakorló dobozok, de <strong>segítség és ellenőrzés nélkül</strong>.</li>
             <li>Az óra indul, és a beadásig (vagy az idő lejártáig) nincs visszajelzés. Papírral, számológéppel dolgozz, ahogy a zh-n.</li>
             <li>A végén mezőnként látod, mi volt jó, mi nem, és minden feladathoz megnyithatod a teljes levezetést.</li>
             <li>Az eredményeid ebben a böngészőben elmentődnek, hogy lásd a fejlődést.</li>

@@ -191,7 +191,7 @@ export const modulok = [
     leiras:
       "Térbeli kényszerek és hat egyensúlyi egyenlet, háromlábú bakállvány, befogott térbeli konzol, térbeli rácsos tartó, térbeli igénybevételek.",
     ikon: "terbeli",
-    kesz: false,
+    kesz: true,
     szakaszok: [
       { id: "elmelet", cim: "Elmélet" },
       { id: "peldak", cim: "Kidolgozott feladatok" },
@@ -225,7 +225,7 @@ export const extraOldalak = [
     slug: "/zh",
     rovid: "Zh-szimulátor",
     menu: "Zh",
-    leiras: "Kilenc véletlen feladat órával, segítség nélkül – mint a zárthelyin.",
+    leiras: "Tíz véletlen feladat órával, segítség nélkül – mint a zárthelyin.",
   },
   {
     slug: "/puska",

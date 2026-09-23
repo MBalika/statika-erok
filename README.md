@@ -250,6 +250,16 @@ oldalhoz elég ezeket átírni.
 - Bekötések: útvonal (5–7. hét, vizsgatípusok), zh-szimulátor 7 feladattal (30/45/60 perc), puska 7–8. lap, a 8–10. modul
   „hamarosan” oldalai, fejléc: a modulok számozott gombokkal (csak az aktív felirata látszik), `fokszamMerleg` testszámlálás javítva.
 
+## 12. kör: 10. modul – Térbeli tartók
+
+- `/terbeli`, `src/components/terbeli/` (axonometrikus SVG rajzok `Axono.js`/`TerbeliRajzok.js`, GYF, kalkulátorok, gyakorlás),
+  3D jelenetek `src/components/harom/Terbeli*.js` (`TerbeliAlap.js` közös elemek statikai x-y-z koordinátákkal), számítómag
+  `src/lib/terbeli.js` (6×6 megoldó, bakállvány, támasztórudak, befogott konzol, térbeli rácsos, N/V_y/V_z/T/M_y/M_z, visszahelyettesítés).
+- 3D felfedezők: forgatható szabadtest-ábra (a befogás helyett a hat reakció animálva nő ki), bakállvány (piros/kék rudak ∝ |S|),
+  térbeli konzol elvágása (hat komponens nyilakkal), térbeli rácsos csomópont; 7 GYF (H13/1–4, vizsgaminta 5.) 3 filmmel (2 db 3D);
+  támasztórúd- és bakállvány-kalkulátor; „Melyik rúd húzott?” játék, 10 generátor, 15 kvíz, 6 hibakereső, puska-lap. Zh: 10 feladat.
+- Ezzel a tankönyv mind a 9 fejezete és a vizsga mind az 5 feladattípusa fent van.
+
 ## 11. kör: 9. modul – Igénybevételi ábrák
 
 - `/igenybevetel`, `src/components/igenybevetel/`, ábrák `src/components/abrak/IgenybevetelAbrak.js`; a diagramokat a motor
