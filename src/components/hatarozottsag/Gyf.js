@@ -56,7 +56,7 @@ export default function GyfBlokkok() {
         </Lepes>
         <Lepes cim="a) Geometriai ellenőrzés: egyismeretlenes menetrend">
           <p>
-            A hatásvonalak: <M>{"A"}</M> ferde (<M>{"45^\\circ"}</M>), <M>{"B"}</M> és <M>{"C"}</M> függőleges. Páronként metszik egymást, közös pontjuk nincs. Menetrend, amelyben minden egyenletben egy új ismeretlen szerepel nemzérus együtthatóval: a vízszintes vetületi egyenletben csak <M>{"A"}</M>; a{" "}
+            A hatásvonalak: <M>{"A"}</M> ferde (<M>{"45^\\circ"}</M>), <M>{"B"}</M> és <M>{"C"}</M> függőleges. <M>{"B"}</M> és <M>{"C"}</M> párhuzamos, de <M>{"A"}</M> mindkettőt metszi: nem mind párhuzamos, és nincs közös pontjuk — az elrendezés nem kritikus. Menetrend, amelyben minden egyenletben egy új ismeretlen szerepel nemzérus együtthatóval: a vízszintes vetületi egyenletben csak <M>{"A"}</M>; a{" "}
             <M>{"B"}</M>-re írt nyomatéki egyenletben (az <M>{"A"}</M> már ismert) csak <M>{"C"}</M>; a függőleges vetületiben csak <M>{"B"}</M>. Ha ilyen menetrend létezik, az <M>{"e = i"}</M> egyenlőséggel együtt <strong>bizonyítja</strong> a határozottságot.
           </p>
           <MB>{"(\\underline{F}, \\underline{H}, \\underline{A}, \\underline{B}, \\underline{C}) \\ekv \\underline{O}"}</MB>
@@ -300,7 +300,7 @@ export default function GyfBlokkok() {
         <Lepes cim="7.10.a és b: túlhatározott (e > i)">
           <MB>{"\\text{a) } r + k = 8 + 3 = 11 < 12,\\qquad \\text{b) } r + k = 9 + 2 = 11 < 12"}</MB>
           <p>
-            a) Az átló nélküli mező négyszög, nem merev: a jobb felső sarok „háromcsuklós tartóját” levéve a maradék téglalap a csukló körül elfordul. b) A merev test két görgőn áll: vízszintesen elgördül. Mindkettő mechanizmus.
+            a) Az átló nélküli mező négyszög, nem merev: a jobb felső sarok „háromcsuklós tartóját” levéve a maradék bal mező paralelogrammává ferdülhet. b) A merev test két görgőn áll: vízszintesen elgördül. Mindkettő mechanizmus.
           </p>
         </Lepes>
         <Lepes cim="7.10.c és d: határozatlan (e < i)">

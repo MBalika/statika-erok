@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement } from "react";
 import { M } from "@/components/ui/Keplet";
 
 /*
@@ -381,3 +382,9 @@ export const HIBAK = [
     tanulsag: <>Konzolnál a szabad vég felől indulj: ott az igénybevételek nullák (hacsak nem hat ott koncentrált erő vagy nyomaték), és a befogás felé nőnek. A legnagyobb <M>{"V"}</M> és <M>{"M"}</M> a befogásnál van.</>,
   },
 ];
+
+// A válaszopciók kulcsot kapnak, különben a szerverről a kliens Kviz-nek átadott
+// elemtömb minden kérdésnél „unique key” figyelmeztetést ad.
+for (const q of KVIZ) {
+  if (Array.isArray(q.v)) q.v = q.v.map((el, i) => (isValidElement(el) && el.key == null ? cloneElement(el, { key: String(i) }) : el));
+}

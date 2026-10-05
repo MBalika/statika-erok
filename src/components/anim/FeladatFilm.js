@@ -4,6 +4,25 @@ import { useMemo } from "react";
 import { useIdovonal } from "./Idovonal";
 import { MB } from "@/components/ui/Keplet";
 
+// A vezérlőgombok a komponensen kívül, hogy lejátszás közben ne mountolódjanak újra képkockánként.
+function Gomb({ onClick, children, cimke, kiemelt = false }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={cimke}
+      title={cimke}
+      className={`flex h-9 items-center justify-center rounded-lg px-3 text-[13px] font-semibold transition ${
+        kiemelt
+          ? "bg-naracs-500 text-white shadow-sm hover:bg-naracs-600"
+          : "bg-white text-petrol-700 ring-1 ring-petrol-200 hover:bg-petrol-50"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
 /**
  * Lépésenként felépülő megoldás-film.
  *   cim        – a film címe
@@ -32,21 +51,6 @@ export default function FeladatFilm({ cim, hossz, fejezetek, rajz, megjegyzes })
     ugras(cel ? cel.t0 : hossz);
   };
 
-  const Gomb = ({ onClick, children, cimke, kiemelt = false }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={cimke}
-      title={cimke}
-      className={`flex h-9 items-center justify-center rounded-lg px-3 text-[13px] font-semibold transition ${
-        kiemelt
-          ? "bg-naracs-500 text-white shadow-sm hover:bg-naracs-600"
-          : "bg-white text-petrol-700 ring-1 ring-petrol-200 hover:bg-petrol-50"
-      }`}
-    >
-      {children}
-    </button>
-  );
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white shadow-sm shadow-petrol-900/[0.04]">

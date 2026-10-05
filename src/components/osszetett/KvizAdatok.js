@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement } from "react";
 import { M } from "@/components/ui/Keplet";
 
 export const KVIZ = [
@@ -286,3 +287,9 @@ export const HIBAK = [
     tanulsag: <>Elkülönítés után a terheket is szét kell osztani a testek között: minden testre csak a rá ható erők (és a csuklóerő). A teljes eredő csak az összegzett (Σ) kijelentésbe való.</>,
   },
 ];
+
+// A válaszopciók kulcsot kapnak, különben a szerverről a kliens Kviz-nek átadott
+// elemtömb minden kérdésnél „unique key” figyelmeztetést ad.
+for (const q of KVIZ) {
+  if (Array.isArray(q.v)) q.v = q.v.map((el, i) => (isValidElement(el) && el.key == null ? cloneElement(el, { key: String(i) }) : el));
+}

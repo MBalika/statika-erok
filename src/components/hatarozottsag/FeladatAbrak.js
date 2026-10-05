@@ -144,7 +144,7 @@ export const GYF7 = {
 };
 
 /** Két szerkezet egymás mellett, jelvénnyel (a GYF-ek „jó / rossz” párjaihoz). */
-export function ParosAbra({ bal, jobb, balCim, jobbCim, magassag = 250, reakciokBal, reakciokJobb, cimkekBal, cimkekJobb, meretek, margoFel = 64 }) {
+export function ParosAbra({ bal, jobb, balCim, jobbCim, magassag = 250, reakciokBal, reakciokJobb, cimkekBal, cimkekJobb, meretek, margoFel = 64, extraBal, extraJobb }) {
   const it = (sz) => kinematika(sz);
   const ib = it(bal);
   const ij = it(jobb);
@@ -153,8 +153,8 @@ export function ParosAbra({ bal, jobb, balCim, jobbCim, magassag = 250, reakciok
   return (
     <svg viewBox={`0 0 600 ${magassag}`} className="abra w-full h-auto select-none">
       <TartoHegyek />
-      <SzerkezetRajz szerkezet={bal} csoport eltolas={[0, 0]} szelesseg={300} magassag={magassag} margo={{ bal: 40, jobb: 30, fel: margoFel, le: 78 }} tamaszMeret={11} reakciok={reakciokBal} cimkek={cimkekBal} />
-      <SzerkezetRajz szerkezet={jobb} csoport eltolas={[300, 0]} szelesseg={300} magassag={magassag} margo={{ bal: 30, jobb: 40, fel: margoFel, le: 78 }} tamaszMeret={11} reakciok={reakciokJobb} cimkek={cimkekJobb} />
+      <SzerkezetRajz szerkezet={bal} csoport eltolas={[0, 0]} szelesseg={300} magassag={magassag} margo={{ bal: 40, jobb: 30, fel: margoFel, le: 78 }} tamaszMeret={11} reakciok={reakciokBal} cimkek={cimkekBal} extra={extraBal} />
+      <SzerkezetRajz szerkezet={jobb} csoport eltolas={[300, 0]} szelesseg={300} magassag={magassag} margo={{ bal: 30, jobb: 40, fel: margoFel, le: 78 }} tamaszMeret={11} reakciok={reakciokJobb} cimkek={cimkekJobb} extra={extraJobb} />
       <line x1="300" y1="16" x2="300" y2={magassag - 12} stroke="#cbd5e1" strokeWidth="1" strokeDasharray="4 4" />
       {balCim && (
         <text x="150" y="20" textAnchor="middle" fontSize="12" fontWeight="700" style={{ fill: "#1d3c48" }}>
@@ -233,6 +233,32 @@ export function AbraGyf4() {
     </svg>
   );
 }
+/** A támasztórudak hatásvonalai a talajszintig (y = 0) szaggatva, a talajpontok megjelölve (GYF‑6: A, illetve D). */
+function rudHatasvonalak(szerkezet, pontok) {
+  // eslint-disable-next-line react/display-name
+  return (kx, ky) => (
+    <g>
+      {szerkezet.kenyszerek
+        .filter((k) => k.tipus === "rud" && Math.abs(k.irany[1]) > 1e-9)
+        .map((k, j) => {
+          const h = Math.hypot(k.irany[0], k.irany[1]);
+          const ex = k.irany[0] / h;
+          const ey = k.irany[1] / h;
+          const s = (k.y + 0.15) / -ey; // a talajszint alá egy kicsit
+          return <line key={j} x1={kx(k.x)} y1={ky(k.y)} x2={kx(k.x + s * ex)} y2={ky(k.y + s * ey)} stroke={SZINEK.szurke} strokeWidth="1" strokeDasharray="4 3" opacity="0.75" />;
+        })}
+      {pontok.map((p) => (
+        <g key={p.nev}>
+          <circle cx={kx(p.x)} cy={ky(p.y)} r="4" fill="white" stroke={p.szin} strokeWidth="1.6" />
+          <text x={kx(p.x)} y={ky(p.y) + 17} textAnchor="middle" fontSize="12" fontStyle="italic" fontWeight="650" style={{ fill: p.szin, paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+            {p.nev}
+          </text>
+        </g>
+      ))}
+    </g>
+  );
+}
+
 export function AbraGyf6() {
   return (
     <ParosAbra
@@ -244,6 +270,11 @@ export function AbraGyf6() {
       margoFel={110}
       cimkekBal={["1", "2", "3"]}
       cimkekJobb={["1", "2", "3"]}
+      extraBal={rudHatasvonalak(GYF6_KRITIKUS, [{ nev: "A", x: 0, y: 0, szin: SZINEK.bordo }])}
+      extraJobb={rudHatasvonalak(GYF6_JO, [
+        { nev: "A", x: 0, y: 0, szin: SZINEK.szurke },
+        { nev: "D", x: 1, y: 0, szin: SZINEK.zold },
+      ])}
     />
   );
 }

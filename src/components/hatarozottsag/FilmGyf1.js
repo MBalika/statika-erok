@@ -70,7 +70,7 @@ const FEJEZETEK = [
   { t0: T.a, cim: "A: görgő 45°-os síkon", szoveg: "Az első kényszer egy ferde görgő: a gördülési síkra merőleges reakció, iránya ismert, nagysága nem. Egy ismeretlen.", kepletek: ["i = 1"] },
   { t0: T.b, cim: "B: görgő vízszintes síkon", szoveg: "Függőleges reakció, egy ismeretlen. Még mindig kevés: 3 > 2, a test mozogna.", kepletek: ["i = 2"] },
   { t0: T.c, cim: "C: még egy görgő", szoveg: "A harmadik egyfokú kényszerrel a számlálás rendben: e = i = 3. Ez a határozottság SZÜKSÉGES feltétele — de nem elégséges.", kepletek: ["e = i = 3\\quad\\text{(lehet határozott)}"] },
-  { t0: T.geo, cim: "Geometriai ellenőrzés", szoveg: "A három reakció hatásvonala: A ferde, B és C függőleges. Páronként metszik egymást, nem párhuzamosak, nincs közös pontjuk. A B és C metszéspontjára írt nyomatéki egyenletben csak A marad — egyismeretlenes egyenletek sorozata létezik.", kepletek: ["\\Fx\\to A,\\quad \\Mp{B}\\to C,\\quad \\Fy\\to B"] },
+  { t0: T.geo, cim: "Geometriai ellenőrzés", szoveg: "A három reakció hatásvonala: A ferde, B és C függőleges. B és C párhuzamos, de A mindkettőt metszi: nem mind párhuzamos, és nincs közös pontjuk. A vízszintes vetületből A adódik, a B pontra írt nyomatékiból (A-t már ismerve) C, a függőleges vetületből B — egyismeretlenes egyenletek sorozata létezik.", kepletek: ["\\Fx\\to A,\\quad \\Mp{B}\\to C,\\quad \\Fy\\to B"] },
   { t0: T.reak, cim: "Egy teherre egyértelmű megoldás", szoveg: "Ha egyetlen teherre egyértelmű megoldást találunk, az e = i egyenlőséggel együtt már bizonyítja a határozottságot (tankönyv 7.3.1).", kepletek: ["\\Fx A\\cos 45^\\circ - 2 = 0 \\Rightarrow A = 2{,}828", "\\Mp{B} -10\\cdot 1{,}5 - 2\\cdot 3 + 3\\,C = 0 \\Rightarrow C = 7{,}000", "\\Fy 2 + B + 7 - 10 = 0 \\Rightarrow B = 1{,}000\\ \\text{kN}"] },
   { t0: T.fordit, cim: "Az A görgőt vízszintes síkra fordítjuk", szoveg: "A számláló meg sem rezdül: továbbra is 3 = 3. De a három hatásvonal most párhuzamos — a vízszintes vetületi egyenletben egyetlen reakció sem szerepel.", kepletek: ["\\Fx -2 = 0\\quad ?!"] },
   { t0: T.csusz, cim: "Kritikus elrendezés: kicsúszik", szoveg: "Vízszintes teherre nincs egyensúly (túlhatározott), csak függőleges teherre pedig három ismeretlenre két egyenlet jut (határozatlan). Határozatlan és túlhatározott szerkezet — nem tartó, pedig e = i.", kepletek: ["e - i = 3 - 3 = 1 - 1\\ \\text{(szabad mozgás − fölös kényszer)}"] },
@@ -94,7 +94,6 @@ function Rajz(t) {
   const kritikus = forditU > 0.99;
   const allapot = t < T.c + 1 ? undefined : kritikus ? "rossz" : t >= T.geo + 2.6 ? "jo" : undefined;
 
-  const rad = (szogA * Math.PI) / 180;
   const hv = (x, szog, hossz) => {
     const r = (szog * Math.PI) / 180;
     return { x1: x - hossz * Math.cos(r), y1: Y + hossz * Math.sin(r), x2: x + hossz * Math.cos(r), y2: Y - hossz * Math.sin(r) };
@@ -102,21 +101,19 @@ function Rajz(t) {
   const vA = hv(XA, szogA, 120);
   const vB = hv(XB, 90, 120);
   const vC = hv(XC, 90, 120);
-  // A és B metszéspontja (csak ha nem párhuzamos)
-  const metszAB = Math.abs(Math.cos(rad)) > 0.02 ? { x: XB, y: Y - (XB - XA) * Math.tan(rad) } : null;
 
   return (
     <svg viewBox="0 0 600 330" className="abra w-full select-none">
       <TartoHegyek />
       <SzamlaloA e={3} i={i} opacitas={tartoU} allapot={allapot} />
 
-      {/* hatásvonalak */}
+      {/* hatásvonalak; a menetrend nyomatéki pontja a B támasz (A-t a vízszintes vetületből már ismerjük) */}
       <g opacity={geoU * (kritikus ? 1 : 0.9)}>
         <VonalA {...vA} u={geoU} szin={kritikus ? SZ.bordo : SZ.szurke} vastag={1.2} />
         <VonalA {...vB} u={geoU} szin={kritikus ? SZ.bordo : SZ.szurke} vastag={1.2} />
         <VonalA {...vC} u={geoU} szin={kritikus ? SZ.bordo : SZ.szurke} vastag={1.2} />
-        {metszAB && metszAB.y > 20 && metszAB.y < 320 && <PontA x={metszAB.x} y={metszAB.y} r={5} szin={SZ.zold} u={metszU * (1 - forditU)} />}
-        {!kritikus && <FeliratA x={XB + 12} y={(metszAB?.y ?? 60) - 6} szin={SZ.zold} meret={11} opacitas={metszU * (1 - forditU)} horgony="start">A∩B: ide nyomatékot → C</FeliratA>}
+        {!kritikus && <PontA x={XB} y={Y} r={5} szin={SZ.zold} u={metszU * (1 - forditU)} />}
+        {!kritikus && <FeliratA x={XB + 12} y={Y - 86} szin={SZ.zold} meret={11} opacitas={metszU * (1 - forditU)} horgony="start">ΣM a B pontra → C (A már ismert)</FeliratA>}
       </g>
 
       {/* támaszok (a helyükön maradnak) */}
@@ -129,11 +126,12 @@ function Rajz(t) {
       <g opacity={cU} transform={`translate(0 ${(1 - cU) * 30})`}>
         <Gorgo x={XC} y={Y} meret={15} />
       </g>
-      <TamaszCimke x={XA - 26} y={Y + 44}>A</TamaszCimke>
-      <TamaszCimke x={XB} y={Y + 50}>B</TamaszCimke>
-      <TamaszCimke x={XC} y={Y + 50}>C</TamaszCimke>
-      <Meret x1={XA} x2={XB} y={Y + 70} cimke="3 m" opacitas={0.8} />
-      <Meret x1={XB} x2={XC} y={Y + 70} cimke="3 m" opacitas={0.8} />
+      {/* a betűk a reakciónyilak mellé, nem alájuk */}
+      <TamaszCimke x={XA - 40} y={Y + 46}>A</TamaszCimke>
+      <TamaszCimke x={XB - 16} y={Y + 50}>B</TamaszCimke>
+      <TamaszCimke x={XC - 16} y={Y + 50}>C</TamaszCimke>
+      <Meret x1={XA} x2={XB} y={Y + 78} cimke="3 m" opacitas={0.8} />
+      <Meret x1={XB} x2={XC} y={Y + 78} cimke="3 m" opacitas={0.8} />
 
       {/* a tartó a terhekkel — ez csúszik el */}
       <g transform={`translate(${dx} 0)`} opacity={tartoU}>
@@ -144,13 +142,13 @@ function Rajz(t) {
 
       {/* reakciók */}
       <g opacity={reakU * (1 - forditU)}>
-        <ReakcioNyil x={XA} y={Y + 4} hossz={44} szog={45} cimke="A = 2,828" cimkeEltolas={[-70, 10]} />
+        <ReakcioNyil x={XA} y={Y + 4} hossz={44} szog={45} cimke="A = 2,828" cimkeEltolas={[-30, 26]} />
         <ReakcioNyil x={XB} y={Y + 4} hossz={30} szog={90} cimke="B = 1,000" cimkeEltolas={[8, 4]} />
         <ReakcioNyil x={XC} y={Y + 4} hossz={66} szog={90} cimke="C = 7,000" cimkeEltolas={[8, 4]} />
       </g>
 
       {/* ítélet */}
-      <Itelet y={300} szoveg="3 = 3, és a hatásvonalak páronként metszik egymást → határozott ✓" opacitas={metszU * (1 - forditU)} />
+      <Itelet y={300} szoveg="3 = 3, nem párhuzamosak, nincs közös pontjuk → határozott ✓" opacitas={metszU * (1 - forditU)} />
       <Itelet y={300} szoveg="3 = 3, de párhuzamos hatásvonalak → kritikus, kicsúszik" szin={SZ.bordo} opacitas={csuszU} />
       {kritikus && csuszU > 0.5 && (
         <FeliratA x={300} y={Y - 92} szin={SZ.bordo} meret={12} opacitas={csuszU * (0.6 + 0.4 * lukteto(t, 1))}>

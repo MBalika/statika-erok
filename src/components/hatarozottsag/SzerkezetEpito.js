@@ -272,7 +272,7 @@ export default function SzerkezetEpito({ kezdoMod = "gerenda" }) {
       el.push(
         <g key="meret">
           {GERENDA.helyek.slice(0, -1).map((x) => (
-            <text key={x} x={(kx(x) + kx(x + 2)) / 2} y={ky(0) + 62} textAnchor="middle" fontSize="11" fontStyle="italic" style={{ fill: "#64748b" }}>
+            <text key={x} x={(kx(x) + kx(x + 2)) / 2} y={ky(0) + 84} textAnchor="middle" fontSize="11" fontStyle="italic" style={{ fill: "#64748b" }}>
               2 m
             </text>
           ))}

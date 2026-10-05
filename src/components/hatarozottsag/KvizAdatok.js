@@ -1,9 +1,10 @@
+import { Fragment } from "react";
 import { M } from "@/components/ui/Keplet";
 
 export const KVIZ = [
   {
     k: <>Mit jelent, hogy egy <em>feladat</em> statikailag határozott?</>,
-    v: [<>Az adott egyensúlyi kijelentés egyenletrendszerének van megoldása, és az egyértelmű.</>, <>A szerkezetnek pontosan három támasza van.</>, <>A terhek csak függőlegesek.</>, <>A szerkezet bármilyen teherre egyensúlyban marad.</>],
+    v: [<Fragment key={0}>Az adott egyensúlyi kijelentés egyenletrendszerének van megoldása, és az egyértelmű.</Fragment>, <Fragment key={1}>A szerkezetnek pontosan három támasza van.</Fragment>, <Fragment key={2}>A terhek csak függőlegesek.</Fragment>, <Fragment key={3}>A szerkezet bármilyen teherre egyensúlyban marad.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -14,7 +15,7 @@ export const KVIZ = [
   },
   {
     k: <>Egy két görgővel megtámasztott gerendát csak függőleges erők terhelnek. Milyen a feladat, és milyen a szerkezet?</>,
-    v: [<>A feladat határozott, a szerkezet túlhatározott.</>, <>Mindkettő határozott.</>, <>Mindkettő túlhatározott.</>, <>A feladat határozatlan, a szerkezet határozott.</>],
+    v: [<Fragment key={0}>A feladat határozott, a szerkezet túlhatározott.</Fragment>, <Fragment key={1}>Mindkettő határozott.</Fragment>, <Fragment key={2}>Mindkettő túlhatározott.</Fragment>, <Fragment key={3}>A feladat határozatlan, a szerkezet határozott.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -24,7 +25,7 @@ export const KVIZ = [
   },
   {
     k: <>Egy két csuklóval megtámasztott gerendán (7.2.a) mi a probléma?</>,
-    v: [<>Négy ismeretlen, három egyenlet: a vízszintes reakciók külön-külön nem határozhatók meg — határozatlan.</>, <>A gerenda vízszintesen elmozdulhat.</>, <>Nincs egyensúly ferde teherre.</>, <>Semmi, a csukló a legjobb támasz.</>],
+    v: [<Fragment key={0}>Négy ismeretlen, három egyenlet: a vízszintes reakciók külön-külön nem határozhatók meg — határozatlan.</Fragment>, <Fragment key={1}>A gerenda vízszintesen elmozdulhat.</Fragment>, <Fragment key={2}>Nincs egyensúly ferde teherre.</Fragment>, <Fragment key={3}>Semmi, a csukló a legjobb támasz.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -34,7 +35,7 @@ export const KVIZ = [
   },
   {
     k: <>Melyik állítás igaz az <M>{"e = i"}</M> feltételről (egyenletek száma = ismeretlenek száma)?</>,
-    v: [<>A határozottság szükséges, de nem elégséges feltétele.</>, <>A határozottság szükséges és elégséges feltétele.</>, <>A határozatlanság elégséges feltétele.</>, <>Csak rácsos tartókra érvényes.</>],
+    v: [<Fragment key={0}>A határozottság szükséges, de nem elégséges feltétele.</Fragment>, <Fragment key={1}>A határozottság szükséges és elégséges feltétele.</Fragment>, <Fragment key={2}>A határozatlanság elégséges feltétele.</Fragment>, <Fragment key={3}>Csak rácsos tartókra érvényes.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -44,7 +45,7 @@ export const KVIZ = [
   },
   {
     k: <>Hogyan változik az egyenletek és az ismeretlenek száma, ha egy síkbeli szerkezetbe egy belső csuklót teszünk (két test között)?</>,
-    v: [<>+3 egyenlet (új test), +2 ismeretlen (kapcsolati erő): a különbség eggyel javul a határozottság felé.</>, <>+2 egyenlet, +2 ismeretlen: nem változik semmi.</>, <>−2 ismeretlen, az egyenletek száma marad.</>, <>+3 egyenlet, +3 ismeretlen.</>],
+    v: [<Fragment key={0}>+3 egyenlet (új test), +2 ismeretlen (kapcsolati erő): a különbség eggyel javul a határozottság felé.</Fragment>, <Fragment key={1}>+2 egyenlet, +2 ismeretlen: nem változik semmi.</Fragment>, <Fragment key={2}>−2 ismeretlen, az egyenletek száma marad.</Fragment>, <Fragment key={3}>+3 egyenlet, +3 ismeretlen.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -54,7 +55,7 @@ export const KVIZ = [
   },
   {
     k: <>Egy gerendát három, vízszintes síkon gördülő görgő támaszt. <M>{"e = i = 3"}</M>. Milyen a szerkezet?</>,
-    v: [<>Határozatlan és túlhatározott: vízszintesen eltolódhat, a függőleges reakciók közül egy fölös.</>, <>Határozott, mert 3 = 3.</>, <>Egyszeresen határozatlan.</>, <>Túlhatározott, két szabad mozgással.</>],
+    v: [<Fragment key={0}>Határozatlan és túlhatározott: vízszintesen eltolódhat, a függőleges reakciók közül egy fölös.</Fragment>, <Fragment key={1}>Határozott, mert 3 = 3.</Fragment>, <Fragment key={2}>Egyszeresen határozatlan.</Fragment>, <Fragment key={3}>Túlhatározott, két szabad mozgással.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -64,7 +65,7 @@ export const KVIZ = [
   },
   {
     k: <>Mikor határozott statikailag a háromcsuklós tartó?</>,
-    v: [<>Ha a három csukló nem esik egy egyenesbe.</>, <>Mindig, mert 6 = 6.</>, <>Ha a két külső csukló azonos magasságban van.</>, <>Ha a belső csukló a gerinc közepén van.</>],
+    v: [<Fragment key={0}>Ha a három csukló nem esik egy egyenesbe.</Fragment>, <Fragment key={1}>Mindig, mert 6 = 6.</Fragment>, <Fragment key={2}>Ha a két külső csukló azonos magasságban van.</Fragment>, <Fragment key={3}>Ha a belső csukló a gerinc közepén van.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -74,7 +75,7 @@ export const KVIZ = [
   },
   {
     k: <>Rácsos tartóra a határozottság szükséges feltétele:</>,
-    v: [<><M>{"2c = r + k"}</M> (síkban), <M>{"3c = r + k"}</M> térben.</>, <><M>{"c = r + k"}</M>.</>, <><M>{"3c = r + k"}</M> síkban is.</>, <><M>{"2r = c + k"}</M>.</>],
+    v: [<Fragment key={0}><M>{"2c = r + k"}</M> (síkban), <M>{"3c = r + k"}</M> térben.</Fragment>, <Fragment key={1}><M>{"c = r + k"}</M>.</Fragment>, <Fragment key={2}><M>{"3c = r + k"}</M> síkban is.</Fragment>, <Fragment key={3}><M>{"2r = c + k"}</M>.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -84,7 +85,7 @@ export const KVIZ = [
   },
   {
     k: <>Miért nem lehet a statikailag határozatlan tartó reakcióit csak az egyensúlyi egyenletekből kiszámítani?</>,
-    v: [<>Mert az egyenletrendszernek végtelen sok megoldása van; az igazit a tartó alakváltozása (merevsége) választja ki.</>, <>Mert több egyenlet van, mint ismeretlen.</>, <>Mert a reakciók iránya ismeretlen.</>, <>Ki lehet: csak több nyomatéki egyenletet kell felírni.</>],
+    v: [<Fragment key={0}>Mert az egyenletrendszernek végtelen sok megoldása van; az igazit a tartó alakváltozása (merevsége) választja ki.</Fragment>, <Fragment key={1}>Mert több egyenlet van, mint ismeretlen.</Fragment>, <Fragment key={2}>Mert a reakciók iránya ismeretlen.</Fragment>, <Fragment key={3}>Ki lehet: csak több nyomatéki egyenletet kell felírni.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -95,7 +96,7 @@ export const KVIZ = [
   },
   {
     k: <>Egy háromtámaszú gerendát (csukló + két görgő) törzstartóvá alakítunk. Melyik <em>nem</em> jó lépés?</>,
-    v: [<>A csuklót vízszintes síkon gördülő görgőre cseréljük.</>, <>Az egyik görgőt elvesszük.</>, <>A csuklót ferde síkú görgőre cseréljük.</>, <>A középső támasz fölé belső csuklót teszünk.</>],
+    v: [<Fragment key={0}>A csuklót vízszintes síkon gördülő görgőre cseréljük.</Fragment>, <Fragment key={1}>Az egyik görgőt elvesszük.</Fragment>, <Fragment key={2}>A csuklót ferde síkú görgőre cseréljük.</Fragment>, <Fragment key={3}>A középső támasz fölé belső csuklót teszünk.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -105,7 +106,7 @@ export const KVIZ = [
   },
   {
     k: <>Melyik módszer bizonyítja a tartó határozottságát a tankönyv szerint (az <M>{"e = i"}</M> feltétel mellett)?</>,
-    v: [<>Egyismeretlenes egyenletek olyan menetrendje, amelyben minden ismeretlen sorra kerül nemzérus együtthatóval — vagy egyetlen teherre talált egyértelmű megoldás.</>, <>A támaszok betűrendbe rakása.</>, <>Az, hogy a reakciók pozitívak.</>, <>Az, hogy a terhek függőlegesek.</>],
+    v: [<Fragment key={0}>Egyismeretlenes egyenletek olyan menetrendje, amelyben minden ismeretlen sorra kerül nemzérus együtthatóval — vagy egyetlen teherre talált egyértelmű megoldás.</Fragment>, <Fragment key={1}>A támaszok betűrendbe rakása.</Fragment>, <Fragment key={2}>Az, hogy a reakciók pozitívak.</Fragment>, <Fragment key={3}>Az, hogy a terhek függőlegesek.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -115,7 +116,7 @@ export const KVIZ = [
   },
   {
     k: <>A tankönyv 7.7.c ábrája: egy gerendát a két végén egy-egy görgő tart, mindkét reakció vízszintes, közös hatásvonalú. <M>{"e = 3, i = 2"}</M>. Hány szabad mozgás és hány fölös kényszer van?</>,
-    v: [<>2 szabad mozgás (függőleges eltolódás, elfordulás) és 1 fölös kényszer.</>, <>1 szabad mozgás, 0 fölös.</>, <>3 szabad mozgás.</>, <>0 szabad mozgás, 1 fölös.</>],
+    v: [<Fragment key={0}>2 szabad mozgás (függőleges eltolódás, elfordulás) és 1 fölös kényszer.</Fragment>, <Fragment key={1}>1 szabad mozgás, 0 fölös.</Fragment>, <Fragment key={2}>3 szabad mozgás.</Fragment>, <Fragment key={3}>0 szabad mozgás, 1 fölös.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -125,7 +126,7 @@ export const KVIZ = [
   },
   {
     k: <>Hány független egyensúlyi egyenlet írható egy síkbeli, <em>közös metszéspontú</em> erőrendszer egyensúlyi kijelentése alapján?</>,
-    v: [<>Kettő.</>, <>Három.</>, <>Egy.</>, <>Hat.</>],
+    v: [<Fragment key={0}>Kettő.</Fragment>, <Fragment key={1}>Három.</Fragment>, <Fragment key={2}>Egy.</Fragment>, <Fragment key={3}>Hat.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -135,7 +136,7 @@ export const KVIZ = [
   },
   {
     k: <>Miért <em>nem</em> vesszük ki a vakrudakat a rácsos tartóból?</>,
-    v: [<>Mert más teherre szükség lehet rájuk: nélkülük a csomópontban egy egyenletben nem maradna ismeretlen, a tartó túlhatározottá válna.</>, <>Mert szépen néz ki.</>, <>Mert a vakrúd mindig húzott.</>, <>Kivehetők, semmi nem változik.</>],
+    v: [<Fragment key={0}>Mert más teherre szükség lehet rájuk: nélkülük a csomópontban egy egyenletben nem maradna ismeretlen, a tartó túlhatározottá válna.</Fragment>, <Fragment key={1}>Mert szépen néz ki.</Fragment>, <Fragment key={2}>Mert a vakrúd mindig húzott.</Fragment>, <Fragment key={3}>Kivehetők, semmi nem változik.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>

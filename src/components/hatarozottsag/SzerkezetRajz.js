@@ -122,10 +122,10 @@ export default function SzerkezetRajz({
       const szog = c.szog ?? 90;
       const hajlas = szog - 90; // a gördülési sík hajlása (a Gorgo „szog” propja)
       jel = <Gorgo x={X} y={Y} szog={hajlas} meret={tamaszMeret} />;
-      if (Math.abs(Math.cos((szog * Math.PI) / 180)) > 0.7) {
-        // fal melletti görgő: a felirat oldalra
+      if (Math.abs(Math.cos((szog * Math.PI) / 180)) > 0.75) {
+        // fal melletti görgő: a felirat oldalra, a fal alá (a tartó szintjén a vízszintes teher nyila és felirata fut)
         cimkeX = X + (Math.cos((szog * Math.PI) / 180) > 0 ? -tamaszMeret * 2 - 8 : tamaszMeret * 2 + 8);
-        cimkeY = Y + 5;
+        cimkeY = Y + 24;
       } else if (Math.abs(hajlas) > 20) cimkeX = X + (hajlas > 0 ? 1 : -1) * 22;
     } else if (c.tipus === "csuklo") {
       jel = <Csuklo x={X} y={Y} meret={tamaszMeret} />;
@@ -147,9 +147,12 @@ export default function SzerkezetRajz({
           <Csuklo x={X2} y={Y2} meret={tamaszMeret * 0.7} forgatas={ey > 0.05 ? 180 : 0} />
         </g>
       );
-      cimkeX = X2 + (ex >= 0 ? 16 : -16);
+      // a betű a rúd folytatásával ellentétes oldalra (ferde rúdnál ott nem keresztezi a hatásvonal)
+      cimkeX = X2 + (ex > 0.05 ? -16 : 16);
       cimkeY = Y2 + (ey > 0.05 ? -tamaszMeret : tamaszMeret + 8);
     }
+    // ha reakciónyilak is vannak, a támasz alatti betű balra csúszik, hogy a függőleges nyíl ne fusson át rajta
+    if (reakciok && (c.tipus === "gorgo" || c.tipus === "csuklo") && cimkeX === X) cimkeX = X - tamaszMeret - 8;
     return (
       <g key={i} {...kattint}>
         {onKenyszer && <circle cx={X} cy={Y + tamaszMeret} r={tamaszMeret + 10} fill="transparent" />}
@@ -171,8 +174,15 @@ export default function SzerkezetRajz({
       const [X, Y] = helyzet(t.test, t.x, t.y);
       const szog = (Math.atan2(t.Fy, t.Fx) * 180) / Math.PI;
       const fugg = Math.abs(t.Fx) < 1e-9;
+      const vizsz = Math.abs(t.Fy) < 1e-9;
       const cim = t.cimke ?? `${sz(F, F % 1 ? 1 : 0)} kN`;
-      return <TeherNyil key={i} x={X} y={Y - (t.Fy < 0 ? 3 : -3)} hossz={Math.min(64, 34 + 2.2 * F)} szog={szog} cimke={cim} cimkeEltolas={fugg ? [7, -4] : t.Fx > 0 ? [-8 - 6.2 * cim.length, -4] : [8, -4]} />;
+      // lefelé mutató (ferde) nyíl: ne lógjon ki a rajz tetején (a felirat a nyíl töve fölött áll) — mozgó testnél is
+      const sinA = Math.abs(Math.sin((szog * Math.PI) / 180));
+      const hossz = Math.min(64, 34 + 2.2 * F, t.Fy < 0 && sinA > 0.1 ? Math.max(24, (Y - 22) / sinA) : Infinity);
+      // vízszintes teher: a felirat a tartó tengelye fölé kerül, ne a tartóra írjuk (jobbra mutató nyílnál a nyíl töve elé,
+      // balra mutatónál a nyíl szára fölé középre — így nem ér össze a szomszédos függőleges teherrel)
+      const eltolas = fugg ? [7, -4] : vizsz ? (t.Fx > 0 ? [-8 - 6.2 * cim.length, -9] : [-hossz / 2 - 3.6 * cim.length - 4, -9]) : t.Fx > 0 ? [-8 - 6.2 * cim.length, -4] : [8, -4];
+      return <TeherNyil key={i} x={X} y={Y - (t.Fy < 0 ? 3 : -3)} hossz={hossz} szog={szog} cimke={cim} cimkeEltolas={eltolas} />;
     });
 
   // ---- reakciók (lila) ----
@@ -186,9 +196,15 @@ export default function SzerkezetRajz({
       const el = [];
       const cim = betuk[j] ?? "";
       const hossz = (v) => Math.min(60, 22 + 2 * Math.abs(v));
+      // a függőleges nyíl felirata jobbra kerül, kivéve ha ott kilógna a rajzból
+      const jobbra = (felirat) => X + 8 + 7.2 * felirat.length <= szelesseg - 4;
+      const oldalt = (felirat, dy) => (jobbra(felirat) ? [8, dy] : [-8 - 7.2 * felirat.length, dy]);
       if (c.tipus === "csuklo" || c.tipus === "befogas") {
         if (Math.abs(r.Fx) > 1e-6) el.push(<ReakcioNyil key="x" x={X + (r.Fx > 0 ? -5 : 5)} y={Y + 10} hossz={hossz(r.Fx)} szog={r.Fx > 0 ? 0 : 180} cimke={`${cim}ₓ = ${sz(Math.abs(r.Fx), 2)}`} cimkeEltolas={r.Fx > 0 ? [-6 - 7 * (cim.length + 8), 16] : [6, 16]} />);
-        if (Math.abs(r.Fy) > 1e-6) el.push(<ReakcioNyil key="y" x={X} y={Y + (r.Fy > 0 ? 5 : -5)} hossz={hossz(r.Fy)} szog={r.Fy > 0 ? 90 : -90} cimke={`${cim}ᵧ = ${sz(Math.abs(r.Fy), 2)}`} cimkeEltolas={[8, r.Fy > 0 ? 4 : -4]} />);
+        if (Math.abs(r.Fy) > 1e-6) {
+          const felirat = `${cim}ᵧ = ${sz(Math.abs(r.Fy), 2)}`;
+          el.push(<ReakcioNyil key="y" x={X} y={Y + (r.Fy > 0 ? 5 : -5)} hossz={hossz(r.Fy)} szog={r.Fy > 0 ? 90 : -90} cimke={felirat} cimkeEltolas={oldalt(felirat, r.Fy > 0 ? 4 : -4)} />);
+        }
         if (c.tipus === "befogas" && Math.abs(r.M) > 1e-6) {
           const rr = 20;
           const irany = r.M > 0 ? 1 : -1;
@@ -207,7 +223,10 @@ export default function SzerkezetRajz({
         const n = r.nagysag ?? Math.hypot(r.Fx ?? 0, r.Fy ?? 0);
         if (Math.abs(n) > 1e-6) {
           const szog = (Math.atan2(r.Fy, r.Fx) * 180) / Math.PI;
-          el.push(<ReakcioNyil key="n" x={X} y={Y + (r.Fy > 0 ? 5 : r.Fy < 0 ? -5 : 0)} hossz={hossz(n)} szog={szog} cimke={`${c.tipus === "rud" ? "S" : cim} = ${sz(Math.abs(n), 2)}`} cimkeEltolas={[8, 4]} />);
+          const felirat = `${c.tipus === "rud" ? "S" : cim} = ${sz(Math.abs(n), 2)}`;
+          // vízszintes reakció (falgörgő): a nyíl a tengely alatt fut, a felirat alatta — ne a tartóra írjuk
+          const vizszR = Math.abs(r.Fy ?? 0) < 1e-6;
+          el.push(<ReakcioNyil key="n" x={X} y={vizszR ? Y + 10 : Y + (r.Fy > 0 ? 5 : -5)} hossz={hossz(n)} szog={szog} cimke={felirat} cimkeEltolas={vizszR ? [8, 16] : oldalt(felirat, 4)} />);
         }
       }
       return <g key={`r${j}`}>{el}</g>;

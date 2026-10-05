@@ -196,7 +196,10 @@ function magyarazat(sz, it) {
             if (ugyanaz && Math.abs((c.x - k.x) * ey - (c.y - k.y) * ex) / h < 1e-6) csuklonAt = true;
           }
         }
-      reszek.push(talalt ? "Kritikus: három csukló egy egyenesbe esik." : csuklonAt ? "Kritikus: egy görgő (rúd) hatásvonala átmegy a testet tartó csuklón." : `Kritikus elrendezés: ${it.szabad} szabad mozgás és ${it.folos} fölös kényszer egyszerre.`);
+      // két testet összekötő, egymással párhuzamos rudak (7.8.b): az oszlopok együtt elborulnak
+      const rudak = sz.kenyszerek.filter((k) => k.tipus === "belsoRud");
+      const parhuzamosRudak = rudak.length >= 2 && rudak.every((r) => Math.abs((r.xB - r.xA) * (rudak[0].yB - rudak[0].yA) - (r.yB - r.yA) * (rudak[0].xB - rudak[0].xA)) < 1e-9);
+      reszek.push(talalt ? "Kritikus: három csukló egy egyenesbe esik." : csuklonAt ? "Kritikus: egy görgő (rúd) hatásvonala átmegy a testet tartó csuklón." : parhuzamosRudak ? "Kritikus: a két testet összekötő rudak párhuzamosak (a külső csuklók egyenesével is) — az oszlopok együtt elborulnak, miközben az egyik rúd fölös." : `Kritikus elrendezés: ${it.szabad} szabad mozgás és ${it.folos} fölös kényszer egyszerre.`);
     }
   }
   return reszek.join(" ");
@@ -239,8 +242,8 @@ function AbraKartya({ abra, valasz, felfedve, onValasz, sorszam }) {
           s={s}
           amplitudo={0.6}
           szelesseg={600}
-          magassag={270}
-          margo={{ bal: 60, jobb: 60, fel: 52, le: 62 }}
+          magassag={290}
+          margo={{ bal: 60, jobb: 60, fel: 106, le: 58 }}
           glow={glow}
           tamaszMeret={13}
           extra={() =>

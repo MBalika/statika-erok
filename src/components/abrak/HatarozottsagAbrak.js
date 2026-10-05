@@ -237,7 +237,7 @@ export function AbraTulhatarozott() {
         <Tarto x1={60} y1={80} x2={230} y2={80} />
         <Csuklo x={66} y={80} meret={13} />
         <TamaszCimke x={66} y={122}>A</TamaszCimke>
-        <Mozgas x={66} y={80} tipus="forgas" r={40} />
+        <Mozgas x={66} y={80} tipus="forgas" r={30} />
         <Jelveny x={160} y={54} szoveg="2 < 3 · elfordul" szin={BORDO} w={92} />
       </g>
       {/* b) két görgő */}
@@ -274,20 +274,20 @@ export function AbraTulhatarozott() {
         <Mozgas x={520} y={80} tipus="forgas" r={30} />
         <Jelveny x={555} y={126} szoveg="1 < 3" szin={BORDO} w={44} />
       </g>
-      {/* e) két rúd */}
+      {/* e) két rúd: a hatásvonalak (a rudak egyenesei) a tartó fölött, a (435; 172,5) pontban metszik egymást */}
       <g>
         <Betu x={270} y={160}>e)</Betu>
         <Tarto x1={310} y1={200} x2={560} y2={200} />
-        <Rud x1={330} y1={200} x2={330} y2={262} />
-        <Rud x1={540} y1={200} x2={470} y2={262} />
-        <Csuklo x={330} y={262} meret={10} />
-        <Csuklo x={470} y={262} meret={10} />
-        <line x1={330} y1={200} x2={330} y2={112} stroke={SZURKE} strokeWidth="1" strokeDasharray="3 3" />
-        <line x1={540} y1={200} x2={330} y2={112} stroke={SZURKE} strokeWidth="1" strokeDasharray="3 3" />
-        <Mozgas x={330} y={112} tipus="forgas" r={16} />
-        <TamaszCimke x={330} y={296}>A</TamaszCimke>
-        <TamaszCimke x={470} y={296}>B</TamaszCimke>
-        <Jelveny x={455} y={172} szoveg="2 < 3 · forog a metszéspont körül" szin={BORDO} w={170} />
+        <line x1={345} y1={255} x2={460} y2={150} stroke={SZURKE} strokeWidth="1" strokeDasharray="3 3" />
+        <line x1={525} y1={255} x2={410} y2={150} stroke={SZURKE} strokeWidth="1" strokeDasharray="3 3" />
+        <Rud x1={405} y1={200} x2={345} y2={255} />
+        <Rud x1={465} y1={200} x2={525} y2={255} />
+        <Csuklo x={345} y={255} meret={10} />
+        <Csuklo x={525} y={255} meret={10} />
+        <Mozgas x={435} y={172.5} tipus="forgas" r={14} />
+        <TamaszCimke x={322} y={268}>A</TamaszCimke>
+        <TamaszCimke x={548} y={268}>B</TamaszCimke>
+        <Jelveny x={435} y={284} szoveg="2 < 3 · forog a metszéspont körül" szin={BORDO} w={170} />
       </g>
     </svg>
   );
@@ -416,13 +416,14 @@ export function AbraKritikus() {
       <g>
         <Betu x={310} y={40}>c)</Betu>
         <Tarto x1={330} y1={90} x2={560} y2={90} />
-        <Gorgo x={330} y={90} szog={90} meret={12} />
-        <Gorgo x={560} y={90} szog={-90} meret={12} />
+        {/* a görgők a tartó végein kívül, a falnak támaszkodnak (szog −90: a test balra, +90: jobbra néz) */}
+        <Gorgo x={330} y={90} szog={-90} meret={12} />
+        <Gorgo x={560} y={90} szog={90} meret={12} />
         <line x1={300} y1={90} x2={590} y2={90} stroke={SZURKE} strokeWidth="1" strokeDasharray="3 3" />
         <Mozgas x={445} y={68} tipus="fuggoleges" r={18} />
         <Mozgas x={505} y={90} tipus="forgas" r={18} />
-        <TamaszCimke x={360} y={122}>A</TamaszCimke>
-        <TamaszCimke x={530} y={122}>B</TamaszCimke>
+        <TamaszCimke x={318} y={126}>A</TamaszCimke>
+        <TamaszCimke x={572} y={126}>B</TamaszCimke>
         <Jelveny x={445} y={40} szoveg="2 < 3: 2 mozgás, 1 fölös" szin={BORDO} w={150} />
       </g>
       {/* d) három rúd egy ponton át */}
@@ -435,8 +436,11 @@ export function AbraKritikus() {
         <Csuklo x={380} y={266} meret={10} />
         <Mozgas x={380} y={266} tipus="forgas" r={22} />
         <TamaszCimke x={380} y={300}>A</TamaszCimke>
-        <Felirat x={478} y={250} szin={SZURKE} meret={11} vastag={500}>
-          mindhárom hatásvonal az A ponton át
+        <Felirat x={500} y={280} szin={SZURKE} meret={11} vastag={500}>
+          mindhárom hatásvonal
+        </Felirat>
+        <Felirat x={500} y={294} szin={SZURKE} meret={11} vastag={500}>
+          az A ponton megy át
         </Felirat>
         <Jelveny x={470} y={170} szoveg="3 = 3, mégis elfordul" szin={BORDO} w={130} />
       </g>
@@ -449,29 +453,33 @@ export function AbraKritikus() {
    ============================================================ */
 export function AbraOsszetettKritikus() {
   return (
-    <svg viewBox="0 0 600 250" className="abra w-full h-auto select-none">
+    <svg viewBox="0 0 600 270" className="abra w-full h-auto select-none">
       <TartoHegyek />
       <HatarozottsagHegyek />
-      {/* a) egy egyenesbe eső három csukló */}
+      {/* a) egy egyenesbe eső három csukló: A (60; 200), C (150; 120), B (240; 40) pontosan egy egyenesen (2 + 2 + 2 = 6 = 6);
+          a B csukló a felső rúdvég jobb oldali falán; a teher az AB egyenesre merőleges — ezt nem tudja megtartani */}
       <g>
         <Betu x={30} y={40}>a)</Betu>
         <Tarto x1={60} y1={200} x2={60} y2={150} />
         <Tarto x1={60} y1={150} x2={120} y2={150} />
-        <Tarto x1={120} y1={150} x2={120} y2={110} />
-        <Tarto x1={120} y1={110} x2={180} y2={110} />
-        <Tarto x1={180} y1={110} x2={180} y2={70} />
-        <Tarto x1={180} y1={70} x2={250} y2={70} />
-        <Tarto x1={250} y1={70} x2={250} y2={40} />
+        <Tarto x1={120} y1={150} x2={120} y2={120} />
+        <Tarto x1={120} y1={120} x2={180} y2={120} />
+        <Tarto x1={180} y1={120} x2={180} y2={70} />
+        <Tarto x1={180} y1={70} x2={240} y2={70} />
+        <Tarto x1={240} y1={70} x2={240} y2={40} />
         <Csuklo x={60} y={200} meret={12} />
-        <Gorgo x={250} y={40} szog={0} meret={11} />
-        <BelsoCsuklo x={150} y={110} />
-        <line x1={40} y1={218} x2={270} y2={22} stroke={BORDO} strokeWidth="1.2" strokeDasharray="5 4" />
+        <Csuklo x={240} y={40} meret={12} forgatas={-90} />
+        <BelsoCsuklo x={150} y={120} />
+        <line x1={42} y1={216} x2={267} y2={16} stroke={BORDO} strokeWidth="1.2" strokeDasharray="5 4" />
         <TamaszCimke x={40} y={206}>A</TamaszCimke>
-        <TamaszCimke x={272} y={46}>B</TamaszCimke>
-        <TamaszCimke x={166} y={132}>C</TamaszCimke>
-        <TeherNyil x={150} y={110} hossz={40} szog={-135} cimke="F" cimkeEltolas={[-12, -4]} />
+        <TamaszCimke x={274} y={46}>B</TamaszCimke>
+        <TamaszCimke x={166} y={142}>C</TamaszCimke>
+        <TeherNyil x={150} y={120} hossz={40} szog={-48} cimke="F" cimkeEltolas={[-12, -4]} />
         <Felirat x={150} y={240} szin={BORDO} meret={11}>
-          A, C, B egy egyenesen: 6 = 6, mégis mozog
+          A, C, B egy egyenesen: 6 = 6,
+        </Felirat>
+        <Felirat x={150} y={254} szin={BORDO} meret={11}>
+          mégis mozog (a vonalra merőlegesen)
         </Felirat>
       </g>
       {/* b) két oszlop, két párhuzamos rúd */}
@@ -484,12 +492,15 @@ export function AbraOsszetettKritikus() {
         <Csuklo x={380} y={210} meret={12} />
         <Csuklo x={540} y={210} meret={12} />
         <line x1={350} y1={210} x2={570} y2={210} stroke={BORDO} strokeWidth="1.2" strokeDasharray="5 4" />
-        <TamaszCimke x={380} y={250}>A</TamaszCimke>
-        <TamaszCimke x={540} y={250}>B</TamaszCimke>
+        <TamaszCimke x={352} y={230}>A</TamaszCimke>
+        <TamaszCimke x={568} y={230}>B</TamaszCimke>
         <TeherNyil x={380} y={66} hossz={40} szog={0} cimke="F" cimkeEltolas={[6, -8]} />
         <Mozgas x={460} y={44} tipus="vizszintes" r={26} />
-        <Felirat x={460} y={236} szin={BORDO} meret={11}>
-          a rudak párhuzamosak AB-vel: az oszlopok elborulnak
+        <Felirat x={460} y={240} szin={BORDO} meret={11}>
+          a rudak párhuzamosak AB-vel:
+        </Felirat>
+        <Felirat x={460} y={254} szin={BORDO} meret={11}>
+          az oszlopok elborulnak
         </Felirat>
       </g>
     </svg>
@@ -609,7 +620,7 @@ export function AbraTorzstarto() {
             <Gorgo x={66} y={244} szog={-35} meret={11} />
             <Gorgo x={170} y={244} meret={12} />
             <Gorgo x={274} y={244} meret={12} />
-            <ReakcioNyil x={66} y={244} hossz={40} szog={180} cimke="Aₓ" cimkeEltolas={[-4, -6]} />
+            <ReakcioNyil x={66} y={244} hossz={40} szog={0} cimke="Aₓ" cimkeEltolas={[-4, -7]} />
             <TeherNyil x={120} y={241} hossz={36} szog={-60} />
             <TeherNyil x={225} y={241} hossz={36} szog={-90} />
           </>

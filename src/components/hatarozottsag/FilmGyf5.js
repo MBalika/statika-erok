@@ -136,7 +136,11 @@ function Rajz(t) {
       )}
 
       {/* teher */}
-      <TeherNyil x={hely("2")[0]} y={hely("2")[1] - 4} hossz={50} szog={-90} cimke="F" cimkeEltolas={[8, -2]} opacitas={csU} />
+      {(() => {
+        // a nyíl a 2-es csomóponttal együtt mozog; a hossza úgy rövidül, hogy a felirat ne lógjon ki a rajz tetején
+        const [fx, fy] = hely("2");
+        return <TeherNyil x={fx} y={fy - 4} hossz={Math.max(22, Math.min(50, fy - 24))} szog={-90} cimke="F" cimkeEltolas={[8, -2]} opacitas={csU} />;
+      })()}
 
       {/* csomópontok */}
       {CS.map((c) => {

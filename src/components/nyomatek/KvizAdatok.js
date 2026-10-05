@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement } from "react";
 import { M } from "@/components/ui/Keplet";
 
 export const KVIZ = [
@@ -117,3 +118,9 @@ export const HIBAK = [
     tanulsag: <>Dinámrendszerben az erők a vetületi <em>és</em> a nyomatéki egyenletben szerepelnek, a nyomatékok csak a nyomatékiban. A mértékegység is elárulja: kNm-t nem lehet kN-hoz adni.</>,
   },
 ];
+
+// A válaszopciók kulcsot kapnak, különben a szerverről a kliens Kviz-nek átadott
+// elemtömb minden kérdésnél „unique key” figyelmeztetést ad.
+for (const q of KVIZ) {
+  if (Array.isArray(q.v)) q.v = q.v.map((el, i) => (isValidElement(el) && el.key == null ? cloneElement(el, { key: String(i) }) : el));
+}

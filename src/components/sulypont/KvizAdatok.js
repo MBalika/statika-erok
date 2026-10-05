@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement } from "react";
 import { M } from "@/components/ui/Keplet";
 
 export const KVIZ = [
@@ -128,3 +129,9 @@ export const HIBAK = [
     tanulsag: <>Józan ész: ha az origót <em>lefelé</em> toljuk, a súlypont z koordinátája <em>kisebb</em> lesz, nem nagyobb — 132,7 mm helyett 32,7 mm. A végső próba mindig ugyanaz: a súlyponton átmenő tengelyre <M>{"S = 0"}</M> kell, hogy legyen; ha nem az, az előjelet rontottad el.</>,
   },
 ];
+
+// A válaszopciók kulcsot kapnak, különben a szerverről a kliens Kviz-nek átadott
+// elemtömb minden kérdésnél „unique key” figyelmeztetést ad.
+for (const q of KVIZ) {
+  if (Array.isArray(q.v)) q.v = q.v.map((el, i) => (isValidElement(el) && el.key == null ? cloneElement(el, { key: String(i) }) : el));
+}

@@ -102,7 +102,7 @@ export default function KritikusFelfedezo() {
       const t = ((q.x - p.x) * q.ey - (q.y - p.y) * q.ex) / det;
       const X = p.x + t * p.ex;
       const Y = p.y + t * p.ey;
-      if (Math.abs(X) > 12 || Math.abs(Y) > 12) continue;
+      if (X < -1.5 || X > 7.5 || Y < -2.2 || Y > 5) continue; // csak a rajzon belüli metszéspontokat jelöljük
       el.push(<circle key={`m${a}${b}`} cx={kx(X)} cy={ky(Y)} r={kritikus ? 6 : 4} fill={kritikus ? SZINEK.bordo : "white"} stroke={kritikus ? SZINEK.bordo : "#64748b"} strokeWidth="1.5" />);
     }
     if (geo.kozosPont && !geo.parhuzamos) {
@@ -113,7 +113,7 @@ export default function KritikusFelfedezo() {
       );
     }
     const szoveg = kritikus ? (geo.parhuzamos ? "3 = 3, mégis eltolódik" : "3 = 3, mégis elfordul") : geo.mertek < 0.08 ? "3 = 3 — de vigyázz, közel a kritikushoz" : "3 = 3 ✓ jó elrendezés";
-    el.push(<Jelveny key="j" x={300} y={22} szoveg={szoveg} szin={kritikus ? SZINEK.bordo : geo.mertek < 0.08 ? "#b45309" : SZINEK.zold} w={Math.max(150, 8.5 * szoveg.length)} />);
+    el.push(<Jelveny key="j" x={190} y={22} szoveg={szoveg} szin={kritikus ? SZINEK.bordo : geo.mertek < 0.08 ? "#b45309" : SZINEK.zold} w={Math.max(150, 8.5 * szoveg.length)} />);
     return el;
   };
 
@@ -124,7 +124,8 @@ export default function KritikusFelfedezo() {
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <div className="min-w-0">
           <div className="racs-vilagos overflow-hidden rounded-xl border border-[color:var(--keret)]">
-            <SzerkezetRajz szerkezet={szerkezet} mozgas={mozgas} s={s} amplitudo={0.5} szelesseg={600} magassag={340} margo={{ bal: 60, jobb: 60, fel: 60, le: 40 }} cimkek={["1", "2", "3"]} extra={extra} glow={kritikus ? null : "zold"} />
+            {/* alul hely marad a rudak közös pontjának (az előre beállított „egy ponton átmenő” eset 3 m-rel a gerenda alatt metsződik) */}
+            <SzerkezetRajz szerkezet={szerkezet} mozgas={mozgas} s={s} amplitudo={0.5} szelesseg={600} magassag={340} margo={{ bal: 60, jobb: 60, fel: 60, le: 130 }} cimkek={["1", "2", "3"]} extra={extra} glow={kritikus ? null : "zold"} />
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
             {ELORE.map((p) => (

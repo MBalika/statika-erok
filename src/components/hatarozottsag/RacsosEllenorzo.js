@@ -39,7 +39,7 @@ const ELORE = [
 const W = 600;
 const Hh = 320;
 const kx = (x) => 130 + x * 85;
-const ky = (y) => 220 - y * 85;
+const ky = (y) => 244 - y * 85; // a felső öv fölött elfér a teher nyila és felirata
 
 export default function RacsosEllenorzo() {
   const [rudak, setRudak] = useState(ALAP);
@@ -149,7 +149,9 @@ export default function RacsosEllenorzo() {
                 const [X, Y] = hely(t.csomopont);
                 const F = Math.hypot(t.Fx, t.Fy);
                 const szog = (Math.atan2(t.Fy, t.Fx) * 180) / Math.PI;
-                return <TeherNyil key={i} x={X} y={Y - (t.Fy < 0 ? 4 : 0)} hossz={34 + 2.2 * F} szog={szog} cimke={`${F} kN`} cimkeEltolas={t.Fx > 0 ? [-40, -6] : [8, -4]} />;
+                // a lefelé mutató nyíl a mozgó csomóponttal együtt emelkedhet: ne lógjon ki a rajz tetején
+                const hossz = t.Fy < 0 ? Math.max(22, Math.min(30 + 1.8 * F, Y - 24)) : 30 + 1.8 * F;
+                return <TeherNyil key={i} x={X} y={Y - (t.Fy < 0 ? 4 : 0)} hossz={hossz} szog={szog} cimke={`${F} kN`} cimkeEltolas={t.Fx > 0 ? [-40, -6] : [8, -4]} />;
               })}
               {/* csomópontok */}
               {CS.map((c) => {
@@ -165,7 +167,7 @@ export default function RacsosEllenorzo() {
               })}
               <Meret x1={kx(0)} x2={kx(2)} y={ky(0) + 66} cimke="2 m" />
               <Meret x1={kx(2)} x2={kx(4)} y={ky(0) + 66} cimke="2 m" />
-              <Jelveny x={300} y={22} szoveg={jelveny} szin={szin} w={Math.max(160, 8.6 * jelveny.length)} />
+              <Jelveny x={150} y={22} szoveg={jelveny} szin={szin} w={Math.max(160, 8.6 * jelveny.length)} />
             </svg>
           </div>
           <p className="mt-2 text-[12px] text-petrol-500">

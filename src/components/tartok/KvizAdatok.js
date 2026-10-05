@@ -1,3 +1,4 @@
+import { cloneElement, isValidElement } from "react";
 import { M } from "@/components/ui/Keplet";
 
 export const KVIZ = [
@@ -258,3 +259,9 @@ export const HIBAK = [
     tanulsag: <>Az ellenőrző egyenlet akkor ér valamit, ha komolyan vesszük: a hiba csak a kerekítés nagyságrendjében lehet. Ha nagyobb, a hiba nagysága gyakran elárulja, melyik tag rossz (kétszeres tag = előjelhiba) — és a hibás egyenlet lehet maga az ellenőrző egyenlet is.</>,
   },
 ];
+
+// A válaszopciók kulcsot kapnak, különben a szerverről a kliens Kviz-nek átadott
+// elemtömb minden kérdésnél „unique key” figyelmeztetést ad.
+for (const q of KVIZ) {
+  if (Array.isArray(q.v)) q.v = q.v.map((el, i) => (isValidElement(el) && el.key == null ? cloneElement(el, { key: String(i) }) : el));
+}

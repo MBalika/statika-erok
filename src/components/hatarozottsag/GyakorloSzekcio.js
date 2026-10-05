@@ -226,7 +226,8 @@ function racsosFeladat() {
     rud(felso(i), felso(i + 1));
     rud(also(i), also(i + 1));
   }
-  for (let i = 0; i <= n; i++) if (Math.random() < 0.85) rud(felso(i), also(i));
+  // a két szélső oszlop mindig megvan, különben a sarokcsomópontba egyetlen rúd futna (a levegőben lógó csomópont)
+  for (let i = 0; i <= n; i++) if (i === 0 || i === n || Math.random() < 0.85) rud(felso(i), also(i));
   for (let i = 0; i < n; i++) {
     const m = valaszt([1, 1, 1, 0, 2]);
     if (m >= 1) rud(felso(i), also(i + 1));
@@ -320,6 +321,7 @@ function folosTamaszFeladat() {
     const it = kinematika(sz);
     if (it.tipus !== "hatarozatlan" || it.folos !== 1) continue;
     const kulsok = kulsoLista(sz);
+    const bcs = belsoCsuklok(sz);
     const elveheto = kulsok.map((k) => {
       const uj = { ...sz, kenyszerek: sz.kenyszerek.filter((q) => q !== k) };
       return kinematika(uj).tipus === "hatarozott";
@@ -338,7 +340,7 @@ function folosTamaszFeladat() {
     return {
       szoveg: (
         <p>
-          Az egyszeresen határozatlan gerendát a következő kényszerek támasztják: {felsorolas(sz)}. Pontosan egy támasz van, amelyik <strong>{kerdes}</strong> úgy, hogy {kerdes === "elvehető" ? "statikailag határozott tartó maradjon" : "a maradék határozott legyen — a többi elvéve a tartó mechanizmussá vagy kritikus elrendezéssé válik"}. Melyik az? (Add meg a sorszámát: A = 1, B = 2, C = 3, D = 4.)
+          Az egyszeresen határozatlan gerendát{bcs ? ` (${bcs} belső csuklóval, ${sz.testek.length} testből)` : ""} a következő kényszerek támasztják: {felsorolas(sz)}. Pontosan egy támasz van, amelyik <strong>{kerdes}</strong> úgy, hogy {kerdes === "elvehető" ? "statikailag határozott tartó maradjon" : "a maradék határozott legyen — a többi elvéve a tartó mechanizmussá vagy kritikus elrendezéssé válik"}. Melyik az? (Add meg a sorszámát: A = 1, B = 2, C = 3, D = 4.)
         </p>
       ),
       abra: <SzerkezetAbra sz={sz} />,

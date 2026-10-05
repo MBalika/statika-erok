@@ -25,7 +25,7 @@ const FEJEZETEK = [
   { t0: T.tam, cim: "Négy támasz jön be", szoveg: "A csukló (2), majd B, C, D görgő (1–1). Az ismeretlenek száma 5, az egyenleteké 3: kétszeresen határozatlan folytatólagos tartó — megfeszül.", kepletek: ["i = 2 + 1 + 1 + 1 = 5 > 3"] },
   { t0: T.csuk, cim: "Két belső csukló", szoveg: "Minden belső csukló új testet választ le (+3 egyenlet) és két kapcsolati erőt hoz (+2 ismeretlen). Két csuklóval: három test, e = 9, i = 5 + 4 = 9.", kepletek: ["e = 3\\cdot 3 = 9,\\qquad i = 5 + 2\\cdot 2 = 9"] },
   { t0: T.fejt, cim: "Lefejtés: befüggesztett részek", szoveg: "III (G₂–D): csukló + görgő, a G₂ nincs D függőlegesén → határozott, levehető. II (G₁–C–G₂): ugyanígy. Ami marad, I (A–B–G₁): kéttámaszú tartó. Így a szerkezet határozott.", kepletek: ["\\text{III: } \\Mp{G_2}\\to D;\\quad \\text{II: } \\Mp{G_1}\\to C;\\quad \\text{I: } \\Mp{A}\\to B"] },
-  { t0: T.reak, cim: "A reakciók egyértelműek", szoveg: "III-ból D = 3 és G₂ = 3; II-ből C = 6 és G₁ = 3 (II-t lefelé húzza I… pontosabban I-re felfelé 3 kN hat); I-ből B = 1,5 és A = 7,5 kN.", kepletek: ["D = 3{,}000,\\ C = 6{,}000,\\ B = 1{,}500,\\ A_y = 7{,}500\\ \\text{kN}"] },
+  { t0: T.reak, cim: "A reakciók egyértelműek", szoveg: "III-ból D = 3 és G₂ = 3; II-ből C = 6 és G₁ = −3 (a II. testet a csuklóban lefelé kell tartani, vagyis az I. testre G₁-ben felfelé 3 kN hat); I-ből B = 1,5 és Aᵧ = 7,5 kN.", kepletek: ["D = 3{,}000,\\ C = 6{,}000,\\ B = 1{,}500,\\ A_y = 7{,}500\\ \\text{kN}"] },
   { t0: T.mozgat, cim: "A csuklókat az első mezőbe toljuk", szoveg: "G₁ = 1,5 m, G₂ = 3 m. A számlálás semmit nem vesz észre: még mindig három test, 9 = 9.", kepletek: ["e = i = 9\\quad\\text{(változatlan)}"] },
   { t0: T.csukl, cim: "Egy egyenesbe eső három csukló", szoveg: "A, G₁, G₂ egy egyenesen: az I. test elfordulhat A körül, a II. visszafordul G₂ körül — a G₁ lezuhan. Kritikus elrendezés: határozatlan és túlhatározott, pedig e = i.", kepletek: ["\\text{szabad mozgás: } 1,\\quad \\text{fölös kényszer: } 1"] },
 ];
@@ -81,10 +81,11 @@ function Rajz(t) {
       <g opacity={dU} transform={`translate(0 ${(1 - dU) * 30})`}>
         <Gorgo x={X(12)} y={Y} meret={14} />
       </g>
-      <TamaszCimke x={X(0)} y={Y + 48}>A</TamaszCimke>
-      <TamaszCimke x={X(4)} y={Y + 48}>B</TamaszCimke>
-      <TamaszCimke x={X(8)} y={Y + 48}>C</TamaszCimke>
-      <TamaszCimke x={X(12)} y={Y + 48}>D</TamaszCimke>
+      {/* a betűk a reakciónyilak mellett (A, B, C balra; D jobbra, mert a D felirat balra áll) */}
+      <TamaszCimke x={X(0) - 18} y={Y + 48}>A</TamaszCimke>
+      <TamaszCimke x={X(4) - 18} y={Y + 48}>B</TamaszCimke>
+      <TamaszCimke x={X(8) - 18} y={Y + 48}>C</TamaszCimke>
+      <TamaszCimke x={X(12) + 18} y={Y + 48}>D</TamaszCimke>
       {[0, 4, 8].map((m) => (
         <Meret key={m} x1={X(m)} x2={X(m + 4)} y={Y + 92} cimke="4 m" opacitas={0.8} />
       ))}
@@ -95,7 +96,7 @@ function Rajz(t) {
         {fejt2 > 0 && <rect x={X(6) - 6} y={Y - 30} width={X(10) - X(6) + 12} height={60} rx="8" fill={SZ.zold} opacity={fejt2 * 0.8} />}
         {fejt1 > 0 && <rect x={X(0) - 6} y={Y - 30} width={X(6) - X(0) + 12} height={60} rx="8" fill={SZ.zold} opacity={fejt1 * 0.6} />}
       </g>
-      <FeliratA x={X(11)} y={Y - 40} szin={SZ.zold} meret={11} opacitas={fejt3 * (1 - mozgU)}>III ✓</FeliratA>
+      <FeliratA x={X(10.4)} y={Y - 40} szin={SZ.zold} meret={11} opacitas={fejt3 * (1 - mozgU)}>III ✓</FeliratA>
       <FeliratA x={X(8)} y={Y - 40} szin={SZ.zold} meret={11} opacitas={fejt2 * (1 - mozgU)}>II: csukló + görgő ✓</FeliratA>
       <FeliratA x={X(3)} y={Y - 40} szin={SZ.zold} meret={11} opacitas={fejt1 * (1 - mozgU)}>I: kéttámaszú ✓</FeliratA>
 
@@ -134,7 +135,7 @@ function Rajz(t) {
         <ReakcioNyil x={X(0)} y={Y + 4} hossz={56} szog={90} cimke="Aᵧ = 7,500" cimkeEltolas={[8, 4]} />
         <ReakcioNyil x={X(4)} y={Y + 4} hossz={26} szog={90} cimke="B = 1,500" cimkeEltolas={[8, 4]} />
         <ReakcioNyil x={X(8)} y={Y + 4} hossz={48} szog={90} cimke="C = 6,000" cimkeEltolas={[8, 4]} />
-        <ReakcioNyil x={X(12)} y={Y + 4} hossz={34} szog={90} cimke="D = 3,000" cimkeEltolas={[-64, 4]} />
+        <ReakcioNyil x={X(12)} y={Y + 4} hossz={34} szog={90} cimke="D = 3,000" cimkeEltolas={[-72, 4]} />
       </g>
 
       <Itelet y={300} szoveg="5 > 3: kétszeresen határozatlan — megfeszül" szin={SZ.lila} opacitas={hatarozatlan ? 1 : 0} />

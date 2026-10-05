@@ -250,6 +250,26 @@ oldalhoz elég ezeket átírni.
 - Bekötések: útvonal (5–7. hét, vizsgatípusok), zh-szimulátor 7 feladattal (30/45/60 perc), puska 7–8. lap, a 8–10. modul
   „hamarosan” oldalai, fejléc: a modulok számozott gombokkal (csak az aktív felirata látszik), `fokszamMerleg` testszámlálás javítva.
 
+## 16. kör: ellenőrző kör, 3. ütem — 7., 8. és 10. modul tételes átnézése
+
+- Három ügynök (rácsos, határozottság, térbeli): minden statikus ábra, film-képkocka, felfedező és kalkulátor (szélső és elfajult
+  beállításokkal), generátor (300–1000 futás) és kvíz a modul motorjával újraszámolva és képen ellenőrizve; a három motor
+  (`racsos.js`, `hatarozottsag.js`, `terbeli.js`) hibátlan, nem változott.
+- **7. modul:** a GYF‑3 „maradék” lépése a következő sorban kiszámolt rúderőt használta; a GYF‑5 rossz helyre tette a hiányzó rudat;
+  a 6.2 „összekötő rúd” példarajz nem felelt meg a definíciónak (új Warren‑rács); a generátorok tehere a támasz fölötti csomópontra is
+  kerülhetett (minden kérdezett rúderő 0 kN); a határozottság‑generátor nem létező csomópontra tett rudat; kilógó/egymásra írt
+  méret‑, teher‑ és reakciófeliratok, az alsó öv terhe a rácsozaton át rajzolva, a kalkulátor átmetsző vonala a rajzon messze kívülre futott.
+- **8. modul:** a 7.8.a „egy egyenesbe eső három csukló” ábrán B görgő volt és C nem esett az A–B egyenesre (a motor szerint határozott
+  szerkezetet mutatott kritikusként); a 7.5.e metszéspont‑vonala nem a rúd egyenese volt; a 7.7.c falgörgői a tartón belül; a GYF‑1 film
+  és szöveg párhuzamos hatásvonalak metszéspontjáról beszélt; a GYF‑3 film G₁ előjele; a rácsos generátor egy rúddal bekötött
+  sarokcsomópontot adott; a „Stabil vagy mozog?” játék a két oszlop + párhuzamos rudak esetét nem ismerte fel; feliratok a reakciónyilakon,
+  kilógó tehernyilak a mechanizmus‑animációban és a kritikus‑felfedezőben.
+- **10. modul:** a GYF‑2/GYF‑7 keresztmetszet‑képe tükrözött (balkezes) nézet volt; a 4. hibakereső x tengelyre írt egyenletének előjele;
+  a tartály‑generátorok ábrája a H13/4 fix rajzát mutatta a tényleges feladat helyett; a 3D jelenetekben az oszlopba rajzolt A_y/M_Ay
+  nyilak, vászonból kifutó nyilak, a nyomott rúd ereje a csúcsból kifelé rajzolva; a bakállvány‑felfedező előbeállításai a terhet is állítják.
+- Közös: a kvízek válaszopciói kulcsot kaptak (eddig 48–60 „unique key” konzolfigyelmeztetés oldalanként); a film vezérlőgombjai
+  (`anim/FeladatFilm.js`) a komponensen kívülre kerültek, mert lejátszás közben képkockánként újra mountolódtak és a kattintás elveszhetett.
+
 ## 15. kör: ellenőrző kör, 2. ütem — 1–4. modul tételes átnézése
 
 - Két ügynök (1–2. és 3–4. modul): minden statikus ábra, film-képkocka, felfedező (szélső beállításokkal is), generátor (300–500 futás)
