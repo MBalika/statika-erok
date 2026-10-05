@@ -15,6 +15,8 @@ import RacsosRajz, { leptek, RACS_SZIN } from "./RacsosRajz";
 
 const SZ = 600;
 const MA = 360;
+// a felső margó akkora, hogy a felső öv terhének felirata ne érjen a címbe
+const MARGO = { bal: 56, jobb: 56, fel: 84, le: 70 };
 
 const TARTOK = [
   { id: "tk66", cim: "Tankönyv 6.6", modell: () => PELDAK.tk66(2, 1.5, 12) },
@@ -33,7 +35,7 @@ export default function AtmetszoVonal({ kezdo = 0 }) {
 
   const { modell, e, lp } = useMemo(() => {
     const m = TARTOK[tIdx].modell();
-    return { modell: m, e: racsosMegold(m), lp: leptek(m, SZ, MA, { bal: 56, jobb: 56, fel: 74, le: 70 }) };
+    return { modell: m, e: racsosMegold(m), lp: leptek(m, SZ, MA, MARGO) };
   }, [tIdx]);
 
   const modellPont = (ev) => {
@@ -106,6 +108,7 @@ export default function AtmetszoVonal({ kezdo = 0 }) {
             reakciok
             szelesseg={SZ}
             magassag={MA}
+            margo={MARGO}
             onPointerDown={kezd}
             onPointerMove={mozog}
             onPointerUp={vege}
@@ -133,7 +136,8 @@ export default function AtmetszoVonal({ kezdo = 0 }) {
                       return (
                         <g key={i}>
                           <circle cx={px} cy={py} r="7" fill="none" stroke="#7c3aed" strokeWidth="2" />
-                          <text x={px + 10} y={py - 8} fontSize="11.5" fontWeight="700" style={{ fill: "#6d28d9", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
+                          {/* a csomópont sorszáma fölé (az a jobb oldalon −8-nál, a felső övön balra, az alsón +18-nál áll) */}
+                          <text x={px + 12} y={py - 20} fontSize="11.5" fontWeight="700" style={{ fill: "#6d28d9", paintOrder: "stroke", stroke: "white", strokeWidth: 3 }}>
                             {q.fopont.nev.replace(/[{}]/g, "").replace("P_", "P")} → S{q.rud}
                           </text>
                         </g>

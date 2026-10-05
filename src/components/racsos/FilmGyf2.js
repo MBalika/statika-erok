@@ -77,7 +77,7 @@ function Rajz(t) {
             )}
             {fazis === "m8" && (
               <g>
-                <Fokusz x={kx(n8.x)} y={ky(n8.y)} t={t} cimke="8 = főpont" dx={10} dy={22} />
+                <Fokusz x={kx(n8.x)} y={ky(n8.y)} t={t} cimke="8 = főpont" dx={10} dy={34} />
                 <Kar x1={kx(0)} y1={ky(0) + 40} x2={kx(4)} y2={ky(0) + 40} u={arany(t, T.m8 + 0.6, T.m8 + 1.6)} cimke="4 m" dy={-5} />
                 <Kar x1={kx(4) + 26} y1={ky(1.5)} x2={kx(4) + 26} y2={ky(0)} u={arany(t, T.m8 + 1.2, T.m8 + 2.2)} cimke="1,5 m" dx={24} dy={4} />
                 <Pipa x={300} y={30} opacitas={arany(t, T.m8 + 2.4, T.m8 + 3)} szin={SZ.bordo}>
@@ -98,7 +98,7 @@ function Rajz(t) {
             )}
             {fazis === "m2" && (
               <g>
-                <Fokusz x={x2} y={y2} t={t} cimke="2 = főpont" dx={-70} dy={-14} />
+                <Fokusz x={x2} y={y2} t={t} cimke="2 = főpont" dx={-70} dy={-26} />
                 <Kar x1={kx(0)} y1={ky(1.5) - 34} x2={kx(2)} y2={ky(1.5) - 34} u={arany(t, T.m2 + 0.6, T.m2 + 1.6)} cimke="2 m" dy={-5} />
                 <Pipa x={300} y={30} opacitas={arany(t, T.m2 + 2, T.m2 + 2.6)}>
                   −2·3 + 1,5·S₇,₈ = 0 → S₇,₈ = 4 kN (húzott)

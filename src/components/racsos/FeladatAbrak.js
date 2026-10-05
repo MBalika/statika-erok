@@ -12,7 +12,7 @@ import { M_GYF1, M_GYF2, M_GYF3, M_GYF4, M_GYF5, M_GYF6, M_GYF7_EREDETI } from "
 const alap = { szinez: false, meretek: true, magassag: 330 };
 
 export function AbraGyf1() {
-  return <RacsosRajz modell={M_GYF1} {...alap} cimke="A = CSUKLÓ (1), B = GÖRGŐ (7); A RÁCSRUDAK 3–4–5-ÖS HÁROMSZÖGEK: cos = 0,6, sin = 0,8" />;
+  return <RacsosRajz modell={M_GYF1} {...alap} cimke="A: CSUKLÓ (1), B: GÖRGŐ (7); RÁCSRUDAK: cos = 0,6, sin = 0,8" />;
 }
 export function AbraGyf2() {
   return <RacsosRajz modell={M_GYF2} {...alap} kiemeltRudak={["2,3", "2,8", "7,8"]} cimke="A KIEMELT RUDAK: AZ ÁTMETSZÉS (S₂,₃, S₂,₈, S₇,₈)" />;

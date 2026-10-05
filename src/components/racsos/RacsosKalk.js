@@ -23,6 +23,25 @@ const TIPUSOK = [
   { id: "trapez", cim: "trapéz (vizsga-típus)", tipus: "trapez" },
 ];
 
+/** Szakasz levágása egy téglalapra (Liang–Barsky): a keresett átmetszés vonala a modellben ±3·H hosszú, a rajzon csak a tartó körüli sáv kell belőle. */
+function vagottSzakasz(p1, p2, x1, y1, x2, y2) {
+  let t0 = 0;
+  let t1 = 1;
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  for (const [p, q] of [[-dx, p1.x - x1], [dx, x2 - p1.x], [-dy, p1.y - y1], [dy, y2 - p1.y]]) {
+    if (Math.abs(p) < 1e-12) {
+      if (q < 0) return null;
+      continue;
+    }
+    const r = q / p;
+    if (p < 0) t0 = Math.max(t0, r);
+    else t1 = Math.min(t1, r);
+    if (t0 > t1) return null;
+  }
+  return [{ x: p1.x + t0 * dx, y: p1.y + t0 * dy }, { x: p1.x + t1 * dx, y: p1.y + t1 * dy }];
+}
+
 const Mezo = ({ cimke, children }) => (
   <label className="block text-[12px] font-medium text-petrol-600">
     <span className="mb-0.5 block">{cimke}</span>
@@ -112,7 +131,24 @@ export default function RacsosKalk() {
 
       <div className="grid lg:grid-cols-[1.25fr_1fr] [&>*]:min-w-0">
         <div className="racs-vilagos border-b border-[color:var(--keret)] p-3 lg:border-r lg:border-b-0">
-          <RacsosRajz modell={modell} eredmeny={e.ok ? e : null} reakciok={e.ok} rudFeliratok={e.ok} meretek kiemeltRudak={ful === "atmetszes" && at ? at.rudak : []} onRud={(id) => { setValasztottRud(id); setFul("atmetszes"); }} magassag={380} cimke={e.ok ? `r = ${e.hatarozottsag.r}, k = ${e.hatarozottsag.k}, c = ${e.hatarozottsag.c}: r + k = ${e.hatarozottsag.i} = 2c = ${e.hatarozottsag.e} ✓ HATÁROZOTT` : "NEM MEGOLDHATÓ"} extra={(kx, ky) => (ful === "atmetszes" && at ? <line x1={kx(at.vonal[0].x)} y1={ky(at.vonal[0].y)} x2={kx(at.vonal[1].x)} y2={ky(at.vonal[1].y)} stroke="#0f172a" strokeWidth="1.8" strokeDasharray="7 5" /> : null)} />
+          <RacsosRajz
+            modell={modell}
+            eredmeny={e.ok ? e : null}
+            reakciok={e.ok}
+            rudFeliratok={e.ok}
+            meretek
+            kiemeltRudak={ful === "atmetszes" && at ? at.rudak : []}
+            onRud={(id) => { setValasztottRud(id); setFul("atmetszes"); }}
+            magassag={380}
+            margo={{ bal: 56, jobb: 56, fel: 96, le: 96 }}
+            cimke={e.ok ? `r = ${e.hatarozottsag.r}, k = ${e.hatarozottsag.k}, c = ${e.hatarozottsag.c}: r + k = ${e.hatarozottsag.i} = 2c = ${e.hatarozottsag.e} ✓ HATÁROZOTT` : "NEM MEGOLDHATÓ"}
+            extra={(kx, ky, lp) => {
+              if (!(ful === "atmetszes" && at)) return null;
+              // a vágóvonalat a tartó körüli sávra vágjuk, hogy ne lógjon ki a rajzból
+              const v = vagottSzakasz({ x: kx(at.vonal[0].x), y: ky(at.vonal[0].y) }, { x: kx(at.vonal[1].x), y: ky(at.vonal[1].y) }, 12, ky(lp.b.yMax) - 30, 588, ky(lp.b.yMin) + 30);
+              return v ? <line x1={v[0].x} y1={v[0].y} x2={v[1].x} y2={v[1].y} stroke="#0f172a" strokeWidth="1.8" strokeDasharray="7 5" /> : null;
+            }}
+          />
           <p className="mt-1 text-[11.5px] text-petrol-500">Kattints egy rúdra: az átmetszés fülön arra a rúdra kapsz levezetést. A rudak mellett a rúderő (kN), rose = húzott, sky = nyomott, szürke = vakrúd.</p>
         </div>
         <div className="p-4 sm:p-5">

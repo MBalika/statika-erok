@@ -29,7 +29,13 @@ export const jelleg = (S) => (Math.abs(S) < 1e-6 ? "vakrúd" : S > 0 ? "húzott"
 
 /** Véletlen függőleges csomóponti terhek a felső (vagy alsó) övön. */
 export function veletlenTerhek(m, db, opciok = {}) {
-  const jeloltek = (opciok.ov === "also" ? m.also : m.felso).filter((id) => !m.tamaszok.some((t) => t.csomopont === id));
+  // a támasz fölötti (vele egy függőlegesbe eső) övcsomópontot kihagyjuk: az oda tett teher egyenesen a támaszba megy,
+  // és a tartó minden más rúdja vakrúd lenne — elfajult feladat
+  const tamaszX = m.tamaszok.map((t) => m.csomopontok.find((c) => c.id === t.csomopont)?.x);
+  const jeloltek = (opciok.ov === "also" ? m.also : m.felso).filter((id) => {
+    const c = m.csomopontok.find((cc) => cc.id === id);
+    return !m.tamaszok.some((t) => t.csomopont === id) && !tamaszX.some((x) => Math.abs(x - c.x) < 1e-9);
+  });
   const hasznalt = new Set();
   const terhek = [];
   for (let i = 0; i < db; i++) {
@@ -162,14 +168,18 @@ function rudjanTerheltFeladat() {
   const Mmax = (P * c1 * c2) / ell;
   const rajzModell = { ...m, terhek: [] };
   const xP = m.csomopontok.find((c) => c.id === bal).x + c1;
-  const rajzExtra = (kx, ky) => (
-    <g>
-      <line x1={kx(xP)} y1={ky(0) - 56} x2={kx(xP)} y2={ky(0) - 4} stroke="var(--color-jel-ero)" strokeWidth="3" strokeLinecap="round" markerEnd="url(#th-teher)" />
-      <text x={kx(xP) + 7} y={ky(0) - 26} fontSize="12.5" fontWeight="650" style={{ fill: "var(--color-jel-ero)", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
-        {`P = ${P} kN`}
-      </text>
-    </g>
-  );
+  const rajzExtra = (kx, ky) => {
+    // a felirat a nyíl jobb oldalán; a tartó jobb végén (ahol a függőleges méretvonal feliratába érne) a bal oldalán
+    const jobbra = kx(xP) + 90 < 560;
+    return (
+      <g>
+        <line x1={kx(xP)} y1={ky(0) - 56} x2={kx(xP)} y2={ky(0) - 4} stroke="var(--color-jel-ero)" strokeWidth="3" strokeLinecap="round" markerEnd="url(#th-teher)" />
+        <text x={kx(xP) + (jobbra ? 7 : -7)} y={ky(0) - 26} textAnchor={jobbra ? "start" : "end"} fontSize="12.5" fontWeight="650" style={{ fill: "var(--color-jel-ero)", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+          {`P = ${P} kN`}
+        </text>
+      </g>
+    );
+  };
   return {
     szoveg: (
       <p>
@@ -240,15 +250,19 @@ function hatarozottsagFeladat() {
   const modosit = valaszt(["semmi", "semmi", "plusz", "minusz", "tamasz", "x"]);
   let magyarazat = "";
   if (modosit === "plusz") {
-    // egy plusz rácsrúd egy mezőbe (X-rácsozás egy mezőben)
-    const i = egesz(0, n - 1);
-    const p = m.felso[i];
-    const q = m.also[i + 1];
-    const p2 = m.also[i];
-    const q2 = m.felso[i + 1];
+    // egy plusz rácsrúd egy mezőbe (X-rácsozás egy mezőben) — csak létező csomópontpár közé, amely még nincs összekötve
     const van = (x, y) => m.rudak.some((r) => (r.a === x && r.b === y) || (r.a === y && r.b === x));
-    if (!van(p, q)) m.rudak.push({ id: `${p},${q}`, a: p, b: q });
-    else if (!van(p2, q2)) m.rudak.push({ id: `${p2},${q2}`, a: p2, b: q2 });
+    const jeloltek = [];
+    for (let i = 0; i < n; i++) {
+      for (const [p, q] of [[m.felso[i], m.also[i + 1]], [m.also[i], m.felso[i + 1]]]) {
+        if (p && q && p !== q && !van(p, q)) {
+          jeloltek.push([p, q]);
+          break;
+        }
+      }
+    }
+    const [p, q] = valaszt(jeloltek);
+    m.rudak.push({ id: `${p},${q}`, a: p, b: q });
     magyarazat = "Egy mezőbe egy második átlós rúd került (X-rácsozás): eggyel több az ismeretlen, mint az egyenlet.";
   } else if (modosit === "minusz") {
     // egy rácsrúd elhagyása

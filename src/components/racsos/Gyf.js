@@ -222,9 +222,9 @@ export default function GyfBlokkok() {
           <MB>{"\\Fy -6 + 9{,}5 - 0{,}6\\,S_{4,8} = 0 \\;\\Rightarrow\\; S_{4,8} = 5{,}833"}</MB>
           <MB>{"\\Mp{4} 2\\cdot 9{,}5 - 1{,}5\\,S_{8,9} = 0 \\;\\Rightarrow\\; S_{8,9} = 12{,}67;\\qquad \\text{ellenőrzés: }\\Fx 17{,}33 - 0{,}8\\cdot 5{,}833 - 12{,}67 = 0\\ \\checkmark"}</MB>
         </Lepes>
-        <Lepes cim="A maradék a 9. és 5. csomópontból, majd a táblázat">
-          <MB>{"5:\\quad \\Fx 12{,}67 - 0{,}8\\,S_{5,9} = 0 \\;\\Rightarrow\\; S_{5,9} = 15{,}83;\\qquad \\Fy -0{,}6\\cdot 15{,}83 - S_{5,10} = 0 \\;\\Rightarrow\\; S_{5,10} = -9{,}5\\ \\checkmark"}</MB>
+        <Lepes cim="A maradék a 4. és 5. csomópontból, ellenőrzés a 9.-en, majd a táblázat">
           <MB>{"4:\\quad \\Fy -6 - 0{,}6\\cdot 5{,}833 - S_{4,9} = 0 \\;\\Rightarrow\\; S_{4,9} = -9{,}5;\\qquad \\Fx 17{,}33 - 0{,}8\\cdot 5{,}833 + S_{4,5} = 0 \\;\\Rightarrow\\; S_{4,5} = -12{,}67"}</MB>
+          <MB>{"5:\\quad \\Fx 12{,}67 - 0{,}8\\,S_{5,9} = 0 \\;\\Rightarrow\\; S_{5,9} = 15{,}83;\\qquad \\Fy -0{,}6\\cdot 15{,}83 - S_{5,10} = 0 \\;\\Rightarrow\\; S_{5,10} = -9{,}5\\ \\checkmark"}</MB>
           <MB>{"\\text{ellenőrzés (9):}\\quad \\Fx -12{,}67 + 0{,}8\\cdot 15{,}83 + 0 = 0\\ \\checkmark,\\qquad \\Fy -9{,}5 + 0{,}6\\cdot 15{,}83 = 0\\ \\checkmark"}</MB>
           <div className="mt-2 max-w-sm">
             <RudErokTabla eredmeny={T3} kicsi />
@@ -333,7 +333,7 @@ export default function GyfBlokkok() {
           </p>
         }
         abra={
-          <AbraKeret cim="A feladatlap rajza számokkal. A felső csomópontok magassága: 2; 2,4; 2,8; 3,2; 3,6; 4 m. A 6–7 mező alsó öve hiányzik: a két háromszög-csoport csak a 7. csomópontban kapcsolódik → háromcsuklós rendszer.">
+          <AbraKeret cim="A feladatlap rajza számokkal. A felső csomópontok magassága: 2; 2,4; 2,8; 3,2; 3,6; 4 m. A 6–8 alsó övrúd hiányzik: a két háromszög-csoport csak a 7. csomópontban kapcsolódik → háromcsuklós rendszer.">
             <AbraGyf5 />
           </AbraKeret>
         }

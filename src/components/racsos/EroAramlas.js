@@ -33,7 +33,8 @@ export default function EroAramlas() {
 
   const tip = TIPUSOK[tipIdx];
   const a = 2;
-  const L = n * a;
+  // a nyeregtető páratlan n-nél n + 1 mezős (a sablon kerekít), a csúszka a valódi fesztávig menjen
+  const L = (tip.tipus === "haromszog" && n % 2 ? n + 1 : n) * a;
 
   const { modell, e, terhelt } = useMemo(() => {
     const m = sablon(tip.tipus, { n, a, h, racs: tip.racs });
@@ -94,14 +95,37 @@ export default function EroAramlas() {
             extra={(kx, ky) => {
               const px = kx(terhelt.x);
               const py = ky(terhelt.y);
-              const hossz = 30 + 2.2 * F;
               const r = (alfa * Math.PI) / 180;
-              const x1 = px - hossz * Math.cos(r);
-              const y1 = py - hossz * Math.sin(r);
+              const cosr = Math.cos(r);
+              const sinr = Math.sin(r);
+              // alsó övön: a nyíl a csomópontból kifelé, a tartó alá lóg (nem a rácsozaton át érkezik); a hossz az alsó margóba fér
+              const alul = ov === "also";
+              let hossz = alul ? Math.min(52, 24 + 1.2 * F) : 30 + 2.2 * F;
+              // a felső övön a nyíl talpa (ferde erőnél a szélső csomópontoknál) maradjon a rajzon belül
+              if (!alul) {
+                if (cosr > 1e-6) hossz = Math.min(hossz, (px - 14) / cosr);
+                else if (cosr < -1e-6) hossz = Math.min(hossz, (586 - px) / -cosr);
+                hossz = Math.max(24, hossz);
+              }
+              const x1 = alul ? px : px - hossz * cosr;
+              const y1 = alul ? py : py - hossz * sinr;
+              const x2 = alul ? px + (hossz - 3) * cosr : px - 3 * cosr;
+              const y2 = alul ? py + (hossz - 3) * sinr : py - 3 * sinr;
+              const cimke = `F = ${sz(F, 0)} kN`;
+              const szeles = 7.4 * cimke.length;
+              // a felirat a nyíl talpánál (felső öv) / hegyénél (alsó öv), a nyíltól kifelé; a jobb szélen a bal oldalra kerül
+              const vegX = alul ? px + hossz * cosr : x1;
+              const vegY = alul ? py + hossz * sinr : y1;
+              // természetes oldal: a nyíl irányával ellentétes; ha ott kilógna a rajzból, a másik oldalra kerül
+              const jobbraFer = vegX + 8 + szeles <= 590;
+              const balraFer = vegX - 8 - szeles >= 10;
+              const balra = cosr < -1e-6 ? balraFer || !jobbraFer : !jobbraFer && balraFer;
+              const cimkeX = balra ? vegX - 8 : vegX + 8;
+              const cimkeY = alul ? vegY + 4 : vegY - 6;
               return (
                 <g>
-                  <line x1={x1} y1={y1} x2={px - 3 * Math.cos(r)} y2={py - 3 * Math.sin(r)} stroke="var(--color-jel-ero)" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#th-teher)" />
-                  <text x={x1 + 8} y={y1 - 6} fontSize="12.5" fontWeight="650" style={{ fill: "var(--color-jel-ero)", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
+                  <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--color-jel-ero)" strokeWidth="3.2" strokeLinecap="round" markerEnd="url(#th-teher)" />
+                  <text x={cimkeX} y={cimkeY} textAnchor={balra ? "end" : "start"} fontSize="12.5" fontWeight="650" style={{ fill: "var(--color-jel-ero)", paintOrder: "stroke", stroke: "white", strokeWidth: 3.5 }}>
                     F = {sz(F, 0)} kN
                   </text>
                   {terhelt.t > 1e-6 && terhelt.t < 1 - 1e-6 && (

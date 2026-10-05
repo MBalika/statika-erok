@@ -93,9 +93,20 @@ export function AbraRacsosVaz() {
 /* ---------------- 6.2: elnevezések ---------------- */
 
 const M62 = sablon("parhuzamos", { n: 6, a: 2, h: 1.5, racs: "N" });
-const M62b = sablon("parhuzamos", { n: 6, a: 2, h: 1.5, racs: "Z" });
-// a második rajzon csak a belső oszlopok egy része marad (összekötő rudak példája)
-M62b.rudak = M62b.rudak.filter((r) => !["1,8", "7,14"].includes(r.id));
+// a második rajz: Warren-rácsozás függőleges rudakkal, amelyek alsó végén csak a két egy egyenesbe eső
+// övrúd csatlakozik (a rácsrudak a felső csomópontokban találkoznak) → ezek az összekötő rudak
+const M62b = (() => {
+  const m = sablon("warren", { n: 6, a: 1, h: 1.5 });
+  for (let i = 0; i < 6; i++) {
+    const uj = String(14 + i);
+    const bal = m.also[i];
+    const jobb = m.also[i + 1];
+    m.csomopontok.push({ id: uj, x: 2 * i + 1, y: 0 });
+    m.rudak = m.rudak.filter((r) => r.id !== rudId(bal, jobb));
+    m.rudak.push({ id: rudId(bal, uj), a: bal, b: uj }, { id: rudId(uj, jobb), a: uj, b: jobb }, { id: rudId(m.felso[i], uj), a: m.felso[i], b: uj });
+  }
+  return m;
+})();
 
 export function AbraElnevezesek() {
   const Cimke = ({ x, y, children, horgony = "middle", szin = "#334155" }) => (
@@ -306,7 +317,7 @@ export function AbraAtmetszes() {
         kiemeltRudak={["2,3", "2,8", "7,8"]}
         szelesseg={600}
         magassag={220}
-        margo={{ bal: 70, jobb: 70, fel: 62, le: 60 }}
+        margo={{ bal: 70, jobb: 70, fel: 80, le: 50 }}
         csoport
         extra={(kx, ky) => <HullamVonal x1={kx(3.1) - 20} y1={ky(1.5) - 24} x2={kx(2.7)} y2={ky(0) + 22} />}
       />
@@ -479,7 +490,7 @@ export function AbraOsszetett() {
         b) HÁROMCSUKLÓS RENDSZERŰ
       </text>
       <g>
-        <RacsosRajz modell={gerber} szinez={false} csomopontCimkek={false} szelesseg={300} magassag={150} margo={{ bal: 20, jobb: 20, fel: 30, le: 44 }} csoport extra={(kx, ky) => <circle cx={kx(15)} cy={ky(0)} r="6" fill="white" stroke={RACS_SZIN.aktiv} strokeWidth="2.4" />} />
+        <RacsosRajz modell={gerber} szinez={false} csomopontCimkek={false} szelesseg={300} magassag={150} margo={{ bal: 30, jobb: 30, fel: 30, le: 44 }} csoport extra={(kx, ky) => <circle cx={kx(15)} cy={ky(0)} r="6" fill="white" stroke={RACS_SZIN.aktiv} strokeWidth="2.4" />} />
         {/* a merev testek sémája */}
         <g transform="translate(0 165)">
           <polygon points="30,60 40,20 220,20 235,60" fill="#cbd5e1" stroke="#475569" strokeWidth="1.2" />
@@ -497,13 +508,13 @@ export function AbraOsszetett() {
         </g>
       </g>
       <g transform="translate(300 0)">
-        <RacsosRajz modell={harom} szinez={false} csomopontCimkek={false} szelesseg={300} magassag={150} margo={{ bal: 20, jobb: 20, fel: 30, le: 44 }} csoport extra={(kx, ky) => <circle cx={kx(6)} cy={ky(3.2)} r="6" fill="white" stroke={RACS_SZIN.aktiv} strokeWidth="2.4" />} />
+        <RacsosRajz modell={harom} szinez={false} csomopontCimkek={false} szelesseg={300} magassag={150} margo={{ bal: 30, jobb: 30, fel: 30, le: 44 }} csoport extra={(kx, ky) => <circle cx={kx(6)} cy={ky(3.2)} r="6" fill="white" stroke={RACS_SZIN.aktiv} strokeWidth="2.4" />} />
         <g transform="translate(0 165)">
           <polygon points="30,60 30,30 150,10 160,60" fill="#cbd5e1" stroke="#475569" strokeWidth="1.2" />
-          <polygon points="160,60 150,10 290,-5 290,60" fill="#cbd5e1" stroke="#475569" strokeWidth="1.2" />
+          <polygon points="160,60 150,10 280,-4 280,60" fill="#cbd5e1" stroke="#475569" strokeWidth="1.2" />
           <circle cx={150} cy={10} r="5" fill="white" stroke={RACS_SZIN.aktiv} strokeWidth="2" />
           <Csuklo x={32} y={62} meret={11} />
-          <Csuklo x={288} y={62} meret={11} />
+          <Csuklo x={278} y={62} meret={11} />
           <text x={160} y={126} textAnchor="middle" fontSize="10.5" style={{ fill: "#475569" }}>
             két merev test, három csukló
           </text>
@@ -590,8 +601,8 @@ export function AbraRudjanTerhelt() {
       <TartoHegyek />
       <KekHegy />
       <Rud ox={50} oy={150} cim="a) terhelt rácsrúd" mod="a" />
-      <Rud ox={240} oy={150} cim="b) elkülönítés" mod="b" />
-      <Rud ox={425} oy={150} cim="c) helyettesítés" mod="c" />
+      <Rud ox={230} oy={150} cim="b) elkülönítés" mod="b" />
+      <Rud ox={405} oy={150} cim="c) helyettesítés" mod="c" />
       <text x={300} y={206} textAnchor="middle" fontSize="10" style={{ fill: "#475569" }}>
         b) a j, k végpontokra írt nyomatéki egyenletekből Sₖᵐ és Sⱼᵐ; a rúdirányú vetületből Sₖˢ = Sⱼˢ − Fˢ
       </text>

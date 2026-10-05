@@ -1,6 +1,10 @@
+import { cloneElement } from "react";
 import { M } from "@/components/ui/Keplet";
 
-export const KVIZ = [
+/** A válaszok elemtömbje kulcsot kap: a szerver-oldalról a kliens Kviz komponensnek kulcs nélkül átadott elemlista React-figyelmeztetést ad. */
+const kulcsolt = (lista) => lista.map((q) => ({ ...q, v: q.v.map((el, i) => cloneElement(el, { key: i })) }));
+
+export const KVIZ = kulcsolt([
   {
     k: <>Mi teszi a rácsos tartó rúdjait „tiszta rúddá” (csak rúderő ébred bennük)?</>,
     v: [<>Csuklós csomópontok, egyenes rudak és csak a csomópontokon ható terhek.</>, <>Az, hogy a rudak acélból vannak.</>, <>Az, hogy a tartó párhuzamos övű.</>, <>Az, hogy a tartót görgő és csukló támasztja.</>],
@@ -91,7 +95,7 @@ export const KVIZ = [
     helyes: 0,
     magyarazat: <>Az átmetszésnél az övrúd ereje a főpontra írt nyomatékból = a rész külső erőinek nyomatéka / magasság: az överők a hajlítónyomaték-ábrát követik (felül nyomás, alul húzás), a rácsrudak pedig a nyíróerőt (a támasz felé nőnek, előjelet a teher alatt váltanak).</>,
   },
-];
+]);
 
 export const HIBAK = [
   {
