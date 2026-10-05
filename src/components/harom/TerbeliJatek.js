@@ -129,7 +129,7 @@ export default function TerbeliJatek() {
     ) : fazis === "mutat" ? (
       <>
         {utolso === 100 ? "Tökéletes kör!" : utolso >= 50 ? "Részben jó." : "Ezt nézd meg jobban:"}{" "}
-        S₁ = {sz(S[0], 2)}, S₂ = {sz(S[1], 2)}, S₃ = {sz(S[2], 2)} kN — a legnagyobb a(z) {maxIdx + 1}-es rúdban. Ebben a körben {utolso} pont.
+        S₁ = {sz(S[0], 2)}, S₂ = {sz(S[1], 2)}, S₃ = {sz(S[2], 2)} kN — a legnagyobb a(z) {maxIdx + 1}-{maxIdx === 2 ? "as" : "es"} rúdban. Ebben a körben {utolso} pont.
       </>
     ) : (
       <>Eddigi átlag: {sz(atlagEddig, 0)} pont.</>
@@ -139,7 +139,7 @@ export default function TerbeliJatek() {
     <JatekKeret cim="Melyik rúd húzott?" leiras="Egy háromlábú bakállványt véletlen irányú erő terhel. Tippeld meg mindhárom rúd előjelét és a legnagyobb rúderőt — utána a 3D modell megmutatja a valóságot." pont={fazis === "kesz" ? osszPont : atlagEddig} kor={kor} osszKor={OSSZ_KOR} kesz={fazis === "kesz"} onUj={ujJatek} uzenet={uzenet}>
       <div className="grid gap-4 lg:grid-cols-[1.3fr_1fr] [&>*]:min-w-0">
         <div>
-          <Jelenet3D kamera={kam([11, 8, 14])} cel={P([1, 2.5, 0])} magassag={380} tavolsagMin={5} tavolsagMax={50}>
+          <Jelenet3D kamera={kam([11, 8, 14])} cel={P([1, 3, 0])} magassag={380} tavolsagMin={5} tavolsagMax={50}>
             <PadloT meret={20} osztas={20} magassag={-0.01} />
             <TengelyekT hossz={4} origo={[0, 0, 0]} />
             {labak.map((p, i) => {
@@ -155,12 +155,13 @@ export default function TerbeliJatek() {
                     {mutat && u > 0.6 ? `: ${sz(S[i], 1)} kN` : ""}
                   </CimkeT>
                   <CimkeT pozicio={[p[0], -0.45, p[2]]} szin="#475569" meret={11} vastag={false}>({p[0]}; 0; {p[2]})</CimkeT>
-                  {mutat && Math.abs(S[i]) > 0.05 && <VektorNyilT pont={csucs} F={[e[i][0] * S[i], e[i][1] * S[i], e[i][2] * S[i]]} leptek={0.12} szin={st.szin} vastag={0.06} minHossz={0.6} u={u} />}
+                  {/* húzott rúd: a nyíl a csúcsból a talppont felé; nyomott: a talppont felől a csúcsba (hegye a csúcsban) */}
+                  {mutat && Math.abs(S[i]) > 0.05 && (S[i] > 0 ? <VektorNyilT pont={csucs} F={[e[i][0] * S[i], e[i][1] * S[i], e[i][2] * S[i]]} leptek={0.12} szin={st.szin} vastag={0.06} minHossz={0.6} maxHossz={2} u={u} /> : <EroNyilT pont={csucs} F={[e[i][0] * S[i], e[i][1] * S[i], e[i][2] * S[i]]} leptek={0.12} szin={st.szin} vastag={0.06} minHossz={0.6} maxHossz={2} u={u} />)}
                 </group>
               );
             })}
             <PontT pozicio={csucs} r={0.2} szin={SZIN.tarto} />
-            <EroNyilT pont={csucs} F={F} leptek={0.2} szin={SZIN.teher} cimke={`F = ${Fn} kN`} cimkeEltolas={[0, 0.5, 0]} />
+            <EroNyilT pont={csucs} F={F} leptek={0.2} szin={SZIN.teher} maxHossz={2} cimke={`F = ${Fn} kN`} cimkeEltolas={[0, 0.5, 0]} />
           </Jelenet3D>
           <p className="mt-1 text-center text-[11.5px] text-petrol-400">Forgasd a modellt, mielőtt tippelsz! F = ({sz(F[0], 1)}; {sz(F[1], 1)}; {sz(F[2], 1)}) kN, a csúcs (0; {csucs[1]}; 0).</p>
         </div>

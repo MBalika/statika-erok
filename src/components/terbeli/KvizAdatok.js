@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { M } from "@/components/ui/Keplet";
 
 /** A 10. modul (térbeli tartók) fogalmi kvíze és hibakeresője. */
@@ -5,7 +6,7 @@ import { M } from "@/components/ui/Keplet";
 export const KVIZ = [
   {
     k: <>Hány független egyensúlyi egyenlet írható fel egy merev testre térben, és milyenek?</>,
-    v: [<>Hat: három vetületi (x, y, z) és három nyomatéki, egymásra merőleges tengelyekre.</>, <>Három: két vetületi és egy nyomatéki.</>, <>Kilenc: három-három minden síkra.</>, <>Hat: hat nyomatéki egyenlet tetszőleges tengelyekre.</>],
+    v: [<Fragment key="0">Hat: három vetületi (x, y, z) és három nyomatéki, egymásra merőleges tengelyekre.</Fragment>, <Fragment key="1">Három: két vetületi és egy nyomatéki.</Fragment>, <Fragment key="2">Kilenc: három-három minden síkra.</Fragment>, <Fragment key="3">Hat: hat nyomatéki egyenlet tetszőleges tengelyekre.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -16,7 +17,7 @@ export const KVIZ = [
   },
   {
     k: <>Mekkora a merev befogás, a gömbcsukló, a támasztórúd és a tengelycsukló fokszáma térben?</>,
-    v: [<>6, 3, 1, 5</>, <>3, 2, 1, 2</>, <>6, 2, 1, 4</>, <>6, 3, 3, 5</>],
+    v: [<Fragment key="0">6, 3, 1, 5</Fragment>, <Fragment key="1">3, 2, 1, 2</Fragment>, <Fragment key="2">6, 2, 1, 4</Fragment>, <Fragment key="3">6, 3, 3, 5</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -26,7 +27,7 @@ export const KVIZ = [
   },
   {
     k: <>Miért oldható meg a háromlábú bakállvány három egyenletből, ha térben hat egyenlet van?</>,
-    v: [<>Mert a csomópontra ható erők közös metszéspontúak: a csomópontra írt három nyomatéki egyenlet 0 = 0 azonosság.</>, <>Mert három rúd van, és minden rúd egy egyenletet ad.</>, <>Mert a bakállvány síkbeli feladat.</>, <>Mert a nyomatéki egyenleteket nem lehet térben felírni.</>],
+    v: [<Fragment key="0">Mert a csomópontra ható erők közös metszéspontúak: a csomópontra írt három nyomatéki egyenlet 0 = 0 azonosság.</Fragment>, <Fragment key="1">Mert három rúd van, és minden rúd egy egyenletet ad.</Fragment>, <Fragment key="2">Mert a bakállvány síkbeli feladat.</Fragment>, <Fragment key="3">Mert a nyomatéki egyenleteket nem lehet térben felírni.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -36,7 +37,7 @@ export const KVIZ = [
   },
   {
     k: <>Mikor <em>nincs</em> egyértelmű megoldása a bakállvány egyenleteinek?</>,
-    v: [<>Ha a három rúd egy közös síkban fekszik.</>, <>Ha a teher függőleges.</>, <>Ha a rudak nem egyforma hosszúak.</>, <>Ha a csúcs nem az y tengelyen van.</>],
+    v: [<Fragment key="0">Ha a három rúd egy közös síkban fekszik.</Fragment>, <Fragment key="1">Ha a teher függőleges.</Fragment>, <Fragment key="2">Ha a rudak nem egyforma hosszúak.</Fragment>, <Fragment key="3">Ha a csúcs nem az y tengelyen van.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -47,19 +48,19 @@ export const KVIZ = [
   },
   {
     k: <>Egy rúderőre a számításból <M>{"S_2 = -8{,}2\\ \\text{kN}"}</M> adódott. Mit jelent?</>,
-    v: [<>A rúd nyomott: a csomópontot a talppont felől tolja 8,2 kN-nal.</>, <>A rúd húzott, csak a talppont felől nézve.</>, <>Számolási hiba, a rúderő nem lehet negatív.</>, <>A rúd erőtlen, az előjel nem értelmezhető.</>],
+    v: [<Fragment key="0">A rúd nyomott: a csomópontot a talppont felől tolja 8,2 kN-nal.</Fragment>, <Fragment key="1">A rúd húzott, csak a talppont felől nézve.</Fragment>, <Fragment key="2">Számolási hiba, a rúderő nem lehet negatív.</Fragment>, <Fragment key="3">A rúd erőtlen, az előjel nem értelmezhető.</Fragment>],
     helyes: 0,
     magyarazat: <>A rúderőt mindig húzóerőként vesszük fel (a csomópontból a talppont felé mutató egységvektorral). A negatív érték azt jelenti, hogy a tényleges erő ellentétes: a rúd nyomott. A vizsgán a helyes előjel a pont fele!</>,
   },
   {
     k: <>Mereven befogott térbeli konzolnál miért egyismeretlenesek a nyomatéki egyenletek, ha a befogás ponton átmenő tengelyekre írjuk őket?</>,
-    v: [<>Mert a három reakcióerő-komponens metszi ezeket a tengelyeket (karjuk nulla), és a merőleges nyomatékkomponensek vetülete nulla.</>, <>Mert a befogásnál nincs reakcióerő, csak nyomaték.</>, <>Mert a terhek nem forgatnak a befogás pontjára.</>, <>Mert térben minden nyomatéki egyenlet egyismeretlenes.</>],
+    v: [<Fragment key="0">Mert a három reakcióerő-komponens metszi ezeket a tengelyeket (karjuk nulla), és a merőleges nyomatékkomponensek vetülete nulla.</Fragment>, <Fragment key="1">Mert a befogásnál nincs reakcióerő, csak nyomaték.</Fragment>, <Fragment key="2">Mert a terhek nem forgatnak a befogás pontjára.</Fragment>, <Fragment key="3">Mert térben minden nyomatéki egyenlet egyismeretlenes.</Fragment>],
     helyes: 0,
     magyarazat: <>Tankönyv 9.2.3: az A ponton átmenő tengelyek körül rendre csak egy ismeretlen nyomatékkomponens forgat — a reakcióerők hatásvonala átmegy a tengelyen, a másik két nyomatékkomponens merőleges rá. Ezért a konzol mindig „kényelmes” feladat.</>,
   },
   {
     k: <>Egy merev testet egy gömbcsuklóval és három rúddal támasztunk meg. Melyik elrendezés <em>nem</em> jó?</>,
-    v: [<>Ha az egyik rúd hatásvonala átmegy a gömbcsuklón.</>, <>Ha a három rúd nem egyforma hosszú.</>, <>Ha két rúd párhuzamos, de nem esnek egy síkba a harmadikkal.</>, <>Ha a rudak nem függőlegesek.</>],
+    v: [<Fragment key="0">Ha az egyik rúd hatásvonala átmegy a gömbcsuklón.</Fragment>, <Fragment key="1">Ha a három rúd nem egyforma hosszú.</Fragment>, <Fragment key="2">Ha két rúd párhuzamos, de nem esnek egy síkba a harmadikkal.</Fragment>, <Fragment key="3">Ha a rudak nem függőlegesek.</Fragment>],
     helyes: 0,
     magyarazat: (
       <>
@@ -70,49 +71,49 @@ export const KVIZ = [
   },
   {
     k: <>Két gömbcsuklóval megtámasztott test — miért nem tartó?</>,
-    v: [<>A két csuklót összekötő egyenes körüli forgatást semmi nem egyensúlyozza.</>, <>Mert 3 + 3 = 6 &lt; 6, kevés a kényszer.</>, <>Mert két csukló mindig fölös kényszert ad.</>, <>Tartó: hat a fokszám, hat az egyenlet.</>],
+    v: [<Fragment key="0">A két csuklót összekötő egyenes körüli forgatást semmi nem egyensúlyozza.</Fragment>, <Fragment key="1">Mert 3 + 3 = 6 &lt; 6, kevés a kényszer.</Fragment>, <Fragment key="2">Mert két csukló mindig fölös kényszert ad.</Fragment>, <Fragment key="3">Tartó: hat a fokszám, hat az egyenlet.</Fragment>],
     helyes: 0,
     magyarazat: <>A számlálás (6 = 6) stimmel, mégis kritikus: a két csuklón átmenő tengelyre írt nyomatéki egyenletben egyetlen reakció sem szerepel, tehát létezik teher (egy ekörül forgató nyomaték), amire nincs egyensúly. Egyszerre határozatlan (a tengely menti erő megoszlása) és túlhatározott.</>,
   },
   {
     k: <>Térbeli rácsos tartón hány egyenlet és hány ismeretlen van (<M>{"c"}</M> csomópont, <M>{"r"}</M> rúd, <M>{"k"}</M> kényszerfok)?</>,
-    v: [<><M>{"e = 3c"}</M>, <M>{"i = r + k"}</M></>, <><M>{"e = 2c"}</M>, <M>{"i = r + k"}</M></>, <><M>{"e = 6c"}</M>, <M>{"i = r + k"}</M></>, <><M>{"e = 3c"}</M>, <M>{"i = 3r + k"}</M></>],
+    v: [<Fragment key="0"><M>{"e = 3c"}</M>, <M>{"i = r + k"}</M></Fragment>, <Fragment key="1"><M>{"e = 2c"}</M>, <M>{"i = r + k"}</M></Fragment>, <Fragment key="2"><M>{"e = 6c"}</M>, <M>{"i = r + k"}</M></Fragment>, <Fragment key="3"><M>{"e = 3c"}</M>, <M>{"i = 3r + k"}</M></Fragment>],
     helyes: 0,
     magyarazat: <>Csomópontonként közös metszéspontú térbeli erőrendszer: három vetületi egyenlet. Az ismeretlenek a rúderők és a reakciókomponensek. Az átmetszéses módszer térben hatos átmetszést kíván (hat egyenlet a levágott részre).</>,
   },
   {
     k: <>Melyik igénybevétel a <em>csavarónyomaték</em>, és mikor pozitív?</>,
-    v: [<>A nyomatékvektor tartótengely-irányú komponense; pozitív, ha a vektor a keresztmetszetből kifelé mutat.</>, <>A keresztmetszet síkjába eső nyomatékkomponens; pozitív, ha a húzott oldal alul van.</>, <>A tengelyirányú erőkomponens; pozitív, ha húz.</>, <>Bármelyik nyomatékkomponens, ha az óramutató szerint forgat.</>],
+    v: [<Fragment key="0">A nyomatékvektor tartótengely-irányú komponense; pozitív, ha a vektor a keresztmetszetből kifelé mutat.</Fragment>, <Fragment key="1">A keresztmetszet síkjába eső nyomatékkomponens; pozitív, ha a húzott oldal alul van.</Fragment>, <Fragment key="2">A tengelyirányú erőkomponens; pozitív, ha húz.</Fragment>, <Fragment key="3">Bármelyik nyomatékkomponens, ha az óramutató szerint forgat.</Fragment>],
     helyes: 0,
     magyarazat: <>Tankönyv 9.3: a nyomatékvektort egy tengelyirányú (csavaró, T) és két keresztmetszet-síkbeli (hajlító) komponensre bontjuk. A T előjelét a normálerőhöz hasonlóan a kifelé mutató vektorhoz társítjuk: kívülről a keresztmetszetre nézve az óramutatóval ellentétesen forgató csavarás a pozitív.</>,
   },
   {
     k: <>Hogyan döntjük el a nyíróerők és a hajlítónyomatékok előjelét térben, ha a tartó szakaszai a globális tengelyekkel párhuzamosak?</>,
-    v: [<>A követő tartórész felől a megelőző rész keresztmetszetére ható komponens pozitív, ha a globális tengely pozitív irányába mutat.</>, <>A pozitív normálerőt az óramutató szerint 90°-kal elforgatjuk, mint síkban.</>, <>Mindig a húzott oldalra rajzoljuk, előjel nincs.</>, <>A nagyságuk számít, az előjel nem értelmezhető térben.</>],
+    v: [<Fragment key="0">A követő tartórész felől a megelőző rész keresztmetszetére ható komponens pozitív, ha a globális tengely pozitív irányába mutat.</Fragment>, <Fragment key="1">A pozitív normálerőt az óramutató szerint 90°-kal elforgatjuk, mint síkban.</Fragment>, <Fragment key="2">Mindig a húzott oldalra rajzoljuk, előjel nincs.</Fragment>, <Fragment key="3">A nagyságuk számít, az előjel nem értelmezhető térben.</Fragment>],
     helyes: 0,
     magyarazat: <>A síkbeli „forgasd el 90°-kal” szabály térben nem egyértelmű (melyik tengely körül?). A tankönyv ezért a keresztmetszet síkjába eső két globális tengelyt tekinti pozitívnak; a követő rész az, amelyik felé a tengelyirányú koordinátatengely mutat. A megelőző rész keresztmetszetén a nyilak a negatív irányba mutatnak ugyanazon előjel mellett (hatás–ellenhatás).</>,
   },
   {
     k: <>Egy egyenes rúd végén ható erő mekkora csavarónyomatékot ad a rúd egy keresztmetszetében?</>,
-    v: [<>Nullát: az erő hatásvonala metszi a rúd tengelyét.</>, <>Az erő és a kar szorzatát.</>, <>Az erő tengelyirányú komponensének és a rúdhossznak a szorzatát.</>, <>Attól függ, milyen irányú az erő.</>],
+    v: [<Fragment key="0">Nullát: az erő hatásvonala metszi a rúd tengelyét.</Fragment>, <Fragment key="1">Az erő és a kar szorzatát.</Fragment>, <Fragment key="2">Az erő tengelyirányú komponensének és a rúdhossznak a szorzatát.</Fragment>, <Fragment key="3">Attól függ, milyen irányú az erő.</Fragment>],
     helyes: 0,
     magyarazat: <>A tengelyre vett nyomaték nulla, ha az erő hatásvonala metszi a tengelyt vagy párhuzamos vele (2. modul, 2.7). A csavarás csak kitérő hatásvonalú erőből származik — a H13/2 K1 keresztmetszetében a vízszintes szár végén ható erő csavarja a függőleges szárat, a K2-ben (a vízszintes száron) nem.</>,
   },
   {
     k: <>Egy erő nyomatékát egy ferde tengelyre kell felírni. Mi a recept?</>,
-    v: [<>A tengely egy pontjára vett nyomatékvektort skalárisan szorozzuk a tengely egységvektorával.</>, <>Az erőt a tengelyre vetítjük, és a vetületet szorozzuk a távolsággal.</>, <>Az erőt a tengelyre merőleges síkra vetítjük, a nyomaték ennek a hossza.</>, <>Ferde tengelyre nem lehet nyomatékot felírni.</>],
+    v: [<Fragment key="0">A tengely egy pontjára vett nyomatékvektort skalárisan szorozzuk a tengely egységvektorával.</Fragment>, <Fragment key="1">Az erőt a tengelyre vetítjük, és a vetületet szorozzuk a távolsággal.</Fragment>, <Fragment key="2">Az erőt a tengelyre merőleges síkra vetítjük, a nyomaték ennek a hossza.</Fragment>, <Fragment key="3">Ferde tengelyre nem lehet nyomatékot felírni.</Fragment>],
     helyes: 0,
     magyarazat: <><M>{"M_t = \\underline M_Q\\cdot\\underline e_t"}</M>, <M>{"\\underline M_Q = (\\underline r_P - \\underline r_Q)\\times\\underline F"}</M>, Q a tengely bármely pontja. A tankönyv (9.1.1) szerint ez „sok munkával, de kivitelezhető” — a bakállványnál a két talppontot összekötő tengelyre írt egyenlet így ad egyismeretlenes egyenletet.</>,
   },
   {
     k: <>Egy tartályt folyadék tölt ki. Hol és mekkora a térfogat mentén megoszló teher eredője?</>,
-    v: [<>A töltés térfogatának súlypontjában, nagysága <M>{"\\gamma V"}</M>.</>, <>A tartály alján, nagysága <M>{"\\gamma h A"}</M>, a felület közepén.</>, <>A tartály geometriai középpontjában, nagysága <M>{"\\gamma A"}</M>.</>, <>A töltés felszínén, nagysága <M>{"\\gamma V"}</M>.</>],
+    v: [<Fragment key="0">A töltés térfogatának súlypontjában, nagysága <M>{"\\gamma V"}</M>.</Fragment>, <Fragment key="1">A tartály alján, nagysága <M>{"\\gamma h A"}</M>, a felület közepén.</Fragment>, <Fragment key="2">A tartály geometriai középpontjában, nagysága <M>{"\\gamma A"}</M>.</Fragment>, <Fragment key="3">A töltés felszínén, nagysága <M>{"\\gamma V"}</M>.</Fragment>],
     helyes: 0,
     magyarazat: <>Tankönyv 9.1.3: az állandó intenzitású térfogati teher részeredői a részek térfogatának és az intenzitásnak a szorzatai, a részek súlypontjában. Egy téglatest töltésnél ez a téglatest középpontja. (A falakra ható folyadéknyomás a tartály belső erője — a támaszokat a töltés súlya terheli.)</>,
   },
   {
     k: <>Mikor <em>nem</em> alkalmas hat támasztórúd egy merev test megtámasztására?</>,
-    v: [<>Ha négy rúd párhuzamos, vagy a hatásvonalaik egy pontban metszik egymást, vagy három rúd egy síkban fekszik és párhuzamos / egy ponton átmenő.</>, <>Ha a rudak különböző hosszúságúak.</>, <>Ha nem mindegyik rúd függőleges.</>, <>Hat rúd mindig megfelelő, mert 6 = 6.</>],
+    v: [<Fragment key="0">Ha négy rúd párhuzamos, vagy a hatásvonalaik egy pontban metszik egymást, vagy három rúd egy síkban fekszik és párhuzamos / egy ponton átmenő.</Fragment>, <Fragment key="1">Ha a rudak különböző hosszúságúak.</Fragment>, <Fragment key="2">Ha nem mindegyik rúd függőleges.</Fragment>, <Fragment key="3">Hat rúd mindig megfelelő, mert 6 = 6.</Fragment>],
     helyes: 0,
     magyarazat: <>Tankönyv 9.2.3: a számlálás csak szükséges feltétel. A felsorolt elrendezések kritikusak — a fölös kényszer mellett szabad mozgás marad. Ellenőrzés: keress olyan tengelyt, amely körül egyetlen rúd sem forgat: ha van, a szerkezet elmozdulhat.</>,
   },
@@ -182,7 +183,7 @@ export const HIBAK = [
     lepesek: [
       { szoveg: <>Elkülönítés: <M>{"A_x, A_y, A_z"}</M>, <M>{"S_1, S_2, S_3"}</M>; a teher <M>{"G = 480"}</M> kN a súlypontban.</> },
       {
-        szoveg: <>Nyomatéki egyenlet az origón átmenő <M>{"x"}</M> tengelyre: <M>{"960 - 4S_1 - 4A_y = 0"}</M> — két ismeretlen, ezért felírjuk a többi egyenletet is, és 6 × 6-os rendszert oldunk meg.</>,
+        szoveg: <>Nyomatéki egyenlet az origón átmenő <M>{"x"}</M> tengelyre: <M>{"960 + 4S_1 - 4A_y = 0"}</M> — két ismeretlen, ezért felírjuk a többi egyenletet is, és 6 × 6-os rendszert oldunk meg.</>,
         hibas: true,
         javitas: (
           <>

@@ -108,12 +108,13 @@ function Rajz(t) {
         <>
           {E.map((e, i) => {
             const nagysag = kesz ? Math.abs(S[i]) : 6;
-            const irany = kesz && S[i] < 0 ? -1 : 1;
-            const v = [e[0] * nagysag * irany, e[1] * nagysag * irany, e[2] * nagysag * irany];
             const szin = kesz ? rudStilus(S[i]).szin : xyU > 0.05 && i === 0 ? SZIN.nyomott : zU > 0.05 && i > 0 ? SZIN.huzott : SZIN.reakcio;
+            // a végén a tényleges irány: a nyomott (S₁ < 0) rúd a talppont felől tolja a csúcsot – a nyíl hegye a csúcsban, a rúd mentén
+            if (kesz && S[i] < 0) return <EroNyilT key={i} pont={C} F={[e[0] * S[i], e[1] * S[i], e[2] * S[i]]} leptek={0.16} szin={szin} vastag={0.07} u={elk} minHossz={0.9} />;
+            const v = [e[0] * nagysag, e[1] * nagysag, e[2] * nagysag];
             return <VektorNyilT key={i} pont={C} F={v} leptek={0.16} szin={szin} vastag={0.07} u={elk} minHossz={0.9} cimke={kesz ? "" : `S${i + 1}`} cimkeEltolas={[e[0] * 0.5, e[1] * 0.5 - 0.2, e[2] * 0.5]} />;
           })}
-          {kesz && <CimkeT pozicio={[C[0] - 1.6, C[1] - 1.4, 0.3]} szin={SZIN.nyomott} meret={11.5}>S₁ a csúcsot tolja</CimkeT>}
+          {kesz && <CimkeT pozicio={[(C[0] + L[0][0]) / 2 - 0.3, (C[1] + L[0][1]) / 2 - 0.55, 0]} szin={SZIN.nyomott} meret={11.5}>S₁ a csúcsot tolja</CimkeT>}
         </>
       )}
       {/* z irányú vetületek jelzése */}

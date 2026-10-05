@@ -232,10 +232,10 @@ export function KorongT({ pozicio, normal, r = 0.3, szin = "#f59e0b", opacitas =
 }
 
 /** Erő rajza: a nyíl hegye a támadáspontban (a tankönyv rajzai szerint), a farka a −F irányban. lepték: egység/kN. */
-export function EroNyilT({ pont, F, leptek = 0.25, szin = SZIN.teher, u = 1, opacitas = 1, vastag = 0.09, cimke, cimkeEltolas = [0, 0.5, 0], cimkeSzin }) {
+export function EroNyilT({ pont, F, leptek = 0.25, szin = SZIN.teher, u = 1, opacitas = 1, vastag = 0.09, cimke, cimkeEltolas = [0, 0.5, 0], cimkeSzin, minHossz = 0.9, maxHossz = Infinity }) {
   const h = Math.hypot(F[0], F[1], F[2]);
   if (h < 1e-9) return null;
-  const L = Math.max(0.9, h * leptek);
+  const L = Math.min(maxHossz, Math.max(minHossz, h * leptek));
   const farok = [pont[0] - (F[0] / h) * L, pont[1] - (F[1] / h) * L, pont[2] - (F[2] / h) * L];
   const kezd = [pont[0] - (F[0] / h) * L * u, pont[1] - (F[1] / h) * L * u, pont[2] - (F[2] / h) * L * u];
   return (
@@ -251,10 +251,10 @@ export function EroNyilT({ pont, F, leptek = 0.25, szin = SZIN.teher, u = 1, opa
 }
 
 /** Reakcióerő / rúderő nyila: a farka a pontban, a hegye a vektor irányában (kifelé mutat). */
-export function VektorNyilT({ pont, F, leptek = 0.25, szin = SZIN.reakcio, u = 1, opacitas = 1, vastag = 0.09, cimke, cimkeEltolas = [0, 0.5, 0], kettos = false, minHossz = 0.9 }) {
+export function VektorNyilT({ pont, F, leptek = 0.25, szin = SZIN.reakcio, u = 1, opacitas = 1, vastag = 0.09, cimke, cimkeEltolas = [0, 0.5, 0], kettos = false, minHossz = 0.9, maxHossz = Infinity }) {
   const h = Math.hypot(F[0], F[1], F[2]);
   if (h < 1e-9) return null;
-  const L = Math.max(minHossz, h * leptek);
+  const L = Math.min(maxHossz, Math.max(minHossz, h * leptek));
   const veg = [pont[0] + (F[0] / h) * L, pont[1] + (F[1] / h) * L, pont[2] + (F[2] / h) * L];
   return (
     <group>

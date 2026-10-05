@@ -1,4 +1,4 @@
-import { axono, TerHegyek, Felirat, Nyil3, EroNyil3, VektorNyil3, KettosNyil3, Rud3, Seged3, Tengelyek3, Gomb3, Talp3, Befogas3, Meret3, Doboz3, Metszet3, SZ } from "./Axono";
+import { axono, TerHegyek, Felirat, Nyil3, EroNyil3, VektorNyil3, KettosNyil3, Rud3, Seged3, Tengelyek3, Gomb3, Talp3, Befogas3, Meret3, Doboz3, Metszet3, SZ, cimkeHely } from "./Axono";
 import { sz } from "@/lib/szamok";
 
 /**
@@ -40,11 +40,27 @@ export function KonzolRajz({
   oy = 250,
   s = 44,
 }) {
-  const v = axono({ ox, oy, s });
+  // magas (b = 4) szárnál kisebb lépték, hogy a felső teher nyila és felirata is a rajzban maradjon
+  const sk = Math.min(s, 132 / Math.max(b, 1e-6));
+  const v = axono({ ox, oy, s: sk });
   const A = [0, 0, 0];
   const C = [0, b, 0];
   const E = [-a, b, 0];
   const nev = ["x", "y", "z"];
+  // az E felirat a teher nyilának farkával ellentétes oldalra kerül (balra-le, balra-fel vagy balra)
+  const hF = Math.hypot(...F) || 1;
+  const vegF = v([E[0] + F[0] / hF, E[1] + F[1] / hF, E[2] + F[2] / hF]);
+  const farokX = v(E)[0] - vegF[0];
+  const farokY = v(E)[1] - vegF[1];
+  const farokH = Math.hypot(farokX, farokY) || 1;
+  const eHely = [
+    [-12, 18],
+    [-13, -8],
+    [-20, 6],
+  ].reduce((legjobb, j) => {
+    const d = (j[0] * farokX + j[1] * farokY) / (Math.hypot(j[0], j[1]) * farokH);
+    return !legjobb || d < legjobb.d ? { j, d } : legjobb;
+  }, null).j;
   return (
     <Svg w={w} h={h}>
       {cim && (
@@ -52,19 +68,19 @@ export function KonzolRajz({
           {cim}
         </Felirat>
       )}
-      <Tengelyek3 v={v} hossz={[3.2, Math.min(b + 1.4, (oy - 34) / s), 2.6]} />
+      <Tengelyek3 v={v} hossz={[3.2, Math.min(b + 1.4, (oy - 34) / sk), 2.6]} />
       {befogas && !reakciok && <Befogas3 v={v} p={A} irany="le" />}
       <Rud3 v={v} a={A} b={C} vastag={6} />
       <Rud3 v={v} a={C} b={E} vastag={6} />
       <Felirat x={v(A)[0] + 12} y={v(A)[1] + 16} meret={12.5} dolt>
         A
       </Felirat>
-      <Felirat x={v(E)[0] - 10} y={v(E)[1] + 18} meret={12} dolt>
+      <Felirat x={v(E)[0] + eHely[0]} y={v(E)[1] + eHely[1]} meret={12} dolt>
         E
       </Felirat>
       {meretek && (
         <>
-          <Meret3 v={v} a={E} b={C} eltolas={[0, 24]} cimke={`a = ${sz(a, 0)} m`} />
+          <Meret3 v={v} a={E} b={C} eltolas={[0, a < 1.5 ? 34 : 24]} cimke={`a = ${sz(a, 0)} m`} />
           <Meret3 v={v} a={[2.4, 0, 0]} b={[2.4, b, 0]} eltolas={[0, 0]} cimke={`b = ${sz(b, 0)} m`} />
         </>
       )}
@@ -73,7 +89,7 @@ export function KonzolRajz({
         const t = m.s < b ? [0, 1, 0] : [1, 0, 0];
         return <Metszet3 key={m.nev} v={v} p={p} t={t} cimke={m.nev} cimkeEltolas={m.s < b ? [12, -6] : [-6, -12]} />;
       })}
-      <EroNyil3 v={v} pont={E} F={F} leptek={4.5} cimke={Fcimke} cimkeEltolas={[-8, 2]} horgony="end" />
+      <EroNyil3 v={v} pont={E} F={F} leptek={4.5} cimke={Fcimke} cimkeEltolas={[-8, farokY > 0.3 * farokH ? 20 : 2]} horgony="end" />
       {reakciok &&
         !reakcioErtekek &&
         [0, 1, 2].map((i) => {
@@ -113,19 +129,19 @@ export function KonzolRajz({
         })}
       {reakcioErtekek && (
         <g>
-          <Felirat x={w - 40} y={60} meret={11.5} horgony="end" szin={SZ.reakcio}>
+          <Felirat x={40} y={60} meret={11.5} horgony="start" szin={SZ.reakcio}>
             reakcióerő [kN]
           </Felirat>
           {[0, 1, 2].map((i) => (
-            <Felirat key={`r${i}`} x={w - 40} y={78 + i * 16} meret={11.5} vastag={false} horgony="end" szin={SZ.reakcio}>
+            <Felirat key={`r${i}`} x={40} y={78 + i * 16} meret={11.5} vastag={false} horgony="start" szin={SZ.reakcio}>
               A{nev[i]} = {sz(reakcioErtekek.R[i], 2)}
             </Felirat>
           ))}
-          <Felirat x={w - 40} y={140} meret={11.5} horgony="end" szin={SZ.nyomatek}>
+          <Felirat x={40} y={140} meret={11.5} horgony="start" szin={SZ.nyomatek}>
             befogási nyomaték [kNm]
           </Felirat>
           {[0, 1, 2].map((i) => (
-            <Felirat key={`m${i}`} x={w - 40} y={158 + i * 16} meret={11.5} vastag={false} horgony="end" szin={SZ.nyomatek}>
+            <Felirat key={`m${i}`} x={40} y={158 + i * 16} meret={11.5} vastag={false} horgony="start" szin={SZ.nyomatek}>
               MA{nev[i]} = {sz(reakcioErtekek.MA[i], 2)}
             </Felirat>
           ))}
@@ -154,11 +170,12 @@ export function BakallvanyRajz({
   F = [-7.071, -7.071, 0],
   Fcimke = "F",
   Fszog, // pl. "α" – az F és a +x tengely közötti szög felirata
-  FcimkeEltolas = [6, -2],
-  Fhorgony = "start",
+  FcimkeEltolas = null, // null: a nyíl iránya szerint automatikusan
+  Fhorgony = null,
   rudErok = null, // [S1,S2,S3] – ha adott, a rudak színe és felirata az előjel szerint
   elkulonites = false, // csak a csomópont: F és a három rúderő nyíl
   meretek = true,
+  talpKoordinatak = false, // a talppontok (x; 0; z) koordinátái a talp alatt az x/z méretfeliratok helyett
   cim,
   magyarazat = [],
   w = 600,
@@ -173,6 +190,24 @@ export function BakallvanyRajz({
     const l = Math.hypot(...d);
     return d.map((c) => c / l);
   });
+  // a teher nyilának farka a képernyőn (a C-ből kifelé): ha alulról jön (felfelé mutató F), a feliratot a farok mellé tesszük
+  const hF0 = Math.hypot(...F) || 1;
+  const vegF0 = v([csucs[0] + F[0] / hF0, csucs[1] + F[1] / hF0, csucs[2] + F[2] / hF0]);
+  const farok = [v(csucs)[0] - vegF0[0], v(csucs)[1] - vegF0[1]];
+  const farokLent = hF0 > 1e-9 && farok[1] > 0.3 * (Math.hypot(...farok) || 1);
+  const FcimkeElt = FcimkeEltolas ?? (farokLent ? [farok[0] >= 0 ? 8 : -8, 4] : [6, -2]);
+  const FhorgonyAuto = Fhorgony ?? (farokLent ? (farok[0] >= 0 ? "start" : "end") : "start");
+  // a csúcs alatti függőleges segédvonal elmaradna, ha egy rúd maga is függőleges (a vonal a rúdra esne)
+  const vanFuggolegesRud = labak.some((p) => Math.abs(p[0] - csucs[0]) < 1e-9 && Math.abs(p[2] - csucs[2]) < 1e-9);
+  const rudSzakaszok = labak.map((p) => [v(csucs), v(p)]);
+  // a teher feliratának helye (közelítőleg) mint kerülendő szakasz a rúdfeliratok elhelyezéséhez
+  const farokPx = Math.max(26, hF0 * 5);
+  const fh0 = Math.hypot(...farok) || 1;
+  const farokPont = [v(csucs)[0] + (farok[0] / fh0) * (farokPx + 12), v(csucs)[1] + (farok[1] / fh0) * (farokPx + 12)];
+  const cimkeIrany = FhorgonyAuto === "end" ? -1 : FhorgonyAuto === "start" ? 1 : 0;
+  const teherCimkeSzakasz = [[farokPont[0] + (cimkeIrany === 0 ? -35 : cimkeIrany * 4), farokPont[1] - 6], [farokPont[0] + (cimkeIrany === 0 ? 35 : cimkeIrany * 70), farokPont[1] - 6]];
+  // a magasság méretvonala: a legnagyobb x-ű talptól jobbra; koordináta-feliratos rajzon a talpak képernyő-helyétől jobbra
+  const xMeret = talpKoordinatak ? (Math.max(...labak.map((p) => v(p)[0])) + 44 - ox) / s : Math.max(...labak.map((p) => p[0])) + 1.2;
   if (elkulonites) {
     const vv0 = axono({ ox: 0, oy: 0, s: 30 });
     const [cx0, cy0] = vv0(csucs);
@@ -204,22 +239,19 @@ export function BakallvanyRajz({
           {cim}
         </Felirat>
       )}
-      <Tengelyek3 v={v} hossz={[7.5, csucs[1] + 1.5, 5]} />
+      <Tengelyek3 v={v} hossz={[7.5, csucs[1] + 1.5, talpKoordinatak ? Math.max(5, ...labak.map((p) => p[2] + 2)) : 5]} />
       {labak.map((p, i) => {
         const szin = rudErok ? (Math.abs(rudErok[i]) < 1e-6 ? SZ.seged : rudErok[i] < 0 ? SZ.nyomott : SZ.huzott) : SZ.tarto;
-        const kozep = [(csucs[0] + p[0]) / 2, (csucs[1] + p[1]) / 2, (csucs[2] + p[2]) / 2];
-        const [X, Y] = v(kozep);
-        // a rúdra merőleges irány a képernyőn, a csúcs talppontjától elfelé
-        const [Xc, Yc] = v(csucs);
-        const [Xp, Yp] = v(p);
-        const dh = Math.hypot(Xp - Xc, Yp - Yc) || 1;
-        let nx = -(Yp - Yc) / dh;
-        let ny = (Xp - Xc) / dh;
+        // a rúd száma és a rúderő felirata a rúd mellett, lehetőleg a csúcs talppontjától elfelé és a többi rúdtól távol
         const [Xo, Yo] = v([csucs[0], 0, csucs[2]]);
-        if (nx * (X - Xo) + ny * (Y - Yo) < 0) {
-          nx = -nx;
-          ny = -ny;
-        }
+        const [Xk, Yk] = v([(csucs[0] + p[0]) / 2, (csucs[1] + p[1]) / 2, (csucs[2] + p[2]) / 2]);
+        const elonyH = Math.hypot(Xk - Xo, Yk - Yo) || 1;
+        const probak = rudErok ? (nx, ny) => [[nx * 18 + (nx > 0.2 ? 40 : nx < -0.2 ? -40 : 0), ny * 18], [nx * 18 + (nx > 0.2 ? 80 : nx < -0.2 ? -80 : 0), ny * 18]] : null;
+        const hely = cimkeHely(v(csucs), v(p), [...rudSzakaszok.filter((_, j) => j !== i), ...(Fcimke ? [teherCimkeSzakasz] : [])], 16, [(Xk - Xo) / elonyH, (Yk - Yo) / elonyH], undefined, probak);
+        const { nx, ny } = hely;
+        const X = hely.x - nx * 16;
+        const Y = hely.y - ny * 16;
+        const [Xp, Yp] = v(p);
         return (
           <g key={i}>
             <Rud3 v={v} a={csucs} b={p} vastag={4.5} szin={szin} />
@@ -239,10 +271,15 @@ export function BakallvanyRajz({
                 <Seged3 v={v} a={p} b={[0, 0, p[2]]} />
               </>
             )}
+            {talpKoordinatak && (
+              <Felirat x={Xp} y={Yp + 26} meret={10.5} vastag={false} szin={SZ.meret}>
+                ({sz(p[0], 0)}; 0; {sz(p[2], 0)})
+              </Felirat>
+            )}
           </g>
         );
       })}
-      <Seged3 v={v} a={[csucs[0], 0, csucs[2]]} b={csucs} />
+      {!vanFuggolegesRud && <Seged3 v={v} a={[csucs[0], 0, csucs[2]]} b={csucs} />}
       <circle cx={v(csucs)[0]} cy={v(csucs)[1]} r="4.5" fill="white" stroke={SZ.tarto} strokeWidth="2" />
       {(() => {
         // a C felirat a teher-nyíl farkával ellentétes oldalra kerül, hogy ne fedje az F feliratot
@@ -256,7 +293,7 @@ export function BakallvanyRajz({
           </Felirat>
         );
       })()}
-      <EroNyil3 v={v} pont={csucs} F={F} leptek={5} cimke={Fcimke} cimkeEltolas={FcimkeEltolas} horgony={Fhorgony} />
+      <EroNyil3 v={v} pont={csucs} F={F} leptek={5} cimke={Fcimke} cimkeEltolas={FcimkeElt} horgony={FhorgonyAuto} />
       {Fszog && (
         <>
           <Seged3 v={v} a={csucs} b={[csucs[0] + 2.6, csucs[1], csucs[2]]} szin={SZ.teher} />
@@ -267,8 +304,9 @@ export function BakallvanyRajz({
       )}
       {meretek && (
         <>
-          <Meret3 v={v} a={[Math.max(...labak.map((p) => p[0])) + 1.2, 0, 0]} b={[Math.max(...labak.map((p) => p[0])) + 1.2, csucs[1], 0]} eltolas={[0, 0]} cimke={`${sz(csucs[1], 0)} m`} />
-          {labak.map((p, i) => (
+          <Meret3 v={v} a={[xMeret, 0, 0]} b={[xMeret, csucs[1], 0]} eltolas={[0, 0]} cimke={`${sz(csucs[1], 0)} m`} />
+          {!talpKoordinatak &&
+            labak.map((p, i) => (
             <g key={i}>
               {p[0] !== 0 && (
                 <Felirat x={v([p[0] / 2, 0, p[2]])[0]} y={v([p[0] / 2, 0, p[2]])[1] + (p[2] >= 0 ? 14 : -6)} meret={11} vastag={false} szin={SZ.meret}>
@@ -281,7 +319,7 @@ export function BakallvanyRajz({
                 </Felirat>
               )}
             </g>
-          ))}
+            ))}
         </>
       )}
       {magyarazat.map((sor, i) => (
@@ -297,14 +335,34 @@ export function BakallvanyRajz({
 /* Tartály gömbcsuklóval és három rúddal (H13/4)                        */
 /* ------------------------------------------------------------------ */
 
-export function TartalyRajz({ Fcimke = "F", gamma = "γ = 15 kN/m³", rudErok = null, reakciok = false, cim, magyarazat = [], w = 600, h = 430, ox = 200, oy = 210, s = 32 }) {
+export function TartalyRajz({
+  Lx = 4, // a tartály (lap) mérete x irányban
+  H = 2, // a tartály magassága (lapnál: az oszlop magassága, ha van F)
+  Lz = 4, // méret z irányban
+  Fpont = [0, H, Lz], // a vízszintes F támadáspontja; null: nincs F
+  Fcimke = "F",
+  gamma = "γ = 15 kN/m³", // a töltés felirata (üres/null: nincs)
+  Gcimke = null, // ha adott: koncentrált G erő nyila a lap/tartály közepén (a generátor „lap” feladatához)
+  lap = false, // tartály helyett vízszintes lap (y = 0) és egy oszlop a (0; 0; 0) sarkon F-ig
+  rudErok = null,
+  reakciok = false,
+  cim,
+  magyarazat = [],
+  w = 600,
+  h = 430,
+  ox = 200,
+  oy = 210,
+  s = 32,
+}) {
   const v = axono({ ox, oy, s });
-  const A = [4, 0, 4];
-  const r1 = [[0, 0, 4], [0, -3, 4]];
-  const r2 = [[4, 0, 0], [6, 0, 0]];
-  const r3 = [[4, 0, 0], [4, -3, 0]];
+  const A = [Lx, 0, Lz];
+  const r1 = [[0, 0, Lz], [0, -3, Lz]];
+  const r2 = [[Lx, 0, 0], [Lx + 2, 0, 0]];
+  const r3 = [[Lx, 0, 0], [Lx, -3, 0]];
   const rudak = [r1, r2, r3];
   const szinRud = (i) => (rudErok ? (Math.abs(rudErok[i]) < 1e-6 ? SZ.seged : rudErok[i] < 0 ? SZ.nyomott : SZ.huzott) : SZ.rud);
+  const lapSarkok = [[0, 0, Lz], [Lx, 0, Lz], [Lx, 0, 0], [0, 0, 0]].map(v);
+  const gammaPont = v([Lx / 2 + 0.2, H - 0.1, 0]);
   return (
     <Svg w={w} h={h}>
       {cim && (
@@ -312,12 +370,23 @@ export function TartalyRajz({ Fcimke = "F", gamma = "γ = 15 kN/m³", rudErok = 
           {cim}
         </Felirat>
       )}
-      <Tengelyek3 v={v} hossz={[7.6, 3.4, 6]} />
-      <Doboz3 v={v} x={[0, 4]} y={[0, 2]} z={[0, 4]} />
-      <Felirat x={v([2.2, 1.9, 0])[0] + 60} y={v([2.2, 1.9, 0])[1] - 22} meret={11.5} vastag={false} horgony="start">
-        {gamma}
-      </Felirat>
-      <line x1={v([3.2, 1.6, 0])[0]} y1={v([3.2, 1.6, 0])[1]} x2={v([2.2, 1.9, 0])[0] + 58} y2={v([2.2, 1.9, 0])[1] - 18} stroke={SZ.seged} strokeWidth="1" />
+      <Tengelyek3 v={v} hossz={[Lx + 3.6, Math.max(H, 1) + 1.4, Lz + 2]} />
+      {lap ? (
+        <g>
+          <polygon points={lapSarkok.map((q) => q.join(",")).join(" ")} fill="rgba(142,195,205,0.22)" stroke={SZ.tarto} strokeWidth="2.2" strokeLinejoin="round" />
+          {Fpont && <Rud3 v={v} a={[0, 0, 0]} b={[0, Fpont[1], 0]} vastag={5} />}
+        </g>
+      ) : (
+        <Doboz3 v={v} x={[0, Lx]} y={[0, H]} z={[0, Lz]} />
+      )}
+      {gamma && !lap && (
+        <>
+          <Felirat x={gammaPont[0] + 60} y={gammaPont[1] - 22} meret={11.5} vastag={false} horgony="start">
+            {gamma}
+          </Felirat>
+          <line x1={v([Lx - 0.8, H - 0.4, 0])[0]} y1={v([Lx - 0.8, H - 0.4, 0])[1]} x2={gammaPont[0] + 58} y2={gammaPont[1] - 18} stroke={SZ.seged} strokeWidth="1" />
+        </>
+      )}
       {rudak.map(([p, q], i) => {
         const kozep = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2, (p[2] + q[2]) / 2];
         const [X, Y] = v(kozep);
@@ -330,7 +399,8 @@ export function TartalyRajz({ Fcimke = "F", gamma = "γ = 15 kN/m³", rudErok = 
               {i + 1}
             </Felirat>
             {rudErok && (
-              <Felirat x={X + (i === 1 ? 0 : i === 2 ? 28 : 8)} y={Y + (i === 1 ? -30 : 18)} meret={11} szin={szinRud(i)} horgony={i === 1 ? "middle" : "start"}>
+              /* az 1-es rúd felirata balra (a talaj szaggatott vonala jobbra keresztezné), a 3-asé jobbra, a 2-esé fölé */
+              <Felirat x={X + (i === 1 ? 0 : i === 2 ? 28 : -30)} y={Y + (i === 1 ? -30 : i === 2 ? 18 : 4)} meret={11} szin={szinRud(i)} horgony={i === 1 ? "middle" : i === 2 ? "start" : "end"}>
                 S{i + 1} = {sz(rudErok[i], 1)} kN
               </Felirat>
             )}
@@ -344,17 +414,19 @@ export function TartalyRajz({ Fcimke = "F", gamma = "γ = 15 kN/m³", rudErok = 
           d[i] = 1;
           return <VektorNyil3 key={i} v={v} pont={A} F={d} leptek={36} minHossz={36} szin={SZ.reakcio} cimke={`A${["x", "y", "z"][i]}`} cimkeEltolas={[i === 0 ? 6 : i === 1 ? 8 : -6, i === 1 ? -2 : i === 0 ? 4 : 12]} horgony={i === 2 ? "end" : "start"} />;
         })}
-      <EroNyil3 v={v} pont={[0, 2, 4]} F={[-1, 0, 0]} leptek={40} cimke={Fcimke} cimkeEltolas={[-40, -9]} horgony="start" />
-      <Meret3 v={v} a={[0, -3, 4]} b={[4, -3, 4]} eltolas={[0, 20]} cimke="4 m" />
-      <Meret3 v={v} a={[4, -3, 4]} b={[6, -3, 4]} eltolas={[0, 20]} cimke="2 m" />
-      <Meret3 v={v} a={[6.6, 0, 0]} b={[6.6, 2, 0]} eltolas={[0, 0]} cimke="2 m" />
-      <Meret3 v={v} a={[6.6, -3, 0]} b={[6.6, 0, 0]} eltolas={[0, 0]} cimke="3 m" />
-      <Meret3 v={v} a={[6, -3, 0]} b={[6, -3, 4]} eltolas={[14, 12]} cimke="4 m" />
+      {Gcimke && <EroNyil3 v={v} pont={[Lx / 2, lap ? 0 : H / 2, Lz / 2]} F={[0, -1, 0]} leptek={44} cimke={Gcimke} cimkeEltolas={[10, 12]} horgony="start" />}
+      {Fpont && <EroNyil3 v={v} pont={Fpont} F={[-1, 0, 0]} leptek={40} cimke={Fcimke} cimkeEltolas={[lap ? -6 : -32, -14]} horgony="middle" />}
+      <Meret3 v={v} a={[0, -3, Lz]} b={[Lx, -3, Lz]} eltolas={[0, 20]} cimke={`${sz(Lx, 0)} m`} />
+      <Meret3 v={v} a={[Lx, -3, Lz]} b={[Lx + 2, -3, Lz]} eltolas={[0, 20]} cimke="2 m" />
+      {!lap && <Meret3 v={v} a={[Lx + 2.6, 0, 0]} b={[Lx + 2.6, H, 0]} eltolas={[0, 0]} cimke={`${sz(H, H % 1 ? 1 : 0)} m`} />}
+      {lap && Fpont && <Meret3 v={v} a={[0.7, 0, 0]} b={[0.7, Fpont[1], 0]} eltolas={[0, 0]} cimke={`${sz(Fpont[1], Fpont[1] % 1 ? 1 : 0)} m`} />}
+      <Meret3 v={v} a={[Lx + 2.6, -3, 0]} b={[Lx + 2.6, 0, 0]} eltolas={[0, 0]} cimke="3 m" />
+      <Meret3 v={v} a={[Lx + 2, -3, 0]} b={[Lx + 2, -3, Lz]} eltolas={[14, 12]} cimke={`${sz(Lz, 0)} m`} />
       {/* a talajszint vázlata */}
-      <Seged3 v={v} a={[0, -3, 4]} b={[6, -3, 4]} />
-      <Seged3 v={v} a={[6, -3, 4]} b={[6, -3, 0]} />
-      <Seged3 v={v} a={[6, -3, 0]} b={[0, -3, 0]} />
-      <Seged3 v={v} a={[0, -3, 0]} b={[0, -3, 4]} />
+      <Seged3 v={v} a={[0, -3, Lz]} b={[Lx + 2, -3, Lz]} />
+      <Seged3 v={v} a={[Lx + 2, -3, Lz]} b={[Lx + 2, -3, 0]} />
+      <Seged3 v={v} a={[Lx + 2, -3, 0]} b={[0, -3, 0]} />
+      <Seged3 v={v} a={[0, -3, 0]} b={[0, -3, Lz]} />
       {magyarazat.map((sor, i) => (
         <Felirat key={i} x={w / 2} y={h - 8 - (magyarazat.length - 1 - i) * 15} meret={11.5} vastag={false} szin="#475569">
           {sor}
@@ -381,8 +453,11 @@ export const RACSOS_RUDAK = [
 export function RacsosRajz({ terhek = [{ cs: "E", F: [0, -12, 0], cimke: "12 kN" }, { cs: "D", F: [0, -8, 0], cimke: "8 kN" }], rudErok = null, kiemeltCsomopont, cim, magyarazat = [], w = 600, h = 380, ox = 200, oy = 270, s = 40 }) {
   const v = axono({ ox, oy, s });
   const P = RACSOS_CSOMOPONTOK;
+  const hh = h + Math.max(0, magyarazat.length - 1) * 16; // több magyarázó sor: a rajz alatt több hely
+  const szakaszok = RACSOS_RUDAK.map(([, a, b]) => [v(P[a]), v(P[b])]);
+  const foglalt = []; // a már elhelyezett feliratok (rövid vízszintes szakaszok), hogy a következők ne üljenek rájuk
   return (
-    <Svg w={w} h={h}>
+    <Svg w={w} h={hh}>
       {cim && (
         <Felirat x={w / 2} y={22} meret={13}>
           {cim}
@@ -397,18 +472,18 @@ export function RacsosRajz({ terhek = [{ cs: "E", F: [0, -12, 0], cimke: "12 kN"
       {RACSOS_RUDAK.map(([id, a, b]) => {
         const S = rudErok ? rudErok[id] : null;
         const szin = S == null ? SZ.tarto : Math.abs(S) < 1e-6 ? SZ.seged : S < 0 ? SZ.nyomott : SZ.huzott;
+        // a rúd száma a rúd mellett, a többi rúdtól távol (a 3-as rúd felezőpontja pl. épp a 6-os rúdra esik a rajzon)
         const kozep = [(P[a][0] + P[b][0]) / 2, (P[a][1] + P[b][1]) / 2, (P[a][2] + P[b][2]) / 2];
-        const [X, Y] = v(kozep);
-        const [Xa, Ya] = v(P[a]);
-        const [Xb, Yb] = v(P[b]);
-        const dh = Math.hypot(Xb - Xa, Yb - Ya) || 1;
-        let nx = -(Yb - Ya) / dh;
-        let ny = (Xb - Xa) / dh;
+        const [Xk, Yk] = v(kozep);
         const [Xo, Yo] = v([3, 1.2, 2]);
-        if (nx * (X - Xo) + ny * (Y - Yo) < 0) {
-          nx = -nx;
-          ny = -ny;
-        }
+        const elonyH = Math.hypot(Xk - Xo, Yk - Yo) || 1;
+        const probak = S != null ? (nx, ny) => [[nx * 17 + (nx > 0.3 ? 14 : nx < -0.3 ? -14 : 0), ny * 17], [nx * 17 + (nx > 0.3 ? 28 : nx < -0.3 ? -28 : 0), ny * 17]] : null;
+        const hely = cimkeHely(v(P[a]), v(P[b]), [...szakaszok.filter((_, j) => RACSOS_RUDAK[j][0] !== id), ...foglalt], 13, [(Xk - Xo) / elonyH, (Yk - Yo) / elonyH], undefined, probak);
+        const { nx, ny } = hely;
+        const X = hely.x - nx * 13;
+        const Y = hely.y - ny * 13;
+        foglalt.push([[hely.x - 9, hely.y], [hely.x + 9, hely.y]]);
+        if (S != null) foglalt.push([[X + nx * 30 - 26, Y + ny * 30], [X + nx * 30 + 26, Y + ny * 30]]);
         const halvany = kiemeltCsomopont && a !== kiemeltCsomopont && b !== kiemeltCsomopont;
         return (
           <g key={id} opacity={halvany ? 0.35 : 1}>
@@ -440,7 +515,7 @@ export function RacsosRajz({ terhek = [{ cs: "E", F: [0, -12, 0], cimke: "12 kN"
         <EroNyil3 key={t.cs} v={v} pont={P[t.cs]} F={t.F} leptek={4} cimke={t.cimke} cimkeEltolas={[t.cs === "D" ? -22 : 22, -6]} />
       ))}
       {magyarazat.map((sor, i) => (
-        <Felirat key={i} x={w / 2} y={h - 8 - (magyarazat.length - 1 - i) * 15} meret={11.5} vastag={false} szin="#475569">
+        <Felirat key={i} x={w / 2} y={hh - 8 - (magyarazat.length - 1 - i) * 15} meret={11.5} vastag={false} szin="#475569">
           {sor}
         </Felirat>
       ))}
@@ -453,13 +528,15 @@ export function RacsosRajz({ terhek = [{ cs: "E", F: [0, -12, 0], cimke: "12 kN"
 /* ------------------------------------------------------------------ */
 
 /**
- * nezet: { vizsz: "z", fugg: "y", normal: "x", normalBefele: true } – a rajz síkjának két tengelye és a normális.
+ * nezet: { vizsz: "z", fugg: "y", normal: "x", normalBefele: true, fuggLefele?: false } – a rajz síkjának két tengelye és a normális;
+ *        fuggLefele: a függőleges tengely pozitív iránya a papíron lefelé mutat (pl. felülnézet: x jobbra, z lefelé, y a néző felé — jobbkezes).
  * ertekek: { N, T, [V_vizsz], [V_fugg], [M_vizsz], [M_fugg] } – a komponensek előjeles értéke (null: nincs kiírva).
  * Az erők nyilai a pozitív tengelyirányba mutatnak, ha az érték pozitív; N és T: ⊙ (a néző felé) vagy ⊗ (befelé).
  */
 export function KeresztmetszetKep({ nezet, ertekek, cim, cx = 150, cy = 148, r = 44, w = 300, h = 300, csoport = false, magyarazat = [] }) {
-  const { vizsz, fugg, normal, normalBefele } = nezet;
+  const { vizsz, fugg, normal, normalBefele, fuggLefele = false } = nezet;
   const bef = normalBefele ? 1 : -1; // +normál irány a néző felé (−1) vagy befelé (+1)
+  const fj = fuggLefele ? -1 : 1; // a függőleges tengely pozitív iránya a papíron: felfelé (+1) vagy lefelé (−1)
   const jel = (ertek) => (ertek > 0 ? 1 : ertek < 0 ? -1 : 0);
   const Vv = ertekek[`V_${vizsz}`];
   const Vf = ertekek[`V_${fugg}`];
@@ -500,26 +577,26 @@ export function KeresztmetszetKep({ nezet, ertekek, cim, cx = 150, cy = 148, r =
       <circle cx={cx} cy={cy} r={r} fill="rgba(245,158,11,0.18)" stroke={SZ.sarga} strokeWidth="2" />
       {/* tengelyek */}
       <line x1={cx - r - 26} y1={cy} x2={cx + r + 26} y2={cy} stroke={SZ.meret} strokeWidth="1.2" markerEnd="url(#tr-tengely)" />
-      <line x1={cx} y1={cy + r + 26} x2={cx} y2={cy - r - 26} stroke={SZ.meret} strokeWidth="1.2" markerEnd="url(#tr-tengely)" />
+      <line x1={cx} y1={cy + fj * (r + 26)} x2={cx} y2={cy - fj * (r + 26)} stroke={SZ.meret} strokeWidth="1.2" markerEnd="url(#tr-tengely)" />
       <Felirat x={cx + r + 28} y={cy - 5} meret={12} szin={SZ.meret} dolt horgony="start">
         {vizsz}
       </Felirat>
-      <Felirat x={cx + 8} y={cy - r - 26} meret={12} szin={SZ.meret} dolt horgony="start">
+      <Felirat x={cx + 8} y={cy - fj * (r + 26) + (fj > 0 ? 0 : 4)} meret={12} szin={SZ.meret} dolt horgony="start">
         {fugg}
       </Felirat>
       {/* nyíróerők */}
       {Vv != null && jel(Vv) !== 0 && (
         <g>
           <line x1={cx} y1={cy} x2={cx + jel(Vv) * (r - 6)} y2={cy} stroke={SZ.kek} strokeWidth="2.6" markerEnd="url(#tr-kek)" />
-          <Felirat x={cx + jel(Vv) * 10} y={cy - 8} meret={11} szin={SZ.kek} horgony={jel(Vv) > 0 ? "start" : "end"}>
+          <Felirat x={cx + jel(Vv) * 10} y={cy - 6} meret={11} szin={SZ.kek} horgony={jel(Vv) > 0 ? "start" : "end"}>
             V{vizsz} = {sz(Vv, 2)}
           </Felirat>
         </g>
       )}
       {Vf != null && jel(Vf) !== 0 && (
         <g>
-          <line x1={cx} y1={cy} x2={cx} y2={cy - jel(Vf) * (r - 6)} stroke={SZ.kek} strokeWidth="2.6" markerEnd="url(#tr-kek)" />
-          <Felirat x={cx + 8} y={cy - jel(Vf) * (r - 16) + 4} meret={11} szin={SZ.kek} horgony="start">
+          <line x1={cx} y1={cy} x2={cx} y2={cy - fj * jel(Vf) * (r - 6)} stroke={SZ.kek} strokeWidth="2.6" markerEnd="url(#tr-kek)" />
+          <Felirat x={cx + 8} y={cy - fj * jel(Vf) * (r - 16) + 4} meret={11} szin={SZ.kek} horgony="start">
             V{fugg} = {sz(Vf, 2)}
           </Felirat>
         </g>
@@ -536,24 +613,24 @@ export function KeresztmetszetKep({ nezet, ertekek, cim, cx = 150, cy = 148, r =
       )}
       {Mf != null && jel(Mf) !== 0 && (
         <g>
-          <line x1={cx + 32} y1={cy - jel(Mf) * (r + 4)} x2={cx + 32} y2={cy - jel(Mf) * (r + 36)} stroke={SZ.nyomatek} strokeWidth="2.4" markerEnd="url(#tr-nyomatek)" />
-          <line x1={cx + 32} y1={cy - jel(Mf) * (r + 4)} x2={cx + 32} y2={cy - jel(Mf) * (r + 29)} stroke={SZ.nyomatek} strokeWidth="2.4" markerEnd="url(#tr-nyomatek)" />
-          <Felirat x={cx + 40} y={cy - jel(Mf) * (r + 20) + 4} meret={11} szin={SZ.nyomatek} horgony="start">
+          <line x1={cx + 32} y1={cy - fj * jel(Mf) * (r + 4)} x2={cx + 32} y2={cy - fj * jel(Mf) * (r + 36)} stroke={SZ.nyomatek} strokeWidth="2.4" markerEnd="url(#tr-nyomatek)" />
+          <line x1={cx + 32} y1={cy - fj * jel(Mf) * (r + 4)} x2={cx + 32} y2={cy - fj * jel(Mf) * (r + 29)} stroke={SZ.nyomatek} strokeWidth="2.4" markerEnd="url(#tr-nyomatek)" />
+          <Felirat x={cx + 40} y={cy - fj * jel(Mf) * (r + 20) + 4} meret={11} szin={SZ.nyomatek} horgony="start">
             M{fugg} = {sz(Mf, 2)}
           </Felirat>
         </g>
       )}
       {/* N és T szimbólumok a körben, feliratuk kívül */}
-      {szimbolum(cx - 22, cy - 22, N, "N", SZ.kek, cx - r - 6, cy - r + 2, "end")}
-      {szimbolum(cx - 22, cy + 22, T, "T", SZ.nyomatek, cx - r - 6, cy + r + 2, "end")}
-      <Felirat x={cx} y={cy + r + 44} meret={10.5} vastag={false} szin="#475569">
+      {szimbolum(cx - 26, cy - 26, N, "N", SZ.kek, cx - r - 6, cy - r + 2, "end")}
+      {szimbolum(cx - 26, cy + 26, T, "T", SZ.nyomatek, cx - r - 6, cy + r + 2, "end")}
+      <Felirat x={cx} y={cy + r + (fuggLefele ? 56 : 44)} meret={10.5} vastag={false} szin="#475569">
         ⊙ a néző felé, ⊗ befelé
       </Felirat>
-      <Felirat x={cx} y={cy + r + 58} meret={10.5} vastag={false} szin="#475569">
+      <Felirat x={cx} y={cy + r + (fuggLefele ? 70 : 58)} meret={10.5} vastag={false} szin="#475569">
         {nevelo} {normal} tengely {normalBefele ? "befelé" : "a néző felé"} mutat
       </Felirat>
       {magyarazat.map((sor, i) => (
-        <Felirat key={i} x={cx} y={cy + r + 74 + i * 14} meret={10.5} vastag={false} szin="#475569">
+        <Felirat key={i} x={cx} y={cy + r + (fuggLefele ? 86 : 74) + i * 14} meret={10.5} vastag={false} szin="#475569">
           {sor}
         </Felirat>
       ))}

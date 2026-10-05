@@ -75,12 +75,12 @@ export default function TerbeliKonzolVagas() {
             <BefogasT pozicio={A} normal={[0, 1, 0]} meret={1.8} opacitas={befOp} />
             <CimkeT pozicio={[0.35, -0.35, 0.3]} szin={SZIN.tarto}>A</CimkeT>
             <CimkeT pozicio={[E[0] - 0.4, E[1] + 0.35, 0]} szin={SZIN.tarto} meret={12} vastag={false}>E</CimkeT>
-            <EroNyilT pont={E} F={F} leptek={LE} szin={SZIN.teher} cimke={`F = (${sz(F[0], 1)}; ${sz(F[1], 1)}; ${sz(F[2], 1)})`} cimkeEltolas={[0, 0.5, 0]} opacitas={teherOp} />
+            <EroNyilT pont={E} F={F} leptek={LE} maxHossz={3} szin={SZIN.teher} cimke={`F = (${sz(F[0], 1)}; ${sz(F[1], 1)}; ${sz(F[2], 1)})`} cimkeEltolas={[0, 0.5, 0]} opacitas={teherOp} />
             {/* reakciók, ha a befogás felőli részből számolunk */}
             {oldal === "befogas" && (
               <>
-                <VektorNyilT pont={A} F={reak.R} leptek={LE} szin={SZIN.reakcio} cimke="A" cimkeEltolas={[0.3, 0.3, 0]} />
-                <VektorNyilT pont={A} F={reak.MA} leptek={LM} szin={SZIN.nyomatek} kettos vastag={0.08} cimke="M_A" cimkeEltolas={[0.3, 0.3, 0]} minHossz={1.2} />
+                <VektorNyilT pont={A} F={reak.R} leptek={LE} maxHossz={3} szin={SZIN.reakcio} cimke="A" cimkeEltolas={[0.3, 0.3, 0]} />
+                <VektorNyilT pont={A} F={reak.MA} leptek={LM} maxHossz={3} szin={SZIN.nyomatek} kettos vastag={0.08} cimke="M_A" cimkeEltolas={[-0.4, -0.35, 0]} minHossz={1.2} />
               </>
             )}
             {/* a keresztmetszet és az igénybevételek */}
@@ -98,6 +98,7 @@ export default function TerbeliKonzolVagas() {
                   pont={K}
                   F={v}
                   leptek={ero ? LE : LM}
+                  maxHossz={2.4}
                   szin={ero ? SZIN.kek : SZIN.nyomatek}
                   kettos={!ero}
                   vastag={ero ? 0.07 : 0.07}

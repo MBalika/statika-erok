@@ -19,16 +19,16 @@ const RAD = Math.PI / 180;
 const LE = 0.22;
 
 const ELRENDEZESEK = [
-  { nev: "H13/3", labak: [[-4, 0, 0], [5, 0, -4], [5, 0, 4]], h: 6 },
-  { nev: "vizsgaminta", labak: [[0, 0, 4], [0, 0, 0], [5, 0, -4]], h: 6 },
-  { nev: "szimmetrikus", labak: [[-3, 0, 3], [-3, 0, -3], [4, 0, 0]], h: 5 },
+  { nev: "H13/3", labak: [[-4, 0, 0], [5, 0, -4], [5, 0, 4]], h: 6, teher: { Fn: 10, azimut: 180, emel: -45 } },
+  { nev: "vizsgaminta", labak: [[0, 0, 4], [0, 0, 0], [5, 0, -4]], h: 6, teher: { Fn: 6, azimut: 0, emel: 0 } },
+  { nev: "szimmetrikus", labak: [[-3, 0, 3], [-3, 0, -3], [4, 0, 0]], h: 5, teher: { Fn: 12, azimut: 0, emel: -90 } },
 ];
 
 export default function TerbeliBakallvany() {
   const [elr, setElr] = useState(0);
   const [h, setH] = useState(6);
   const [Fn, setFn] = useState(10);
-  const [azimut, setAzimut] = useState(200);
+  const [azimut, setAzimut] = useState(180);
   const [emel, setEmel] = useState(-45);
   const [xEltol, setXEltol] = useState(0);
   const [zEltol, setZEltol] = useState(0);
@@ -45,6 +45,10 @@ export default function TerbeliBakallvany() {
     setH(ELRENDEZESEK[i].h);
     setXEltol(0);
     setZEltol(0);
+    // a kidolgozott feladat terhe is beáll, így a rúderők a GYF‑3 / GYF‑4 értékeit adják
+    setFn(ELRENDEZESEK[i].teher.Fn);
+    setAzimut(ELRENDEZESEK[i].teher.azimut);
+    setEmel(ELRENDEZESEK[i].teher.emel);
   };
   const tag = (i, k) => `${e[i][k] < 0 ? "-" : "+"} S_${i + 1}\\,\\tfrac{${f4(Math.abs(labak[i][k] - csucs[k]))}}{${f4(l[i])}}`;
   const komp = ["x", "y", "z"];
@@ -54,7 +58,7 @@ export default function TerbeliBakallvany() {
     <div className="overflow-hidden rounded-2xl border border-[color:var(--keret)] bg-white">
       <div className="grid lg:grid-cols-[1.3fr_1fr] [&>*]:min-w-0">
         <div className="border-b border-[color:var(--keret)] p-2 lg:border-r lg:border-b-0">
-          <Jelenet3D kamera={kam([11, 8, 14])} cel={P([1, 2.5, 0])} magassag={420} tavolsagMin={5} tavolsagMax={50}>
+          <Jelenet3D kamera={kam([14, 10, 17])} cel={P([1, 3.5, 0])} magassag={420} tavolsagMin={5} tavolsagMax={50}>
             <PadloT meret={20} osztas={20} magassag={-0.01} />
             <TengelyekT hossz={4} origo={[0, 0, 0]} />
             {labak.map((p, i) => {
@@ -63,7 +67,8 @@ export default function TerbeliBakallvany() {
                 <group key={i}>
                   <RudT tol={csucs} ig={p} sugar={st.sugar} szin={st.szin} />
                   <TalpT pozicio={p} />
-                  <CimkeT pozicio={[(csucs[0] + p[0]) / 2, (csucs[1] + p[1]) / 2 + 0.35, (csucs[2] + p[2]) / 2]} szin={st.szin} meret={12}>
+                  {/* a három felirat a rudak különböző pontjain (42/50/58 %), hogy egymás közelébe vetülő rudaknál se fedjék egymást */}
+                  <CimkeT pozicio={[csucs[0] + (p[0] - csucs[0]) * [0.42, 0.5, 0.58][i] + (Math.abs(p[0] - csucs[0]) < 1e-9 && Math.abs(p[2] - csucs[2]) < 1e-9 ? 0.75 : 0), csucs[1] + (p[1] - csucs[1]) * [0.42, 0.5, 0.58][i] + 0.35, csucs[2] + (p[2] - csucs[2]) * [0.42, 0.5, 0.58][i]]} szin={st.szin} meret={12}>
                     {i + 1}: S = {ok ? sz(S[i], 2) : "–"} kN
                   </CimkeT>
                   <VonalT tol={[p[0], 0, 0]} ig={p} szin="#94a3b8" szaggatott opacitas={0.6} />
@@ -75,12 +80,18 @@ export default function TerbeliBakallvany() {
             <PontT pozicio={csucs} r={0.2} szin={SZIN.tarto} />
             <CimkeT pozicio={[csucs[0] + 0.5, csucs[1] + 0.4, csucs[2]]} szin={SZIN.tarto} meret={12} vastag={false}>C({sz(csucs[0], 1)}; {sz(h, 1)}; {sz(csucs[2], 1)})</CimkeT>
             <VonalT tol={[csucs[0], 0, csucs[2]]} ig={csucs} szin="#94a3b8" szaggatott opacitas={0.6} />
-            <EroNyilT pont={csucs} F={F} leptek={LE} szin={SZIN.teher} cimke={`F = ${sz(Fn, 1)} kN`} cimkeEltolas={[0, 0.5, 0]} />
-            {/* a csomópontra ható rúderők (elkülönítés): kis nyilak a csúcsban */}
+            <EroNyilT pont={csucs} F={F} leptek={LE} szin={SZIN.teher} maxHossz={2.4} cimke={`F = ${sz(Fn, 1)} kN`} cimkeEltolas={[0, 0.5, 0]} />
+            {/* a csomópontra ható rúderők (elkülönítés): húzott rúd a talppont felé húz (nyíl a csúcsból kifelé),
+                nyomott rúd a talppont felől tolja a csúcsot (a nyíl hegye a csúcsban, a rúd mentén) */}
             {ok &&
-              S.map((s, i) => (Math.abs(s) > 0.05 ? <VektorNyilT key={`s${i}`} pont={csucs} F={[e[i][0] * s, e[i][1] * s, e[i][2] * s]} leptek={0.12} szin={rudStilus(s, Smax).szin} vastag={0.06} minHossz={0.6} /> : null))}
+              S.map((s, i) => {
+                if (Math.abs(s) < 0.05) return null;
+                const v = [e[i][0] * s, e[i][1] * s, e[i][2] * s];
+                const szin = rudStilus(s, Smax).szin;
+                return s > 0 ? <VektorNyilT key={`s${i}`} pont={csucs} F={v} leptek={0.12} szin={szin} vastag={0.06} minHossz={0.6} maxHossz={2} /> : <EroNyilT key={`s${i}`} pont={csucs} F={v} leptek={0.12} szin={szin} vastag={0.06} minHossz={0.6} maxHossz={2} />;
+              })}
           </Jelenet3D>
-          <p className="mt-1 text-center text-[11.5px] text-petrol-400">Piros rúd: húzott (S &gt; 0), kék: nyomott (S &lt; 0); a vastagság a rúderő nagyságával nő. A csúcsban a kis nyilak a csomópontra ható rúderők.</p>
+          <p className="mt-1 text-center text-[11.5px] text-petrol-400">Piros rúd: húzott (S &gt; 0), kék: nyomott (S &lt; 0); a vastagság a rúderő nagyságával nő. A csúcsban a kis nyilak a csomópontra ható rúderők: a húzott rúd a talppontja felé húzza, a nyomott a talppontja felől tolja a csúcsot.</p>
         </div>
 
         <div className="p-4 sm:p-5">

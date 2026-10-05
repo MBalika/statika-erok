@@ -73,7 +73,7 @@ function Rajz(t) {
       <RudT tol={C} ig={E} sugar={0.13} szin={SZIN.tarto} u={arany(t, 0.9, 1.6)} />
       <PontT pozicio={C} r={0.16} szin={SZIN.tarto} u={szerk} />
       <CimkeT pozicio={[0.35, -0.35, 0.3]} szin={SZIN.tarto} opacitas={szerk}>A</CimkeT>
-      <CimkeT pozicio={[E[0] - 0.4, E[1] + 0.35, 0]} szin={SZIN.tarto} meret={12} vastag={false} opacitas={teher}>E(−2; 3; 0)</CimkeT>
+      <CimkeT pozicio={[E[0] - 0.55, E[1] - 0.5, 0]} szin={SZIN.tarto} meret={12} vastag={false} opacitas={teher}>E(−2; 3; 0)</CimkeT>
       <VonalT tol={[-2, 3.6, 0]} ig={[0, 3.6, 0]} szin="#64748b" vastag={1.2} opacitas={szerk} />
       <CimkeT pozicio={[-1, 3.95, 0]} szin="#475569" meret={11.5} vastag={false} opacitas={szerk}>a = 2 m</CimkeT>
       <VonalT tol={[0.7, 0, 0]} ig={[0.7, 3, 0]} szin="#64748b" vastag={1.2} opacitas={szerk} />
@@ -93,7 +93,7 @@ function Rajz(t) {
             return (
               <VektorNyilT
                 key={nev}
-                pont={A}
+                pont={i === 1 ? [-0.45, 0, 0] : A}
                 F={v}
                 leptek={1.4}
                 szin={kiszamolt ? SZIN.reakcio : "#94a3b8"}
@@ -113,7 +113,7 @@ function Rajz(t) {
             return (
               <VektorNyilT
                 key={nev}
-                pont={A}
+                pont={i === 1 ? [0.45, 0, 0] : A}
                 F={v}
                 leptek={1.9}
                 szin={kiszamolt ? SZIN.nyomatek : "#94a3b8"}
@@ -132,7 +132,8 @@ function Rajz(t) {
         <>
           <VektorNyilT pont={A} F={R} leptek={LE} szin={SZIN.reakcio} u={vegU} cimke="A = 10 kN" cimkeEltolas={[0, 0, 0.6]} />
           <VektorNyilT pont={A} F={[MA[0], 0, 0]} leptek={LM} szin={SZIN.nyomatek} kettos vastag={0.08} u={vegU} cimke="MAx = 30 kNm" cimkeEltolas={[0.9, 0.3, 0]} />
-          <VektorNyilT pont={A} F={[0, MA[1], 0]} leptek={LM} szin={SZIN.nyomatek} kettos vastag={0.08} u={vegU} cimke="MAy = 20 kNm" cimkeEltolas={[0.3, 0.5, 0]} />
+          {/* az y irányú (oszloppal párhuzamos) nyomatékvektor az oszlop mellett, hogy látsszon */}
+          <VektorNyilT pont={[0.45, 0, 0]} F={[0, MA[1], 0]} leptek={LM} szin={SZIN.nyomatek} kettos vastag={0.08} u={vegU} cimke="MAy = 20 kNm" cimkeEltolas={[0.3, 0.5, 0]} />
           {/* kar-vonalak az ellenőrzéshez */}
           <VonalT tol={A} ig={[0, 3, 0]} szin={SZIN.nyomatek} szaggatott opacitas={0.5 * vegU} />
           <CimkeT pozicio={[-0.5, 1.5, 0.4]} szin={SZIN.nyomatek} meret={11} vastag={false} opacitas={vegU}>kar 3 m</CimkeT>

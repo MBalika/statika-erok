@@ -72,19 +72,24 @@ export default function TerbeliSzabadtest() {
             {/* befogás */}
             <BefogasT pozicio={A} normal={[0, 1, 0]} meret={1.8} opacitas={1 - u} />
             {/* a teher */}
-            <EroNyilT pont={E} F={F} leptek={LE} szin={SZIN.teher} cimke={`F = ${sz(Math.hypot(...F), 2)} kN`} cimkeEltolas={[0, 0.5, 0]} />
+            <EroNyilT pont={E} F={F} leptek={LE} maxHossz={3.2} szin={SZIN.teher} cimke={`F = ${sz(Math.hypot(...F), 2)} kN`} cimkeEltolas={[0, 0.5, 0]} />
             {/* reakciók */}
             {u > 0.02 && (
               <>
                 {komp.map((k, i) => {
                   const v = [0, 0, 0];
                   v[i] = R[i];
-                  return Math.abs(R[i]) > 1e-6 ? <VektorNyilT key={`R${k}`} pont={A} F={v} leptek={LE} szin={SZIN.reakcio} u={u} cimke={`A${k} = ${sz(R[i], 2)}`} cimkeEltolas={[i === 0 ? 0.6 : 0, i === 1 ? 0.45 : -0.3 * (i === 2), i === 2 ? 0.6 : 0]} /> : null;
+                  /* az oszloppal párhuzamos (y) komponensek az oszlop mellett, hogy ne takarja őket a szár */
+                  const j = Math.sign(R[i]);
+                  const elt = [i === 0 ? 0.6 * j : i === 1 ? -0.55 : 0, i === 1 ? 0.4 * j : 0.35, i === 2 ? 0.6 * j : 0];
+                  return Math.abs(R[i]) > 1e-6 ? <VektorNyilT key={`R${k}`} pont={i === 1 ? [A[0] - 0.45, A[1], A[2]] : A} F={v} leptek={LE} maxHossz={3.2} szin={SZIN.reakcio} u={u} cimke={`A${k} = ${sz(R[i], 2)}`} cimkeEltolas={elt} /> : null;
                 })}
                 {komp.map((k, i) => {
                   const v = [0, 0, 0];
                   v[i] = MA[i];
-                  return Math.abs(MA[i]) > 1e-6 ? <VektorNyilT key={`M${k}`} pont={A} F={v} leptek={LM} szin={SZIN.nyomatek} u={u} kettos vastag={0.08} cimke={`MA${k} = ${sz(MA[i], 2)}`} cimkeEltolas={[i === 0 ? 0.9 : 0.3, i === 1 ? 0.5 : -0.65, i === 2 ? 0.9 : 0]} minHossz={1.2} /> : null;
+                  const j = Math.sign(MA[i]);
+                  const elt = [i === 0 ? 0.8 * j : i === 1 ? 0.6 : 0, i === 1 ? 0.4 * j : -0.4, i === 2 ? 0.8 * j : 0];
+                  return Math.abs(MA[i]) > 1e-6 ? <VektorNyilT key={`M${k}`} pont={i === 1 ? [A[0] + 0.45, A[1], A[2]] : A} F={v} leptek={LM} maxHossz={3.2} szin={SZIN.nyomatek} u={u} kettos vastag={0.08} cimke={`MA${k} = ${sz(MA[i], 2)}`} cimkeEltolas={elt} minHossz={1.2} /> : null;
                 })}
               </>
             )}

@@ -110,7 +110,7 @@ function terfogatiTeherFeladat() {
           Számítsd ki a töltés súlyát és a rúderőket!
         </p>
       ),
-      abra: <TartalyRajz Fcimke={F ? `F = ${F} kN` : ""} gamma={`γ = ${gamma} kN/m³`} magyarazat={[`A rajz a H13/4 elrendezését mutatja; itt a tartály ${Lx} × ${Lz} × ${sz(H, 1)} m.`]} />,
+      abra: <TartalyRajz Lx={Lx} Lz={Lz} H={H} Fpont={F ? [0, H, 0] : null} Fcimke={F ? `F = ${F} kN` : ""} gamma={`γ = ${gamma} kN/m³`} magyarazat={[`A tartály ${Lx} × ${Lz} × ${sz(H, 1)} m, a H13/4 megtámasztásával;`, F ? `az F a hátsó-felső (0; ${sz(H, 1)}; 0) sarkon hat.` : "most nincs vízszintes erő."]} />,
       sugo: (
         <p>
           <M>{"G = \\gamma V"}</M> a töltés súlypontjában (<M>{"L_x/2;\\ H/2;\\ L_z/2"}</M>). Nyomatéki egyenletek az <M>{"A"}</M> csuklón átmenő <M>{"x, y, z"}</M> tengelyekre: mindegyikben egyetlen rúderő marad.

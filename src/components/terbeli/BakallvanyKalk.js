@@ -132,7 +132,7 @@ export default function BakallvanyKalk() {
           {ok ? (
             <>
               <p className="text-[13px] text-petrol-600">A három egyenlet megoldása (a számítómag Gauss-eliminációval; kézzel: fejezd ki az egyik ismeretlent, és helyettesíts):</p>
-              <MB>{`S_1 = ${f4(S[0])}\\ \\text{kN}\\ (${S[0] < 0 ? "\\text{nyomott}" : "\\text{húzott}"}),\\quad S_2 = ${f4(S[1])}\\ \\text{kN}\\ (${S[1] < 0 ? "\\text{nyomott}" : "\\text{húzott}"}),\\quad S_3 = ${f4(S[2])}\\ \\text{kN}\\ (${S[2] < 0 ? "\\text{nyomott}" : "\\text{húzott}"})`}</MB>
+              <MB>{S.map((si, i) => `S_${i + 1} = ${f4(si)}\\ \\text{kN}\\ (${Math.abs(si) < 5e-7 ? "\\text{erőtlen}" : si < 0 ? "\\text{nyomott}" : "\\text{húzott}"})`).join(",\\quad ")}</MB>
               <p className="text-[13px] text-petrol-600">Ellenőrzés visszahelyettesítéssel (a csomópontra ható erők összege):</p>
               <MB>{`\\sum\\underline F_i = (${f4(ellenorzes.F[0])};\\ ${f4(ellenorzes.F[1])};\\ ${f4(ellenorzes.F[2])}) \\approx \\underline 0\\ \\checkmark`}</MB>
             </>

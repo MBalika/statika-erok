@@ -6,7 +6,7 @@ import { M, MB } from "@/components/ui/Keplet";
 import { f4, zarK, vekK, kereszt, sub, egyseg, hossz, skalar, bakallvany, befogottKonzol, igenybevetelek, csomopontHaromRud, nyomatekTengelyre, tamasztorudak } from "@/lib/terbeli";
 import { sz } from "@/lib/szamok";
 import { KonzolRajz, BakallvanyRajz, TartalyRajz } from "./TerbeliRajzok";
-import { axono, TerHegyek, Felirat, Rud3, Seged3, Tengelyek3, Talp3, EroNyil3, VektorNyil3, SZ } from "./Axono";
+import { axono, TerHegyek, Felirat, Rud3, Seged3, Tengelyek3, Talp3, EroNyil3, VektorNyil3, SZ, cimkeHely } from "./Axono";
 
 /* ============================================================
    1. Háromlábú bakállvány rúderői
@@ -40,7 +40,7 @@ function bakallvanyFeladat() {
           <M>{`\\underline F = ${vekK(F)}`}</M> kN hat. Számítsd ki a három rúderőt (húzott = pozitív)!
         </p>
       ),
-      abra: <BakallvanyRajz csucs={csucs} labak={labak} F={F} Fcimke={`F = ${sz(hossz(F), 2)} kN`} magyarazat={[`A teher komponensei: (${F.join("; ")}) kN.`]} />,
+      abra: <BakallvanyRajz csucs={csucs} labak={labak} F={F} Fcimke={`F = ${sz(hossz(F), 2)} kN`} talpKoordinatak magyarazat={[`A teher komponensei: (${F.join("; ")}) kN; a talppontok (x; 0; z) koordinátái a talpak alatt.`]} />,
       sugo: (
         <p>
           A csomópont közös metszéspontú térbeli erőrendszer: három vetületi egyenlet. Rúdvektor <M>{"\\underline l_i"}</M> a csúcsból a talppontba, <M>{"\\underline e_i = \\underline l_i/l_i"}</M>, a rúderő a csomópontra <M>{"S_i\\underline e_i"}</M>. Keress
@@ -204,7 +204,19 @@ function tamasztorudFeladat() {
           {F ? <>, és a <M>{`(0;\\ ${H};\\ 0)`}</M> pontban (egy <M>{`${H}`}</M> m magas oszlop tetején) <M>{`F = ${F}`}</M> kN a <M>{"-x"}</M> irányban</> : null}. Számítsd ki a rúderőket és a csukló függőleges reakcióját!
         </p>
       ),
-      abra: <TartalyRajz Fcimke={F ? `F = ${F} kN` : ""} gamma={`G = ${G} kN a lap közepén`} magyarazat={["A rajz a H13/4 elrendezését mutatja (a tartály helyett itt lap + oszlop);", "a méretek a feladatszövegben."]} />,
+      abra: (
+        <TartalyRajz
+          lap
+          Lx={Lx}
+          Lz={Lz}
+          H={H}
+          Fpont={F ? [0, H, 0] : null}
+          Fcimke={F ? `F = ${F} kN` : ""}
+          gamma={null}
+          Gcimke={`G = ${G} kN`}
+          magyarazat={[`A ${Lx} × ${Lz} m-es lap a H13/4 megtámasztásával: gömbcsukló A, két függőleges és egy vízszintes rúd;`, F ? `az F a (0; ${H}; 0) pontban, a ${H} m-es oszlop tetején hat.` : "most nincs vízszintes erő."]}
+        />
+      ),
       sugo: (
         <p>
           Nyomatéki egyenletek az <M>{"A"}</M>-n átmenő tengelyekre: az <M>{"x"}</M> tengelyre csak <M>{"S_3"}</M> és <M>{"G"}</M> forgat, az <M>{"y"}</M>-ra csak <M>{"S_2"}</M> és <M>{"F"}</M>, a <M>{"z"}</M>-re <M>{"S_1"}</M>, <M>{"G"}</M> és{" "}
@@ -242,30 +254,48 @@ function tamasztorudFeladat() {
 
 function CsomopontRajz({ P, vegek, ismert, F }) {
   const v = axono({ ox: 300, oy: 250, s: 26 });
+  const szakaszok = [...vegek, ismert.veg].map((q) => [v(P), v(q)]);
+  const [Xp, Yp] = v(P);
+  const cimke = (q, i) => {
+    const hely = cimkeHely(v(P), v(q), szakaszok.filter((_, j) => j !== i), 13);
+    return hely;
+  };
+  const ismertSzin = ismert.S < 0 ? SZ.nyomott : SZ.huzott;
+  const ismertHely = cimke(ismert.veg, 3);
   return (
-    <svg viewBox="0 0 600 340" className="w-full h-auto" role="img">
+    <svg viewBox="0 0 600 350" className="w-full h-auto" role="img">
       <TerHegyek />
       <Felirat x={300} y={20} meret={12.5}>A csomópont és a hozzá futó rudak</Felirat>
       <Tengelyek3 v={v} hossz={[3, 3, 3]} />
-      {vegek.map((q, i) => (
-        <g key={i}>
-          <Rud3 v={v} a={P} b={q} vastag={4} szin={SZ.tarto} />
-          <Talp3 v={v} p={q} />
-          <Felirat x={v([(P[0] + q[0]) / 2, (P[1] + q[1]) / 2, (P[2] + q[2]) / 2])[0] + 10} y={v([(P[0] + q[0]) / 2, (P[1] + q[1]) / 2, (P[2] + q[2]) / 2])[1] - 6} meret={11.5} szin={SZ.tarto} horgony="start">
-            {i + 1}
-          </Felirat>
-          <Seged3 v={v} a={q} b={[q[0], 0, q[2]]} />
-        </g>
-      ))}
-      <Rud3 v={v} a={P} b={ismert.veg} vastag={4} szin={ismert.S < 0 ? SZ.nyomott : SZ.huzott} />
-      <Talp3 v={v} p={ismert.veg} />
-      <Felirat x={v([(P[0] + ismert.veg[0]) / 2, (P[1] + ismert.veg[1]) / 2, (P[2] + ismert.veg[2]) / 2])[0] + 10} y={v([(P[0] + ismert.veg[0]) / 2, (P[1] + ismert.veg[1]) / 2, (P[2] + ismert.veg[2]) / 2])[1] - 6} meret={11.5} szin={ismert.S < 0 ? SZ.nyomott : SZ.huzott} horgony="start">
-        4: S₄ = {sz(ismert.S, 1)} kN
+      {vegek.map((q, i) => {
+        const hely = cimke(q, i);
+        return (
+          <g key={i}>
+            <Rud3 v={v} a={P} b={q} vastag={4} szin={SZ.tarto} />
+            <Talp3 v={v} p={q} />
+            <circle cx={hely.x} cy={hely.y} r="8.5" fill="white" stroke={SZ.tarto} strokeWidth="1.2" />
+            <Felirat x={hely.x} y={hely.y + 4} meret={10.5} szin={SZ.tarto}>
+              {i + 1}
+            </Felirat>
+          </g>
+        );
+      })}
+      {/* a 4-es rúd a tartó egy másik csomópontjába fut (nem talppont): csomópont-jel, és szaggatott vonal a talajig */}
+      <Rud3 v={v} a={P} b={ismert.veg} vastag={4} szin={ismertSzin} />
+      <Seged3 v={v} a={ismert.veg} b={[ismert.veg[0], 0, ismert.veg[2]]} />
+      <circle cx={v(ismert.veg)[0]} cy={v(ismert.veg)[1]} r="4.5" fill="white" stroke={SZ.tarto} strokeWidth="2" />
+      <circle cx={ismertHely.x} cy={ismertHely.y} r="8.5" fill="white" stroke={ismertSzin} strokeWidth="1.2" />
+      <Felirat x={ismertHely.x} y={ismertHely.y + 4} meret={10.5} szin={ismertSzin}>
+        4
       </Felirat>
-      <circle cx={v(P)[0]} cy={v(P)[1]} r="4.5" fill="white" stroke={SZ.tarto} strokeWidth="2" />
-      <Felirat x={v(P)[0] - 10} y={v(P)[1] - 8} meret={12} dolt horgony="end">P</Felirat>
+      <Felirat x={v(ismert.veg)[0] + (ismert.veg[0] >= P[0] ? 10 : -10)} y={v(ismert.veg)[1] + 4} meret={11} szin={ismertSzin} horgony={ismert.veg[0] >= P[0] ? "start" : "end"}>
+        S₄ = {sz(ismert.S, 1)} kN
+      </Felirat>
+      <circle cx={Xp} cy={Yp} r="4.5" fill="white" stroke={SZ.tarto} strokeWidth="2" />
+      <Felirat x={Xp - 10} y={Yp - 8} meret={12} dolt horgony="end">P</Felirat>
       <EroNyil3 v={v} pont={P} F={F} leptek={4} cimke="F" cimkeEltolas={[0, -6]} />
-      <Felirat x={300} y={330} meret={11} vastag={false} szin="#475569">A talppontok gömbcsuklók; a 4-es rúd ereje már ismert (piros: húzott, kék: nyomott).</Felirat>
+      <Felirat x={300} y={326} meret={11} vastag={false} szin="#475569">Az 1–3. rúd talppontja gömbcsukló; a 4-es rúd a tartó egy másik csomópontjába fut,</Felirat>
+      <Felirat x={300} y={341} meret={11} vastag={false} szin="#475569">ereje az előző csomópontból már ismert (piros: húzott, kék: nyomott).</Felirat>
     </svg>
   );
 }
@@ -329,9 +359,19 @@ function racsosCsomopontFeladat() {
    ============================================================ */
 
 function NyomatekRajz({ P, F, Q, e }) {
-  const v = axono({ ox: 280, oy: 230, s: 30 });
-  const veg1 = [Q[0] - e[0] * 4, Q[1] - e[1] * 4, Q[2] - e[2] * 4];
-  const veg2 = [Q[0] + e[0] * 4, Q[1] + e[1] * 4, Q[2] + e[2] * 4];
+  const veg1 = [Q[0] - e[0] * 3.5, Q[1] - e[1] * 3.5, Q[2] - e[2] * 3.5];
+  const veg2 = [Q[0] + e[0] * 3.5, Q[1] + e[1] * 3.5, Q[2] + e[2] * 3.5];
+  // a rajz illesztése: a fontos pontok vetületének befoglaló téglalapja a [40..560]×[36..296] mezőbe kerül
+  const hF = Math.hypot(...F) || 1;
+  const farok = [P[0] - (F[0] / hF) * 1.6, P[1] - (F[1] / hF) * 1.6, P[2] - (F[2] / hF) * 1.6];
+  const v0 = axono({ ox: 0, oy: 0, s: 1 });
+  const pontok = [veg1, veg2, P, Q, farok, [0, 0, 0], [3.5, 0, 0], [0, 3.5, 0], [0, 0, 3], [Q[0] + e[0] * 1.5, Q[1] + e[1] * 1.5, Q[2] + e[2] * 1.5]].map(v0);
+  const xs = pontok.map((q) => q[0]);
+  const ys = pontok.map((q) => q[1]);
+  const sz0 = Math.min(30, 480 / Math.max(1e-6, Math.max(...xs) - Math.min(...xs)), 240 / Math.max(1e-6, Math.max(...ys) - Math.min(...ys)));
+  const ox = 300 - ((Math.max(...xs) + Math.min(...xs)) / 2) * sz0;
+  const oy = 166 - ((Math.max(...ys) + Math.min(...ys)) / 2) * sz0;
+  const v = axono({ ox, oy, s: sz0 });
   return (
     <svg viewBox="0 0 600 330" className="w-full h-auto" role="img">
       <TerHegyek />

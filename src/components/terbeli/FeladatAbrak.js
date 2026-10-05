@@ -25,7 +25,7 @@ export function AbraGyf2Eredmeny() {
   return (
     <svg viewBox="0 0 600 300" className="w-full h-auto" role="img">
       <TerHegyek />
-      <KeresztmetszetKep csoport cim="K1 (tengely: y; nézet felülről)" cx={150} cy={148} nezet={{ vizsz: "x", fugg: "z", normal: "y", normalBefele: false }} ertekek={{ N: 0, T: -20, V_x: 0, V_z: -10, M_x: -20, M_z: 0 }} />
+      <KeresztmetszetKep csoport cim="K1 (tengely: y; nézet felülről)" cx={150} cy={148} nezet={{ vizsz: "x", fugg: "z", normal: "y", normalBefele: false, fuggLefele: true }} ertekek={{ N: 0, T: -20, V_x: 0, V_z: -10, M_x: -20, M_z: 0 }} />
       <KeresztmetszetKep csoport cim="K2 (tengely: x; nézet −x felől)" cx={450} cy={148} nezet={{ vizsz: "z", fugg: "y", normal: "x", normalBefele: true }} ertekek={{ N: 0, T: 0, V_z: 10, V_y: 0, M_z: 0, M_y: 10 }} />
     </svg>
   );
@@ -80,8 +80,8 @@ export function AbraGyf7Eredmeny() {
   return (
     <svg viewBox="0 0 600 300" className="w-full h-auto" role="img">
       <TerHegyek />
-      <KeresztmetszetKep csoport cim="K1 (tengely: y)" cx={150} cy={148} nezet={{ vizsz: "x", fugg: "z", normal: "y", normalBefele: false }} ertekek={{ N: -5, T: 6, V_x: 4, V_z: 3, M_x: 4.5, M_z: 4 }} />
-      <KeresztmetszetKep csoport cim="K2 (tengely: x)" cx={450} cy={148} nezet={{ vizsz: "z", fugg: "y", normal: "x", normalBefele: true }} ertekek={{ N: -4, T: 0, V_z: -3, V_y: 5, M_z: -5, M_y: -3 }} />
+      <KeresztmetszetKep csoport cim="K1 (tengely: y; nézet felülről)" cx={150} cy={148} nezet={{ vizsz: "x", fugg: "z", normal: "y", normalBefele: false, fuggLefele: true }} ertekek={{ N: -5, T: 6, V_x: 4, V_z: 3, M_x: 4.5, M_z: 4 }} />
+      <KeresztmetszetKep csoport cim="K2 (tengely: x; nézet −x felől)" cx={450} cy={148} nezet={{ vizsz: "z", fugg: "y", normal: "x", normalBefele: true }} ertekek={{ N: -4, T: 0, V_z: -3, V_y: 5, M_z: -5, M_y: -3 }} />
     </svg>
   );
 }

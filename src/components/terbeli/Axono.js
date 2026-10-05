@@ -323,3 +323,41 @@ export function Metszet3({ v, p, t, r = 9, szin = SZ.sarga, cimke, cimkeEltolas 
     </g>
   );
 }
+
+/** Egy képernyőpont távolsága egy képernyő-szakasztól (px). */
+export function tavolsagSzakasztol([px, py], [ax, ay], [bx, by]) {
+  const dx = bx - ax;
+  const dy = by - ay;
+  const h2 = dx * dx + dy * dy;
+  const t = h2 < 1e-9 ? 0 : Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / h2));
+  return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+}
+
+/**
+ * Felirat helye egy képernyő-szakasz (a→b) mellett úgy, hogy a többi szakasztól (`masok`: [[p, q], …]) a lehető
+ * legmesszebb essen: jelöltek a szakasz 50/38/62 %-ánál, mindkét oldalon `tav` px-re, merőlegesen; az `elony`
+ * (képernyő-irány) felőli oldal kis előnyt kap, a középtől távolabbi jelöltek kis hátrányt.
+ * `probak(nx, ny)` további vizsgálandó pontokat adhat a jelölthöz képest (px), pl. a hosszabb felirat közepét és végét.
+ * → { x, y, nx, ny, d } – a hely, a merőleges egységvektor és a legközelebbi idegen szakasz távolsága.
+ */
+export function cimkeHely(a, b, masok = [], tav = 14, elony = null, tKand = [0.5, 0.38, 0.62], probak = null) {
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+  const dh = Math.hypot(dx, dy) || 1;
+  const n0 = [-dy / dh, dx / dh];
+  let legjobb = null;
+  for (const t of tKand) {
+    for (const oldal of [1, -1]) {
+      const nx = n0[0] * oldal;
+      const ny = n0[1] * oldal;
+      const x = a[0] + dx * t + nx * tav;
+      const y = a[1] + dy * t + ny * tav;
+      let d = Infinity;
+      const pontokP = [[0, 0], ...(probak ? probak(nx, ny) : [])];
+      for (const [p, q] of masok) for (const [px, py] of pontokP) d = Math.min(d, tavolsagSzakasztol([x + px, y + py], p, q));
+      const pont = Math.min(d, 40) + (elony && nx * elony[0] + ny * elony[1] > 0 ? 6 : 0) - Math.abs(t - 0.5) * 20;
+      if (!legjobb || pont > legjobb.pont) legjobb = { x, y, nx, ny, d, pont };
+    }
+  }
+  return legjobb;
+}

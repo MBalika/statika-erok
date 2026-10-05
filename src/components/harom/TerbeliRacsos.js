@@ -80,10 +80,10 @@ export default function TerbeliRacsos() {
             {CSOMOPONTOK.map((c) => (
               <group key={c.id}>
                 {TAMASZOK.some((t) => t.csomopont === c.id) ? <GombcsukloT pozicio={c.p} r={0.2} /> : <PontT pozicio={c.p} r={c.id === valasztott ? 0.24 : 0.17} szin={c.id === valasztott ? "#f59e0b" : SZIN.tarto} />}
-                <CimkeT pozicio={[c.p[0] + 0.35, c.p[1] + 0.35, c.p[2]]} szin={c.id === valasztott ? "#b45309" : SZIN.tarto} meret={12.5}>{c.id}</CimkeT>
+                <CimkeT pozicio={[c.p[0] + (c.id === "D" ? -0.45 : 0.35), c.p[1] + 0.35, c.p[2]]} szin={c.id === valasztott ? "#b45309" : SZIN.tarto} meret={12.5}>{c.id}</CimkeT>
               </group>
             ))}
-            {terhek.map((t) => (Math.hypot(...t.F) > 0.01 ? <EroNyilT key={t.csomopont} pont={pont(t.csomopont)} F={t.F} leptek={0.14} szin={SZIN.teher} cimke={`${sz(Math.hypot(...t.F), 1)} kN`} cimkeEltolas={[0, 0.4, 0]} /> : null))}
+            {terhek.map((t) => (Math.hypot(...t.F) > 0.01 ? <EroNyilT key={t.csomopont} pont={pont(t.csomopont)} F={t.F} leptek={0.1} maxHossz={2.2} szin={SZIN.teher} cimke={`${sz(Math.hypot(...t.F), 1)} kN`} cimkeEltolas={[t.csomopont === "D" ? -0.75 : 0.65, 0.35, 0]} /> : null))}
             {er.ok && er.reakciok.map((r) => (Math.abs(r.S) > 0.01 ? <VektorNyilT key={r.id} pont={pont(r.csomopont)} F={r.F} leptek={0.1} szin={SZIN.reakcio} vastag={0.06} minHossz={0.6} /> : null))}
           </Jelenet3D>
           <p className="mt-1 text-center text-[11.5px] text-petrol-400">Piros rúd: húzott, kék: nyomott, szürke: vakrúd; vastagság ∝ |S|. Lila nyilak: a gömbcsuklók reakciói. A kiválasztott csomópont rúdjai élénkek.</p>

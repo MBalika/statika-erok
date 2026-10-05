@@ -132,10 +132,18 @@ export function AbraVetites() {
       <Felirat x={v(E)[0] - 4} y={v(E)[1] + 17} meret={12} dolt>E</Felirat>
       <Felirat x={v([0, 0, 0])[0] + 12} y={v([0, 0, 0])[1] + 16} meret={12} dolt>A</Felirat>
       <EroNyil3 v={v} pont={E} F={F} leptek={5} cimke="F" cimkeEltolas={[0, -6]} />
-      {/* komponens-lépcső */}
-      <Seged3 v={v} a={E} b={[E[0] - 1.2, E[1], E[2]]} szin={SZ.teher} />
-      <Seged3 v={v} a={[E[0] - 1.2, E[1], E[2]]} b={[E[0] - 1.2, E[1] + 1.5, E[2]]} szin={SZ.teher} />
-      <Seged3 v={v} a={[E[0] - 1.2, E[1] + 1.5, E[2]]} b={[E[0] - 1.2, E[1] + 1.5, E[2] - 0.9]} szin={SZ.teher} />
+      {/* komponens-lépcső: az E-től a nyíl farkáig, a −F irányú komponensekkel (a nyíl hossza px-ben: max(26, |F|·5)) */}
+      {(() => {
+        const hF = Math.hypot(...F);
+        const u = F.map((c) => (-c / hF) * (Math.max(26, hF * 5) / 34));
+        return (
+          <>
+            <Seged3 v={v} a={E} b={[E[0] + u[0], E[1], E[2]]} szin={SZ.teher} />
+            <Seged3 v={v} a={[E[0] + u[0], E[1], E[2]]} b={[E[0] + u[0], E[1] + u[1], E[2]]} szin={SZ.teher} />
+            <Seged3 v={v} a={[E[0] + u[0], E[1] + u[1], E[2]]} b={[E[0] + u[0], E[1] + u[1], E[2] + u[2]]} szin={SZ.teher} />
+          </>
+        );
+      })()}
       <Magyarazat x={180} y={318} sorok={["A ferde erő komponensei a (9.1) képlettel:", "Fx = F·lx/l, Fy = F·ly/l, Fz = F·lz/l."]} />
 
       <Nezet vv={vxy} cimx="x" cimy="y" cim="xy-sík (elölnézet): Fx, Fy, ΣMz" komp={[4, -5, 0]} cimke="Fx, Fy" x0={440} y0={52} />
