@@ -1,5 +1,6 @@
 import AbraIllesztes from "@/components/AbraIllesztes";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -32,6 +33,7 @@ export default function RootLayout({ children }) {
         <main className="flex-1">{children}</main>
         <AbraIllesztes />
         <SiteFooter />
+        <Analytics />
       </body>
     </html>
   );
